@@ -1,0 +1,1391 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, noai, noimageai">
+<script>try{if(!localStorage.getItem('vs-motion-demo')){localStorage.setItem('vs-motion-demo','1');localStorage.setItem('vs-motion','full')}}catch(e){}</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Mirror · Ouija Cat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=VT323&display=swap" rel="stylesheet">
+<script>/* motion: macOS can ask for less; this site lets you opt back in (stored per browser, all pages) */
+{ let m = null; try { m = localStorage.getItem('vs-motion'); } catch (e) {} if (m !== 'calm') document.documentElement.classList.add('motion-full'); }   // full motion by default (the films and animations are the point); Calm motion is the opt-out
+addEventListener('DOMContentLoaded', () => { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) return; const full = document.documentElement.classList.contains('motion-full');
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'motion-btn'; b.textContent = full ? 'Calm motion' : 'Full motion'; b.title = full ? 'Your Mac asks for reduced motion: calm every animation on this site' : 'Show every animation again';
+  b.onclick = () => { try { full ? localStorage.setItem('vs-motion', 'calm') : localStorage.removeItem('vs-motion'); } catch (e) {} location.reload(); };
+  const bar = document.querySelector('.bar'); if (bar) { const h = bar.querySelector('h1'); h ? h.after(b) : bar.append(b); } });
+</script>
+<style>
+.motion-btn { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #f0d68f; background: rgba(214,164,67,.12); border: 1px solid rgba(214,164,67,.6); padding: 5px 9px; cursor: pointer; white-space: nowrap; }
+:root { --gold: #d6a443; --gold-pale: #f0d68f; --cream: #eee4cb; --muted: #a8aecb; --bar: 42px;
+  --display: "IM Fell English SC", Georgia, serif; --serif: "IM Fell English", Georgia, serif; --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; height: 100%; background: #040306; color: var(--cream); font-family: var(--serif); overflow: hidden; }
+.bar { position: fixed; top: 0; left: 0; right: 0; height: var(--bar); z-index: 20; display: flex; align-items: center; gap: 8px; padding: 0 12px; background: linear-gradient(rgba(0,0,0,.92), rgba(0,0,0,.5)); }
+.bar a, .bar button { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--cream); background: transparent; border: 1px solid rgba(214,164,67,.5); padding: 5px 9px; text-decoration: none; cursor: pointer; white-space: nowrap; }
+.bar a:hover, .bar button:hover, .bar button[aria-pressed="true"] { border-color: var(--gold-pale); color: var(--gold-pale); }
+.bar h1 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 18px; letter-spacing: .1em; color: var(--gold-pale); white-space: nowrap; flex: 1; }
+.wrap { position: fixed; top: var(--bar); left: 0; right: 0; bottom: 0; display: grid; place-items: center; overflow: hidden; }
+.board { position: relative; width: min(100vw, calc((100vh - var(--bar)) * 1.7864)); aspect-ratio: 2944 / 1648; }
+.board img, .board canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.board img { opacity: 0; transition: opacity 1.6s ease; }
+.board img.on { opacity: 1; }
+#fx { touch-action: manipulation; }
+#fx.hand { cursor: pointer; }
+.tip { position: fixed; z-index: 30; max-width: 300px; pointer-events: none; padding: 10px 13px; background: rgba(8,10,20,.93); border: 1px solid rgba(214,164,67,.5); box-shadow: 0 10px 28px rgba(0,0,0,.6); opacity: 0; transition: opacity .15s; }
+.tip.on { opacity: 1; }
+.tip h4 { margin: 0 0 3px; font-family: var(--display); font-weight: 400; font-size: 18px; color: var(--gold-pale); }
+.tip p { margin: 0; font-size: 15px; line-height: 1.3; }
+.say { position: fixed; left: 50%; bottom: 34px; transform: translateX(-50%); z-index: 15; max-width: min(640px, 92vw); text-align: center; font-family: var(--serif); font-style: italic; font-size: 20px; line-height: 1.3; color: var(--gold-pale); text-shadow: 0 2px 12px #000, 0 0 2px #000; opacity: 0; transition: opacity .6s; pointer-events: none; }
+.say.on { opacity: 1; }
+.drawer { position: fixed; top: var(--bar); right: 0; bottom: 0; width: min(440px, 100vw); z-index: 25; background: rgba(6,6,10,.97); border-left: 1px solid rgba(214,164,67,.3); overflow-y: auto; padding: 18px 22px 40px; transform: translateX(100%); transition: transform .35s ease; }
+.drawer.on { transform: none; }
+.drawer h2 { font-family: var(--display); font-weight: 400; color: var(--gold-pale); margin: 0 0 4px; font-size: 26px; }
+.drawer h3 { font-family: var(--display); font-weight: 400; color: var(--gold); margin: 18px 0 4px; font-size: 18px; letter-spacing: .04em; }
+.drawer p { margin: 0 0 8px; font-size: 16px; line-height: 1.4; }
+.drawer .sub { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+.drawer .dim { color: var(--muted); font-size: 14px; }
+.drawer .x { position: absolute; top: 12px; right: 14px; background: none; border: 0; color: var(--cream); font-size: 18px; cursor: pointer; }
+.drawer button.small { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--cream); background: transparent; border: 1px solid rgba(214,164,67,.5); padding: 5px 9px; cursor: pointer; margin-top: 10px; }
+.foot { position: fixed; left: 0; right: 0; bottom: 3px; text-align: center; font-family: var(--mono); font-size: 9px; letter-spacing: .08em; color: rgba(168,174,203,.45); pointer-events: none; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+/* the gaze: the mirror opens to fill the screen */
+.gaze { position: fixed; inset: 0; z-index: 40; background: #000; clip-path: ellipse(0% 0% at 50% 50%); transition: clip-path 1.6s cubic-bezier(.6,0,.2,1); }
+.gaze.open { clip-path: ellipse(150% 150% at 50% 50%); }
+.gaze canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.gaze .hud { position: absolute; top: 12px; left: 14px; right: 14px; display: flex; gap: 8px; align-items: center; font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: rgba(238,228,203,.55); transition: opacity 1.5s; }
+.gaze.deep .hud { opacity: .18; }
+.gaze .hud:hover { opacity: 1; }
+.gaze .hud b { color: var(--gold-pale); font-weight: 400; font-size: 13px; min-width: 52px; }
+.gaze .hud span { flex: 1; }
+.gaze .hud button { font: inherit; letter-spacing: inherit; text-transform: inherit; color: var(--cream); background: rgba(0,0,0,.4); border: 1px solid rgba(214,164,67,.45); padding: 5px 9px; cursor: pointer; }
+.gaze .hud button[aria-pressed="true"] { color: var(--gold-pale); border-color: var(--gold-pale); }
+.gaze .prompt { position: absolute; left: 50%; bottom: 9vh; transform: translateX(-50%); width: min(720px, 90vw); text-align: center; font-family: var(--serif); font-style: italic; font-size: clamp(18px, 2.4vw, 28px); line-height: 1.3; color: var(--gold-pale); text-shadow: 0 2px 14px #000, 0 0 3px #000; opacity: 0; transition: opacity 1.4s; }
+.gaze .prompt.on { opacity: .92; }
+.gaze .prompt.q { font-style: normal; font-family: var(--display); letter-spacing: .03em; }
+.veil { position: absolute; inset: 0; background: linear-gradient(#050307 0%, #120a14 70%, #1d1018 100%); transform: translateY(-101%); transition: transform 1.8s cubic-bezier(.5,0,.3,1); }
+.veil.down { transform: none; }
+.veil::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 24px; background: repeating-linear-gradient(90deg, rgba(214,164,67,.5) 0 2px, transparent 2px 12px); opacity: .6; }
+.tell { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(520px, 92vw); padding: 22px 24px; background: rgba(6,5,10,.92); border: 1px solid rgba(214,164,67,.5); box-shadow: 0 20px 60px rgba(0,0,0,.7); }
+.tell h3 { margin: 0 0 6px; font-family: var(--display); font-weight: 400; font-size: 24px; color: var(--gold-pale); }
+.tell p { margin: 0 0 12px; font-size: 16px; line-height: 1.35; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.chips button { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--cream); background: transparent; border: 1px solid rgba(214,164,67,.4); padding: 6px 9px; cursor: pointer; }
+.chips button[aria-pressed="true"] { background: rgba(214,164,67,.2); border-color: var(--gold-pale); color: var(--gold-pale); }
+.tell textarea { width: 100%; background: rgba(0,0,0,.5); color: var(--cream); border: 1px solid rgba(214,164,67,.35); font: 16px var(--serif); padding: 8px; resize: vertical; }
+.tell .go { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
+.tell .go button { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--cream); background: rgba(214,164,67,.12); border: 1px solid rgba(214,164,67,.6); padding: 8px 12px; cursor: pointer; }
+.tell .reply { font-style: italic; color: var(--gold-pale); font-size: 19px; }
+.back { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; background: rgba(5,3,7,.82); opacity: 0; transition: opacity .9s; }
+.back.on { opacity: 1; }
+.back .tell { position: relative; left: auto; top: auto; transform: none; }
+.back ol { margin: 0 0 12px; padding-left: 22px; font-size: 16px; line-height: 1.5; }
+.back ol b { color: var(--gold-pale); font-weight: 400; }
+.tell .note { font-family: var(--serif); font-size: 15px; color: var(--muted); }
+.turn { display: none; }
+@media (orientation: portrait) and (max-width: 700px) {
+  .turn { display: grid; position: fixed; left: 12px; right: 12px; bottom: 18px; z-index: 50; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 12px 14px; background: rgba(10,8,16,.94); border: 1px solid rgba(214,164,67,.55); font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--cream); }
+  .turn svg { width: 28px; height: 28px; }
+  .turn button { background: transparent; border: 1px solid rgba(214,164,67,.5); color: var(--cream); font: inherit; padding: 5px 8px; }
+}
+/* two mirrors: two people, two cameras */
+.duo { clip-path: none; opacity: 0; transition: opacity 1.2s ease; }
+.duo.open { opacity: 1; }
+.duo .hud { flex-wrap: wrap; }
+.duo .hud .live { width: 7px; height: 7px; border-radius: 50%; background: #555; flex: none; }
+.duo .hud .live.on { background: #7dffb8; box-shadow: 0 0 8px #7dffb8; }
+.duo .hud .end { border-color: rgba(240,214,143,.85); color: var(--gold-pale); }
+.duo.deep .hud .end { opacity: 1; }
+.duo .prompt.stay { opacity: .95; }
+.duo .prompt small { display: block; font-family: var(--mono); font-style: normal; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.duo .prompt em { display: block; font-size: .62em; color: var(--muted); margin-top: 8px; }
+.duo .tell { max-height: 86vh; overflow-y: auto; }
+.duo .tell label { display: block; font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 10px 0 4px; }
+.duo .tell input[type=text], .duo .tell textarea { width: 100%; background: rgba(0,0,0,.5); color: var(--cream); border: 1px solid rgba(214,164,67,.35); font: 16px var(--serif); padding: 8px; }
+.duo .tell textarea.code { font: 11px/1.3 var(--mono); word-break: break-all; height: 86px; }
+.duo .tell .check { display: flex; gap: 8px; align-items: center; font-family: var(--serif); font-size: 15px; text-transform: none; letter-spacing: 0; color: var(--cream); }
+.duo .tell .code-big { font-family: VT323, var(--mono); font-size: 30px; letter-spacing: .08em; color: #b8ffe0; text-shadow: 0 0 10px rgba(120,255,200,.6); margin: 4px 0 10px; }
+.duo .tell .small { font-size: 14px; color: var(--muted); }
+.duo .tell .go { flex-wrap: wrap; }
+.duo .tell a { color: var(--gold-pale); }
+.duo .fv { position: absolute; width: 2px; height: 2px; opacity: 0; pointer-events: none; }
+body.duo-on .turn { display: none; }
+@media (prefers-reduced-motion: reduce) { html:not(.motion-full) .gaze, html:not(.motion-full) .veil, html:not(.motion-full) .board img, html:not(.motion-full) .duo { transition-duration: .01s; } }
+</style>
+</head>
+<body>
+<header class="bar">
+  <a href="./">← Templum</a>
+  <a href="crystal.html">Crystal</a>
+  <h1>The Mirror</h1>
+  <button type="button" id="gazeBtn">Sit</button>
+  <button type="button" id="loreBtn" aria-pressed="false" aria-controls="drawer">Mirror lore</button>
+  <button type="button" id="twoBtn" aria-pressed="false" aria-controls="drawer">Two mirrors</button>
+  <button type="button" id="bookBtn" aria-pressed="false" aria-controls="drawer">Journal</button>
+  <button type="button" id="fsBtn">Full screen</button>
+</header>
+<div class="turn" id="turn" role="note"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2" fill="none" stroke="#d6a443" stroke-width="1.6"/><circle cx="12" cy="18.5" r=".9" fill="#d6a443"/></svg><span>Turn your phone sideways. The mirror doesn’t fit upright.</span><button type="button" onclick="this.parentNode.hidden = true">OK</button></div>
+<div class="wrap">
+  <div class="board" id="board">
+    <img id="art" src="mirror-device.webp" alt="">
+    <canvas id="fx" aria-label="Ouija Cat's mirror. Touch the mirror on the right to wake it, the round porthole for two mirrors facing, the buttons on the left to change the surface, and the buttons on the right to sit for one, three or ten minutes."></canvas>
+  </div>
+</div>
+<div class="tip" id="tip"></div>
+<div class="say" id="say" aria-hidden="true"></div>
+<aside class="drawer" id="drawer" aria-label="Mirror"></aside>
+<div class="sr" id="sr" aria-live="polite"></div>
+<div class="back" id="back" hidden role="dialog" aria-label="Back in the room"></div>
+<section class="gaze" id="gaze" hidden aria-label="The mirror, full screen">
+  <canvas id="gz" aria-hidden="true"></canvas>
+  <div class="veil" id="veil"></div>
+  <div class="hud">
+    <b id="clock">0:00</b><span id="surfName">Silver</span>
+    <button type="button" id="gSurf" title="Change the surface">Surface</button>
+    <button type="button" id="gAsk" aria-pressed="false" title="He asks you things while you look">Questions</button>
+    <button type="button" id="gLight" aria-pressed="false" title="Candle near keeps the room bright enough; Half dark is the old way">Candle near</button>
+    <button type="button" id="gMute" aria-pressed="false" title="The glass hums while you sit">Mute</button>
+    <button type="button" id="gEnd" title="Stop and say what you saw (Esc)">Stop</button>
+  </div>
+  <div class="prompt" id="prompt" aria-live="polite"></div>
+  <div class="tell" id="tell" hidden></div>
+</section>
+<section class="gaze duo" id="duo" hidden aria-label="Two mirrors">
+  <canvas id="dz" aria-hidden="true"></canvas>
+  <div class="veil" id="dveil"></div>
+  <div class="hud">
+    <i class="live" id="dlive" title="Connected"></i><b id="dclock">0:00</b><span id="dstage">Two mirrors</span>
+    <button type="button" id="dSurf" title="Change the surface for both of you">Surface</button>
+    <button type="button" id="dLight" title="Change the light for both of you">Light</button>
+    <button type="button" id="dPat" aria-pressed="false" title="A slow pattern around their face, for both of you">Pattern</button>
+    <button type="button" id="dSwap" aria-pressed="false" title="See yourself big and them small">Swap</button>
+    <button type="button" id="dMic" aria-pressed="false" title="Mute your microphone">Mute me</button>
+    <button type="button" id="dNext" title="Go on to the next part, for both of you">Next</button>
+    <button type="button" id="dEnd" class="end" title="End it for both of you, cameras off (Esc)">End</button>
+  </div>
+  <div class="prompt" id="dprompt" aria-live="polite"></div>
+  <div class="tell" id="dcard" hidden></div>
+</section>
+<div class="foot">The camera stays on this computer. Nothing is recorded or sent.</div>
+
+<script type="module">
+const $ = id => document.getElementById(id);
+const IW = 2944, IH = 1648;
+const calm = matchMedia('(prefers-reduced-motion: reduce)').matches && !document.documentElement.classList.contains('motion-full');
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const sr = t => { $('sr').textContent = ''; setTimeout(() => { $('sr').textContent = t; }, 30); };
+
+/* ---------- the device (positions on the 2944 × 1648 picture) ---------- */
+const M = {
+  oval: { x: 2005, y: 830, rx: 268, ry: 412 },          // the cat's portrait, inside the rune band
+  glass: { x: 1636, y: 262, w: 760, h: 1140 },           // the whole right-hand mirror
+  port: { x: 1025, y: 980, r: 150 },                     // the round porthole on the left
+  led: { x: 852, y: 1377, w: 358, h: 98 },               // the little screen
+  left: [437, 537, 637, 737, 837, 937].map(y => ({ x: 642, y, r: 46 })),
+  right: [537, 637, 737, 837, 937].map(y => ({ x: 1395, y, r: 46 })),
+};
+const SURF = [
+  { k: 'silver', name: 'Silver', t: 'The ordinary mirror, by candle. Start here.' },
+  { k: 'black', name: 'Black', t: 'Obsidian. Only the light parts of you come back.' },
+  { k: 'infinity', name: 'Infinity', t: 'Two mirrors facing. It goes all the way down and it lags.' },
+  { k: 'other', name: 'Other self', t: 'One half of your face, twice. Meet the other one.' },
+  { k: 'corridor', name: 'Corridor', t: 'Two mirrors and two candles, the Yuletide way. Look down the corridor.' },
+  { k: 'cover', name: 'Cover', t: 'Throw the cloth over it. Always cover it when you’re done.' },
+];
+const LENGTHS = [60, 180, 600];
+const RIGHT = [
+  { t: 'One minute', p: 'Start here. A minute is plenty the first few times.' },
+  { t: 'Three minutes', p: 'Long enough for your face to start doing things.' },
+  { t: 'Ten minutes', p: 'The deep sitting. For when the short ones feel easy. He asks you first.' },
+  { t: 'Questions', p: 'He asks you things while you look. Answer in your head.' },
+  { t: 'Journal', p: 'Everything you said you saw, kept on this computer.' },
+];
+const ST = { surf: 0, len: 0, dark: false, ask: false, awake: 0, wakeTo: 0, stream: null, video: null, sitting: false, hover: null, muted: false, otherSide: 0 };
+try { const s = JSON.parse(localStorage.getItem('vs-mirror') || '{}'); if (s.surf >= 0 && s.surf < 5) ST.surf = s.surf; if (s.len >= 0 && s.len < 2) ST.len = s.len; ST.ask = !!s.ask; ST.dark = !!s.dark; } catch (e) {}
+const keep = () => { try { localStorage.setItem('vs-mirror', JSON.stringify({ surf: ST.surf, len: ST.len < 2 ? ST.len : 0, ask: ST.ask, dark: ST.dark })); } catch (e) {} };
+
+/* ---------- his lines ---------- */
+const L = {
+  hello: ['Touch the mirror. Your face goes where mine was. Don’t get used to it.', 'Go on, wake it. It’s been waiting all day.', 'Mirror’s asleep. So was I.'],
+  woke: ['There you are.', 'Oh. It’s you.', 'Hi. Fix nothing. It sees you doing it.', 'That’s the face you went out with today?'],
+  sleep: ['Covered. Good manners.', 'Cloth’s on. It can rest now.'],
+  surf: { silver: 'Silver. Plain glass, candle light.', black: 'Black. Obsidian rules.', infinity: 'Infinity. Don’t count them.', other: 'Other self. That one’s been waiting.', corridor: 'Corridor. Look down it, not at it.' },
+  len: ['One minute. Good start.', 'Three minutes. Fine.', 'Ten minutes. Now we’re talking.'],
+  start: ['Look at one eye. Just one.', 'Pick an eye. Stay on it.', 'Your eyes. Not your hair.'],
+  during: ['Don’t fix your hair. It can see you doing it.', 'If your face changes, keep going. That’s the point.', 'Stop checking if it’s working.', 'Blink when you have to. Not before.', 'Somebody older might look back. Be polite.', 'Your edges are going. Let them.', 'Don’t talk to it yet.', 'Still you? Check again.', 'It’s looking at you exactly as hard as you’re looking at it.', 'Slower breath. Same eye.', 'Whatever shows up, don’t greet it with that face.', 'You moved. Back to the eye.'],
+  ask: ['What do you keep not saying out loud?', 'Who taught you that face?', 'What would you do if nobody was watching?', 'Which version of you is tired?', 'What are you pretending not to want?', 'Who do you turn into around your family?', 'What does this face want that you keep saying no to?', 'Who have you been copying lately?', 'What are you scared it’ll show you?', 'If this was the last time you saw yourself, what would you say?', 'Who looks back at you when you’re angry?', 'What did you look like before anyone told you what you looked like?'],
+  end: ['Done. Don’t look away yet.', 'Time. Stay one more breath.', 'That’s it. Slowly.'],
+};
+const SEEN = [
+  ['changed', 'My face changed', 'Your face moved and you didn’t. Write down what it turned into before you forget.'],
+  ['old', 'Someone older', 'Someone older sat in for you. That happens. Thank them.'],
+  ['young', 'Me, younger', 'A younger you. Ask what they wanted. You’ll know.'],
+  ['animal', 'An animal', 'An animal. Look up what it means tonight, then come back and tell me.'],
+  ['known', 'Someone I know', 'Someone you know. They’ll be on your mind all day now. Sorry.'],
+  ['stranger', 'A stranger', 'A stranger. Not a stranger to the mirror.'],
+  ['dark', 'It went dark', 'It went dark. That’s it opening. Stay longer next time.'],
+  ['light', 'Light or colour', 'Light around you. Some people would charge for that.'],
+  ['nothing', 'Nothing', 'Nothing. Most people need a few sittings. The mirror’s in no hurry.'],
+];
+
+/* ---------- toasts ---------- */
+let sayT = 0;
+const say = (t, ms = 4200) => { const el = $('say'); el.textContent = t; el.classList.add('on'); clearTimeout(sayT); sayT = setTimeout(() => el.classList.remove('on'), ms); sr(t); };
+
+/* ---------- camera ---------- */
+async function camera() {
+  if (ST.stream) return true;
+  if (/[?&]fakecam/.test(location.search)) {   // test hook: a drawn stand-in instead of the camera
+    const c = mk(640, 480), g = c.getContext('2d'), t0 = performance.now();
+    const draw = () => { const t = (performance.now() - t0) / 1000; g.fillStyle = '#3a2a24'; g.fillRect(0, 0, 640, 480); g.fillStyle = '#c99a7c'; g.beginPath(); g.ellipse(320 + 20 * Math.sin(t), 240, 120, 160, 0, 0, 7); g.fill(); g.fillStyle = '#111'; g.beginPath(); g.arc(280 + 20 * Math.sin(t), 210, 14, 0, 7); g.arc(360 + 20 * Math.sin(t), 210, 14, 0, 7); g.fill(); if (ST.stream) requestAnimationFrame(draw); };
+    ST.stream = c.captureStream(30); draw(); const v = document.createElement('video'); v.muted = true; v.playsInline = true; v.srcObject = ST.stream; await v.play().catch(() => {}); ST.video = v; window.__mirror = ST; return true;
+  }
+  if (!navigator.mediaDevices?.getUserMedia) { say('This browser won’t give this page a camera. Try Chrome or Safari.', 6000); return false; }
+  try {
+    ST.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false });
+  } catch (e) {
+    say(e.name === 'NotAllowedError' ? 'The camera’s blocked. Click the icon left of the address bar, allow Camera, then touch the mirror again.' : e.name === 'NotFoundError' ? 'No camera found. The mirror needs one.' : 'The camera didn’t start: ' + (e.name || 'error') + '.', 7000);
+    return false;
+  }
+  const v = document.createElement('video'); v.muted = true; v.playsInline = true; v.srcObject = ST.stream;
+  await v.play().catch(() => {}); ST.video = v; return true;
+}
+function stopCamera() { ST.stream?.getTracks().forEach(t => t.stop()); ST.stream = null; ST.video = null; }
+
+/* ---------- the glass: draws your camera, flipped, through a surface ---------- */
+const mk = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; };
+const noise = t => (Math.sin(t * 1.7) * .5 + Math.sin(t * 2.9 + 1.3) * .3 + Math.sin(t * 5.3 + .7) * .2);   // smooth, nothing flashes
+const buffers = new WeakMap();
+function buf(ctx, n) { let b = buffers.get(ctx); if (!b) { b = {}; buffers.set(ctx, b); } const c = ctx.canvas; if (!b[n] || b[n].width !== c.width || b[n].height !== c.height) b[n] = mk(c.width, c.height); return b[n]; }
+function camDraw(ctx, W, H, v = ST.video, flip = true) {
+  if (!v || !v.videoWidth) { ctx.fillStyle = '#07060a'; ctx.fillRect(0, 0, W, H); return; }
+  const s = Math.max(W / v.videoWidth, H / v.videoHeight), w = v.videoWidth * s, h = v.videoHeight * s;
+  ctx.save(); if (flip) { ctx.translate(W, 0); ctx.scale(-1, 1); } ctx.drawImage(v, (W - w) / 2, (H - h) / 2, w, h); ctx.restore();
+}
+function candle(ctx, x, y, s, t, seed) {
+  const f = .85 + .15 * noise(t * 1.3 + seed);
+  const g = ctx.createRadialGradient(x, y, 0, x, y, s * 3.2 * f);
+  g.addColorStop(0, 'rgba(255,214,140,.55)'); g.addColorStop(.25, 'rgba(255,170,80,.18)'); g.addColorStop(1, 'rgba(255,140,40,0)');
+  ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.fillStyle = g; ctx.fillRect(x - s * 4, y - s * 4, s * 8, s * 8);
+  ctx.fillStyle = 'rgba(255,236,190,.95)'; ctx.beginPath(); ctx.ellipse(x, y, s * .16, s * .42 * f, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = 'rgba(238,228,203,.85)'; ctx.fillRect(x - s * .28, y + s * .45, s * .56, s * 1.6); ctx.restore();
+}
+function glass(ctx, W, H, k, t, dim = 0, v = ST.video, flip = true) {
+  if (k === 'infinity' || k === 'corridor') {
+    const B = buf(ctx, 'a'), sc = k === 'corridor' ? .8 : .84, rot = k === 'infinity' ? .012 : 0;
+    // the room behind you, darker; then the mirror behind you (the last frame, smaller); then you, in front
+    camDraw(ctx, W, H, v, flip); ctx.fillStyle = k === 'corridor' ? 'rgba(0,0,0,.72)' : 'rgba(0,0,0,.6)'; ctx.fillRect(0, 0, W, H);
+    const ox = W * (k === 'corridor' ? .075 : .05), oy = -H * (k === 'corridor' ? .025 : .01);   // each mirror sits a little off, so the ones behind peek over your shoulder
+    ctx.save(); ctx.translate(W / 2 + ox, H / 2 + oy); ctx.rotate(rot); ctx.scale(sc, sc); ctx.translate(-W / 2, -H / 2);
+    ctx.drawImage(B, 0, 0); ctx.strokeStyle = 'rgba(214,164,67,.7)'; ctx.lineWidth = Math.max(2, W * .006); ctx.strokeRect(0, 0, W, H); ctx.restore();
+    const C = buf(ctx, 'c'), c2 = C.getContext('2d'); c2.globalCompositeOperation = 'source-over'; c2.clearRect(0, 0, W, H); camDraw(c2, W, H, v, flip);
+    c2.globalCompositeOperation = 'destination-in'; c2.save(); c2.translate(W / 2, H * .46); c2.scale(W * .3, H * .44);
+    const fm = c2.createRadialGradient(0, 0, 0, 0, 0, 1); fm.addColorStop(0, '#000'); fm.addColorStop(.62, '#000'); fm.addColorStop(1, 'rgba(0,0,0,0)'); c2.fillStyle = fm; c2.beginPath(); c2.arc(0, 0, 1, 0, 7); c2.fill(); c2.restore();
+    ctx.drawImage(C, 0, 0);
+    if (k === 'corridor') { const s = Math.min(W, H) * .07; candle(ctx, W * .12, H * .78, s, t, 0); candle(ctx, W * .88, H * .78, s, t, 2.1); }
+    B.getContext('2d').drawImage(ctx.canvas, 0, 0);
+  } else if (k === 'other') {
+    camDraw(ctx, W, H, v, flip);
+    const B = buf(ctx, 'b'), b = B.getContext('2d'); b.clearRect(0, 0, W, H); b.drawImage(ctx.canvas, 0, 0);
+    ctx.save(); ctx.beginPath(); ST.otherSide ? ctx.rect(0, 0, W / 2, H) : ctx.rect(W / 2, 0, W / 2, H); ctx.clip();
+    ctx.translate(W, 0); ctx.scale(-1, 1); ctx.drawImage(B, 0, 0); ctx.restore();
+  } else camDraw(ctx, W, H, v, flip);
+  tone(ctx, W, H, k, t, dim);
+}
+function tone(ctx, W, H, k, t, dim) {
+  if (k === 'black') {
+    ctx.save(); ctx.globalCompositeOperation = 'saturation'; ctx.fillStyle = '#808080'; ctx.fillRect(0, 0, W, H);
+    ctx.globalCompositeOperation = 'multiply'; ctx.fillStyle = 'rgb(58,56,70)'; ctx.fillRect(0, 0, W, H);
+    ctx.globalCompositeOperation = 'screen'; const g = ctx.createLinearGradient(0, 0, W, H); g.addColorStop(0, 'rgba(120,130,170,.10)'); g.addColorStop(.45, 'rgba(0,0,0,0)'); g.addColorStop(.55, 'rgba(160,170,210,.07)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); ctx.restore();
+  } else {
+    ctx.save(); ctx.globalCompositeOperation = 'soft-light'; ctx.fillStyle = `rgba(255,190,120,${.22 + .05 * noise(t)})`; ctx.fillRect(0, 0, W, H); ctx.restore();
+  }
+  const d = Math.min(.8, dim + (k === 'black' ? 0 : .04 * (1 + noise(t * .9))));
+  if (d > 0) { ctx.fillStyle = `rgba(0,0,0,${d})`; ctx.fillRect(0, 0, W, H); }
+  const vg = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * .32, W / 2, H / 2, Math.max(W, H) * .72);
+  vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,.78)'); ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
+}
+
+/* ---------- the board ---------- */
+const board = $('board'), fx = $('fx'), cx = fx.getContext('2d'), art = $('art');
+const small = mk(320, 480), sctx = small.getContext('2d');
+const mask = mk(320, 480), mctx = mask.getContext('2d');
+let S = 1, dpr = 1;
+function fit() { dpr = Math.min(2, devicePixelRatio || 1); const r = board.getBoundingClientRect(); fx.width = Math.round(r.width * dpr); fx.height = Math.round(r.height * dpr); S = fx.width / IW; }
+addEventListener('resize', fit);
+art.decode?.().catch(() => {}).finally(() => { art.classList.add('on'); fit(); });
+if (art.complete) { art.classList.add('on'); fit(); }
+
+function ledText(t) {
+  const { x, y, w, h } = M.led;
+  cx.save(); cx.scale(S, S);
+  cx.fillStyle = 'rgba(4,14,16,.96)'; cx.fillRect(x, y, w, h);
+  cx.font = '64px VT323, monospace'; cx.textAlign = 'center'; cx.textBaseline = 'middle';
+  cx.shadowColor = 'rgba(120,255,200,.8)'; cx.shadowBlur = 14; cx.fillStyle = '#b8ffe0';
+  cx.fillText(t.slice(0, 13), x + w / 2, y + h / 2 + 3); cx.restore();
+}
+function ring(p, a, col = '240,214,143') {
+  cx.save(); cx.scale(S, S); cx.strokeStyle = `rgba(${col},${a})`; cx.lineWidth = 6; cx.shadowColor = `rgba(${col},${a})`; cx.shadowBlur = 22;
+  cx.beginPath(); cx.arc(p.x, p.y, p.r + 6, 0, Math.PI * 2); cx.stroke(); cx.restore();
+}
+function drawBoard(t) {
+  cx.clearRect(0, 0, fx.width, fx.height);
+  // the cat dissolves into you
+  ST.awake += (ST.wakeTo - ST.awake) * (calm ? 1 : .035);
+  if (ST.awake > .01 && ST.video) {
+    const k = SURF[ST.surf].k;
+    glass(sctx, small.width, small.height, k === 'cover' ? 'silver' : k, t);
+    mctx.globalCompositeOperation = 'source-over'; mctx.clearRect(0, 0, 320, 480); mctx.drawImage(small, 0, 0);
+    mctx.globalCompositeOperation = 'destination-in'; mctx.save(); mctx.translate(160, 240); mctx.scale(1, 1.5);
+    const g = mctx.createRadialGradient(0, 0, 0, 0, 0, 160); g.addColorStop(0, '#000'); g.addColorStop(.82, '#000'); g.addColorStop(1, 'rgba(0,0,0,0)');
+    mctx.fillStyle = g; mctx.fillRect(-160, -160, 320, 320); mctx.restore();
+    const o = M.oval; cx.save(); cx.globalAlpha = Math.min(1, ST.awake);
+    const bk = cx.createRadialGradient(0, 0, 0, 0, 0, 1); bk.addColorStop(0, 'rgba(6,5,8,1)'); bk.addColorStop(.9, 'rgba(6,5,8,1)'); bk.addColorStop(1, 'rgba(6,5,8,0)');
+    cx.save(); cx.translate(o.x * S, o.y * S); cx.scale(o.rx * S, o.ry * S); cx.fillStyle = bk; cx.beginPath(); cx.arc(0, 0, 1, 0, 7); cx.fill(); cx.restore();
+    cx.drawImage(mask, (o.x - o.rx) * S, (o.y - o.ry) * S, o.rx * 2 * S, o.ry * 2 * S); cx.restore();
+  }
+  // the porthole: two mirrors facing, always turning a little
+  const p = M.port, pul = .5 + .5 * Math.sin(t * 1.1);
+  cx.save(); cx.scale(S, S); cx.beginPath(); cx.arc(p.x, p.y, p.r * .92, 0, Math.PI * 2); cx.clip();
+  for (let i = 0; i < 9; i++) { const r = p.r * Math.pow(.78, i) * (1 + .04 * Math.sin(t * .8 - i * .6)); cx.strokeStyle = `rgba(240,214,143,${.28 - i * .025})`; cx.lineWidth = 4; cx.beginPath(); cx.arc(p.x, p.y, r, 0, Math.PI * 2); cx.stroke(); }
+  cx.restore();
+  // the buttons
+  M.left.forEach((b, i) => { if (i === ST.surf && ST.awake > .2) ring(b, .55 + .25 * pul); else if (ST.hover === 'L' + i) ring(b, .5); });
+  M.right.forEach((b, i) => { if ((i < 3 && i === ST.len) || (i === 3 && ST.ask)) ring(b, .45 + .2 * pul, '160,255,210'); else if (ST.hover === 'R' + i) ring(b, .5, '160,255,210'); });
+  if (ST.hover === 'oval' || ST.hover === 'port') {
+    cx.save(); cx.scale(S, S); cx.strokeStyle = 'rgba(240,214,143,.5)'; cx.lineWidth = 5; cx.shadowColor = 'rgba(240,214,143,.7)'; cx.shadowBlur = 24; cx.beginPath();
+    ST.hover === 'oval' ? cx.ellipse(M.oval.x, M.oval.y, M.oval.rx + 10, M.oval.ry + 10, 0, 0, Math.PI * 2) : cx.arc(p.x, p.y, p.r + 8, 0, Math.PI * 2); cx.stroke(); cx.restore();
+  }
+  ledText(ST.sitting ? 'SITTING' : ST.awake > .5 ? SURF[ST.surf].name.toUpperCase() + ' ' + Math.round(LENGTHS[ST.len] / 60) + 'M' : 'ASLEEP');
+}
+
+/* ---------- touching it ---------- */
+function at(e) { const r = fx.getBoundingClientRect(); return { x: (e.clientX - r.left) / r.width * IW, y: (e.clientY - r.top) / r.height * IH }; }
+function hit(p) {
+  const o = M.oval; if (((p.x - o.x) / o.rx) ** 2 + ((p.y - o.y) / o.ry) ** 2 <= 1) return 'oval';
+  if (Math.hypot(p.x - M.port.x, p.y - M.port.y) <= M.port.r) return 'port';
+  for (let i = 0; i < M.left.length; i++) if (Math.hypot(p.x - M.left[i].x, p.y - M.left[i].y) <= M.left[i].r + 8) return 'L' + i;
+  for (let i = 0; i < M.right.length; i++) if (Math.hypot(p.x - M.right[i].x, p.y - M.right[i].y) <= M.right[i].r + 8) return 'R' + i;
+  const { x, y, w, h } = M.led; if (p.x >= x && p.x <= x + w && p.y >= y && p.y <= y + h) return 'led';
+  const g = M.glass; if (p.x >= g.x && p.x <= g.x + g.w && p.y >= g.y && p.y <= g.y + g.h) return 'glass';
+  return null;
+}
+function tipFor(h) {
+  if (h === 'oval' || h === 'glass') return ST.awake > .5 ? ['The mirror', 'Touch it again to sit. Or pick a surface on the left first.'] : ['The mirror', pick(L.hello) + ' The camera stays on this computer.'];
+  if (h === 'port') return ['The porthole', 'Two mirrors facing each other. Touch it to go straight in.'];
+  if (h === 'led') return ['The little screen', 'What the mirror is doing.'];
+  if (h[0] === 'L') { const s = SURF[+h.slice(1)]; return [s.name, s.t]; }
+  if (h[0] === 'R') { const r = RIGHT[+h.slice(1)]; return [r.t, r.p]; }
+}
+const tip = $('tip');
+fx.addEventListener('pointermove', e => {
+  const h = hit(at(e)); ST.hover = h; fx.classList.toggle('hand', !!h && h !== 'led');
+  if (!h || e.pointerType === 'touch') { tip.classList.remove('on'); return; }
+  const [a, b] = tipFor(h); tip.innerHTML = `<h4>${esc(a)}</h4><p>${esc(b)}</p>`;
+  tip.style.left = Math.min(e.clientX + 16, innerWidth - 310) + 'px'; tip.style.top = Math.min(e.clientY + 16, innerHeight - 120) + 'px'; tip.classList.add('on');
+});
+fx.addEventListener('pointerleave', () => { ST.hover = null; tip.classList.remove('on'); });
+fx.addEventListener('click', async e => {
+  const h = hit(at(e)); if (!h) return; tip.classList.remove('on');
+  if (h === 'oval' || h === 'glass') { if (ST.awake > .5) sit(); else wake(); }
+  else if (h === 'port') { ST.surf = 2; keep(); if (await wake(true)) sit(); }
+  else if (h[0] === 'L') { const i = +h.slice(1); if (i === 5) { cover(); return; } ST.surf = i; keep(); if (i === 3 && ST.awake > .5) ST.otherSide ^= 1; if (await wake(true)) say(L.surf[SURF[i].k]); }
+  else if (h[0] === 'R') {
+    const i = +h.slice(1);
+    if (i === 2 && ST.len !== 2) deepAsk();
+    else if (i < 3) { ST.len = i; keep(); say(L.len[i]); }
+    else if (i === 3) { ST.ask = !ST.ask; keep(); say(ST.ask ? 'Questions on. I’ll ask, you answer in your head.' : 'Questions off. Just look.'); }
+    else openDrawer('book');
+  }
+});
+async function wake(quiet) {
+  if (!(await camera())) return false;
+  if (ST.wakeTo !== 1) { ST.wakeTo = 1; if (!quiet) say(pick(L.woke)); hum(true, .5); setTimeout(() => !ST.sitting && hum(false), 2600); }
+  return true;
+}
+function cover() {
+  if (ST.wakeTo === 0) { say('It’s already covered.'); return; }
+  ST.wakeTo = 0; say(pick(L.sleep)); setTimeout(() => { if (!ST.wakeTo && !ST.sitting) stopCamera(); }, 2500);
+}
+
+/* ---------- the hum: a rubbed glass rim ---------- */
+let AC = null, humG = null;
+function hum(on, level = 1) {
+  try {
+    if (!AC) {
+      AC = new (window.AudioContext || window.webkitAudioContext)(); humG = AC.createGain(); humG.gain.value = 0; humG.connect(AC.destination);
+      [[293.66, .5], [440, .28], [587.33, .2], [880.6, .08]].forEach(([f, a], i) => {
+        const o = AC.createOscillator(), g = AC.createGain(), lfo = AC.createOscillator(), lg = AC.createGain();
+        o.frequency.value = f; g.gain.value = a; lfo.frequency.value = .21 + i * .13; lg.gain.value = a * .45;
+        lfo.connect(lg); lg.connect(g.gain); o.connect(g); g.connect(humG); o.start(); lfo.start();
+      });
+    }
+    AC.resume();
+    const v = on && !ST.muted ? .05 * level * (window.VS_VOLUME ?? .8) : 0;
+    humG.gain.cancelScheduledValues(AC.currentTime); humG.gain.setTargetAtTime(v, AC.currentTime, on ? 1.4 : .5);
+  } catch (e) {}
+}
+addEventListener('vs-volume', () => { if (ST.sitting) hum(true); });
+
+/* ---------- the sitting ---------- */
+const gaze = $('gaze'), gz = $('gz'), gctx = gz.getContext('2d'), promptEl = $('prompt');
+let T0 = 0, nextLine = 0, lastQ = -1, endAt = 0, raf = 0;
+function gfit() { const d = Math.min(1.5, devicePixelRatio || 1); let w = Math.round(innerWidth * d), h = Math.round(innerHeight * d); const k = Math.min(1, 1600 / w); gz.width = Math.round(w * k); gz.height = Math.round(h * k); }
+function line(t, q) { promptEl.classList.remove('on'); setTimeout(() => { promptEl.textContent = t; promptEl.classList.toggle('q', !!q); promptEl.classList.add('on'); sr(t); }, 700); }
+async function sit() {
+  if (ST.sitting) return;
+  if (SURF[ST.surf].k === 'cover') ST.surf = 0;
+  if (!(await wake(true))) return;
+  ST.sitting = true; gaze.hidden = false; $('tell').hidden = true; $('veil').classList.remove('down'); promptEl.classList.remove('on');
+  const o = M.oval, r = fx.getBoundingClientRect();
+  const cxp = (r.left + o.x / IW * r.width) / innerWidth * 100, cyp = (r.top + o.y / IH * r.height) / innerHeight * 100;
+  gaze.style.transition = 'none'; gaze.style.clipPath = `ellipse(${o.rx / IW * r.width}px ${o.ry / IH * r.height}px at ${cxp}% ${cyp}%)`;
+  gfit(); void gaze.offsetWidth; gaze.style.transition = ''; gaze.style.clipPath = ''; gaze.classList.add('open');
+  $('surfName').textContent = SURF[ST.surf].name; $('gAsk').setAttribute('aria-pressed', ST.ask); lightBtn(); $('gMute').setAttribute('aria-pressed', ST.muted);
+  T0 = performance.now(); endAt = T0 + LENGTHS[ST.len] * 1000; nextLine = T0 + 9000; lastQ = -1;
+  setTimeout(() => line(pick(L.start)), 1800); hum(true);
+  document.body.classList.add('sitting');
+}
+function gloop(now) {
+  if (ST.sitting && !$('veil').classList.contains('down')) {
+    const el = (now - T0) / 1000, left = Math.max(0, (endAt - now) / 1000);
+    // the room dims over the first ninety seconds, the way a candle-lit room does once your eyes give up
+    const top = ST.dark ? .5 : .18, dim = Math.min(top, el / 90 * top) * (SURF[ST.surf].k === 'black' ? .4 : 1);
+    if ($('tell').hidden) glass(gctx, gz.width, gz.height, SURF[ST.surf].k === 'cover' ? 'silver' : SURF[ST.surf].k, now / 1000, dim);
+    $('clock').textContent = `${Math.floor(left / 60)}:${String(Math.floor(left % 60)).padStart(2, '0')}`;
+    gaze.classList.toggle('deep', el > 12);
+    if ($('tell').hidden && now > nextLine && left > 8) {
+      if (ST.ask && Math.random() < .7) { let i; do i = Math.floor(Math.random() * L.ask.length); while (i === lastQ); lastQ = i; line(L.ask[i], true); nextLine = now + 30000; }
+      else { line(pick(L.during)); nextLine = now + 26000 + Math.random() * 14000; }
+      setTimeout(() => promptEl.classList.remove('on'), 9000);
+    }
+    if ($('tell').hidden && left <= 0) { line(pick(L.end)); setTimeout(tell, 3500); endAt = Infinity; }
+  }
+  drawDuo(now);
+  drawBoard(now / 1000);
+  raf = requestAnimationFrame(gloop);
+}
+raf = requestAnimationFrame(gloop);
+
+function tell() {
+  if (!$('tell').hidden) return;
+  const secs = Math.round((performance.now() - T0) / 1000);
+  promptEl.classList.remove('on'); hum(true, .4);
+  const el = $('tell'); el.hidden = false;
+  el.innerHTML = `<h3>What did you see?</h3><p>Pick anything that fits. Then say it in your own words, while it’s fresh.</p>
+    <div class="chips">${SEEN.map(([k, l]) => `<button type="button" data-k="${k}" aria-pressed="false">${l}</button>`).join('')}</div>
+    <textarea id="note" rows="3" maxlength="600" placeholder="What it looked like, what it did" aria-label="What you saw"></textarea>
+    <div class="go"><button type="button" id="skip">Skip</button><button type="button" id="save">Keep it</button></div>`;
+  el.querySelectorAll('.chips button').forEach(b => b.onclick = () => b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') !== 'true'));
+  const done = keepIt => {
+    const seen = [...el.querySelectorAll('.chips [aria-pressed="true"]')].map(b => b.dataset.k), note = $('note').value.trim();
+    if (keepIt && (seen.length || note)) { const J = book(); J.unshift({ at: Date.now(), surf: SURF[ST.surf].name, secs, seen, note }); try { localStorage.setItem('vs-mirror-journal', JSON.stringify(J.slice(0, 200))); } catch (e) {} }
+    const first = SEEN.find(s => s[0] === seen.find(k => k !== 'nothing')) || SEEN.find(s => s[0] === seen[0]);
+    const reply = first ? first[2] : keepIt && note ? 'Kept. Read it again in a week. It’ll mean something else.' : 'Fine. Keep it to yourself.';
+    el.innerHTML = `<h3>He says</h3><p class="reply">${esc(reply)}</p><p class="dim" style="color:var(--muted);font-size:14px">Cover the mirror before you go. Then don’t look at it for a minute.</p><div class="go"><button type="button" id="again">Sit again</button><button type="button" id="cov">Cover it</button></div>`;
+    sr(reply);
+    $('again').onclick = () => { el.hidden = true; T0 = performance.now(); endAt = T0 + LENGTHS[ST.len] * 1000; nextLine = T0 + 9000; line(pick(L.start)); hum(true); };
+    $('cov').onclick = closeSitting;
+  };
+  $('save').onclick = () => done(true); $('skip').onclick = () => done(false);
+}
+function closeSitting() {
+  hum(false); $('veil').classList.add('down'); promptEl.classList.remove('on');
+  setTimeout(() => {
+    gaze.classList.remove('open'); gaze.style.transition = 'none'; gaze.hidden = true; gaze.style.transition = '';
+    ST.sitting = false; document.body.classList.remove('sitting'); ST.wakeTo = 0; setTimeout(() => { if (!ST.wakeTo) stopCamera(); }, 2500);
+    backToRoom();
+  }, 2000);
+}
+/* ---------- coming back: every sitting ends in the room, lights up ---------- */
+function backToRoom(lead) {
+  const b = $('back'); if (!b.hidden) return;
+  const day = new Date().toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' });
+  b.innerHTML = `<div class="tell"><h3>Back in the room</h3><p>${esc(lead || pick(L.sleep))} Now come back properly.</p>
+    <ol><li>Lights up. Look away from the screen.</li><li>Name five things you can see in the room.</li><li>Feet on the floor. One long breath out.</li><li>Say your name and today’s date out loud: <b>${esc(day)}</b>.</li></ol>
+    <p class="note">Still feel strange in an hour, or can’t shake what you saw? Give the glass a rest for a few days and talk to someone you trust.</p>
+    <div class="go"><button type="button" id="backOk">I’m back</button></div></div>`;
+  b.hidden = false; void b.offsetWidth; b.classList.add('on'); hum(false);
+  const ok = $('backOk'); ok.focus({ preventScroll: true });
+  ok.onclick = () => { b.classList.remove('on'); setTimeout(() => { b.hidden = true; b.innerHTML = ''; say('Good. The glass can rest.'); }, 600); };
+}
+/* ---------- the deep sitting asks first ---------- */
+function deepAsk() {
+  const b = $('back'); if (!b.hidden) return;
+  b.innerHTML = `<div class="tell"><h3>The deep sitting</h3><p>Ten minutes. Faces change, things look back, and it can stay with you after.</p>
+    <p class="note">Skip this one today if you live with psychosis, voices, dissociation or DID, if you’ve had a drink or a smoke, or if you haven’t slept. The short sittings are still the real thing. You can stop any time: the Stop button, or Esc.</p>
+    <div class="go"><button type="button" id="deepNo">Keep it short</button><button type="button" id="deepYes">Sit the deep one</button></div></div>`;
+  b.hidden = false; void b.offsetWidth; b.classList.add('on');
+  const close = () => { b.classList.remove('on'); setTimeout(() => { b.hidden = true; b.innerHTML = ''; }, 600); };
+  $('deepNo').onclick = () => { close(); say('Short it is. Smart.'); };
+  $('deepYes').onclick = () => { close(); ST.len = 2; keep(); say(L.len[2]); };
+  $('deepNo').focus({ preventScroll: true });
+}
+function lightBtn() { const g = $('gLight'); g.textContent = ST.dark ? 'Half dark' : 'Candle near'; g.setAttribute('aria-pressed', ST.dark); }
+$('gLight').onclick = () => { ST.dark = !ST.dark; keep(); lightBtn(); line(ST.dark ? 'Half dark. The old way. Stop if it gets too much.' : 'Candle near. Plenty.'); };
+$('gEnd').onclick = () => { if ($('tell').hidden) { endAt = Infinity; tell(); } else closeSitting(); };
+$('gSurf').onclick = () => { ST.surf = (ST.surf + 1) % 5; keep(); $('surfName').textContent = SURF[ST.surf].name; line(L.surf[SURF[ST.surf].k]); };
+$('gAsk').onclick = () => { ST.ask = !ST.ask; keep(); $('gAsk').setAttribute('aria-pressed', ST.ask); if (ST.ask) nextLine = performance.now() + 1500; };
+$('gMute').onclick = () => { ST.muted = !ST.muted; $('gMute').setAttribute('aria-pressed', ST.muted); hum(!ST.muted); };
+addEventListener('keydown', e => { if (e.key === 'Escape' && !$('back').hidden) { ($('backOk') || $('deepNo'))?.click(); return; } if (e.key === 'Escape' && D.open) { $('dEnd').click(); return; } if (e.key === 'Escape' && ST.sitting) { if ($('tell').hidden) { endAt = Infinity; tell(); } else closeSitting(); } });
+addEventListener('resize', () => { if (ST.sitting) gfit(); });
+$('gazeBtn').onclick = () => sit();
+$('fsBtn').onclick = () => { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.().catch(() => {}); };
+
+/* ---------- the drawer ---------- */
+const book = () => { try { return JSON.parse(localStorage.getItem('vs-mirror-journal') || '[]'); } catch (e) { return []; } };
+const LORE = [
+  ['The first mirrors were black', 'About eight thousand years ago in Anatolia, people polished volcanic glass and buried it with their dead. Before silver there was obsidian.'],
+  ['Smoking Mirror', 'In Mexico a god was named for his black mirror. In it he saw everything people did. Polished obsidian mirrors from there crossed the sea and ended up in European cabinets of spirits.'],
+  ['Mirrors that keep a secret', 'Some old Chinese bronze mirrors look plain. Catch the sun on one and the pattern cast on its back appears on the wall. Japanese makers made them too, and some hid sacred images inside.'],
+  ['Why houses cover their mirrors', 'When someone dies, many families cover every mirror in the house so the soul doesn’t get lost or caught on its way out. Some still do.'],
+  ['The Yuletide corridor', 'In Russia at Yuletide, girls set two mirrors face to face between two candles and looked down the corridor at midnight for the face of the one they’d marry. If something else came, you said a charm and covered the glass.'],
+  ['The net of jewels', 'One Buddhist teaching pictures the universe as a net with a jewel at every knot, each one reflecting all the others, forever. That’s what’s in the porthole.'],
+  ['Glass and silver', 'Glass mirrors as you know them came out of Venice. The mirror-makers of Murano weren’t allowed to leave. A silver coating came later, in the 1830s, and the mercury ones went away.'],
+  ['The strange face', 'Sit in a dim room and look at your own eyes for ten minutes and most people see their face change: someone older, a stranger, an animal, a face they’ve never seen. The mirror rooms have always known it.'],
+];
+const HOW = ['Keep a light near you. One candle behind you or off to the side, never in the glass.', 'The mirror at arm’s length, a little lower than your eyes.', 'Pick one of your eyes and stay on it. Breathe slow. Blink when you need to.', 'Start with a minute. Go longer once a short sitting feels easy. Ten minutes is the deep one.', 'Sit once in a day, not all night. Never when you haven’t slept.', 'Don’t chase what shows up and don’t talk to it on the first night.', 'When you’re done, say thank you and cover it. Then come back to the room: lights up, look around, say your name and the date.'];
+function openDrawer(which) {
+  const d = $('drawer'), btn = { lore: 'loreBtn', two: 'twoBtn', book: 'bookBtn' }[which];
+  if (d.classList.contains('on') && d.dataset.w === which) { d.classList.remove('on'); $(btn).setAttribute('aria-pressed', 'false'); return; }
+  ['loreBtn', 'twoBtn', 'bookBtn'].forEach(b => $(b).setAttribute('aria-pressed', String(b === btn)));
+  d.dataset.w = which; let h = '<button type="button" class="x" aria-label="Close">✕</button>';
+  if (which === 'lore') h += `<h2>Mirror lore</h2><p class="sub">what to know before you sit</p>${LORE.map(([a, b]) => `<h3>${esc(a)}</h3><p>${esc(b)}</p>`).join('')}<h3>How to sit</h3>${HOW.map(x => `<p>${esc(x)}</p>`).join('')}`;
+  if (which === 'two') h += `<h2>Two mirrors</h2><p class="sub">you and one friend</p><p>Two people, two cameras. You send a friend a link, both mirrors open, and each of you becomes the other one’s mirror.</p><p>First you breathe together, then four minutes of looking at each other’s eyes without talking. The surface, the light and the pattern change for both of you at once. Then he deals you questions to ask each other out loud, three rounds, each one closer. At the end you both say what you saw.</p><button type="button" class="small" id="twoGo">Open two mirrors</button><h3>Got a code?</h3><p class="dim">If a friend read you a code instead of sending the link, type it here.</p><input type="text" id="twoCode" maxlength="19" autocomplete="off" placeholder="XXXX-XXXX" aria-label="Room code" style="width:100%;background:rgba(0,0,0,.5);color:var(--cream);border:1px solid rgba(214,164,67,.35);font:18px VT323,monospace;letter-spacing:.1em;padding:6px 8px;text-transform:uppercase"><button type="button" class="small" id="twoJoin">Go in</button><p class="dim" id="twoErr"></p><h3>Private</h3><p class="dim">Nothing is recorded. Your cameras connect straight to each other; the only thing that goes through anyone else is the knock that introduces you, locked with your code. Only two people fit in one pair of mirrors. Either of you can end it with one button.</p><p class="dim">Can’t get it to connect? There’s a way to do the knock by hand inside.</p>`;
+  if (which === 'book') { const J = book(); h += `<h2>Journal</h2><p class="sub">${J.length} sitting${J.length === 1 ? '' : 's'} · kept on this computer only</p>` + (J.length ? J.map(j => `<h3>${esc(new Date(j.at).toLocaleDateString())} · ${esc(j.surf)} · ${Math.round(j.secs / 60) || '<1'} min</h3>${j.seen.length ? `<p class="dim">${esc(j.seen.map(k => (SEEN.find(s => s[0] === k) || [, k])[1]).join(', '))}</p>` : ''}${j.note ? `<p>${esc(j.note)}</p>` : ''}`).join('') + '<button type="button" class="small" id="forget">Forget all of it</button>' : '<p>Nothing yet. Sit first.</p>'); }
+  d.innerHTML = h; d.classList.add('on');
+  d.querySelector('.x').onclick = () => { d.classList.remove('on'); $(btn).setAttribute('aria-pressed', 'false'); };
+  if ($('twoGo')) { $('twoGo').onclick = () => openDuo(newCode(), true); $('twoJoin').onclick = () => { const c = $('twoCode').value.toUpperCase().replace(/^VS-MIRROR-/, '').replace(/[^A-Z0-9]/g, ''); if (/^[A-HJ-NP-Z2-9]{8}$/.test(c)) openDuo(c.slice(0, 4) + '-' + c.slice(4), false); else $('twoErr').textContent = 'That code is eight letters and numbers, like 7KQ2-M9XA.'; }; }
+  const f = $('forget'); if (f) f.onclick = () => { if (confirm('Forget every sitting in this journal? It can’t be undone.')) { try { localStorage.removeItem('vs-mirror-journal'); } catch (e) {} openDrawer('book'); openDrawer('book'); } };
+}
+$('loreBtn').onclick = () => openDrawer('lore');
+$('twoBtn').onclick = () => openDrawer('two');
+$('bookBtn').onclick = () => openDrawer('book');
+/* ---------- two mirrors: two people, two cameras, straight to each other ----------
+   The knock that introduces the two browsers goes through public relays (Nostr, with BitTorrent trackers as a second way in),
+   encrypted with the room code. Then the video goes directly between the two browsers (WebRTC). Nothing is recorded.
+   No relay server for video (TURN) yet: when two networks won't connect directly, we say so. By hand = copy and paste the knock. */
+const TRY = 'https://cdn.jsdelivr.net/npm/@trystero-p2p/', TRY_V = '0.26.0', APP = 'varanus-salvation-mirror-1';
+const ABC = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+const DSURF = [['silver', 'Silver'], ['black', 'Black'], ['merge', 'Merge'], ['infinity', 'Infinity'], ['corridor', 'Corridor']];
+const LIGHTS = [['none', 'No light'], ['candle', 'Candle', '255,170,90'], ['moon', 'Moon', '120,150,255'], ['violet', 'Violet', '170,110,255'], ['rose', 'Rose', '255,150,180']];
+const STAGES = ['breath', 'gaze', 'q', 'q', 'q', 'q', 'q', 'q', 'tell'];
+const BREATH = 60, GAZE = 240;
+const QS = [
+  ['What’s the first thing you noticed about my face tonight?', 'What did you think of me the first time we met?', 'What do you think I was like as a kid?', 'Which face of mine could you do an impression of?'],
+  ['When did you last see me really happy?', 'What do you think I want right now that I’m not saying?', 'What do I do that reminds you of someone in your family?', 'What’s one thing you’d never have guessed about me?'],
+  ['Who did you see in my face just now?', 'What do you see in me that I don’t?', 'If I were your mirror, what would I be showing you?', 'What should I stop pretending about?'],
+];
+const ROUND = ['Round one. Easy ones.', 'Round two. Closer.', 'Round three. The mirror ones.'];
+const L2 = {
+  here: n => [`${n} is here.`, `There’s ${n}.`, `${n} came. Good.`],
+  breath: ['Breathe with the ring. Both of you. In for four, out for six.', 'Same breath, two rooms. Follow the ring.'],
+  gaze: ['No talking now. Look at their eyes. One eye.', 'Pick one of their eyes. Stay on it.', 'Don’t laugh. Fine, laugh. Now back to the eyes.', 'Their face is going to change. Let it.', 'You’re both doing this. Nobody’s winning.', 'If they turn into someone else, stay polite.', 'Blink when you have to. Not to escape.', 'They can see you looking away, you know.', 'Slower. You’re rushing a staring contest.'],
+  asks: ['Ask them this, out loud:', 'Your turn to ask. Out loud:'],
+  told: ['You both saw something. Don’t tell me it was nothing.', 'Two mirrors, two stories. Compare them in a week.', 'Write it down tonight. Tomorrow you’ll say you imagined it.'],
+  one: ['One of you saw something. The other one’s turn comes. Don’t rush it.', 'One saw, one didn’t. Swap seats next time.'],
+  none: ['Nothing, twice. Do it again next week. It’s shy.', 'Nothing. Fine. Your faces were busy being polite.'],
+};
+const D = { open: false, code: '', host: false, name: '', fname: '', mic: true, stage: -1, stageT: 0, startT: 0, surf: 0, light: 0, pat: false, swap: false,
+  me: null, meStream: null, fv: null, fstream: null, fsrc: '', peer: null, leader: false, rooms: {}, pc: null, dc: null, via: '',
+  sid: Math.random().toString(36).slice(2, 8), n: 0, seen: new Set(), told: null, ftold: null, nextLine: 0, joinT: 0, warned: false, covered: false };
+const PP = mk(320, 320), PPX = PP.getContext('2d');
+const dz = $('dz'), dctx = dz.getContext('2d'), duo = $('duo'), dcard = $('dcard'), dprompt = $('dprompt');
+const who = () => D.fname || 'Your friend', whoL = () => D.fname || 'your friend';
+const linkFor = c => location.origin + location.pathname + '#two=' + c;
+function newCode() { const b = crypto.getRandomValues(new Uint8Array(8)); const s = [...b].map(x => ABC[x % 32]).join(''); return s.slice(0, 4) + '-' + s.slice(4); }
+function dfit() { const d = Math.min(1.5, devicePixelRatio || 1); const w = Math.round(innerWidth * d), h = Math.round(innerHeight * d), k = Math.min(1, 1280 / w); dz.width = Math.round(w * k); dz.height = Math.round(h * k); }
+function card(h) { dcard.innerHTML = h; dcard.hidden = false; }
+function cardOff() { dcard.hidden = true; dcard.innerHTML = ''; }
+function dline(t, stay) { dprompt.classList.remove('on', 'stay'); setTimeout(() => { dprompt.innerHTML = t; dprompt.classList.add(stay ? 'stay' : 'on'); sr(dprompt.textContent); if (!stay) setTimeout(() => dprompt.classList.remove('on'), 9000); }, 600); }
+function hudSync() {
+  $('dSurf').textContent = DSURF[D.surf][1]; $('dLight').textContent = LIGHTS[D.light][1]; $('dPat').setAttribute('aria-pressed', D.pat);
+  $('dSwap').setAttribute('aria-pressed', D.swap); $('dMic').setAttribute('aria-pressed', !D.mic); $('dMic').textContent = D.mic ? 'Mute me' : 'Unmute me';
+  $('dlive').classList.toggle('on', !!D.peer);
+  const st = STAGES[D.stage]; const show = !!D.peer && D.stage >= 0;
+  ['dSurf', 'dLight', 'dPat', 'dSwap', 'dNext'].forEach(b => { $(b).hidden = !show; });
+  $('dMic').hidden = !D.meStream?.getAudioTracks().length;
+  $('dstage').textContent = !D.peer ? (D.via === 'hand' ? 'By hand' : 'Waiting for ' + whoL()) : st === 'breath' ? 'Breathing together' : st === 'gaze' ? 'The gaze' : st === 'q' ? 'Questions · ' + ROUND[Math.floor((D.stage - 2) / 2)].split('.')[0].toLowerCase() : st === 'tell' ? 'What you saw' : 'With ' + who();
+  $('dNext').textContent = st === 'breath' ? 'Skip to the gaze' : st === 'gaze' ? 'To the questions' : st === 'q' ? (D.stage === 7 ? 'Finish' : 'Next question') : 'Next';
+  if (st === 'tell') $('dNext').hidden = true;
+}
+
+/* the cameras */
+function fakeStream() {   // ?fakecam: a drawn stand-in face, its own colour in each tab
+  const c = mk(640, 480), g = c.getContext('2d'), hue = Math.floor(Math.random() * 360), t0 = performance.now(), tag = D.sid.slice(0, 2).toUpperCase();
+  const draw = () => { const t = (performance.now() - t0) / 1000; g.fillStyle = `hsl(${hue},25%,16%)`; g.fillRect(0, 0, 640, 480); g.fillStyle = `hsl(${hue},45%,62%)`; g.beginPath(); g.ellipse(320 + 24 * Math.sin(t), 240, 120, 160, 0, 0, 7); g.fill(); g.fillStyle = '#111'; g.beginPath(); g.arc(282 + 24 * Math.sin(t), 212, 13, 0, 7); g.arc(358 + 24 * Math.sin(t), 212, 13, 0, 7); g.fill(); g.font = '40px monospace'; g.fillText(tag, 20, 50); };
+  draw(); const iv = setInterval(draw, 40); const s = c.captureStream(25); s.getVideoTracks()[0].addEventListener('ended', () => clearInterval(iv)); s._iv = iv; return s;
+}
+async function startMine() {
+  if (D.meStream) return true;
+  if (/[?&]fakecam/.test(location.search)) D.meStream = fakeStream();
+  else {
+    if (!navigator.mediaDevices?.getUserMedia) { card(`<h3>No camera here</h3><p>This browser won’t give this page a camera. Try Chrome or Safari.</p><div class="go"><button type="button" id="dx">Close</button></div>`); $('dx').onclick = () => endDuo(true); return false; }
+    const video = { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } };
+    try { D.meStream = await navigator.mediaDevices.getUserMedia({ video, audio: D.mic ? { echoCancellation: true, noiseSuppression: true } : false }); }
+    catch (e) {
+      if (D.mic && e.name === 'NotFoundError') { try { D.meStream = await navigator.mediaDevices.getUserMedia({ video, audio: false }); D.mic = false; } catch (e2) { e = e2; } }
+      if (!D.meStream) { card(`<h3>The camera didn’t start</h3><p>${e.name === 'NotAllowedError' ? 'It’s blocked. Click the icon left of the address bar, allow Camera (and Microphone), then try again.' : e.name === 'NotFoundError' ? 'No camera found. Two mirrors needs one.' : 'Something stopped it: ' + esc(e.name || 'error') + '.'}</p><div class="go"><button type="button" id="dx">Close</button><button type="button" id="dr">Try again</button></div>`); $('dx').onclick = () => endDuo(true); $('dr').onclick = consentCard; return false; }
+    }
+  }
+  const v = document.createElement('video'); v.muted = true; v.playsInline = true; v.srcObject = D.meStream; await v.play().catch(() => {}); D.me = v;
+  return true;
+}
+function setFriendStream(stream, src) {
+  if (D.fstream === stream) return;
+  if (D.fstream && D.fsrc === 'nostr' && src === 'torrent') return;   // prefer the first way in
+  D.fstream = stream; D.fsrc = src;
+  if (!D.fv) { D.fv = document.createElement('video'); D.fv.className = 'fv'; D.fv.playsInline = true; D.fv.autoplay = true; duo.append(D.fv); }
+  D.fv.srcObject = stream; D.fv.play().catch(() => {});
+}
+
+/* the knock: two public ways in, then straight to each other */
+function send(k, v) {
+  const m = { k, v, n: D.sid + ':' + (++D.n) };
+  if (D.dc?.readyState === 'open') try { D.dc.send(JSON.stringify(m)); } catch (e) {}
+  Object.values(D.rooms).forEach(r => { if (r.act && r.has) r.act.send(m, { target: D.peer }).catch?.(() => {}); });
+}
+function recv(m, from) {
+  if (!m || typeof m !== 'object' || D.seen.has(m.n)) return;
+  if (m.k === 'full') { endDuo(true); say('Those two mirrors already have two people in them. Ask your friend for a new link. Your camera’s off.', 8000); return; }
+  if (from !== D.peer) return;
+  D.seen.add(m.n); handle(m.k, m.v);
+}
+async function join() {
+  D.used = true; D.via = 'relay'; D.joinT = performance.now(); D.warned = false;
+  const cfg = { appId: APP, password: 'vs-mirror|' + D.code, relayConfig: { warnOnRelayFailure: false } };
+  for (const s of ['nostr', 'torrent']) {
+    import(`${TRY}${s}@${TRY_V}/+esm`).then(mod => {
+      if (!D.open || D.via !== 'relay' || D.rooms[s]) return;
+      const room = mod.joinRoom(cfg, 'mirror-' + D.code, { onJoinError: e => { D.err = s + ': ' + (e?.error?.message || e?.error || 'join error'); if (!D.peer && D.open && D.via === 'relay') noTurn(); } });
+      const act = room.makeAction('m'), r = { room, act, mod, has: false }; D.rooms[s] = r; D.selfId = mod.selfId;
+      act.onMessage = (data, meta) => recv(data, meta?.peerId);
+      room.onPeerJoin = id => peerJoin(s, id);
+      room.onPeerLeave = id => peerLeave(s, id);
+      room.onPeerStream = (stream, id) => { if (id === D.peer) setFriendStream(stream, s); };
+    }).catch(() => { D.rooms[s] = D.rooms[s] || { failed: true }; if (D.rooms.nostr?.failed && D.rooms.torrent?.failed) unreachable(); });
+  }
+}
+function peerJoin(s, id) {
+  const r = D.rooms[s]; if (!r) return;
+  if (D.peer && D.peer !== id) { r.act.send({ k: 'full', n: D.sid + ':full' }, { target: id }); return; }
+  r.has = true; r.room.addStream(D.meStream, { target: id });
+  const first = !D.peer; D.peer = id; D.leader = String(D.selfId) < String(id);
+  if (first) connected();
+  if (s === 'nostr' && D.rooms.torrent?.room) setTimeout(() => { const t = D.rooms.torrent; if (t?.room && D.rooms.nostr?.has && D.fsrc === 'nostr') { try { t.room.leave(); } catch (e) {} delete D.rooms.torrent; } }, 6000);
+}
+function peerLeave(s, id) {
+  const r = D.rooms[s]; if (r) r.has = false;
+  if (id !== D.peer) return;
+  if (Object.values(D.rooms).some(x => x.has)) return;   // still there through the other way in
+  gone();
+}
+function leaveAll() { Object.values(D.rooms).forEach(r => { try { r.room?.leave(); } catch (e) {} }); D.rooms = {}; try { D.dc?.close(); D.pc?.close(); } catch (e) {} D.dc = null; D.pc = null; }
+
+/* by hand: copy and paste the knock */
+const b64 = u8 => btoa(String.fromCharCode(...u8)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+const unb64 = s => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0));
+async function pack(desc) {
+  const raw = new TextEncoder().encode(JSON.stringify({ t: desc.type, s: desc.sdp }));
+  if (window.CompressionStream) { const z = new Uint8Array(await new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer()); return 'VSM1z.' + b64(z); }
+  return 'VSM1p.' + b64(raw);
+}
+async function unpack(txt) {
+  const m = String(txt).trim().match(/VSM1([zp])\.([A-Za-z0-9_-]+)/); if (!m) throw new Error('not a knock');
+  let raw = unb64(m[2]);
+  if (m[1] === 'z') raw = new Uint8Array(await new Response(new Blob([raw]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());
+  const o = JSON.parse(new TextDecoder().decode(raw)); return { type: o.t, sdp: o.s };
+}
+function handPC(offerer) {
+  D.used = true; leaveAll(); D.via = 'hand'; D.peer = null; hudSync();
+  const pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] }); D.pc = pc;
+  D.meStream.getTracks().forEach(t => pc.addTrack(t, D.meStream));
+  const dc = pc.createDataChannel('m', { negotiated: true, id: 0 }); D.dc = dc;
+  dc.onmessage = e => { try { recv(JSON.parse(e.data), 'hand'); } catch (x) {} };
+  dc.onopen = () => { D.peer = 'hand'; D.leader = offerer; connected(); };
+  dc.onclose = () => { if (D.peer === 'hand') gone(); };
+  pc.ontrack = e => setFriendStream(e.streams[0] || new MediaStream([e.track]), 'hand');
+  pc.oniceconnectionstatechange = () => { if (pc.iceConnectionState === 'failed' && D.open) noTurn(); };
+  return pc;
+}
+const gathered = pc => new Promise(res => { if (pc.iceGatheringState === 'complete') return res(); pc.addEventListener('icegatheringstatechange', () => pc.iceGatheringState === 'complete' && res()); setTimeout(res, 4000); });
+function copyBtn(id, getText) { const b = $(id); b.onclick = async () => { const t = getText(); try { await navigator.clipboard.writeText(t); b.textContent = 'Copied'; } catch (e) { const ta = dcard.querySelector('textarea.code'); ta?.select(); document.execCommand?.('copy'); b.textContent = 'Copied'; } setTimeout(() => { b.textContent = 'Copy'; }, 1800); }; }
+function handCard() {
+  card(`<h3>By hand</h3><p>When the link won’t work, do the knock yourselves. One of you makes it, the other answers it. Send them over text, email, anything.</p>
+    <div class="go"><button type="button" id="hBack">Back</button><button type="button" id="hGot">I got a knock</button><button type="button" id="hMake">Make the knock</button></div>`);
+  $('hBack').onclick = waitCard;
+  $('hMake').onclick = async () => {
+    card(`<h3>Making the knock…</h3><p class="small">A few seconds.</p>`);
+    const pc = handPC(true); await pc.setLocalDescription(await pc.createOffer()); await gathered(pc); const txt = await pack(pc.localDescription);
+    card(`<h3>Your knock</h3><p>Send this whole thing to ${esc(whoL())}. They press <b>I got a knock</b> and paste it.</p><textarea class="code" readonly id="hOut">${esc(txt)}</textarea>
+      <div class="go"><button type="button" id="hCopy">Copy</button></div><label for="hIn">Then paste their answer here</label><textarea class="code" id="hIn" placeholder="VSM1…"></textarea>
+      <p class="small" id="hErr"></p><div class="go"><button type="button" id="hBack2">Back</button><button type="button" id="hGo">Connect</button></div>`);
+    copyBtn('hCopy', () => txt); $('hBack2').onclick = () => { leaveAll(); join(); waitCard(); };
+    $('hGo').onclick = async () => { try { await pc.setRemoteDescription(await unpack($('hIn').value)); card(`<h3>Connecting…</h3><p class="small">If nothing happens in twenty seconds, your networks won’t shake hands.</p>`); } catch (e) { $('hErr').textContent = 'That isn’t their answer. Copy all of it, from VSM1 to the end.'; } };
+  };
+  $('hGot').onclick = () => {
+    card(`<h3>Their knock</h3><label for="hIn">Paste the knock they sent</label><textarea class="code" id="hIn" placeholder="VSM1…"></textarea><p class="small" id="hErr"></p>
+      <div class="go"><button type="button" id="hBack2">Back</button><button type="button" id="hGo">Answer it</button></div>`);
+    $('hBack2').onclick = handCard;
+    $('hGo').onclick = async () => {
+      let offer; try { offer = await unpack($('hIn').value); if (offer.type !== 'offer') throw 0; } catch (e) { $('hErr').textContent = 'That isn’t a knock. Copy all of it, from VSM1 to the end.'; return; }
+      card(`<h3>Answering…</h3>`);
+      const pc = handPC(false); await pc.setRemoteDescription(offer); await pc.setLocalDescription(await pc.createAnswer()); await gathered(pc); const txt = await pack(pc.localDescription);
+      card(`<h3>Your answer</h3><p>Send this back to ${esc(whoL())}. You’ll connect when they paste it.</p><textarea class="code" readonly>${esc(txt)}</textarea><div class="go"><button type="button" id="hCopy">Copy</button></div>`);
+      copyBtn('hCopy', () => txt);
+    };
+  };
+}
+
+/* the screens */
+function inviteCard() {
+  const link = linkFor(D.code);
+  card(`<h3>Two mirrors</h3><p>Send this link to one friend. Only someone with it can come in, and only two can be in at once.</p>
+    <p class="code-big">VS-MIRROR-${esc(D.code)}</p><textarea class="code" readonly style="height:52px">${esc(link)}</textarea>
+    <div class="go"><button type="button" id="iCopy">Copy</button>${navigator.share ? '<button type="button" id="iShare">Share</button>' : ''}<button type="button" id="iX">Not now</button><button type="button" id="iGo">I sent it. Open my mirror</button></div>`);
+  copyBtn('iCopy', () => link);
+  if ($('iShare')) $('iShare').onclick = () => navigator.share({ title: 'Two mirrors', text: 'Sit in two mirrors with me.', url: link }).catch(() => {});
+  $('iX').onclick = () => endDuo(true); $('iGo').onclick = consentCard;
+}
+function consentCard() {
+  card(`<h3>${D.host ? 'Before the mirrors open' : 'You’re invited to two mirrors'}</h3>
+    <p>${D.host ? 'Your friend' : 'Whoever sent you this'} will see your face${D.mic ? ' and hear your voice' : ''} live, and you’ll see theirs. Nothing is recorded. Either of you can end it with one button, or Esc.</p>
+    <p class="small">Your two browsers connect straight to each other, like a video call, so each of you can see the other’s internet address. The knock that introduces you goes through public relays, locked with your room code. No flashing lights, ever.</p>
+    <p class="small">Four minutes of eye contact is a lot. Skip it tonight if you live with psychosis, voices, dissociation or DID, or if you haven’t slept.</p>
+    <label for="cName">What should he call you? (optional)</label><input type="text" id="cName" maxlength="24" autocomplete="off" value="${esc(D.name)}">
+    <label class="check"><input type="checkbox" id="cMic" ${D.mic ? 'checked' : ''}> Microphone on, so you can talk in the questions</label>
+    <div class="go"><button type="button" id="cX">Not now</button><button type="button" id="cGo">Enter</button></div>`);
+  $('cX').onclick = () => endDuo(true);
+  $('cGo').onclick = async () => {
+    D.name = $('cName').value.trim().slice(0, 24); D.mic = $('cMic').checked; try { localStorage.setItem('vs-mirror-name', D.name); } catch (e) {}
+    card(`<h3>Opening your mirror…</h3>`);
+    if (!(await startMine())) return;
+    hudSync(); join(); waitCard();
+  };
+}
+function waitCard() {
+  if (D.peer) return;
+  const link = linkFor(D.code);
+  card(`<h3>Waiting for ${esc(whoL())}</h3><p>Your mirror’s open. When they open the link and press Enter, you’ll see each other.</p>
+    <p class="code-big">VS-MIRROR-${esc(D.code)}</p><div class="go"><button type="button" id="wCopy">Copy</button><button type="button" id="wHand">Connect by hand</button></div>
+    <p class="small" id="wHint"></p>`);
+  copyBtn('wCopy', () => link); $('wHand').onclick = handCard;
+}
+function noTurn() {
+  if (D.peer || D.warned) return; D.warned = true;
+  card(`<h3>Your networks won’t shake hands</h3><p>You found each other, but your two connections won’t open a direct line. Try another Wi-Fi, or put one of you on phone data.</p>
+    <p class="small">Some office, school and phone networks block it. A relay server would get round it; that’s coming.</p>
+    <div class="go"><button type="button" id="nX">End</button><button type="button" id="nHand">Connect by hand</button><button type="button" id="nKeep">Keep trying</button></div>`);
+  $('nX').onclick = () => endDuo(true); $('nHand').onclick = handCard; $('nKeep').onclick = () => { D.warned = false; waitCard(); };
+}
+function unreachable() {
+  if (D.peer || D.via !== 'relay') return;
+  card(`<h3>Can’t reach the relays</h3><p>The public relays that introduce the two mirrors aren’t answering from here. Do the knock by hand instead.</p>
+    <div class="go"><button type="button" id="uX">End</button><button type="button" id="uHand">Connect by hand</button></div>`);
+  $('uX').onclick = () => endDuo(true); $('uHand').onclick = handCard;
+}
+function connected() {
+  hudSync(); send('hello', { name: D.name, stage: D.stage, surf: D.surf, light: D.light, pat: D.pat });
+  card(`<h3>Found them</h3><p class="small">Waiting for their camera…</p>`);
+}
+function gone() {
+  D.peer = null; D.fstream = null; if (D.fv) D.fv.srcObject = null; hudSync();
+  if (!D.open || D.covered || D.fcovered) return;
+  dprompt.classList.remove('on', 'stay');
+  card(`<h3>${esc(who())}’s gone</h3><p>The connection dropped. If they come back through the same link, you’ll pick up where you were.</p>
+    <div class="go"><button type="button" id="gX">End</button><button type="button" id="gW">Wait for them</button></div>`);
+  $('gX').onclick = () => { send('end'); endDuo(true); }; $('gW').onclick = () => { if (D.via === 'relay' && !Object.keys(D.rooms).length) join(); waitCard(); };
+}
+function handle(k, v) {
+  if (k === 'hello') {
+    D.fname = String(v?.name || '').slice(0, 24); hudSync();
+    if (D.stage < 0 && (v?.stage ?? -1) < 0) { card(`<h3>${esc(pick(L2.here(who())))}</h3><p class="small">Get comfortable. Arm’s length from the screen, eyes level with theirs.</p>`); setTimeout(() => { if (D.peer && D.stage < 0) setStage(0); }, 3500); }
+    else if ((v?.stage ?? -1) > D.stage) { D.surf = v.surf | 0; D.light = v.light | 0; D.pat = !!v.pat; setStage(v.stage, true); }
+    else { cardOff(); send('stage', D.stage); send('surf', D.surf); send('light', D.light); send('pat', D.pat); if (STAGES[D.stage] === 'q') showQ(); if (STAGES[D.stage] === 'tell') tellCard(); }
+    if (!D.startT) D.startT = performance.now();
+  }
+  else if (k === 'stage') setStage(v | 0, true);
+  else if (k === 'surf') { D.surf = (v | 0) % DSURF.length; hudSync(); }
+  else if (k === 'light') { D.light = (v | 0) % LIGHTS.length; hudSync(); }
+  else if (k === 'pat') { D.pat = !!v; hudSync(); }
+  else if (k === 'told') { D.ftold = { seen: Array.isArray(v?.seen) ? v.seen.filter(x => SEEN.some(s => s[0] === x)).slice(0, 9) : [], note: String(v?.note || '').slice(0, 600) }; if (D.told) summary(); }
+  else if (k === 'cover') { D.fcovered = true; if (STAGES[D.stage] === 'tell' && !D.told) { dline(`${esc(who())} covered their mirror. Say what you saw, then cover yours.`, true); return; } if (!D.covered) { dprompt.classList.remove('on', 'stay'); card(`<h3>${esc(who())} covered their mirror</h3><p>Cover yours too. Say thank you first.</p><div class="go"><button type="button" id="kC">Thank you. Cover it</button></div>`); $('kC').onclick = () => coverDuo(false); } }
+  else if (k === 'end') { const sat = D.stage >= 1, w = who(); endDuo(false); if (sat) backToRoom(`${w} ended it. Your camera’s off too.`); else say(`${w} ended it. Your camera’s off too.`, 6000); }
+}
+function setStage(v, fromPeer) {
+  if (v <= D.stage || v >= STAGES.length) return;
+  D.stage = v; D.stageT = performance.now(); if (!D.startT) D.startT = D.stageT;
+  if (!fromPeer) send('stage', v);
+  const st = STAGES[v]; cardOff(); hudSync();
+  if (st === 'breath') dline(pick(L2.breath));
+  else if (st === 'gaze') { dline(pick(L2.gaze.slice(0, 2))); D.nextLine = D.stageT + 40000; }
+  else if (st === 'q') showQ();
+  else if (st === 'tell') { dprompt.classList.remove('on', 'stay'); tellCard(); }
+}
+function seedOf(s) { let h = 2166136261; for (const c of s) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+function showQ() {
+  const s = D.stage - 2, round = Math.floor(s / 2), turn = s % 2, h = seedOf(D.code + '|' + round);
+  const q = QS[round][(h + turn * 2) % QS[round].length], iAsk = (turn === 0) === D.leader;
+  dline(`<small>${esc(ROUND[round])}</small>${iAsk ? `${esc(pick(L2.asks))}<br>“${esc(q)}”<em>Then listen. Don’t help them answer.</em>` : `${esc(who())} is asking you:<br>“${esc(q)}”<em>Answer out loud. Then back to their eyes.</em>`}`, true);
+}
+function tellCard() {
+  card(`<h3>What did you see in their face?</h3><p>Just for you first. Pick anything that fits, then say it in your own words. ${esc(who())} sees nothing until you’ve both finished, so neither of you steers the other.</p>
+    <div class="chips">${SEEN.map(([k, l]) => `<button type="button" data-k="${k}" aria-pressed="false">${l}</button>`).join('')}</div>
+    <textarea id="dnote" rows="3" maxlength="600" placeholder="What it looked like, what it did" aria-label="What you saw"></textarea>
+    <label class="check"><input type="checkbox" id="dshare"> Let them read what I wrote</label>
+    <div class="go"><button type="button" id="dskip">Skip</button><button type="button" id="dsave">Keep it</button></div>`);
+  dcard.querySelectorAll('.chips button').forEach(b => b.onclick = () => b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') !== 'true'));
+  const done = keepIt => {
+    const seen = [...dcard.querySelectorAll('.chips [aria-pressed="true"]')].map(b => b.dataset.k), note = $('dnote').value.trim(), share = $('dshare').checked;
+    const secs = Math.round((performance.now() - D.startT) / 1000);
+    if (keepIt && (seen.length || note)) { const J = book(); J.unshift({ at: Date.now(), surf: 'Two mirrors', secs, seen, note, with: D.fname }); try { localStorage.setItem('vs-mirror-journal', JSON.stringify(J.slice(0, 200))); } catch (e) {} }
+    D.told = { seen, note: share ? note : '' }; send('told', D.told);
+    if (D.ftold) summary(); else { card(`<h3>Kept</h3><p>Waiting for ${esc(whoL())} to finish theirs. Nobody sees anything until you both have.</p><div class="go"><button type="button" id="dcov">Cover my mirror</button></div>`); $('dcov').onclick = () => coverDuo(true); }
+  };
+  $('dsave').onclick = () => { dprompt.classList.remove('on', 'stay'); done(true); }; $('dskip').onclick = () => done(false);
+}
+const seenTxt = a => { const x = (a || []).map(k => (SEEN.find(s => s[0] === k) || [, k])[1].toLowerCase()); return x.length ? x.join(', ') : 'didn’t say'; };
+function summary() {
+  const mins = Math.max(1, Math.round((performance.now() - D.startT) / 60000));
+  const saw = a => (a || []).some(k => k !== 'nothing'), me = saw(D.told?.seen), them = saw(D.ftold?.seen);
+  const reply = pick(me && them ? L2.told : me || them ? L2.one : L2.none);
+  D.sum = { mins, mine: seenTxt(D.told?.seen), theirs: seenTxt(D.ftold?.seen), note: D.ftold?.note || '', reply };
+  card(`<h3>Two mirrors · ${mins} minute${mins === 1 ? '' : 's'}</h3><p>You saw: <b>${esc(D.sum.mine)}</b>.</p><p>${esc(who())} saw: <b>${esc(D.sum.theirs)}</b>.</p>
+    ${D.sum.note ? `<p class="small">They wrote: “${esc(D.sum.note)}”</p>` : ''}<p class="reply">${esc(reply)}</p>
+    <p class="small">Two readings. Neither one is the right one; each of you keeps your own. Give it a few nights before you sit with the same person again.</p>
+    <p class="small">The card isn’t stored anywhere. Keep it if you want it.</p>
+    <div class="go"><button type="button" id="sKeep">Keep the card</button><button type="button" id="sCov">Thank you. Cover both mirrors</button></div>`);
+  $('sKeep').onclick = keepCard; $('sCov').onclick = () => coverDuo(true);
+}
+function keepCard() {
+  const c = mk(1200, 630), g = c.getContext('2d'), S2 = D.sum; if (!S2) return;
+  const bg = g.createLinearGradient(0, 0, 0, 630); bg.addColorStop(0, '#0b0710'); bg.addColorStop(1, '#1d1018'); g.fillStyle = bg; g.fillRect(0, 0, 1200, 630);
+  g.strokeStyle = 'rgba(214,164,67,.7)'; g.lineWidth = 3; g.strokeRect(30, 30, 1140, 570); g.strokeRect(42, 42, 1116, 546);
+  g.fillStyle = '#f0d68f'; g.textAlign = 'center'; g.font = '54px "IM Fell English SC", Georgia, serif'; g.fillText('Two mirrors', 600, 130);
+  g.font = '20px "IBM Plex Mono", monospace'; g.fillStyle = '#a8aecb'; g.fillText(`${new Date().toLocaleDateString()} · ${S2.mins} minute${S2.mins === 1 ? '' : 's'}`, 600, 172);
+  g.font = '34px "IM Fell English", Georgia, serif'; g.fillStyle = '#eee4cb';
+  g.fillText(`${D.name || 'You'} saw ${S2.mine}.`, 600, 270, 1060); g.fillText(`${D.fname || 'They'} saw ${S2.theirs}.`, 600, 330, 1060);
+  g.font = 'italic 30px "IM Fell English", Georgia, serif'; g.fillStyle = '#f0d68f'; g.fillText(S2.reply, 600, 440, 1060);
+  g.font = '18px "IBM Plex Mono", monospace'; g.fillStyle = 'rgba(168,174,203,.7)'; g.fillText('OUIJA CAT · THE MIRROR', 600, 560);
+  const a = document.createElement('a'); a.download = 'two-mirrors.png'; a.href = c.toDataURL('image/png'); a.click();
+}
+function coverDuo(tellThem) {
+  if (D.covered) return; D.covered = true; if (tellThem) send('cover');
+  dprompt.classList.remove('on', 'stay'); cardOff(); $('dveil').classList.add('down');
+  setTimeout(() => { endDuo(false); backToRoom('Both mirrors covered.'); }, 2000);
+}
+function endDuo(quiet) {
+  if (!D.open) return; D.open = false; leaveAll();
+  D.meStream?.getTracks().forEach(t => t.stop()); clearInterval(D.meStream?._iv);
+  if (D.fv) { D.fv.srcObject = null; D.fv.remove(); }
+  Object.assign(D, { meStream: null, me: null, fv: null, fstream: null, fsrc: '', peer: null, stage: -1, startT: 0, told: null, ftold: null, sum: null, via: '', covered: false, seen: new Set() });
+  duo.classList.remove('open', 'deep'); dprompt.classList.remove('on', 'stay'); cardOff();
+  setTimeout(() => { if (!D.open) { duo.hidden = true; $('dveil').classList.remove('down'); } }, calm ? 0 : 1200);
+  document.body.classList.remove('duo-on');
+  if (/^#two=/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search);
+}
+function openDuo(code, host) {
+  if (D.open) return;
+  if (D.used) {   // the relays keep this page's peer id from the last pair of mirrors; a fresh page connects cleanly
+    try { sessionStorage.setItem('vs-duo-host', host ? code : ''); } catch (e) {}
+    history.replaceState(null, '', location.pathname + location.search + '#two=' + code); location.reload(); return;
+  }
+  if (ST.sitting) closeSitting(); if (ST.stream) { ST.wakeTo = 0; stopCamera(); }
+  $('drawer').classList.remove('on'); ['loreBtn', 'twoBtn', 'bookBtn'].forEach(b => $(b).setAttribute('aria-pressed', 'false'));
+  Object.assign(D, { open: true, code, host, fcovered: false, stage: -1, surf: 0, light: 0, pat: false, swap: false, fname: '', mic: true, covered: false, warned: false });
+  try { D.name = localStorage.getItem('vs-mirror-name') || ''; } catch (e) {}
+  history.replaceState(null, '', location.pathname + location.search + '#two=' + code);
+  duo.hidden = false; $('dveil').classList.remove('down'); dfit(); void duo.offsetWidth; duo.classList.add('open'); document.body.classList.add('duo-on');
+  hudSync(); host ? inviteCard() : consentCard();
+}
+
+/* drawing both mirrors */
+function faceMask(ctx, W, H, v, flip, name) {   // the face only, feathered: the middle of the frame
+  const C = buf(ctx, name), c2 = C.getContext('2d'); c2.globalCompositeOperation = 'source-over'; c2.clearRect(0, 0, W, H); camDraw(c2, W, H, v, flip);
+  c2.globalCompositeOperation = 'destination-in'; c2.save(); c2.translate(W / 2, H * .46); c2.scale(W * .3, H * .44);
+  const fm = c2.createRadialGradient(0, 0, 0, 0, 0, 1); fm.addColorStop(0, '#000'); fm.addColorStop(.62, '#000'); fm.addColorStop(1, 'rgba(0,0,0,0)'); c2.fillStyle = fm; c2.beginPath(); c2.arc(0, 0, 1, 0, 7); c2.fill(); c2.restore();
+  return C;
+}
+function layer(c, W, H, v, flip, inner, t, corridor) {   // one mirror: its room, darker; the other mirror inside it; the face in front
+  camDraw(c, W, H, v, flip); c.fillStyle = corridor ? 'rgba(0,0,0,.72)' : 'rgba(0,0,0,.6)'; c.fillRect(0, 0, W, H);
+  const sc = corridor ? .8 : .84, ox = W * (corridor ? .075 : .05), oy = -H * (corridor ? .025 : .01);
+  c.save(); c.translate(W / 2 + ox, H / 2 + oy); c.rotate(corridor ? 0 : .012); c.scale(sc, sc); c.translate(-W / 2, -H / 2);
+  c.drawImage(inner, 0, 0); c.strokeStyle = 'rgba(214,164,67,.7)'; c.lineWidth = Math.max(2, W * .006); c.strokeRect(0, 0, W, H); c.restore();
+  c.drawImage(faceMask(c, W, H, v, flip, 'fm'), 0, 0);
+  if (corridor) { const s = Math.min(W, H) * .07; candle(c, W * .12, H * .78, s, t, 0); candle(c, W * .88, H * .78, s, t, 2.1); }
+}
+function drawDuo(now) {
+  if (!D.open || duo.hidden) return;
+  const W = dz.width, H = dz.height, t = now / 1000, st = STAGES[D.stage], el = D.stage >= 0 ? (now - D.stageT) / 1000 : 0;
+  const fOK = D.fv?.videoWidth > 0, meOK = D.me?.videoWidth > 0;
+  const bigV = D.swap || !fOK ? D.me : D.fv, bigFlip = D.swap || !fOK, smV = bigV === D.me ? (fOK ? D.fv : null) : D.me, smFlip = smV === D.me;
+  const k = fOK ? DSURF[D.surf][0] : 'silver';
+  const dim = !fOK ? .5 : st === 'gaze' ? Math.min(ST.dark ? .5 : .18, el / 90 * (ST.dark ? .5 : .18)) * (k === 'black' ? .4 : 1) : st === 'breath' ? .12 : st === 'tell' ? .35 : 0;
+  if (k === 'merge' && smV) {
+    camDraw(dctx, W, H, bigV, bigFlip);
+    dctx.save(); dctx.globalAlpha = .5 + .18 * Math.sin(t * Math.PI * 2 / 24); dctx.drawImage(faceMask(dctx, W, H, smV, smFlip, 'mm'), 0, 0); dctx.restore();
+    tone(dctx, W, H, 'silver', t, dim);
+  } else if ((k === 'infinity' || k === 'corridor') && smV) {
+    const F1 = buf(dctx, 'f1'), F2 = buf(dctx, 'f2'), cor = k === 'corridor';
+    layer(F2.getContext('2d'), W, H, smV, smFlip, F1, t, cor);   // your mirror holds theirs, which holds yours…
+    layer(dctx, W, H, bigV, bigFlip, F2, t, cor);
+    F1.getContext('2d').drawImage(dz, 0, 0);
+    tone(dctx, W, H, k, t, dim);
+  } else glass(dctx, W, H, k === 'merge' ? 'silver' : k, t, dim, bigV, bigFlip);
+  if (!meOK && !fOK) { dctx.fillStyle = '#050407'; dctx.fillRect(0, 0, W, H); }
+  // the light, washed over both of you, slow
+  const Lc = LIGHTS[D.light][2];
+  if (Lc && fOK) { dctx.save(); dctx.globalCompositeOperation = 'soft-light'; dctx.fillStyle = `rgba(${Lc},${.42 + .1 * Math.sin(t * Math.PI * 2 / 10)})`; dctx.fillRect(0, 0, W, H);
+    dctx.globalCompositeOperation = 'screen'; const g = dctx.createRadialGradient(W / 2, H * .46, 0, W / 2, H * .46, Math.max(W, H) * .6); g.addColorStop(0, `rgba(${Lc},.10)`); g.addColorStop(1, `rgba(${Lc},0)`); dctx.fillStyle = g; dctx.fillRect(0, 0, W, H); dctx.restore(); }
+  // the pattern: a slow mandala around their face
+  if (D.pat && fOK) {
+    const cx2 = W / 2, cy2 = H * .46, R = Math.min(W, H) * .44, a = .2 + .06 * Math.sin(t * Math.PI * 2 / 12);
+    dctx.save(); dctx.globalCompositeOperation = 'screen'; dctx.strokeStyle = `rgba(240,214,143,${a})`; dctx.lineWidth = Math.max(1, W / 900);
+    [[R, 12, 1, .16], [R * .8, 8, -1, .2], [R * 1.14, 24, 1, .07]].forEach(([r, n, dir, w]) => {
+      const rot = dir * t * Math.PI * 2 / 150;
+      for (let i = 0; i < n; i++) { const an = rot + i * Math.PI * 2 / n; dctx.beginPath(); dctx.ellipse(cx2 + Math.cos(an) * r, cy2 + Math.sin(an) * r, r * w, r * w * .42, an, 0, Math.PI * 2); dctx.stroke(); }
+      dctx.beginPath(); dctx.arc(cx2, cy2, r * (1 - w * .5), 0, Math.PI * 2); dctx.stroke();
+    });
+    for (let i = 0; i < 6; i++) { const an = -t * Math.PI * 2 / 200 + i * Math.PI / 3; dctx.beginPath(); dctx.arc(cx2 + Math.cos(an) * R * .5, cy2 + Math.sin(an) * R * .5, R * .5, 0, Math.PI * 2); dctx.stroke(); }
+    dctx.restore();
+  }
+  // the breathing ring: in for four, out for six, the same on both screens
+  if (st === 'breath') {
+    const p = el % 10, e = x => .5 - .5 * Math.cos(Math.PI * x), r0 = Math.min(W, H) * .16, r1 = Math.min(W, H) * .34;
+    const r = p < 4 ? r0 + (r1 - r0) * e(p / 4) : r1 - (r1 - r0) * e((p - 4) / 6);
+    dctx.save(); dctx.strokeStyle = 'rgba(240,214,143,.75)'; dctx.lineWidth = Math.max(2, W / 400); dctx.shadowColor = 'rgba(240,214,143,.8)'; dctx.shadowBlur = 24;
+    dctx.beginPath(); dctx.arc(W / 2, H * .46, r, 0, Math.PI * 2); dctx.stroke(); dctx.shadowBlur = 0;
+    dctx.fillStyle = 'rgba(240,214,143,.85)'; dctx.font = `${Math.round(H * .03)}px "IBM Plex Mono", monospace`; dctx.textAlign = 'center'; dctx.fillText(p < 4 ? 'IN' : 'OUT', W / 2, H * .46 + r + H * .05); dctx.restore();
+  }
+  // the porthole: the other one, small
+  if (smV && smV.videoWidth) {
+    const pr = Math.min(W, H) * .11, px = pr * 1.35, py = H - pr * 1.45;
+    glass(PPX, 320, 320, 'silver', t, 0, smV, smFlip);
+    dctx.save(); dctx.beginPath(); dctx.arc(px, py, pr, 0, Math.PI * 2); dctx.clip(); dctx.drawImage(PP, px - pr, py - pr, pr * 2, pr * 2); dctx.restore();
+    dctx.save(); dctx.strokeStyle = 'rgba(214,164,67,.85)'; dctx.lineWidth = Math.max(2, W / 380); dctx.beginPath(); dctx.arc(px, py, pr, 0, Math.PI * 2); dctx.stroke(); dctx.restore();
+  }
+  // time
+  const clock = st === 'breath' ? BREATH - el : st === 'gaze' ? GAZE - el : D.startT ? (now - D.startT) / 1000 : 0, cs = Math.max(0, clock);
+  $('dclock').textContent = `${Math.floor(cs / 60)}:${String(Math.floor(cs % 60)).padStart(2, '0')}`;
+  duo.classList.toggle('deep', st === 'gaze' && el > 12);
+  if (D.peer && st === 'breath' && el > BREATH) setStage(1);
+  else if (D.peer && st === 'gaze') {
+    if (el > GAZE) setStage(2);
+    else if (now > D.nextLine && GAZE - el > 15) { dline(pick(L2.gaze.slice(2))); D.nextLine = now + 40000 + Math.random() * 15000; }
+  }
+  if (D.via === 'relay' && !D.peer && D.joinT && now - D.joinT > 30000 && $('wHint') && !$('wHint').textContent) $('wHint').textContent = 'Taking a while? Check they opened this exact link and pressed Enter. If you’re on different networks and nothing happens, connect by hand.';
+}
+$('dSurf').onclick = () => { D.surf = (D.surf + 1) % DSURF.length; send('surf', D.surf); hudSync(); if (STAGES[D.stage] !== 'q') dline(DSURF[D.surf][1] + ({ merge: '. Your faces, one on the other.', infinity: '. You in them in you. Don’t count.', corridor: '. Candles between you.', black: '. Obsidian, for both.', silver: '. Plain glass.' })[DSURF[D.surf][0]]); };
+$('dLight').onclick = () => { D.light = (D.light + 1) % LIGHTS.length; send('light', D.light); hudSync(); };
+$('dPat').onclick = () => { D.pat = !D.pat; send('pat', D.pat); hudSync(); };
+$('dSwap').onclick = () => { D.swap = !D.swap; hudSync(); };
+$('dMic').onclick = () => { D.mic = !D.mic; D.meStream?.getAudioTracks().forEach(tr => { tr.enabled = D.mic; }); hudSync(); };
+$('dNext').onclick = () => { if (D.peer && D.stage >= 0) setStage(D.stage + 1); };
+$('dEnd').onclick = () => { const sat = D.stage >= 1; send('end'); endDuo(false); if (sat) backToRoom('Ended. Both cameras are off.'); else say('Ended. Both cameras are off.', 5000); };
+addEventListener('resize', () => { if (D.open) dfit(); });
+{ const m = location.hash.match(/^#two=([A-Z2-9]{4}-[A-Z2-9]{4})$/); let h = ''; try { h = sessionStorage.getItem('vs-duo-host') || ''; sessionStorage.removeItem('vs-duo-host'); } catch (e) {} if (m) openDuo(m[1], h === m[1]); }
+addEventListener('hashchange', () => { const m = location.hash.match(/^#two=([A-Z2-9]{4}-[A-Z2-9]{4})$/); if (m && !D.open) openDuo(m[1], false); });
+window.__duo = D;
+
+setTimeout(() => { if (!D.open) say(pick(L.hello), 5000); }, 1400);
+</script>
+<script id="vs-chrome">
+/* The shared frame for every page: the rooms as bold tabs (current room lit), a volume slider that every page's
+   sound obeys (window.VS_VOLUME, event 'vs-volume', remembered), gold sparks that follow the cursor and burst on a
+   click, and a dissolve between rooms. Costs nothing when idle: the spark canvas only draws while sparks are alive. */
+(function () {
+  /* ---------- the safety stage: every page's sound passes through it on the way to the speakers ----------
+     It fades in when a room's sound starts or wakes (no click on the first note), takes out sub-bass thumps and DC
+     (the usual cause of pops when things start and stop), catches anything that would clip (crackle), and fades out
+     when you leave a room, so nothing is cut off mid-wave. The Turntable gets no limiter: her masters stay as they are. */
+  (function safeAudio() {
+    if (!window.AudioNode || AudioNode.prototype.__vsSafe) return;
+    const P = AudioNode.prototype, orig = P.connect, bus = new WeakMap(), limit = !/deck\.html$/.test(location.pathname);
+    P.__vsSafe = true; window.__vsBuses = [];
+    function stage(ctx) {
+      let s = bus.get(ctx); if (s) return s;
+      const g = ctx.createGain(); g.gain.value = 0;
+      const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 16; hp.Q.value = .5; orig.call(g, hp); let last = hp;
+      if (limit) { const l = ctx.createDynamicsCompressor(); l.threshold.value = -1; l.knee.value = 0; l.ratio.value = 20; l.attack.value = .002; l.release.value = .12; orig.call(last, l); last = l; }
+      orig.call(last, ctx.destination);
+      const ramp = (to, d) => { const t = ctx.currentTime; g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(g.gain.value, t); g.gain.linearRampToValueAtTime(to, t + d); };
+      s = { g, ctx, up: (d = .45) => ramp(1, d), down: (d = .18) => ramp(0, d) };
+      if (ctx.state === 'running') s.up(.6);
+      ctx.addEventListener('statechange', () => { if (ctx.state === 'running') s.up(.35); });
+      bus.set(ctx, s); window.__vsBuses.push(s); return s;
+    }
+    P.connect = function (dest, out, inp) {
+      if (dest instanceof AudioDestinationNode) { const s = stage(dest.context); if (out == null) orig.call(this, s.g); else orig.call(this, s.g, out); return dest; }
+      return out == null ? orig.call(this, dest) : inp == null ? orig.call(this, dest, out) : orig.call(this, dest, out, inp);
+    };
+    // leaving: every sound on the page fades out (the stage for Web Audio, a quick ramp for films playing on their own)
+    window.VS_FADE_OUT = (ms = 200) => {
+      for (const s of window.__vsBuses) try { s.down(ms / 1000); } catch (e) {}
+      document.querySelectorAll('video, audio').forEach(m => { if (m.muted || m.paused || !m.volume) return; const v0 = m.__vsPre = m.volume, t0 = performance.now(); const step = () => { const k = Math.min(1, (performance.now() - t0) / ms); m.volume = v0 * (1 - k); if (k < 1) requestAnimationFrame(step); }; step(); });
+    };
+    addEventListener('pagehide', () => window.VS_FADE_OUT(60));
+  })();
+
+  /* ---------- films stay in the page: a phone never lifts one out ----------
+     iPhones play a video full-screen, offer picture-in-picture, or pop it into a floating preview on a long press, unless
+     told not to. Every film here is part of the room's background, so each one is pinned: inline, no picture-in-picture,
+     no AirPlay, no controls, and touches pass through it to the room. Films made later (by a room's own code) get the same
+     the moment they're added or played. */
+  (function pinFilms() {
+    const pin = v => { if (!v || v.__vsPinned || v.tagName !== 'VIDEO') return; v.__vsPinned = true;
+      v.playsInline = true; v.setAttribute('playsinline', ''); v.setAttribute('webkit-playsinline', ''); v.setAttribute('x-webkit-airplay', 'deny');
+      v.controls = false; v.removeAttribute('controls'); try { v.disablePictureInPicture = true; v.setAttribute('disablepictureinpicture', ''); } catch (e) {}
+      try { v.disableRemotePlayback = true; v.setAttribute('disableremoteplayback', ''); } catch (e) {}
+      v.addEventListener('webkitbeginfullscreen', () => { try { v.webkitExitFullscreen(); } catch (e) {} });
+      v.addEventListener('enterpictureinpicture', () => { try { document.exitPictureInPicture(); } catch (e) {} }); };
+    const all = () => document.querySelectorAll('video').forEach(pin); all();
+    const play = HTMLMediaElement.prototype.play; HTMLMediaElement.prototype.play = function () { pin(this); return play.apply(this, arguments); };
+    new MutationObserver(ms => { for (const m of ms) for (const n of m.addedNodes) { if (n.tagName === 'VIDEO') pin(n); else if (n.querySelectorAll) n.querySelectorAll('video').forEach(pin); } }).observe(document.documentElement, { childList: true, subtree: true });
+    const st = document.createElement('style'); st.textContent = 'video { pointer-events: none; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; } video::-webkit-media-controls, video::-webkit-media-controls-start-playback-button, video::-webkit-media-controls-overlay-play-button { display: none !important; -webkit-appearance: none; }';
+    (document.head || document.documentElement).append(st);
+  })();
+
+  const ROOMS = [['./', 'Templum', '☥', 'The board. Ask him.'], ['parlour.html', 'Parlour', '♄', 'His console. Every key plays.'], ['deck.html', 'Turntable', '◉', 'ANIMUSCULT on his decks.'], ['palm.html', 'Palm', '✶', 'Your hand, read.'], ['crystal.html', 'Crystal', '◎', 'The seer’s sitting.'], ['mirror.html', 'Mirror', '◐', 'Two mirrors, facing.'], ['mesmer.html', 'Trance', '❂', 'The magnetic tub. Go under.'], ['sleep.html', 'Sleep', '☾', 'Sleep sounds. The screen can go off.'], ['geometry.html', 'Geometry', '❋', 'Sacred geometry and mandalas.'], ['forge.html', 'Forge', '✧', 'Sigils from your words.'], ['engine.html', 'Engine', '⚙︎', 'The dome machine. Scry with him.'], ['radio.html', 'Radio', '⌁', 'Live voices from everywhere.'], ['compendium.html', 'Compendium', '☘', 'The library of plant medicine, A to Z.']];
+  window.VS_ROOMS = ROOMS;   // the Templum's floating doors read this, so a new room shows up there too
+  const here = (location.pathname.split('/').pop() || 'index.html').replace('index.html', '') || './';
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches && !document.documentElement.classList.contains('motion-full');
+
+  /* ---------- volume ---------- */
+  let vol = .8; try { const v = parseFloat(localStorage.getItem('vs-volume')); if (v >= 0 && v <= 1) vol = v; } catch (e) {}
+  window.VS_VOLUME = vol;
+  const setVol = v => { vol = window.VS_VOLUME = Math.max(0, Math.min(1, v)); try { localStorage.setItem('vs-volume', String(vol)); } catch (e) {} dispatchEvent(new CustomEvent('vs-volume', { detail: vol })); document.querySelectorAll('.vs-vol input').forEach(i => { i.value = Math.round(vol * 100); }); document.querySelectorAll('.vs-vol').forEach(l => l.classList.toggle('mute', vol === 0)); };
+  // media elements on the page follow it too (films, his recorded voice)
+  const mediaVol = () => document.querySelectorAll('video, audio').forEach(m => { if (m.dataset.vsBase == null) m.dataset.vsBase = m.volume; m.volume = Math.min(1, +m.dataset.vsBase * vol); });
+  addEventListener('vs-volume', () => { if (!document.body?.dataset.novol) mediaVol(); });
+
+  /* ---------- styles (added last, so they win) ---------- */
+  const css = `
+.bar { gap: 7px !important; }
+.bar h1 { display: none !important; }
+.bar .vs-rooms { display: flex; gap: 6px; align-items: center; overflow-x: auto; scrollbar-width: none; flex: 1 1 auto; min-width: 0; }
+.bar .vs-rooms::-webkit-scrollbar { display: none; }
+.bar a.vs-room { position: relative; display: inline-flex !important; align-items: center; gap: 7px; font-family: "IBM Plex Mono", ui-monospace, monospace !important; font-size: 11px !important; font-weight: 400; letter-spacing: .16em !important; text-transform: uppercase; color: rgba(243,230,196,.62) !important; text-decoration: none; padding: 7px 10px 7px 8px !important; border: 0 !important; border-radius: 0; background: none !important; box-shadow: none; transition: color .5s ease, text-shadow .5s ease; white-space: nowrap; }
+.bar a.vs-room i { font-style: normal; font-size: 14px; color: rgba(240,199,106,.7); transition: color .5s, text-shadow .5s; }
+.bar a.vs-room::after { content: ""; position: absolute; left: 10px; right: 10px; bottom: 2px; height: 1px; background: linear-gradient(90deg, transparent, rgba(240,214,143,.85), transparent); opacity: 0; transform: scaleX(.4); transition: opacity .5s ease, transform .5s ease; }
+.bar a.vs-room:hover { color: #fbefcf !important; text-shadow: 0 0 14px rgba(255,210,130,.45); }
+.bar a.vs-room:hover i { color: #f6d27e; text-shadow: 0 0 10px rgba(240,190,90,.7); }
+.bar a.vs-room:hover::after { opacity: .5; transform: none; }
+.bar a.vs-room[aria-current="page"] { color: #fff3d2 !important; text-shadow: 0 0 16px rgba(255,205,120,.55); }
+.bar a.vs-room[aria-current="page"] i { color: #ffd77e; text-shadow: 0 0 12px rgba(255,200,100,.9); }
+.bar a.vs-room[aria-current="page"]::after { opacity: 1; transform: none; }
+.bar > button:not(.unzoom):not(.vs-menu), .bar > a:not(.vs-room), .bar .motion-btn { background: none !important; border: 0 !important; border-bottom: 1px solid transparent !important; border-radius: 0 !important; box-shadow: none !important; color: rgba(238,228,203,.66) !important; transition: color .5s, border-color .5s !important; }
+.bar > button:not(.unzoom):not(.vs-menu):hover, .bar > a:not(.vs-room):hover, .bar .motion-btn:hover, .bar > button[aria-pressed="true"], .bar > button.on { color: #f0d68f !important; border-bottom-color: rgba(240,214,143,.55) !important; }
+.vs-vol { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border: 0; border-radius: 3px; color: rgba(240,199,106,.8); background: none; }
+/* the room breathes out when nobody is touching anything: the frame steps back and leaves the room */
+.bar, .foot, .vs-vol.float { transition: opacity 1.8s ease; }
+body.vs-quiet .bar, body.vs-quiet .foot, body.vs-quiet .vs-vol.float { opacity: 0; }
+body.sitting .bar { opacity: 0 !important; }   /* a sitting hides the frame completely: no half-dimmed grey bar */
+body.sitting .bar:hover, body.sitting .bar:focus-within { opacity: 1 !important; }
+body.vs-quiet .bar:hover, body.vs-quiet .bar:focus-within, body.vs-quiet .vs-vol.float:hover { opacity: 1; transition-duration: .4s; }
+/* one film over every room: a soft vignette and a fine grain, so the rooms read as one place */
+.vs-film { position: fixed; inset: 0; z-index: 19; pointer-events: none; background: radial-gradient(ellipse 75% 70% at 50% 54%, rgba(0,0,0,0) 55%, rgba(0,0,0,.34) 100%); }
+.vs-film::after { content: ""; position: absolute; inset: 0; opacity: .05; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -.35'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.foot { font-size: 11.5px !important; letter-spacing: .04em !important; color: rgba(238,228,203,.5) !important; bottom: 6px !important; }
+/* phones: the rooms fold into one menu button; the page's own buttons move into the same sheet */
+.bar .vs-menu { display: none; align-items: center; gap: 9px; flex: none; font: 500 11.5px/1 "IBM Plex Mono", ui-monospace, monospace; letter-spacing: .16em; text-transform: uppercase; color: #fff3d2; background: linear-gradient(rgba(214,164,67,.16), rgba(214,164,67,.06)); border: 1px solid rgba(240,214,143,.5); border-radius: 3px; padding: 0 12px 0 10px; height: 32px; cursor: pointer; box-shadow: 0 0 0 rgba(240,199,106,0), inset 0 0 12px rgba(214,164,67,.08); transition: border-color .3s, box-shadow .3s, background .3s; }
+.bar .vs-menu:hover, .bar .vs-menu[aria-expanded="true"] { border-color: #f0d68f; background: linear-gradient(rgba(214,164,67,.28), rgba(214,164,67,.1)); box-shadow: 0 0 18px rgba(240,199,106,.28), inset 0 0 12px rgba(214,164,67,.12); }
+.bar .vs-menu svg { width: 15px; height: 15px; flex: none; color: #ffd77e; }
+.bar .vs-menu .vs-n { font-weight: 400; font-size: 10px; letter-spacing: 0; color: #120a04; background: #e9c46e; border-radius: 8px; padding: 2px 5px 1px; }
+.bar .vs-menu .vs-here { display: inline-flex; align-items: center; gap: 6px; padding-left: 9px; border-left: 1px solid rgba(240,214,143,.3); color: rgba(243,230,196,.75); letter-spacing: .12em; }
+.bar .vs-menu .vs-here i { font-style: normal; font-size: 13px; color: #ffd77e; }
+.bar .vs-menu.vs-call { animation: vsCall 1.6s ease-in-out 4; }
+@keyframes vsCall { 50% { border-color: #ffe7a8; box-shadow: 0 0 26px rgba(255,205,110,.55), inset 0 0 14px rgba(255,205,110,.2); } }
+.bar.vs-tight .vs-rooms { display: none !important; }
+.bar.vs-tight .vs-menu { display: inline-flex; }
+.bar > button, .bar > a:not(.vs-room), .bar .motion-btn, .bar > label { white-space: nowrap; flex: none; }
+/* a room's opening screen sits under the bar, so the way to the other rooms is there from the first second */
+body:has(.gate:not([hidden])) .bar { z-index: 9 !important; opacity: 1 !important; }
+/* the first visit: one quiet word under the rooms, once */
+.vs-hint { position: fixed; z-index: 9991; max-width: 270px; padding: 11px 14px 12px; font: italic 400 15px/1.35 "IM Fell English", Georgia, serif; color: #f3e6c4; background: rgba(8,6,12,.94); border: 1px solid rgba(240,214,143,.45); box-shadow: 0 10px 40px rgba(0,0,0,.6), 0 0 22px rgba(214,164,67,.15); opacity: 0; transform: translateY(-4px); transition: opacity .5s ease, transform .5s ease; pointer-events: none; }
+.vs-hint.on { opacity: 1; transform: none; }
+.vs-hint::before { content: ""; position: absolute; top: -6px; left: var(--ax, 22px); width: 10px; height: 10px; background: inherit; border-left: 1px solid rgba(240,214,143,.45); border-top: 1px solid rgba(240,214,143,.45); transform: rotate(45deg); }
+.vs-hint b { display: block; margin-bottom: 3px; font: 500 10px/1 "IBM Plex Mono", ui-monospace, monospace; font-style: normal; letter-spacing: .2em; text-transform: uppercase; color: #f0c76a; }
+.vs-sheet { position: fixed; inset: 0; z-index: 9990; overflow-y: auto; background: rgba(5,4,10,.97); color: #efe4c8; padding: calc(14px + env(safe-area-inset-top, 0px)) max(18px, env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px)); display: grid; align-content: start; gap: 14px; opacity: 0; transition: opacity .25s ease; }
+.vs-sheet.on { opacity: 1; }
+.vs-sheet .vs-sh-top { display: flex; align-items: center; justify-content: space-between; }
+.vs-sheet h2 { margin: 0; font: 500 11px/1 "IBM Plex Mono", ui-monospace, monospace; letter-spacing: .22em; text-transform: uppercase; color: rgba(240,199,106,.85); }
+.vs-sheet .vs-x { width: 44px; height: 44px; border: 0; background: none; color: #efe4c8; font-size: 22px; cursor: pointer; }
+.vs-sheet .vs-sh-rooms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.vs-sheet .vs-sh-rooms a { display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 10px 14px; border: 1px solid rgba(214,164,67,.28); color: #f3e6c4; text-decoration: none; font: 400 19px/1.1 "IM Fell English SC", "IM Fell English", Georgia, serif; }
+.vs-sheet .vs-sh-rooms a i { font-style: normal; font-size: 22px; color: #f0c76a; width: 26px; text-align: center; }
+.vs-sheet .vs-sh-rooms a span { display: grid; gap: 4px; }
+.vs-sheet .vs-sh-rooms a small { font: italic 400 12.5px/1.25 "IM Fell English", Georgia, serif; color: rgba(239,228,200,.6); }
+.vs-sheet.drop { inset: auto; top: calc(var(--vs-bar-b, 46px) + 6px); left: var(--vs-drop-x, 10px); width: min(360px, calc(100vw - 20px)); max-height: calc(100vh - var(--vs-bar-b, 46px) - 20px); padding: 14px; gap: 10px; background: rgba(8,6,12,.96); border: 1px solid rgba(240,214,143,.4); box-shadow: 0 18px 60px rgba(0,0,0,.7), 0 0 30px rgba(214,164,67,.12); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); transform: translateY(-6px); transition: opacity .2s ease, transform .2s ease; }
+.vs-sheet.drop.on { transform: none; }
+.vs-sheet.drop .vs-x { width: 32px; height: 32px; font-size: 16px; }
+.vs-sheet.drop .vs-sh-rooms { grid-template-columns: 1fr; gap: 2px; }
+.vs-sheet.drop .vs-sh-rooms a { min-height: 50px; border-color: transparent; font-size: 18px; transition: background .2s, border-color .2s; }
+.vs-sheet.drop .vs-sh-rooms a:hover { background: rgba(214,164,67,.1); border-color: rgba(214,164,67,.3); }
+.vs-sheet .vs-sh-rooms a[aria-current="page"] { border-color: #f0d68f; background: rgba(214,164,67,.14); box-shadow: 0 0 22px rgba(214,164,67,.18); }
+.vs-sheet .vs-sh-tools { display: grid; gap: 0; border-top: 1px solid rgba(214,164,67,.2); }
+.vs-sheet .vs-sh-tools > * { display: flex !important; align-items: center; width: 100%; min-height: 48px; margin: 0 !important; padding: 0 4px !important; text-align: left; font: 500 12.5px/1.2 "IBM Plex Mono", ui-monospace, monospace !important; letter-spacing: .12em !important; text-transform: uppercase; color: #efe4c8 !important; background: none !important; border: 0 !important; border-bottom: 1px solid rgba(214,164,67,.14) !important; border-radius: 0 !important; box-shadow: none !important; position: static !important; opacity: 1 !important; text-decoration: none; cursor: pointer; }
+.vs-sheet .vs-sh-tools:empty { display: none; }
+@media (max-width: 760px) { .bar .vs-rooms { display: none !important; } .bar .vs-menu { display: inline-flex; } .bar .vs-menu .vs-here span { display: none; } .bar .vs-vol { margin-left: auto; } }
+/* power: every room switches off and on from the bar */
+.bar .vs-pow { display: inline-flex !important; align-items: center; gap: 7px; flex: none; font: 500 10.5px/1 "IBM Plex Mono", ui-monospace, monospace !important; letter-spacing: .16em !important; text-transform: uppercase; color: rgba(238,228,203,.7) !important; background: none !important; border: 0 !important; padding: 6px 6px !important; cursor: pointer; white-space: nowrap; }
+.bar .vs-pow i { width: 7px; height: 7px; border-radius: 50%; background: #7dffb0; box-shadow: 0 0 8px #3dff8a, 0 0 2px #fff inset; transition: background .4s, box-shadow .4s; }
+.bar .vs-pow svg { width: 14px; height: 14px; }
+.bar .vs-pow:hover { color: #f0d68f !important; }
+body.vs-off .bar .vs-pow i { background: #4a1712; box-shadow: none; }
+body.vs-off .bar { z-index: 9990 !important; opacity: 1 !important; }
+.vs-offveil { position: fixed; inset: 0; z-index: 9989; display: grid; place-items: center; background: #030206; opacity: 0; pointer-events: none; transition: opacity .45s ease .25s; }
+.vs-offveil::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px; background: linear-gradient(90deg, transparent, rgba(255,236,190,.9), transparent); box-shadow: 0 0 24px rgba(255,214,140,.8); transform: scaleX(0); opacity: 0; }
+body.vs-off .vs-offveil { opacity: 1; pointer-events: auto; }
+body.vs-off .vs-offveil::before { animation: vsCrt .6s ease-out; }
+@keyframes vsCrt { 0% { transform: scaleX(1) scaleY(30); opacity: .0; } 30% { transform: scaleX(1) scaleY(1); opacity: 1; } 100% { transform: scaleX(0); opacity: 0; } }
+.vs-offveil button { display: grid; justify-items: center; gap: 14px; background: none; border: 0; color: rgba(243,230,196,.7); font: italic 400 17px/1.3 "IM Fell English", Georgia, serif; cursor: pointer; opacity: 0; transition: opacity .6s ease .45s, color .3s; }
+body.vs-off .vs-offveil button { opacity: 1; }
+.vs-offveil button:hover { color: #fff3d2; }
+.vs-offveil button span { display: grid; place-items: center; width: 74px; height: 74px; border-radius: 50%; border: 1px solid rgba(240,214,143,.45); color: #f0c76a; box-shadow: 0 0 30px rgba(214,164,67,.15), inset 0 0 20px rgba(214,164,67,.08); transition: box-shadow .4s, border-color .4s; }
+.vs-offveil button:hover span { border-color: #f0d68f; box-shadow: 0 0 40px rgba(240,199,106,.35), inset 0 0 20px rgba(214,164,67,.15); }
+.vs-offveil button svg { width: 30px; height: 30px; }
+.vs-vol svg { width: 16px; height: 16px; flex: none; cursor: pointer; }
+.vs-vol.mute svg .w { display: none; }
+.vs-vol input { -webkit-appearance: none; appearance: none; width: 84px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, #f0c76a var(--p, 80%), rgba(214,164,67,.25) var(--p, 80%)); outline: none; cursor: pointer; }
+.vs-vol input::-webkit-slider-thumb { -webkit-appearance: none; width: 13px; height: 13px; border-radius: 50%; background: radial-gradient(#fff6d8, #d6a443); box-shadow: 0 0 8px rgba(240,200,120,.8); border: 0; }
+.vs-vol input::-moz-range-thumb { width: 13px; height: 13px; border-radius: 50%; background: #e8c070; border: 0; }
+.vs-vol.float { position: fixed; right: 14px; bottom: 14px; z-index: 40; background: rgba(6,5,10,.85); }
+.vs-fade { position: fixed; inset: 0; z-index: 9998; pointer-events: none; background: radial-gradient(ellipse at 50% 50%, rgba(255,214,140,.0), #030206 70%); opacity: 0; transition: opacity .32s ease; }
+.vs-fade.arrive { transition: opacity .9s cubic-bezier(.3,.1,.3,1); }
+.vs-fade.on { opacity: 1; background: radial-gradient(ellipse at 50% 50%, rgba(255,214,140,.25), #030206 60%); }
+#vs-sparks { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 9997; pointer-events: none; }
+@media (max-width: 1100px) { .bar a.vs-room { font-size: 10.5px !important; padding: 6px 9px 6px 8px !important; letter-spacing: .1em !important; } }
+@media (max-width: 760px) { .vs-vol input { width: 56px; } }
+/* step outside: real-world help, plain on purpose (outside the room's look and not in his voice); never fades, never hidden */
+.vs-out { position: fixed; left: max(10px, env(safe-area-inset-left, 0px)); bottom: max(10px, env(safe-area-inset-bottom, 0px)); z-index: 9995; display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; font: 500 11px/1 system-ui, -apple-system, "Segoe UI", sans-serif; letter-spacing: .02em; color: rgba(255,255,255,.62); background: rgba(20,20,24,.72); border: 1px solid rgba(255,255,255,.18); border-radius: 999px; cursor: pointer; opacity: .7; transition: opacity .3s, color .3s, border-color .3s; }
+.vs-out:hover, .vs-out:focus-visible { opacity: 1; color: #fff; border-color: rgba(255,255,255,.5); }
+.vs-out svg { width: 12px; height: 12px; }
+.vs-outp { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; padding: 16px; background: rgba(0,0,0,.6); }
+.vs-outp[hidden] { display: none; }
+.vs-outp .vs-ob { width: min(520px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; padding: 22px 22px 18px; background: #f6f6f4; color: #1d1d1f; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.5); font: 400 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+.vs-outp h2 { margin: 0 0 8px; font: 600 19px/1.25 system-ui, -apple-system, "Segoe UI", sans-serif; letter-spacing: 0; text-transform: none; color: #1d1d1f; }
+.vs-outp h3 { margin: 16px 0 6px; font: 600 13px/1.3 system-ui, -apple-system, "Segoe UI", sans-serif; color: #444; }
+.vs-outp p { margin: 0 0 8px; }
+.vs-outp ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.vs-outp li a { display: block; padding: 9px 12px; border-radius: 8px; background: #fff; border: 1px solid #ddd; color: #0b57d0; text-decoration: none; }
+.vs-outp li a:hover { border-color: #0b57d0; }
+.vs-outp li a small { display: block; color: #555; font-size: 13px; }
+.vs-outp .vs-oe { padding: 10px 12px; border-radius: 8px; background: #fff1f0; border: 1px solid #f3c2bd; }
+.vs-outp .vs-of { margin-top: 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; color: #666; font-size: 12.5px; }
+.vs-outp .vs-of button { padding: 8px 16px; border-radius: 8px; border: 1px solid #bbb; background: #fff; color: #1d1d1f; font: 500 14px system-ui, -apple-system, sans-serif; cursor: pointer; }
+@media print { .vs-out { display: none; } }
+`;
+  const st = document.createElement('style'); st.textContent = css;
+
+  function build() {
+    document.head.appendChild(st);
+    // the rooms
+    const bar = document.querySelector('header.bar, .bar');
+    if (bar) {
+      bar.querySelectorAll(':scope > a').forEach(a => { const h = a.getAttribute('href') || ''; if (ROOMS.some(([r]) => r === h || (r === './' && (h === './' || h === 'index.html')))) a.remove(); });
+      const nav = document.createElement('nav'); nav.className = 'vs-rooms'; nav.setAttribute('aria-label', 'Rooms');
+      for (const [href, name, glyph] of ROOMS) { const a = document.createElement('a'); a.className = 'vs-room'; a.href = href; a.innerHTML = `<i aria-hidden="true">${glyph}</i><span>${name}</span>`; a.title = name; if (href === here) a.setAttribute('aria-current', 'page'); nav.append(a); }
+      bar.prepend(nav);
+    }
+    // volume (the Turntable has its own big volume in the transport, so it gets none here)
+    if (!document.body.dataset.novol) {
+      const l = document.createElement('label'); l.className = 'vs-vol' + (bar ? '' : ' float'); l.title = 'Volume (every room)';
+      l.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path class="w" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><input type="range" min="0" max="100" step="1" aria-label="Volume">`;
+      const inp = l.querySelector('input'), paint = () => inp.style.setProperty('--p', inp.value + '%');
+      inp.value = Math.round(vol * 100); paint(); l.classList.toggle('mute', vol === 0);
+      inp.addEventListener('input', () => { setVol(inp.value / 100); paint(); });
+      let before = vol; l.querySelector('svg').addEventListener('click', e => { e.preventDefault(); if (vol > 0) { before = vol; setVol(0); } else setVol(before || .8); paint(); });
+      if (bar) { const last = bar.querySelector('#txBtn, #fsBtn, #listBtn'); last ? last.before(l) : bar.append(l); } else document.body.append(l);
+    }
+    power(bar);
+    outside();
+    if (bar) menu(bar);   // after the volume is placed, so the volume stays in the bar on a phone
+    if (!document.body.dataset.novol) mediaVol();
+    const fs = document.getElementById('fsBtn'); if (fs && innerWidth < 1180) { fs.textContent = '⤢'; fs.title = 'Full screen'; fs.setAttribute('aria-label', 'Full screen'); }
+    // the dissolve between rooms
+    const fade = document.createElement('div'); fade.className = 'vs-fade'; document.body.append(fade);
+    try { if (sessionStorage.getItem('vs-arrive')) { sessionStorage.removeItem('vs-arrive'); fade.style.transition = 'none'; fade.classList.add('on'); requestAnimationFrame(() => requestAnimationFrame(() => { fade.style.transition = ''; if (!calm) fade.classList.add('arrive'); fade.classList.remove('on'); setTimeout(() => fade.classList.remove('arrive'), 1000); })); } } catch (e) {}
+    // the film (pages that draw their own, like the radio, opt out with data-nofilm)
+    if (!document.body.dataset.nofilm) { const film = document.createElement('div'); film.className = 'vs-film'; film.setAttribute('aria-hidden', 'true'); document.body.append(film); }
+    // quiet: after a while with no hand on anything, the frame fades back. Never while typing or with a menu open
+    let qt = 0; const busy = () => { const a = document.activeElement; return a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable) || document.querySelector('.drawer.on, dialog[open], [aria-modal="true"]:not([hidden])'); };
+    const wake = () => { document.body.classList.remove('vs-quiet'); clearTimeout(qt); qt = setTimeout(function q() { if (busy()) { qt = setTimeout(q, 3000); return; } document.body.classList.add('vs-quiet'); }, 11000); };
+    ['pointermove', 'pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(ev => addEventListener(ev, wake, { passive: true })); wake();
+    document.addEventListener('click', e => {
+      const a = e.target.closest('a.vs-room, a.play-link'); if (!a || e.metaKey || e.ctrlKey || a.target === '_blank') return;
+      e.preventDefault(); burst(e.clientX, e.clientY, 26); fade.classList.add('on'); try { window.VS_FADE_OUT(calm ? 60 : 220); } catch (er) {} try { sessionStorage.setItem('vs-arrive', '1'); } catch (er) {}
+      setTimeout(() => { location.href = a.href; }, calm ? 60 : 240);
+    });
+    // instant rooms: when the pointer rests on a room tab, the browser builds that page in the background, so the click
+    // just swaps it in (Chrome's speculation rules; other browsers ignore this and load normally)
+    try { if (HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules')) { const sr = document.createElement('script'); sr.type = 'speculationrules';
+      sr.textContent = JSON.stringify({ prerender: [{ where: { and: [{ href_matches: '/*.html' }, { selector_matches: 'a.vs-room, a.play-link' }] }, eagerness: 'moderate' }] }); document.head.append(sr); } } catch (e) {}
+    sparks();
+  }
+
+  /* ---------- power: the room switches off (sound fades and stops, films pause, the screen closes like an old set) ---------- */
+  function power(bar) {
+    const ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v8M7.05 6.05a7.5 7.5 0 1 0 9.9 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+    const veil = document.createElement('div'); veil.className = 'vs-offveil'; veil.innerHTML = `<button type="button">${'<span>' + ICON + '</span>'}Switched off. Touch to wake the room.</button>`; document.body.append(veil);
+    let btn = null;
+    if (bar) { btn = document.createElement('button'); btn.type = 'button'; btn.className = 'vs-pow'; btn.innerHTML = '<i aria-hidden="true"></i>Power'; btn.title = 'Switch this room off and on'; btn.setAttribute('aria-pressed', 'true');
+      const v = bar.querySelector('.vs-vol'); v ? v.before(btn) : bar.append(btn); }
+    let paused = [];
+    const set = on => {
+      if (on === !document.body.classList.contains('vs-off')) return;
+      document.body.classList.toggle('vs-off', !on); if (btn) { btn.setAttribute('aria-pressed', String(on)); btn.title = on ? 'Switch this room off' : 'Switch this room on'; }
+      dispatchEvent(new CustomEvent('vs-power', { detail: { on } }));
+      if (!on) {
+        window.VS_FADE_OUT(260);
+        setTimeout(() => { if (document.body.classList.contains('vs-off')) { for (const s of window.__vsBuses) try { s.ctx.suspend(); } catch (e) {} paused = [...document.querySelectorAll('video')].filter(m => !m.paused); paused.forEach(m => m.pause()); } }, 300);
+      } else {
+        for (const s of window.__vsBuses) try { s.ctx.resume().then(() => s.up(.6)); } catch (e) {}
+        paused.forEach(m => { if (m.__vsPre != null) { m.volume = m.__vsPre; m.__vsPre = null; } m.play().catch(() => {}); }); paused = [];
+      }
+    };
+    window.VS_POWER = set;
+    btn && btn.addEventListener('click', () => set(document.body.classList.contains('vs-off')));
+    veil.querySelector('button').addEventListener('click', () => set(true));
+  }
+
+  /* ---------- step outside: real help, outside the game ---------- */
+  function outside() {
+    if (document.querySelector('.vs-out')) return;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'vs-out'; b.title = 'Real-world help, outside the game';
+    b.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2h7v12H3zM10 8h4M12 6l2 2-2 2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Step outside';
+    const p = document.createElement('div'); p.className = 'vs-outp'; p.hidden = true;
+    p.setAttribute('role', 'dialog'); p.setAttribute('aria-modal', 'true'); p.setAttribute('aria-labelledby', 'vs-out-h');
+    p.innerHTML = `<div class="vs-ob">
+      <h2 id="vs-out-h">Outside the game</h2>
+      <p>This is real-world help. The room's sound is switched off while you're here.</p>
+      <p class="vs-oe"><b>In danger, or might hurt yourself?</b> Call your local emergency number now: 911 (US, Canada), 999 (UK), 112 (EU and many countries), 000 (Australia).</p>
+      <h3>Talk to someone now</h3>
+      <ul>
+        <li><a href="tel:988">988 Suicide &amp; Crisis Lifeline<small>US · call or text 988, any time</small></a></li>
+        <li><a href="tel:116123">Samaritans · 116 123<small>UK and Ireland · free, any time</small></a></li>
+        <li><a href="https://findahelpline.com" target="_blank" rel="noopener">Find A Helpline<small>Free, confidential helplines in your country</small></a></li>
+      </ul>
+      <h3>Hearing voices, or seeing things others don't?</h3>
+      <ul>
+        <li><a href="https://www.hearing-voices.org" target="_blank" rel="noopener">Hearing Voices Network<small>Peer support groups</small></a></li>
+        <li><a href="https://www.intervoiceonline.org" target="_blank" rel="noopener">Intervoice<small>The international hearing voices network</small></a></li>
+      </ul>
+      <h3>Right now</h3>
+      <p>Feet on the floor. Name five things you can see, four you can touch, three you can hear, two you can smell, one you can taste. Breathe out slower than you breathe in.</p>
+      <div class="vs-of"><span>Nothing here is sent anywhere.</span><button type="button">Close</button></div></div>`;
+    // the floating corner button is off for now (the owner found it intrusive); the panel stays, opened by window.VS_OUTSIDE
+    // (the Compendium's rotary phone). To bring the button back, set SHOW_BUTTON to true.
+    const SHOW_BUTTON = false;
+    document.body.append(...(SHOW_BUTTON ? [b, p] : [p]));
+    let back = null;
+    const open = () => { back = document.activeElement; p.hidden = false; try { window.VS_POWER && window.VS_POWER(false); } catch (e) {} p.querySelector('.vs-ob').scrollTop = 0; p.querySelector('.vs-of button').focus({ preventScroll: true }); };
+    const close = () => { p.hidden = true; try { back && back.focus && back.focus(); } catch (e) {} };
+    b.addEventListener('click', open);
+    p.querySelector('.vs-of button').addEventListener('click', close);
+    p.addEventListener('click', e => { if (e.target === p) close(); });
+    addEventListener('keydown', e => {
+      if (p.hidden) return;
+      if (e.key === 'Escape') { e.stopImmediatePropagation(); e.preventDefault(); close(); return; }
+      if (e.key === 'Tab') { const f = [...p.querySelectorAll('a, button')], i = f.indexOf(document.activeElement); if (e.shiftKey ? i <= 0 : i === f.length - 1) { e.preventDefault(); f[e.shiftKey ? f.length - 1 : 0].focus(); } }
+      e.stopImmediatePropagation();   // the room's own keys (notes, Esc to end a sitting) stay quiet while this is open
+    }, true);
+    window.VS_OUTSIDE = open;
+    // a room with its own bar along the bottom (the Turntable's transport) gets the button lifted just above it
+    const place = () => {
+      b.style.bottom = ''; const o = b.getBoundingClientRect(); let lift = 0;
+      for (const e of document.querySelectorAll('body > *, body > * > *')) {
+        if (e === b || e === p || e.classList.contains('vs-film')) continue;
+        const cs = getComputedStyle(e); if (cs.position !== 'fixed' && cs.position !== 'absolute' || cs.display === 'none' || cs.visibility === 'hidden') continue;
+        const r = e.getBoundingClientRect(); if (r.height > innerHeight * .4 || r.bottom < innerHeight - 4 || r.left > o.right || r.right < o.left || r.top > o.bottom) continue;
+        lift = Math.max(lift, innerHeight - r.top + 8);
+      }
+      if (lift) b.style.bottom = lift + 'px';
+    };
+    if (SHOW_BUTTON) { place(); addEventListener('resize', place); setTimeout(place, 1500); setTimeout(place, 5000); }
+  }
+
+  /* ---------- the phone menu ---------- */
+  function menu(bar) {
+    const cur = ROOMS.find(([h]) => h === here) || ROOMS[0];
+    const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'vs-menu'; btn.setAttribute('aria-haspopup', 'dialog'); btn.setAttribute('aria-expanded', 'false');
+    btn.innerHTML = `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Rooms<span class="vs-n" aria-hidden="true">${ROOMS.length}</span><span class="vs-here"><i aria-hidden="true">${cur[2]}</i><span>${cur[1]}</span></span>`;
+    btn.title = 'All the rooms'; btn.setAttribute('aria-label', `Rooms (${ROOMS.length}). You are in ${cur[1]}`);
+    bar.prepend(btn);
+    const sh = document.createElement('div'); sh.className = 'vs-sheet'; sh.hidden = true; sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.setAttribute('aria-label', 'Rooms');
+    sh.innerHTML = `<div class="vs-sh-top"><h2>Rooms</h2><button type="button" class="vs-x" aria-label="Close">✕</button></div><nav class="vs-sh-rooms" aria-label="Rooms">${ROOMS.map(([h, n, g, d]) => `<a class="vs-room" href="${h}"${h === here ? ' aria-current="page"' : ''}><i aria-hidden="true">${g}</i><span>${n}<small>${d}</small></span></a>`).join('')}</nav><h2 class="vs-sh-th">This room</h2><div class="vs-sh-tools"></div>`;
+    document.body.append(sh);
+    const tools = sh.querySelector('.vs-sh-tools');
+    // the tools heading hides itself when the room has no buttons of its own
+    const syncHead = () => { sh.querySelector('.vs-sh-th').hidden = !tools.children.length; };
+    const phone = matchMedia('(max-width: 760px)');
+    const open = () => { if (sh.classList.contains('on')) return close(); hint.done();
+      // a computer gets a dropdown hanging from the button; a phone gets the whole screen
+      const drop = !phone.matches; sh.classList.toggle('drop', drop);
+      if (drop) { const b = btn.getBoundingClientRect(), r = bar.getBoundingClientRect(); sh.style.setProperty('--vs-bar-b', r.bottom + 'px'); sh.style.setProperty('--vs-drop-x', Math.max(10, b.left) + 'px'); }
+      sh.hidden = false; requestAnimationFrame(() => sh.classList.add('on')); btn.setAttribute('aria-expanded', 'true'); (sh.querySelector('.vs-sh-rooms a[aria-current]') || sh.querySelector('.vs-x')).focus({ preventScroll: true }); };
+    const close = () => { sh.classList.remove('on'); btn.setAttribute('aria-expanded', 'false'); setTimeout(() => { if (!sh.classList.contains('on')) sh.hidden = true; }, 250); };
+    btn.addEventListener('click', open); sh.querySelector('.vs-x').addEventListener('click', close);
+    sh.addEventListener('click', e => { if (e.target === sh) close(); });
+    document.addEventListener('pointerdown', e => { if (!sh.hidden && sh.classList.contains('drop') && !sh.contains(e.target) && !btn.contains(e.target)) close(); }, true);
+    tools.addEventListener('click', () => setTimeout(close, 0));   // a tool does its job, then the sheet gets out of the way
+    addEventListener('keydown', e => { if (e.key === 'Escape' && !sh.hidden) { close(); btn.focus({ preventScroll: true }); } });
+    // on a phone the page's own bar buttons live in the sheet; on a wider screen they go back where they came from
+    const pick = el => el.matches('button, a, .motion-btn') && !el.matches('.vs-menu, .vs-room, .unzoom');
+    let moving = false;
+    const place = () => { moving = true;
+      if (phone.matches) { [...bar.children].filter(pick).forEach(el => { if (!el.__vsHome) { el.__vsHome = document.createComment('vs'); el.before(el.__vsHome); } tools.append(el); }); }
+      else [...tools.children].forEach(el => { if (el.__vsHome && el.__vsHome.parentNode) el.__vsHome.replaceWith(el); else bar.append(el); el.__vsHome = null; });
+      syncHead(); moving = false; };
+    // the room names show in the bar when they all fit; when they don't, the ROOMS button takes their place
+    const nav = bar.querySelector('.vs-rooms');
+    const fit = () => { if (phone.matches || !nav) { bar.classList.add('vs-tight'); return; } bar.classList.remove('vs-tight'); if (nav.scrollWidth > nav.clientWidth + 2) bar.classList.add('vs-tight'); };
+    let fq = 0; const fitSoon = () => { cancelAnimationFrame(fq); fq = requestAnimationFrame(fit); };
+    place(); fit(); phone.addEventListener('change', () => { place(); fit(); }); addEventListener('resize', fitSoon);
+    try { document.fonts.ready.then(fitSoon); } catch (e) {}
+    new MutationObserver(() => { if (!moving && phone.matches) place(); fitSoon(); }).observe(bar, { childList: true });
+    // first visit to the house: the rooms announce themselves once, so nobody thinks this is the only one
+    const hint = { el: null, t: 0, done() { clearTimeout(this.t); try { localStorage.setItem('vs-rooms-hint', '1'); } catch (e) {} btn.classList.remove('vs-call'); if (this.el) { const el = this.el; this.el = null; el.classList.remove('on'); setTimeout(() => el.remove(), 600); } } };
+    let seen = true; try { seen = !!localStorage.getItem('vs-rooms-hint'); } catch (e) {}
+    if (!seen) hint.t = setTimeout(() => {
+      const tight = bar.classList.contains('vs-tight'), a = (tight ? btn : nav).getBoundingClientRect(); if (!a.width) return;
+      const el = hint.el = document.createElement('div'); el.className = 'vs-hint'; el.setAttribute('role', 'status');
+      el.innerHTML = `<b>${ROOMS.length} rooms</b>${tight ? 'There’s more than this one. Open the menu.' : 'This is one of them. The rest are up here.'}`;
+      document.body.append(el); el.style.left = Math.max(10, a.left) + 'px'; el.style.top = (a.bottom + 10) + 'px'; el.style.setProperty('--ax', Math.min(a.width / 2, 40) + 'px');
+      if (tight) btn.classList.add('vs-call'); requestAnimationFrame(() => el.classList.add('on'));
+      try { localStorage.setItem('vs-rooms-hint', '1'); } catch (e) {}
+      hint.t = setTimeout(() => hint.done(), 9000);
+    }, 2400);
+    nav && nav.addEventListener('click', () => hint.done());
+  }
+
+  /* ---------- sparks ---------- */
+  let cv, g, P = [], running = false, last = null;
+  function sparks() {
+    if (calm) return;
+    cv = document.createElement('canvas'); cv.id = 'vs-sparks'; document.body.append(cv); g = cv.getContext('2d');
+    const size = () => { cv.width = innerWidth; cv.height = innerHeight; }; size(); addEventListener('resize', size);
+    addEventListener('pointermove', e => { if (e.pointerType === 'touch') return; const d = last ? Math.hypot(e.clientX - last[0], e.clientY - last[1]) : 99; if (d < 26) return; last = [e.clientX, e.clientY]; add(e.clientX, e.clientY, 1, .22); });
+    addEventListener('pointerdown', e => burst(e.clientX, e.clientY, 9), true);
+  }
+  function add(x, y, n, spd) { for (let i = 0; i < n; i++) { const a = Math.random() * 6.28, v = spd * (.4 + Math.random()); P.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - .25, life: 1, d: .012 + Math.random() * .014, r: 1 + Math.random() * 2.2, hue: Math.random() < .2 ? 1 : 0 }); } if (P.length > 260) P.splice(0, P.length - 260); if (!running) { running = true; requestAnimationFrame(tick); } }
+  function burst(x, y, n) { if (calm || !cv) return; add(x, y, n, 2.6); P.push({ ring: true, x, y, life: 1, d: .045 }); }
+  function tick() {
+    g.clearRect(0, 0, cv.width, cv.height); g.globalCompositeOperation = 'lighter';
+    for (let i = P.length - 1; i >= 0; i--) { const p = P[i]; p.life -= p.d; if (p.life <= 0) { P.splice(i, 1); continue; }
+      if (p.ring) { g.strokeStyle = `rgba(255,214,140,${p.life * .7})`; g.lineWidth = 1.5; g.beginPath(); g.arc(p.x, p.y, (1 - p.life) * 46, 0, 7); g.stroke(); continue; }
+      p.x += p.vx; p.y += p.vy; p.vy -= .012; p.vx *= .985; const a = p.life, r = p.r * (.5 + a * .7);
+      g.fillStyle = p.hue ? `rgba(200,225,255,${a * .9})` : `rgba(255,${200 + 40 * a | 0},${120 + 60 * a | 0},${a * .9})`; g.beginPath(); g.arc(p.x, p.y, r, 0, 7); g.fill();
+      g.fillStyle = `rgba(255,200,120,${a * .12})`; g.beginPath(); g.arc(p.x, p.y, r * 4, 0, 7); g.fill(); }
+    g.globalCompositeOperation = 'source-over';
+    if (P.length) requestAnimationFrame(tick); else { running = false; g.clearRect(0, 0, cv.width, cv.height); }
+  }
+  window.VS_BURST = (x, y, n = 20) => burst(x, y, n);
+
+  if (document.readyState === 'loading') addEventListener('DOMContentLoaded', build); else build();
+})();
+
+</script>
+</body>
+</html>

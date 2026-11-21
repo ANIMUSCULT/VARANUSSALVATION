@@ -1,0 +1,1204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, noai, noimageai">
+<script>try{if(!localStorage.getItem('vs-motion-demo')){localStorage.setItem('vs-motion-demo','1');localStorage.setItem('vs-motion','full')}}catch(e){}</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Spirit Radio · Ouija Cat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&family=IBM+Plex+Mono:wght@400;500;600&family=VT323&display=swap" rel="stylesheet">
+<script>/* motion: macOS can ask for less; this site lets you opt back in (stored per browser, all pages) */
+{ let m = null; try { m = localStorage.getItem('vs-motion'); } catch (e) {} if (m !== 'calm') document.documentElement.classList.add('motion-full'); }   // full motion by default (the films and animations are the point); Calm motion is the opt-out
+addEventListener('DOMContentLoaded', () => { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) return; const full = document.documentElement.classList.contains('motion-full');
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'motion-btn'; b.textContent = full ? 'Calm motion' : 'Full motion'; b.title = full ? 'Your Mac asks for reduced motion: calm every animation on this site' : 'Show every animation again';
+  b.onclick = () => { try { full ? localStorage.setItem('vs-motion', 'calm') : localStorage.removeItem('vs-motion'); } catch (e) {} location.reload(); };
+  const bar = document.querySelector('.bar'); if (bar) { const h = bar.querySelector('h1'); h ? h.after(b) : bar.append(b); } });
+</script>
+<style>
+.motion-btn { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #f0d68f; background: rgba(214,164,67,.12); border: 1px solid rgba(214,164,67,.6); padding: 5px 9px; cursor: pointer; white-space: nowrap; }
+:root { --gold: #d6a443; --gold-pale: #f0d68f; --cream: #eee4cb; --muted: #a8aecb; --amber: #ffb347; --bar: 42px;
+  --display: "IM Fell English SC", Georgia, serif; --serif: "IM Fell English", Georgia, serif; --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; height: 100%; background: #0a0705; color: var(--cream); font-family: var(--serif); overflow: hidden; }
+.bar { position: fixed; top: 0; left: 0; right: 0; height: var(--bar); z-index: 20; display: flex; align-items: center; gap: 8px; padding: 0 12px; background: linear-gradient(rgba(0,0,0,.92), rgba(0,0,0,.5)); }
+.bar a, .bar button { font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: rgba(238,228,203,.72); background: transparent; border: 0; border-bottom: 1px solid transparent; padding: 5px 6px; text-decoration: none; cursor: pointer; white-space: nowrap; transition: color .4s, border-color .4s; }
+.bar a:hover, .bar button:hover, .bar button[aria-pressed="true"] { border-bottom-color: rgba(240,214,143,.6); color: var(--gold-pale); }
+.bar, .ask { transition: opacity 1.6s ease; }
+/* the room tabs never hide here: you sit and listen to a radio, and the way back to the other rooms must stay in sight */
+body.vs-quiet .bar, body.quiet .bar { opacity: 1 !important; }
+body.quiet .ask { opacity: .4; }
+body.quiet .ask:focus-within { opacity: 1; }
+.bar h1 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 18px; letter-spacing: .1em; color: var(--gold-pale); white-space: nowrap; flex: 1; }
+.wrap { position: fixed; top: var(--bar); left: 0; right: 0; bottom: 0; display: grid; place-items: center; overflow: hidden; }
+.board { position: relative; width: min(100vw, calc((100vh - var(--bar)) * 1.7857)); aspect-ratio: 2000 / 1120; }
+.board canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 3%, #000 97%, transparent), linear-gradient(to right, transparent, #000 2.5%, #000 97.5%, transparent); -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to bottom, transparent, #000 3%, #000 97%, transparent), linear-gradient(to right, transparent, #000 2.5%, #000 97.5%, transparent); mask-composite: intersect; }
+.board canvas.hand { cursor: pointer; }
+.ask { position: absolute; left: 33%; right: 33%; top: 93.4%; display: flex; gap: 8px; }
+.ask input { flex: 1; min-width: 0; font-family: var(--serif); font-style: italic; font-size: clamp(13px, 1.25vw, 18px); color: var(--cream); background: rgba(8,6,4,.35); border: 0; border-bottom: 1px solid rgba(214,164,67,.35); padding: 6px 8px; text-align: center; transition: border-color .6s; }
+.ask input::placeholder { color: rgba(238,228,203,.45); }
+.ask input:focus { outline: none; border-bottom-color: rgba(240,214,143,.8); }
+.ask button { font-family: var(--mono); font-size: 10.5px; letter-spacing: .26em; color: var(--gold-pale); background: none; border: 0; border-bottom: 1px solid rgba(214,164,67,.35); padding: 0 10px; cursor: pointer; transition: color .4s, text-shadow .4s; }
+.ask button:hover { color: #fff3cf; text-shadow: 0 0 12px rgba(255,200,110,.7); }
+.say { position: absolute; left: 24%; right: 24%; top: .4%; padding: 10px 26px 26px; text-align: center; background: radial-gradient(closest-side, rgba(12,7,4,.8), rgba(12,7,4,.5) 62%, rgba(12,7,4,0)); font-style: italic; font-size: clamp(15px, 1.45vw, 22px); line-height: 1.32; color: #f6e8c6; text-shadow: 0 0 16px rgba(0,0,0,.95); opacity: 0; filter: blur(5px); transform: translateY(-4px); transition: opacity 1.1s ease, filter 1.1s ease, transform 1.1s ease; pointer-events: none; }
+.say.on { opacity: 1; filter: none; transform: none; }
+.say small { display: block; margin-top: 6px; font-style: normal; font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: rgba(214,196,160,.7); }
+.mark { position: absolute; left: 50%; top: 73%; transform: translateX(-50%); font-family: var(--mono); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: #fff; background: #8a1020; border: 1px solid #ff6a7a; padding: 8px 16px; cursor: pointer; box-shadow: 0 0 22px rgba(255,60,80,.45); }
+.blind { position: fixed; inset: 0; z-index: 40; background: #000; display: grid; place-content: center; justify-items: center; gap: 18px; padding: 20px; }
+.blind .q { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; color: rgba(168,174,203,.45); text-transform: uppercase; text-align: center; max-width: 700px; line-height: 1.7; }
+.blind .q b { color: rgba(240,214,143,.7); font-weight: 400; }
+.blind input { width: min(640px, 86vw); font-family: var(--serif); font-size: 28px; color: var(--cream); background: transparent; border: 0; border-bottom: 1px solid rgba(214,164,67,.35); padding: 8px 4px; text-align: center; }
+.blind input:focus { outline: none; }
+.blind .heard { min-height: 1.3em; font-family: var(--display); font-size: 22px; letter-spacing: .1em; color: var(--gold-pale); text-align: center; max-width: 800px; }
+.blind .t { font-family: var(--mono); font-size: 12px; letter-spacing: .3em; color: #e0389a; }
+.blind button { font-family: var(--mono); font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase; color: var(--cream); background: transparent; border: 1px solid rgba(214,164,67,.4); padding: 6px 12px; cursor: pointer; }
+.drawer { position: fixed; top: var(--bar); right: 0; bottom: 0; width: min(460px, 100vw); z-index: 25; background: rgba(6,6,10,.97); border-left: 1px solid rgba(214,164,67,.3); overflow-y: auto; padding: 18px 22px 40px; transform: translateX(100%); transition: transform .35s ease; }
+.drawer.on { transform: none; }
+.drawer h2 { margin: 0 0 4px; font-family: var(--display); font-weight: 400; font-size: 26px; color: var(--gold-pale); letter-spacing: .06em; }
+.drawer .sub { margin: 0 0 16px; font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.drawer h3 { margin: 18px 0 4px; font-family: var(--display); font-weight: 400; font-size: 19px; color: var(--gold-pale); }
+.drawer p { margin: 0 0 8px; font-size: 16px; line-height: 1.38; }
+.drawer p.here { color: #e7c98a; font-style: italic; }
+.drawer .x { position: absolute; top: 12px; right: 14px; font-family: var(--mono); background: none; border: 1px solid rgba(214,164,67,.4); color: var(--cream); padding: 3px 9px; cursor: pointer; }
+.drawer ol { margin: 0; padding-left: 20px; } .drawer li { margin: 0 0 6px; font-size: 15px; line-height: 1.35; }
+.drawer li time { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-right: 6px; }
+.drawer table { width: 100%; border-collapse: collapse; font-size: 14px; } .drawer td { padding: 4px 6px 4px 0; border-bottom: 1px solid rgba(214,164,67,.15); vertical-align: top; } .drawer td:first-child { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; color: var(--gold-pale); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { html:not(.motion-full) .say, html:not(.motion-full) .drawer { transition: none; } html:not(.motion-full) .say { filter: none; } }
+@media (max-width: 760px) { .say { left: 2%; right: 2%; top: auto; bottom: 100%; padding: 0 12px 12px; background: none; font-size: 16px; } .ask { left: 4%; right: 4%; top: 100%; margin-top: 10px; } .mark { top: 60%; } }   /* phones: words above the set, the question box below it */
+</style>
+</head>
+<body data-nofilm="1">
+<div class="bar"><h1>The Spirit Radio</h1>
+  <button type="button" data-deck="kit">The kit</button><button type="button" data-deck="chans">Channels</button><button type="button" data-deck="why">How to listen</button><button type="button" data-deck="history">History</button><button type="button" data-deck="log" id="logBtn">Log</button>
+</div>
+<div class="wrap"><div class="board" id="board">
+  <canvas id="cv" aria-label="Ouija Cat's spirit radio: two three-eyed cats either side of a crystal ball with a burning pentagram, over a black and brass set with two LED screens, a neon ouija board, thirteen jewel channel buttons and a row of switches"></canvas>
+  <div class="say" id="say" role="status" aria-live="polite"></div>
+  <form class="ask" id="ask" autocomplete="off"><input id="q" maxlength="90" placeholder="Ask it something. Out loud helps." aria-label="Your question"><button type="submit">ASK</button></form>
+  <button type="button" class="mark" id="mark" hidden>I heard something</button>
+</div></div>
+<section class="blind" id="blind" hidden aria-label="Blindfold session">
+  <div class="t" id="blindT">3:00</div>
+  <div class="q" id="blindQ"></div>
+  <div class="heard" id="blindHeard"></div>
+  <input id="blindIn" placeholder="type what you hear · enter" aria-label="What you hear">
+  <button type="button" id="blindEnd">End the session</button>
+</section>
+<aside class="drawer" id="drawer" aria-live="polite"><button type="button" class="x" id="dx" aria-label="Close">×</button><div id="dbody"></div></aside>
+
+<script id="vs-chrome">
+/* The shared frame for every page: the rooms as bold tabs (current room lit), a volume slider that every page's
+   sound obeys (window.VS_VOLUME, event 'vs-volume', remembered), gold sparks that follow the cursor and burst on a
+   click, and a dissolve between rooms. Costs nothing when idle: the spark canvas only draws while sparks are alive. */
+(function () {
+  /* ---------- the safety stage: every page's sound passes through it on the way to the speakers ----------
+     It fades in when a room's sound starts or wakes (no click on the first note), takes out sub-bass thumps and DC
+     (the usual cause of pops when things start and stop), catches anything that would clip (crackle), and fades out
+     when you leave a room, so nothing is cut off mid-wave. The Turntable gets no limiter: her masters stay as they are. */
+  (function safeAudio() {
+    if (!window.AudioNode || AudioNode.prototype.__vsSafe) return;
+    const P = AudioNode.prototype, orig = P.connect, bus = new WeakMap(), limit = !/deck\.html$/.test(location.pathname);
+    P.__vsSafe = true; window.__vsBuses = [];
+    function stage(ctx) {
+      let s = bus.get(ctx); if (s) return s;
+      const g = ctx.createGain(); g.gain.value = 0;
+      const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 16; hp.Q.value = .5; orig.call(g, hp); let last = hp;
+      if (limit) { const l = ctx.createDynamicsCompressor(); l.threshold.value = -1; l.knee.value = 0; l.ratio.value = 20; l.attack.value = .002; l.release.value = .12; orig.call(last, l); last = l; }
+      orig.call(last, ctx.destination);
+      const ramp = (to, d) => { const t = ctx.currentTime; g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(g.gain.value, t); g.gain.linearRampToValueAtTime(to, t + d); };
+      s = { g, ctx, up: (d = .45) => ramp(1, d), down: (d = .18) => ramp(0, d) };
+      if (ctx.state === 'running') s.up(.6);
+      ctx.addEventListener('statechange', () => { if (ctx.state === 'running') s.up(.35); });
+      bus.set(ctx, s); window.__vsBuses.push(s); return s;
+    }
+    P.connect = function (dest, out, inp) {
+      if (dest instanceof AudioDestinationNode) { const s = stage(dest.context); if (out == null) orig.call(this, s.g); else orig.call(this, s.g, out); return dest; }
+      return out == null ? orig.call(this, dest) : inp == null ? orig.call(this, dest, out) : orig.call(this, dest, out, inp);
+    };
+    // leaving: every sound on the page fades out (the stage for Web Audio, a quick ramp for films playing on their own)
+    window.VS_FADE_OUT = (ms = 200) => {
+      for (const s of window.__vsBuses) try { s.down(ms / 1000); } catch (e) {}
+      document.querySelectorAll('video, audio').forEach(m => { if (m.muted || m.paused || !m.volume) return; const v0 = m.__vsPre = m.volume, t0 = performance.now(); const step = () => { const k = Math.min(1, (performance.now() - t0) / ms); m.volume = v0 * (1 - k); if (k < 1) requestAnimationFrame(step); }; step(); });
+    };
+    addEventListener('pagehide', () => window.VS_FADE_OUT(60));
+  })();
+
+  /* ---------- films stay in the page: a phone never lifts one out ----------
+     iPhones play a video full-screen, offer picture-in-picture, or pop it into a floating preview on a long press, unless
+     told not to. Every film here is part of the room's background, so each one is pinned: inline, no picture-in-picture,
+     no AirPlay, no controls, and touches pass through it to the room. Films made later (by a room's own code) get the same
+     the moment they're added or played. */
+  (function pinFilms() {
+    const pin = v => { if (!v || v.__vsPinned || v.tagName !== 'VIDEO') return; v.__vsPinned = true;
+      v.playsInline = true; v.setAttribute('playsinline', ''); v.setAttribute('webkit-playsinline', ''); v.setAttribute('x-webkit-airplay', 'deny');
+      v.controls = false; v.removeAttribute('controls'); try { v.disablePictureInPicture = true; v.setAttribute('disablepictureinpicture', ''); } catch (e) {}
+      try { v.disableRemotePlayback = true; v.setAttribute('disableremoteplayback', ''); } catch (e) {}
+      v.addEventListener('webkitbeginfullscreen', () => { try { v.webkitExitFullscreen(); } catch (e) {} });
+      v.addEventListener('enterpictureinpicture', () => { try { document.exitPictureInPicture(); } catch (e) {} }); };
+    const all = () => document.querySelectorAll('video').forEach(pin); all();
+    const play = HTMLMediaElement.prototype.play; HTMLMediaElement.prototype.play = function () { pin(this); return play.apply(this, arguments); };
+    new MutationObserver(ms => { for (const m of ms) for (const n of m.addedNodes) { if (n.tagName === 'VIDEO') pin(n); else if (n.querySelectorAll) n.querySelectorAll('video').forEach(pin); } }).observe(document.documentElement, { childList: true, subtree: true });
+    const st = document.createElement('style'); st.textContent = 'video { pointer-events: none; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; } video::-webkit-media-controls, video::-webkit-media-controls-start-playback-button, video::-webkit-media-controls-overlay-play-button { display: none !important; -webkit-appearance: none; }';
+    (document.head || document.documentElement).append(st);
+  })();
+
+  const ROOMS = [['./', 'Templum', '☥', 'The board. Ask him.'], ['parlour.html', 'Parlour', '♄', 'His console. Every key plays.'], ['deck.html', 'Turntable', '◉', 'ANIMUSCULT on his decks.'], ['palm.html', 'Palm', '✶', 'Your hand, read.'], ['crystal.html', 'Crystal', '◎', 'The seer’s sitting.'], ['mirror.html', 'Mirror', '◐', 'Two mirrors, facing.'], ['mesmer.html', 'Trance', '❂', 'The magnetic tub. Go under.'], ['sleep.html', 'Sleep', '☾', 'Sleep sounds. The screen can go off.'], ['geometry.html', 'Geometry', '❋', 'Sacred geometry and mandalas.'], ['forge.html', 'Forge', '✧', 'Sigils from your words.'], ['engine.html', 'Engine', '⚙︎', 'The dome machine. Scry with him.'], ['radio.html', 'Radio', '⌁', 'Live voices from everywhere.'], ['compendium.html', 'Compendium', '☘', 'The library of plant medicine, A to Z.']];
+  window.VS_ROOMS = ROOMS;   // the Templum's floating doors read this, so a new room shows up there too
+  const here = (location.pathname.split('/').pop() || 'index.html').replace('index.html', '') || './';
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches && !document.documentElement.classList.contains('motion-full');
+
+  /* ---------- volume ---------- */
+  let vol = .8; try { const v = parseFloat(localStorage.getItem('vs-volume')); if (v >= 0 && v <= 1) vol = v; } catch (e) {}
+  window.VS_VOLUME = vol;
+  const setVol = v => { vol = window.VS_VOLUME = Math.max(0, Math.min(1, v)); try { localStorage.setItem('vs-volume', String(vol)); } catch (e) {} dispatchEvent(new CustomEvent('vs-volume', { detail: vol })); document.querySelectorAll('.vs-vol input').forEach(i => { i.value = Math.round(vol * 100); }); document.querySelectorAll('.vs-vol').forEach(l => l.classList.toggle('mute', vol === 0)); };
+  // media elements on the page follow it too (films, his recorded voice)
+  const mediaVol = () => document.querySelectorAll('video, audio').forEach(m => { if (m.dataset.vsBase == null) m.dataset.vsBase = m.volume; m.volume = Math.min(1, +m.dataset.vsBase * vol); });
+  addEventListener('vs-volume', () => { if (!document.body?.dataset.novol) mediaVol(); });
+
+  /* ---------- styles (added last, so they win) ---------- */
+  const css = `
+.bar { gap: 7px !important; }
+.bar h1 { display: none !important; }
+.bar .vs-rooms { display: flex; gap: 6px; align-items: center; overflow-x: auto; scrollbar-width: none; flex: 1 1 auto; min-width: 0; }
+.bar .vs-rooms::-webkit-scrollbar { display: none; }
+.bar a.vs-room { position: relative; display: inline-flex !important; align-items: center; gap: 7px; font-family: "IBM Plex Mono", ui-monospace, monospace !important; font-size: 11px !important; font-weight: 400; letter-spacing: .16em !important; text-transform: uppercase; color: rgba(243,230,196,.62) !important; text-decoration: none; padding: 7px 10px 7px 8px !important; border: 0 !important; border-radius: 0; background: none !important; box-shadow: none; transition: color .5s ease, text-shadow .5s ease; white-space: nowrap; }
+.bar a.vs-room i { font-style: normal; font-size: 14px; color: rgba(240,199,106,.7); transition: color .5s, text-shadow .5s; }
+.bar a.vs-room::after { content: ""; position: absolute; left: 10px; right: 10px; bottom: 2px; height: 1px; background: linear-gradient(90deg, transparent, rgba(240,214,143,.85), transparent); opacity: 0; transform: scaleX(.4); transition: opacity .5s ease, transform .5s ease; }
+.bar a.vs-room:hover { color: #fbefcf !important; text-shadow: 0 0 14px rgba(255,210,130,.45); }
+.bar a.vs-room:hover i { color: #f6d27e; text-shadow: 0 0 10px rgba(240,190,90,.7); }
+.bar a.vs-room:hover::after { opacity: .5; transform: none; }
+.bar a.vs-room[aria-current="page"] { color: #fff3d2 !important; text-shadow: 0 0 16px rgba(255,205,120,.55); }
+.bar a.vs-room[aria-current="page"] i { color: #ffd77e; text-shadow: 0 0 12px rgba(255,200,100,.9); }
+.bar a.vs-room[aria-current="page"]::after { opacity: 1; transform: none; }
+.bar > button:not(.unzoom):not(.vs-menu), .bar > a:not(.vs-room), .bar .motion-btn { background: none !important; border: 0 !important; border-bottom: 1px solid transparent !important; border-radius: 0 !important; box-shadow: none !important; color: rgba(238,228,203,.66) !important; transition: color .5s, border-color .5s !important; }
+.bar > button:not(.unzoom):not(.vs-menu):hover, .bar > a:not(.vs-room):hover, .bar .motion-btn:hover, .bar > button[aria-pressed="true"], .bar > button.on { color: #f0d68f !important; border-bottom-color: rgba(240,214,143,.55) !important; }
+.vs-vol { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border: 0; border-radius: 3px; color: rgba(240,199,106,.8); background: none; }
+/* the room breathes out when nobody is touching anything: the frame steps back and leaves the room */
+.bar, .foot, .vs-vol.float { transition: opacity 1.8s ease; }
+body.vs-quiet .bar, body.vs-quiet .foot, body.vs-quiet .vs-vol.float { opacity: 0; }
+body.sitting .bar { opacity: 0 !important; }   /* a sitting hides the frame completely: no half-dimmed grey bar */
+body.sitting .bar:hover, body.sitting .bar:focus-within { opacity: 1 !important; }
+body.vs-quiet .bar:hover, body.vs-quiet .bar:focus-within, body.vs-quiet .vs-vol.float:hover { opacity: 1; transition-duration: .4s; }
+/* one film over every room: a soft vignette and a fine grain, so the rooms read as one place */
+.vs-film { position: fixed; inset: 0; z-index: 19; pointer-events: none; background: radial-gradient(ellipse 75% 70% at 50% 54%, rgba(0,0,0,0) 55%, rgba(0,0,0,.34) 100%); }
+.vs-film::after { content: ""; position: absolute; inset: 0; opacity: .05; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -.35'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.foot { font-size: 11.5px !important; letter-spacing: .04em !important; color: rgba(238,228,203,.5) !important; bottom: 6px !important; }
+/* phones: the rooms fold into one menu button; the page's own buttons move into the same sheet */
+.bar .vs-menu { display: none; align-items: center; gap: 9px; flex: none; font: 500 11.5px/1 "IBM Plex Mono", ui-monospace, monospace; letter-spacing: .16em; text-transform: uppercase; color: #fff3d2; background: linear-gradient(rgba(214,164,67,.16), rgba(214,164,67,.06)); border: 1px solid rgba(240,214,143,.5); border-radius: 3px; padding: 0 12px 0 10px; height: 32px; cursor: pointer; box-shadow: 0 0 0 rgba(240,199,106,0), inset 0 0 12px rgba(214,164,67,.08); transition: border-color .3s, box-shadow .3s, background .3s; }
+.bar .vs-menu:hover, .bar .vs-menu[aria-expanded="true"] { border-color: #f0d68f; background: linear-gradient(rgba(214,164,67,.28), rgba(214,164,67,.1)); box-shadow: 0 0 18px rgba(240,199,106,.28), inset 0 0 12px rgba(214,164,67,.12); }
+.bar .vs-menu svg { width: 15px; height: 15px; flex: none; color: #ffd77e; }
+.bar .vs-menu .vs-n { font-weight: 400; font-size: 10px; letter-spacing: 0; color: #120a04; background: #e9c46e; border-radius: 8px; padding: 2px 5px 1px; }
+.bar .vs-menu .vs-here { display: inline-flex; align-items: center; gap: 6px; padding-left: 9px; border-left: 1px solid rgba(240,214,143,.3); color: rgba(243,230,196,.75); letter-spacing: .12em; }
+.bar .vs-menu .vs-here i { font-style: normal; font-size: 13px; color: #ffd77e; }
+.bar .vs-menu.vs-call { animation: vsCall 1.6s ease-in-out 4; }
+@keyframes vsCall { 50% { border-color: #ffe7a8; box-shadow: 0 0 26px rgba(255,205,110,.55), inset 0 0 14px rgba(255,205,110,.2); } }
+.bar.vs-tight .vs-rooms { display: none !important; }
+.bar.vs-tight .vs-menu { display: inline-flex; }
+.bar > button, .bar > a:not(.vs-room), .bar .motion-btn, .bar > label { white-space: nowrap; flex: none; }
+/* a room's opening screen sits under the bar, so the way to the other rooms is there from the first second */
+body:has(.gate:not([hidden])) .bar { z-index: 9 !important; opacity: 1 !important; }
+/* the first visit: one quiet word under the rooms, once */
+.vs-hint { position: fixed; z-index: 9991; max-width: 270px; padding: 11px 14px 12px; font: italic 400 15px/1.35 "IM Fell English", Georgia, serif; color: #f3e6c4; background: rgba(8,6,12,.94); border: 1px solid rgba(240,214,143,.45); box-shadow: 0 10px 40px rgba(0,0,0,.6), 0 0 22px rgba(214,164,67,.15); opacity: 0; transform: translateY(-4px); transition: opacity .5s ease, transform .5s ease; pointer-events: none; }
+.vs-hint.on { opacity: 1; transform: none; }
+.vs-hint::before { content: ""; position: absolute; top: -6px; left: var(--ax, 22px); width: 10px; height: 10px; background: inherit; border-left: 1px solid rgba(240,214,143,.45); border-top: 1px solid rgba(240,214,143,.45); transform: rotate(45deg); }
+.vs-hint b { display: block; margin-bottom: 3px; font: 500 10px/1 "IBM Plex Mono", ui-monospace, monospace; font-style: normal; letter-spacing: .2em; text-transform: uppercase; color: #f0c76a; }
+.vs-sheet { position: fixed; inset: 0; z-index: 9990; overflow-y: auto; background: rgba(5,4,10,.97); color: #efe4c8; padding: calc(14px + env(safe-area-inset-top, 0px)) max(18px, env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px)); display: grid; align-content: start; gap: 14px; opacity: 0; transition: opacity .25s ease; }
+.vs-sheet.on { opacity: 1; }
+.vs-sheet .vs-sh-top { display: flex; align-items: center; justify-content: space-between; }
+.vs-sheet h2 { margin: 0; font: 500 11px/1 "IBM Plex Mono", ui-monospace, monospace; letter-spacing: .22em; text-transform: uppercase; color: rgba(240,199,106,.85); }
+.vs-sheet .vs-x { width: 44px; height: 44px; border: 0; background: none; color: #efe4c8; font-size: 22px; cursor: pointer; }
+.vs-sheet .vs-sh-rooms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.vs-sheet .vs-sh-rooms a { display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 10px 14px; border: 1px solid rgba(214,164,67,.28); color: #f3e6c4; text-decoration: none; font: 400 19px/1.1 "IM Fell English SC", "IM Fell English", Georgia, serif; }
+.vs-sheet .vs-sh-rooms a i { font-style: normal; font-size: 22px; color: #f0c76a; width: 26px; text-align: center; }
+.vs-sheet .vs-sh-rooms a span { display: grid; gap: 4px; }
+.vs-sheet .vs-sh-rooms a small { font: italic 400 12.5px/1.25 "IM Fell English", Georgia, serif; color: rgba(239,228,200,.6); }
+.vs-sheet.drop { inset: auto; top: calc(var(--vs-bar-b, 46px) + 6px); left: var(--vs-drop-x, 10px); width: min(360px, calc(100vw - 20px)); max-height: calc(100vh - var(--vs-bar-b, 46px) - 20px); padding: 14px; gap: 10px; background: rgba(8,6,12,.96); border: 1px solid rgba(240,214,143,.4); box-shadow: 0 18px 60px rgba(0,0,0,.7), 0 0 30px rgba(214,164,67,.12); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); transform: translateY(-6px); transition: opacity .2s ease, transform .2s ease; }
+.vs-sheet.drop.on { transform: none; }
+.vs-sheet.drop .vs-x { width: 32px; height: 32px; font-size: 16px; }
+.vs-sheet.drop .vs-sh-rooms { grid-template-columns: 1fr; gap: 2px; }
+.vs-sheet.drop .vs-sh-rooms a { min-height: 50px; border-color: transparent; font-size: 18px; transition: background .2s, border-color .2s; }
+.vs-sheet.drop .vs-sh-rooms a:hover { background: rgba(214,164,67,.1); border-color: rgba(214,164,67,.3); }
+.vs-sheet .vs-sh-rooms a[aria-current="page"] { border-color: #f0d68f; background: rgba(214,164,67,.14); box-shadow: 0 0 22px rgba(214,164,67,.18); }
+.vs-sheet .vs-sh-tools { display: grid; gap: 0; border-top: 1px solid rgba(214,164,67,.2); }
+.vs-sheet .vs-sh-tools > * { display: flex !important; align-items: center; width: 100%; min-height: 48px; margin: 0 !important; padding: 0 4px !important; text-align: left; font: 500 12.5px/1.2 "IBM Plex Mono", ui-monospace, monospace !important; letter-spacing: .12em !important; text-transform: uppercase; color: #efe4c8 !important; background: none !important; border: 0 !important; border-bottom: 1px solid rgba(214,164,67,.14) !important; border-radius: 0 !important; box-shadow: none !important; position: static !important; opacity: 1 !important; text-decoration: none; cursor: pointer; }
+.vs-sheet .vs-sh-tools:empty { display: none; }
+@media (max-width: 760px) { .bar .vs-rooms { display: none !important; } .bar .vs-menu { display: inline-flex; } .bar .vs-menu .vs-here span { display: none; } .bar .vs-vol { margin-left: auto; } }
+/* power: every room switches off and on from the bar */
+.bar .vs-pow { display: inline-flex !important; align-items: center; gap: 7px; flex: none; font: 500 10.5px/1 "IBM Plex Mono", ui-monospace, monospace !important; letter-spacing: .16em !important; text-transform: uppercase; color: rgba(238,228,203,.7) !important; background: none !important; border: 0 !important; padding: 6px 6px !important; cursor: pointer; white-space: nowrap; }
+.bar .vs-pow i { width: 7px; height: 7px; border-radius: 50%; background: #7dffb0; box-shadow: 0 0 8px #3dff8a, 0 0 2px #fff inset; transition: background .4s, box-shadow .4s; }
+.bar .vs-pow svg { width: 14px; height: 14px; }
+.bar .vs-pow:hover { color: #f0d68f !important; }
+body.vs-off .bar .vs-pow i { background: #4a1712; box-shadow: none; }
+body.vs-off .bar { z-index: 9990 !important; opacity: 1 !important; }
+.vs-offveil { position: fixed; inset: 0; z-index: 9989; display: grid; place-items: center; background: #030206; opacity: 0; pointer-events: none; transition: opacity .45s ease .25s; }
+.vs-offveil::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px; background: linear-gradient(90deg, transparent, rgba(255,236,190,.9), transparent); box-shadow: 0 0 24px rgba(255,214,140,.8); transform: scaleX(0); opacity: 0; }
+body.vs-off .vs-offveil { opacity: 1; pointer-events: auto; }
+body.vs-off .vs-offveil::before { animation: vsCrt .6s ease-out; }
+@keyframes vsCrt { 0% { transform: scaleX(1) scaleY(30); opacity: .0; } 30% { transform: scaleX(1) scaleY(1); opacity: 1; } 100% { transform: scaleX(0); opacity: 0; } }
+.vs-offveil button { display: grid; justify-items: center; gap: 14px; background: none; border: 0; color: rgba(243,230,196,.7); font: italic 400 17px/1.3 "IM Fell English", Georgia, serif; cursor: pointer; opacity: 0; transition: opacity .6s ease .45s, color .3s; }
+body.vs-off .vs-offveil button { opacity: 1; }
+.vs-offveil button:hover { color: #fff3d2; }
+.vs-offveil button span { display: grid; place-items: center; width: 74px; height: 74px; border-radius: 50%; border: 1px solid rgba(240,214,143,.45); color: #f0c76a; box-shadow: 0 0 30px rgba(214,164,67,.15), inset 0 0 20px rgba(214,164,67,.08); transition: box-shadow .4s, border-color .4s; }
+.vs-offveil button:hover span { border-color: #f0d68f; box-shadow: 0 0 40px rgba(240,199,106,.35), inset 0 0 20px rgba(214,164,67,.15); }
+.vs-offveil button svg { width: 30px; height: 30px; }
+.vs-vol svg { width: 16px; height: 16px; flex: none; cursor: pointer; }
+.vs-vol.mute svg .w { display: none; }
+.vs-vol input { -webkit-appearance: none; appearance: none; width: 84px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, #f0c76a var(--p, 80%), rgba(214,164,67,.25) var(--p, 80%)); outline: none; cursor: pointer; }
+.vs-vol input::-webkit-slider-thumb { -webkit-appearance: none; width: 13px; height: 13px; border-radius: 50%; background: radial-gradient(#fff6d8, #d6a443); box-shadow: 0 0 8px rgba(240,200,120,.8); border: 0; }
+.vs-vol input::-moz-range-thumb { width: 13px; height: 13px; border-radius: 50%; background: #e8c070; border: 0; }
+.vs-vol.float { position: fixed; right: 14px; bottom: 14px; z-index: 40; background: rgba(6,5,10,.85); }
+.vs-fade { position: fixed; inset: 0; z-index: 9998; pointer-events: none; background: radial-gradient(ellipse at 50% 50%, rgba(255,214,140,.0), #030206 70%); opacity: 0; transition: opacity .32s ease; }
+.vs-fade.arrive { transition: opacity .9s cubic-bezier(.3,.1,.3,1); }
+.vs-fade.on { opacity: 1; background: radial-gradient(ellipse at 50% 50%, rgba(255,214,140,.25), #030206 60%); }
+#vs-sparks { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 9997; pointer-events: none; }
+@media (max-width: 1100px) { .bar a.vs-room { font-size: 10.5px !important; padding: 6px 9px 6px 8px !important; letter-spacing: .1em !important; } }
+@media (max-width: 760px) { .vs-vol input { width: 56px; } }
+/* step outside: real-world help, plain on purpose (outside the room's look and not in his voice); never fades, never hidden */
+.vs-out { position: fixed; left: max(10px, env(safe-area-inset-left, 0px)); bottom: max(10px, env(safe-area-inset-bottom, 0px)); z-index: 9995; display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; font: 500 11px/1 system-ui, -apple-system, "Segoe UI", sans-serif; letter-spacing: .02em; color: rgba(255,255,255,.62); background: rgba(20,20,24,.72); border: 1px solid rgba(255,255,255,.18); border-radius: 999px; cursor: pointer; opacity: .7; transition: opacity .3s, color .3s, border-color .3s; }
+.vs-out:hover, .vs-out:focus-visible { opacity: 1; color: #fff; border-color: rgba(255,255,255,.5); }
+.vs-out svg { width: 12px; height: 12px; }
+.vs-outp { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; padding: 16px; background: rgba(0,0,0,.6); }
+.vs-outp[hidden] { display: none; }
+.vs-outp .vs-ob { width: min(520px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; padding: 22px 22px 18px; background: #f6f6f4; color: #1d1d1f; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.5); font: 400 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+.vs-outp h2 { margin: 0 0 8px; font: 600 19px/1.25 system-ui, -apple-system, "Segoe UI", sans-serif; letter-spacing: 0; text-transform: none; color: #1d1d1f; }
+.vs-outp h3 { margin: 16px 0 6px; font: 600 13px/1.3 system-ui, -apple-system, "Segoe UI", sans-serif; color: #444; }
+.vs-outp p { margin: 0 0 8px; }
+.vs-outp ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.vs-outp li a { display: block; padding: 9px 12px; border-radius: 8px; background: #fff; border: 1px solid #ddd; color: #0b57d0; text-decoration: none; }
+.vs-outp li a:hover { border-color: #0b57d0; }
+.vs-outp li a small { display: block; color: #555; font-size: 13px; }
+.vs-outp .vs-oe { padding: 10px 12px; border-radius: 8px; background: #fff1f0; border: 1px solid #f3c2bd; }
+.vs-outp .vs-of { margin-top: 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; color: #666; font-size: 12.5px; }
+.vs-outp .vs-of button { padding: 8px 16px; border-radius: 8px; border: 1px solid #bbb; background: #fff; color: #1d1d1f; font: 500 14px system-ui, -apple-system, sans-serif; cursor: pointer; }
+@media print { .vs-out { display: none; } }
+`;
+  const st = document.createElement('style'); st.textContent = css;
+
+  function build() {
+    document.head.appendChild(st);
+    // the rooms
+    const bar = document.querySelector('header.bar, .bar');
+    if (bar) {
+      bar.querySelectorAll(':scope > a').forEach(a => { const h = a.getAttribute('href') || ''; if (ROOMS.some(([r]) => r === h || (r === './' && (h === './' || h === 'index.html')))) a.remove(); });
+      const nav = document.createElement('nav'); nav.className = 'vs-rooms'; nav.setAttribute('aria-label', 'Rooms');
+      for (const [href, name, glyph] of ROOMS) { const a = document.createElement('a'); a.className = 'vs-room'; a.href = href; a.innerHTML = `<i aria-hidden="true">${glyph}</i><span>${name}</span>`; a.title = name; if (href === here) a.setAttribute('aria-current', 'page'); nav.append(a); }
+      bar.prepend(nav);
+    }
+    // volume (the Turntable has its own big volume in the transport, so it gets none here)
+    if (!document.body.dataset.novol) {
+      const l = document.createElement('label'); l.className = 'vs-vol' + (bar ? '' : ' float'); l.title = 'Volume (every room)';
+      l.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path class="w" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><input type="range" min="0" max="100" step="1" aria-label="Volume">`;
+      const inp = l.querySelector('input'), paint = () => inp.style.setProperty('--p', inp.value + '%');
+      inp.value = Math.round(vol * 100); paint(); l.classList.toggle('mute', vol === 0);
+      inp.addEventListener('input', () => { setVol(inp.value / 100); paint(); });
+      let before = vol; l.querySelector('svg').addEventListener('click', e => { e.preventDefault(); if (vol > 0) { before = vol; setVol(0); } else setVol(before || .8); paint(); });
+      if (bar) { const last = bar.querySelector('#txBtn, #fsBtn, #listBtn'); last ? last.before(l) : bar.append(l); } else document.body.append(l);
+    }
+    power(bar);
+    outside();
+    if (bar) menu(bar);   // after the volume is placed, so the volume stays in the bar on a phone
+    if (!document.body.dataset.novol) mediaVol();
+    const fs = document.getElementById('fsBtn'); if (fs && innerWidth < 1180) { fs.textContent = '⤢'; fs.title = 'Full screen'; fs.setAttribute('aria-label', 'Full screen'); }
+    // the dissolve between rooms
+    const fade = document.createElement('div'); fade.className = 'vs-fade'; document.body.append(fade);
+    try { if (sessionStorage.getItem('vs-arrive')) { sessionStorage.removeItem('vs-arrive'); fade.style.transition = 'none'; fade.classList.add('on'); requestAnimationFrame(() => requestAnimationFrame(() => { fade.style.transition = ''; if (!calm) fade.classList.add('arrive'); fade.classList.remove('on'); setTimeout(() => fade.classList.remove('arrive'), 1000); })); } } catch (e) {}
+    // the film (pages that draw their own, like the radio, opt out with data-nofilm)
+    if (!document.body.dataset.nofilm) { const film = document.createElement('div'); film.className = 'vs-film'; film.setAttribute('aria-hidden', 'true'); document.body.append(film); }
+    // quiet: after a while with no hand on anything, the frame fades back. Never while typing or with a menu open
+    let qt = 0; const busy = () => { const a = document.activeElement; return a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable) || document.querySelector('.drawer.on, dialog[open], [aria-modal="true"]:not([hidden])'); };
+    const wake = () => { document.body.classList.remove('vs-quiet'); clearTimeout(qt); qt = setTimeout(function q() { if (busy()) { qt = setTimeout(q, 3000); return; } document.body.classList.add('vs-quiet'); }, 11000); };
+    ['pointermove', 'pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(ev => addEventListener(ev, wake, { passive: true })); wake();
+    document.addEventListener('click', e => {
+      const a = e.target.closest('a.vs-room, a.play-link'); if (!a || e.metaKey || e.ctrlKey || a.target === '_blank') return;
+      e.preventDefault(); burst(e.clientX, e.clientY, 26); fade.classList.add('on'); try { window.VS_FADE_OUT(calm ? 60 : 220); } catch (er) {} try { sessionStorage.setItem('vs-arrive', '1'); } catch (er) {}
+      setTimeout(() => { location.href = a.href; }, calm ? 60 : 240);
+    });
+    // instant rooms: when the pointer rests on a room tab, the browser builds that page in the background, so the click
+    // just swaps it in (Chrome's speculation rules; other browsers ignore this and load normally)
+    try { if (HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules')) { const sr = document.createElement('script'); sr.type = 'speculationrules';
+      sr.textContent = JSON.stringify({ prerender: [{ where: { and: [{ href_matches: '/*.html' }, { selector_matches: 'a.vs-room, a.play-link' }] }, eagerness: 'moderate' }] }); document.head.append(sr); } } catch (e) {}
+    sparks();
+  }
+
+  /* ---------- power: the room switches off (sound fades and stops, films pause, the screen closes like an old set) ---------- */
+  function power(bar) {
+    const ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v8M7.05 6.05a7.5 7.5 0 1 0 9.9 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+    const veil = document.createElement('div'); veil.className = 'vs-offveil'; veil.innerHTML = `<button type="button">${'<span>' + ICON + '</span>'}Switched off. Touch to wake the room.</button>`; document.body.append(veil);
+    let btn = null;
+    if (bar) { btn = document.createElement('button'); btn.type = 'button'; btn.className = 'vs-pow'; btn.innerHTML = '<i aria-hidden="true"></i>Power'; btn.title = 'Switch this room off and on'; btn.setAttribute('aria-pressed', 'true');
+      const v = bar.querySelector('.vs-vol'); v ? v.before(btn) : bar.append(btn); }
+    let paused = [];
+    const set = on => {
+      if (on === !document.body.classList.contains('vs-off')) return;
+      document.body.classList.toggle('vs-off', !on); if (btn) { btn.setAttribute('aria-pressed', String(on)); btn.title = on ? 'Switch this room off' : 'Switch this room on'; }
+      dispatchEvent(new CustomEvent('vs-power', { detail: { on } }));
+      if (!on) {
+        window.VS_FADE_OUT(260);
+        setTimeout(() => { if (document.body.classList.contains('vs-off')) { for (const s of window.__vsBuses) try { s.ctx.suspend(); } catch (e) {} paused = [...document.querySelectorAll('video')].filter(m => !m.paused); paused.forEach(m => m.pause()); } }, 300);
+      } else {
+        for (const s of window.__vsBuses) try { s.ctx.resume().then(() => s.up(.6)); } catch (e) {}
+        paused.forEach(m => { if (m.__vsPre != null) { m.volume = m.__vsPre; m.__vsPre = null; } m.play().catch(() => {}); }); paused = [];
+      }
+    };
+    window.VS_POWER = set;
+    btn && btn.addEventListener('click', () => set(document.body.classList.contains('vs-off')));
+    veil.querySelector('button').addEventListener('click', () => set(true));
+  }
+
+  /* ---------- step outside: real help, outside the game ---------- */
+  function outside() {
+    if (document.querySelector('.vs-out')) return;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'vs-out'; b.title = 'Real-world help, outside the game';
+    b.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2h7v12H3zM10 8h4M12 6l2 2-2 2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Step outside';
+    const p = document.createElement('div'); p.className = 'vs-outp'; p.hidden = true;
+    p.setAttribute('role', 'dialog'); p.setAttribute('aria-modal', 'true'); p.setAttribute('aria-labelledby', 'vs-out-h');
+    p.innerHTML = `<div class="vs-ob">
+      <h2 id="vs-out-h">Outside the game</h2>
+      <p>This is real-world help. The room's sound is switched off while you're here.</p>
+      <p class="vs-oe"><b>In danger, or might hurt yourself?</b> Call your local emergency number now: 911 (US, Canada), 999 (UK), 112 (EU and many countries), 000 (Australia).</p>
+      <h3>Talk to someone now</h3>
+      <ul>
+        <li><a href="tel:988">988 Suicide &amp; Crisis Lifeline<small>US · call or text 988, any time</small></a></li>
+        <li><a href="tel:116123">Samaritans · 116 123<small>UK and Ireland · free, any time</small></a></li>
+        <li><a href="https://findahelpline.com" target="_blank" rel="noopener">Find A Helpline<small>Free, confidential helplines in your country</small></a></li>
+      </ul>
+      <h3>Hearing voices, or seeing things others don't?</h3>
+      <ul>
+        <li><a href="https://www.hearing-voices.org" target="_blank" rel="noopener">Hearing Voices Network<small>Peer support groups</small></a></li>
+        <li><a href="https://www.intervoiceonline.org" target="_blank" rel="noopener">Intervoice<small>The international hearing voices network</small></a></li>
+      </ul>
+      <h3>Right now</h3>
+      <p>Feet on the floor. Name five things you can see, four you can touch, three you can hear, two you can smell, one you can taste. Breathe out slower than you breathe in.</p>
+      <div class="vs-of"><span>Nothing here is sent anywhere.</span><button type="button">Close</button></div></div>`;
+    // the floating corner button is off for now (the owner found it intrusive); the panel stays, opened by window.VS_OUTSIDE
+    // (the Compendium's rotary phone). To bring the button back, set SHOW_BUTTON to true.
+    const SHOW_BUTTON = false;
+    document.body.append(...(SHOW_BUTTON ? [b, p] : [p]));
+    let back = null;
+    const open = () => { back = document.activeElement; p.hidden = false; try { window.VS_POWER && window.VS_POWER(false); } catch (e) {} p.querySelector('.vs-ob').scrollTop = 0; p.querySelector('.vs-of button').focus({ preventScroll: true }); };
+    const close = () => { p.hidden = true; try { back && back.focus && back.focus(); } catch (e) {} };
+    b.addEventListener('click', open);
+    p.querySelector('.vs-of button').addEventListener('click', close);
+    p.addEventListener('click', e => { if (e.target === p) close(); });
+    addEventListener('keydown', e => {
+      if (p.hidden) return;
+      if (e.key === 'Escape') { e.stopImmediatePropagation(); e.preventDefault(); close(); return; }
+      if (e.key === 'Tab') { const f = [...p.querySelectorAll('a, button')], i = f.indexOf(document.activeElement); if (e.shiftKey ? i <= 0 : i === f.length - 1) { e.preventDefault(); f[e.shiftKey ? f.length - 1 : 0].focus(); } }
+      e.stopImmediatePropagation();   // the room's own keys (notes, Esc to end a sitting) stay quiet while this is open
+    }, true);
+    window.VS_OUTSIDE = open;
+    // a room with its own bar along the bottom (the Turntable's transport) gets the button lifted just above it
+    const place = () => {
+      b.style.bottom = ''; const o = b.getBoundingClientRect(); let lift = 0;
+      for (const e of document.querySelectorAll('body > *, body > * > *')) {
+        if (e === b || e === p || e.classList.contains('vs-film')) continue;
+        const cs = getComputedStyle(e); if (cs.position !== 'fixed' && cs.position !== 'absolute' || cs.display === 'none' || cs.visibility === 'hidden') continue;
+        const r = e.getBoundingClientRect(); if (r.height > innerHeight * .4 || r.bottom < innerHeight - 4 || r.left > o.right || r.right < o.left || r.top > o.bottom) continue;
+        lift = Math.max(lift, innerHeight - r.top + 8);
+      }
+      if (lift) b.style.bottom = lift + 'px';
+    };
+    if (SHOW_BUTTON) { place(); addEventListener('resize', place); setTimeout(place, 1500); setTimeout(place, 5000); }
+  }
+
+  /* ---------- the phone menu ---------- */
+  function menu(bar) {
+    const cur = ROOMS.find(([h]) => h === here) || ROOMS[0];
+    const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'vs-menu'; btn.setAttribute('aria-haspopup', 'dialog'); btn.setAttribute('aria-expanded', 'false');
+    btn.innerHTML = `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Rooms<span class="vs-n" aria-hidden="true">${ROOMS.length}</span><span class="vs-here"><i aria-hidden="true">${cur[2]}</i><span>${cur[1]}</span></span>`;
+    btn.title = 'All the rooms'; btn.setAttribute('aria-label', `Rooms (${ROOMS.length}). You are in ${cur[1]}`);
+    bar.prepend(btn);
+    const sh = document.createElement('div'); sh.className = 'vs-sheet'; sh.hidden = true; sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.setAttribute('aria-label', 'Rooms');
+    sh.innerHTML = `<div class="vs-sh-top"><h2>Rooms</h2><button type="button" class="vs-x" aria-label="Close">✕</button></div><nav class="vs-sh-rooms" aria-label="Rooms">${ROOMS.map(([h, n, g, d]) => `<a class="vs-room" href="${h}"${h === here ? ' aria-current="page"' : ''}><i aria-hidden="true">${g}</i><span>${n}<small>${d}</small></span></a>`).join('')}</nav><h2 class="vs-sh-th">This room</h2><div class="vs-sh-tools"></div>`;
+    document.body.append(sh);
+    const tools = sh.querySelector('.vs-sh-tools');
+    // the tools heading hides itself when the room has no buttons of its own
+    const syncHead = () => { sh.querySelector('.vs-sh-th').hidden = !tools.children.length; };
+    const phone = matchMedia('(max-width: 760px)');
+    const open = () => { if (sh.classList.contains('on')) return close(); hint.done();
+      // a computer gets a dropdown hanging from the button; a phone gets the whole screen
+      const drop = !phone.matches; sh.classList.toggle('drop', drop);
+      if (drop) { const b = btn.getBoundingClientRect(), r = bar.getBoundingClientRect(); sh.style.setProperty('--vs-bar-b', r.bottom + 'px'); sh.style.setProperty('--vs-drop-x', Math.max(10, b.left) + 'px'); }
+      sh.hidden = false; requestAnimationFrame(() => sh.classList.add('on')); btn.setAttribute('aria-expanded', 'true'); (sh.querySelector('.vs-sh-rooms a[aria-current]') || sh.querySelector('.vs-x')).focus({ preventScroll: true }); };
+    const close = () => { sh.classList.remove('on'); btn.setAttribute('aria-expanded', 'false'); setTimeout(() => { if (!sh.classList.contains('on')) sh.hidden = true; }, 250); };
+    btn.addEventListener('click', open); sh.querySelector('.vs-x').addEventListener('click', close);
+    sh.addEventListener('click', e => { if (e.target === sh) close(); });
+    document.addEventListener('pointerdown', e => { if (!sh.hidden && sh.classList.contains('drop') && !sh.contains(e.target) && !btn.contains(e.target)) close(); }, true);
+    tools.addEventListener('click', () => setTimeout(close, 0));   // a tool does its job, then the sheet gets out of the way
+    addEventListener('keydown', e => { if (e.key === 'Escape' && !sh.hidden) { close(); btn.focus({ preventScroll: true }); } });
+    // on a phone the page's own bar buttons live in the sheet; on a wider screen they go back where they came from
+    const pick = el => el.matches('button, a, .motion-btn') && !el.matches('.vs-menu, .vs-room, .unzoom');
+    let moving = false;
+    const place = () => { moving = true;
+      if (phone.matches) { [...bar.children].filter(pick).forEach(el => { if (!el.__vsHome) { el.__vsHome = document.createComment('vs'); el.before(el.__vsHome); } tools.append(el); }); }
+      else [...tools.children].forEach(el => { if (el.__vsHome && el.__vsHome.parentNode) el.__vsHome.replaceWith(el); else bar.append(el); el.__vsHome = null; });
+      syncHead(); moving = false; };
+    // the room names show in the bar when they all fit; when they don't, the ROOMS button takes their place
+    const nav = bar.querySelector('.vs-rooms');
+    const fit = () => { if (phone.matches || !nav) { bar.classList.add('vs-tight'); return; } bar.classList.remove('vs-tight'); if (nav.scrollWidth > nav.clientWidth + 2) bar.classList.add('vs-tight'); };
+    let fq = 0; const fitSoon = () => { cancelAnimationFrame(fq); fq = requestAnimationFrame(fit); };
+    place(); fit(); phone.addEventListener('change', () => { place(); fit(); }); addEventListener('resize', fitSoon);
+    try { document.fonts.ready.then(fitSoon); } catch (e) {}
+    new MutationObserver(() => { if (!moving && phone.matches) place(); fitSoon(); }).observe(bar, { childList: true });
+    // first visit to the house: the rooms announce themselves once, so nobody thinks this is the only one
+    const hint = { el: null, t: 0, done() { clearTimeout(this.t); try { localStorage.setItem('vs-rooms-hint', '1'); } catch (e) {} btn.classList.remove('vs-call'); if (this.el) { const el = this.el; this.el = null; el.classList.remove('on'); setTimeout(() => el.remove(), 600); } } };
+    let seen = true; try { seen = !!localStorage.getItem('vs-rooms-hint'); } catch (e) {}
+    if (!seen) hint.t = setTimeout(() => {
+      const tight = bar.classList.contains('vs-tight'), a = (tight ? btn : nav).getBoundingClientRect(); if (!a.width) return;
+      const el = hint.el = document.createElement('div'); el.className = 'vs-hint'; el.setAttribute('role', 'status');
+      el.innerHTML = `<b>${ROOMS.length} rooms</b>${tight ? 'There’s more than this one. Open the menu.' : 'This is one of them. The rest are up here.'}`;
+      document.body.append(el); el.style.left = Math.max(10, a.left) + 'px'; el.style.top = (a.bottom + 10) + 'px'; el.style.setProperty('--ax', Math.min(a.width / 2, 40) + 'px');
+      if (tight) btn.classList.add('vs-call'); requestAnimationFrame(() => el.classList.add('on'));
+      try { localStorage.setItem('vs-rooms-hint', '1'); } catch (e) {}
+      hint.t = setTimeout(() => hint.done(), 9000);
+    }, 2400);
+    nav && nav.addEventListener('click', () => hint.done());
+  }
+
+  /* ---------- sparks ---------- */
+  let cv, g, P = [], running = false, last = null;
+  function sparks() {
+    if (calm) return;
+    cv = document.createElement('canvas'); cv.id = 'vs-sparks'; document.body.append(cv); g = cv.getContext('2d');
+    const size = () => { cv.width = innerWidth; cv.height = innerHeight; }; size(); addEventListener('resize', size);
+    addEventListener('pointermove', e => { if (e.pointerType === 'touch') return; const d = last ? Math.hypot(e.clientX - last[0], e.clientY - last[1]) : 99; if (d < 26) return; last = [e.clientX, e.clientY]; add(e.clientX, e.clientY, 1, .22); });
+    addEventListener('pointerdown', e => burst(e.clientX, e.clientY, 9), true);
+  }
+  function add(x, y, n, spd) { for (let i = 0; i < n; i++) { const a = Math.random() * 6.28, v = spd * (.4 + Math.random()); P.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - .25, life: 1, d: .012 + Math.random() * .014, r: 1 + Math.random() * 2.2, hue: Math.random() < .2 ? 1 : 0 }); } if (P.length > 260) P.splice(0, P.length - 260); if (!running) { running = true; requestAnimationFrame(tick); } }
+  function burst(x, y, n) { if (calm || !cv) return; add(x, y, n, 2.6); P.push({ ring: true, x, y, life: 1, d: .045 }); }
+  function tick() {
+    g.clearRect(0, 0, cv.width, cv.height); g.globalCompositeOperation = 'lighter';
+    for (let i = P.length - 1; i >= 0; i--) { const p = P[i]; p.life -= p.d; if (p.life <= 0) { P.splice(i, 1); continue; }
+      if (p.ring) { g.strokeStyle = `rgba(255,214,140,${p.life * .7})`; g.lineWidth = 1.5; g.beginPath(); g.arc(p.x, p.y, (1 - p.life) * 46, 0, 7); g.stroke(); continue; }
+      p.x += p.vx; p.y += p.vy; p.vy -= .012; p.vx *= .985; const a = p.life, r = p.r * (.5 + a * .7);
+      g.fillStyle = p.hue ? `rgba(200,225,255,${a * .9})` : `rgba(255,${200 + 40 * a | 0},${120 + 60 * a | 0},${a * .9})`; g.beginPath(); g.arc(p.x, p.y, r, 0, 7); g.fill();
+      g.fillStyle = `rgba(255,200,120,${a * .12})`; g.beginPath(); g.arc(p.x, p.y, r * 4, 0, 7); g.fill(); }
+    g.globalCompositeOperation = 'source-over';
+    if (P.length) requestAnimationFrame(tick); else { running = false; g.clearRect(0, 0, cv.width, cv.height); }
+  }
+  window.VS_BURST = (x, y, n = 20) => burst(x, y, n);
+
+  if (document.readyState === 'loading') addEventListener('DOMContentLoaded', build); else build();
+})();
+
+</script>
+<script>
+'use strict';
+/* =====================================================================================================
+   The Spirit Radio, on the owner's render (radio-board.webp: the fake lettering painted out by
+   tools/radio-board/clean.mjs; original in assets/radio-board-original.webp). Everything is mapped in image
+   pixels of the 2000 x 1120 render (MAP); Shift+H outlines every control.
+   A ghost box (a radio that never stops on a station), thirteen jewel channels, a neon ouija board that spells
+   what the box "says", a tuner screen and a word screen, the gate (the pentagram), an EMF meter, a REM pod, a
+   blindfold session and an EVP recorder. The band, the stations and the voices in it are made here (no outside broadcasts).
+   The meters follow the Mac's real sensors in live mode (a stand-in room otherwise). Nothing is recorded or sent.
+   ===================================================================================================== */
+const $ = id => document.getElementById(id), R = Math.random, TAU = Math.PI * 2;
+const W = 2000, H = 1120;
+const CALM = matchMedia('(prefers-reduced-motion: reduce)').matches && !document.documentElement.classList.contains('motion-full');
+const MAP = {
+  ball: { x: 1000, y: 385, r: 278 },
+  lensL: { x: 831, y: 645, r: 29 }, lensR: { x: 1170, y: 645, r: 29 }, darkL: { x: 900, y: 647, r: 23 }, darkR: { x: 1100, y: 647, r: 23 }, emblem: { x: 1000, y: 645, r: 46 },
+  scrL: [352, 805, 635, 917], scrR: [1377, 807, 1655, 917], stripL: [366, 764, 622, 786], stripR: [1382, 762, 1645, 784],
+  board: [700, 764, 1316, 940],
+  cats: [{ third: [490, 352, 47, 17], eyes: [[400, 447, 35], [590, 435, 32]], box: [190, 90, 745, 720] }, { third: [1512, 310, 42, 17], eyes: [[1412, 400, 33], [1602, 407, 35]], box: [1255, 80, 1810, 720] }],
+  fig: { x: 207, y: 852, r: 13 }, pod: { x: 1755, y: 800, r: 26 },
+  // the row of controls: image pixels, radius, colour of their light, label above
+  btn: {
+    power: { x: 355, y: 983, r: 26, col: 'red', lab: 'POWER', slider: true }, sweep: { x: 417, y: 985, r: 25, col: 'orange', lab: 'SWEEP' }, band: { x: 482, y: 985, r: 25, col: 'blue', lab: 'BAND' },
+    dir: { x: 547, y: 985, r: 25, col: 'red', lab: 'DIR' }, echo: { x: 610, y: 985, r: 25, col: 'red', lab: 'ECHO' },
+    evp: { x: 717, y: 985, r: 25, col: 'blue', lab: 'EVP' }, blind: { x: 780, y: 985, r: 25, col: 'red', lab: 'BLIND' }, hold: { x: 852, y: 985, r: 25, col: 'white', lab: 'HOLD' },
+    ask: { x: 950, y: 972, r: 43, col: 'orange' }, gate: { x: 1060, y: 972, r: 45, col: 'red' },
+    view: { x: 1150, y: 985, r: 25, col: 'white', lab: 'VIEW' }, rem: { x: 1225, y: 985, r: 25, col: 'red', lab: 'REM' }, words: { x: 1292, y: 985, r: 25, col: 'blue', lab: 'WORDS' },
+    ghost: { x: 1390, y: 985, r: 25, col: 'pink', lab: 'GHOST' }, stat: { x: 1450, y: 982, r: 20, lab: 'STATIC', tog: true }, tone: { x: 1495, y: 982, r: 20, lab: 'TONE', tog: true },
+    room: { x: 1542, y: 982, r: 20, lab: 'ROOM', tog: true }, lamp: { x: 1585, y: 982, r: 15, lab: 'LAMP', tog: true }, log: { x: 1635, y: 985, r: 27, col: 'white', lab: 'LOG' },
+  },
+};
+/* the thirteen jewels are channels: each holds the dial on one frequency with its own character */
+const CH = [
+  { key: 'ether', name: 'ETHER', j: [727, 706], col: 'white', band: 'FM', idx: 6, line: 'Ether. Empty air. Listen to the empty part.' },
+  { key: 'numbers', name: 'NUMBERS', j: [730, 686], col: 'blue', band: 'SW', idx: 23, line: 'Numbers. Someone reading digits to no one. Watch the board.' },
+  { key: 'ballroom', name: 'BALLROOM', j: [820, 686], col: 'orange', band: 'AM', idx: 34, line: 'The ballroom. Everyone’s dancing. Nobody’s alive.' },
+  { key: 'hearth', name: 'HEARTH', j: [817, 706], col: 'red', band: 'AM', idx: 66, line: 'The hearth. Something is sitting by the fire. Don’t touch.' },
+  { key: 'birdsong', name: 'BIRDSONG', j: [910, 706], col: 'green', band: 'FM', idx: 72, line: 'Birdsong. The first tape that talked back was full of birds.' },
+  { key: 'sonar', name: 'SONAR', j: [910, 686], col: 'blue', band: 'SW', idx: 60, line: 'Sonar. Deep water. Things ping back.' },
+  { key: 'morse', name: 'MORSE', j: [1000, 706], col: 'blue', band: 'SW', idx: 41, line: 'Morse. It spells. Watch the letters.' },
+  { key: 'seance', name: 'SÉANCE', j: [1090, 686], col: 'cream', band: 'FM', idx: 105, line: 'The séance. Breathe with it.' },
+  { key: 'lullaby', name: 'LULLABY', j: [1090, 706], col: 'yellow', band: 'AM', idx: 90, line: 'A music box going flat. Someone keeps winding it.' },
+  { key: 'siren', name: 'SIREN', j: [1180, 686], col: 'red', band: 'FM', idx: 150, line: 'A siren, far off. It isn’t for you.' },
+  { key: 'phone', name: 'TELEPHONE', j: [1185, 706], col: 'blue', band: 'AM', idx: 10, line: 'The line. Someone keeps calling. Don’t pick up.' },
+  { key: 'choir', name: 'CHOIR', j: [1265, 686], col: 'pink', band: 'FM', idx: 186, line: 'The choir. They only know one chord.' },
+  { key: 'cat', name: 'THE CAT', j: [1275, 706], col: 'orange', band: 'FM', idx: 190, line: 'My channel. Purring at 86 BPM.' },
+];
+const RATES = [50, 100, 150, 200, 250, 300, 350];
+const ST = { on: false, rate: 3, band: 'WORLD', prevBand: 'WORLD', rev: true, echo: 1, idx: 60, q: '', primeUntil: 0, word: null, wordAt: 0, words: 0, log: [], blind: null, evp: null, outline: false,
+  act: 0, spikeAt: 0, spikeName: '', live: false, lastEvent: 0, k2: 0, rem: 0, level: 0, ptr: null, hover: null, sayAt: 0, lastWordAt: 0, warm: 0, needle: 0, everOn: false,
+  chan: null, hold: false, gate: null, gateLv: 0, view: 0, remArm: true, wordsOn: true, ghost: false, statLo: false, warmTone: false, bigRoom: false, lamp: true, press: {}, digits: '' };
+
+/* ---------------- canvas ---------------- */
+const board = $('board'), cv = $('cv'), g = cv.getContext('2d');
+let S = 1, base = null, VIG = null, GRAIN = null, PENT = null, PENTR = null, RUNES = null, LIDC = ['#2a2527', '#2a2527'];
+const mk = (w, h) => { const c = document.createElement('canvas'); c.width = Math.max(1, w); c.height = Math.max(1, h); return c; };
+function size() { const d = Math.min(devicePixelRatio || 1, 1.25); cv.width = Math.round(board.offsetWidth * d); cv.height = Math.round(board.offsetHeight * d); S = cv.width / W; base = null; }
+addEventListener('resize', size);
+// the board can have no size yet when the script first runs (layout, fonts, a prerendered tab): follow it whenever it changes
+new ResizeObserver(() => { if (Math.round(board.offsetWidth * Math.min(devicePixelRatio || 1, 1.25)) !== cv.width) size(); }).observe(board);
+const art = new Image(); art.src = 'radio-board.webp'; art.onload = () => { base = null; setTimeout(extract, 400); };   // the light masks come a moment after the first frame
+function glowSprite(col, n) { const c = mk(n, n), x = c.getContext('2d'), r = n / 2, gr = x.createRadialGradient(r, r, 0, r, r, r); gr.addColorStop(0, `rgba(${col},1)`); gr.addColorStop(.2, `rgba(${col},.6)`); gr.addColorStop(.5, `rgba(${col},.14)`); gr.addColorStop(1, `rgba(${col},0)`); x.fillStyle = gr; x.fillRect(0, 0, n, n); return c; }
+const RGB = { white: '225,236,255', blue: '80,165,255', orange: '255,140,40', red: '255,46,34', green: '70,255,130', cream: '255,228,170', yellow: '255,218,70', pink: '255,100,215', amber: '255,170,60', magenta: '240,70,170', cyan: '120,230,255' };
+const GLOW = {}; for (const k in RGB) GLOW[k] = glowSprite(RGB[k], 128);
+
+/* light that already lives in the render, lifted out so it can be turned up: the pentagram's neon and the cats' red runes */
+function extract() {
+  // read at half size: these become glows, and a quarter of the pixels keeps the first seconds smooth
+  const h2 = 2, w2 = W / h2, hh2 = H / h2, c = mk(w2, hh2), x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(art, 0, 0, w2, hh2); let id; try { id = x.getImageData(0, 0, w2, hh2); } catch (e) { return; }
+  const p = id.data, B = MAP.ball, bx = B.x / h2, by = B.y / h2, br = B.r / h2, br2 = (br - 3) ** 2, bo2 = (br + 5) ** 2;
+  const pick = (x0, y0, x1, y1, test) => { x0 = x0 / h2 | 0; y0 = y0 / h2 | 0; x1 = x1 / h2 | 0; y1 = y1 / h2 | 0; const ww = x1 - x0, o = mk(ww, y1 - y0), ox = o.getContext('2d'), od = ox.createImageData(ww, y1 - y0), q8 = od.data;
+    for (let y = y0; y < y1; y++) { const dy2 = (y - by) ** 2; for (let X = x0; X < x1; X++) { const k = (y * w2 + X) * 4, r = p[k], gg = p[k + 1], b = p[k + 2], a = test(r, gg, b, (X - bx) ** 2 + dy2); if (a <= 0) continue; const q = ((y - y0) * ww + X - x0) * 4; q8[q] = r; q8[q + 1] = gg; q8[q + 2] = b; q8[q + 3] = 255 * Math.min(1, a); } }
+    ox.putImageData(od, 0, 0); return { c: o, x: x0 * h2, y: y0 * h2, w: ww * h2, h: (y1 - y0) * h2 }; };
+  PENT = pick(B.x - B.r, B.y - B.r, B.x + B.r, B.y + B.r + 10, (r, gg, b, d2) => d2 < br2 && r > 190 && gg > 90 && r - b > 70 ? (r + gg - 300) / 160 : 0);
+  { const c2 = mk(PENT.c.width, PENT.c.height), x2 = c2.getContext('2d'); x2.drawImage(PENT.c, 0, 0); x2.globalCompositeOperation = 'source-in'; x2.fillStyle = '#ff2a12'; x2.fillRect(0, 0, c2.width, c2.height); PENTR = c2; }
+  RUNES = MAP.cats.map(C => pick(...C.box, (r, gg, b, d2) => r > 105 && gg < r * .42 && b < r * .45 && d2 > bo2 ? (r - 90) / 90 : 0));
+  // the skin above each third eye, for its eyelid
+  LIDC = MAP.cats.map(C => { const [ex, ey, rx, ry] = C.third; let s2 = [0, 0, 0], n = 0; for (let y = (ey - ry - 16) / h2 | 0; y < (ey - ry - 6) / h2; y++) for (let X = (ex - rx * .6) / h2 | 0; X < (ex + rx * .6) / h2; X++) { const k = (y * w2 + X) * 4; s2[0] += p[k]; s2[1] += p[k + 1]; s2[2] += p[k + 2]; n++; } return `rgb(${s2.map(v => Math.round(v / n)).join(',')})`; });
+}
+
+/* ---------------- the neon ouija board on the centre panel ---------------- */
+const GL = [];   // every glyph: { ch, x, y, rot, size }
+(() => {
+  const arc = (s, cx, cy, Rr, th) => [...s].forEach((ch, i) => { const a = -th + 2 * th * i / (s.length - 1); GL.push({ ch, x: cx + Rr * Math.sin(a), y: cy - Rr * Math.cos(a), rot: a, size: 31 }); });
+  arc('ABCDEFGHIJKLM', 1008, 1228, 433, .5); arc('NOPQRSTUVWXYZ', 1008, 1283, 428, .47);
+  [...'1234567890'].forEach((ch, i) => GL.push({ ch, x: 893 + i * 25.5, y: 904, rot: 0, size: 22 }));
+  GL.push({ ch: 'YES', x: 816, y: 789, rot: 0, size: 23 }, { ch: 'NO', x: 1201, y: 789, rot: 0, size: 23 }, { ch: 'GOODBYE', x: 1005, y: 923, rot: 0, size: 15 });
+})();
+const gIdx = ch => GL.findIndex(gl => gl.ch === ch);
+const LIT = new Float32Array(GL.length), FLK = new Float32Array(GL.length);
+let LITS = null;   // one glowing sprite per glyph, built at the canvas scale
+function neonFont(gl) { return `${gl.ch.length > 1 ? 400 : 400} ${gl.size}px "IM Fell English SC", Georgia, serif`; }
+function buildLit() {
+  LITS = GL.map(gl => { const pad = 26, x0 = mk(10, 10).getContext('2d'); x0.font = neonFont(gl); const tw = x0.measureText(gl.ch).width + (gl.ch.length > 1 ? gl.ch.length * 3 : 0);
+    const w = Math.ceil((tw + pad * 2) * S), h = Math.ceil((gl.size * 1.4 + pad * 2) * S), c = mk(w, h), x = c.getContext('2d'); x.scale(S, S); x.font = neonFont(gl); x.textAlign = 'center'; x.textBaseline = 'middle'; if ('letterSpacing' in x && gl.ch.length > 1) x.letterSpacing = '3px';
+    const cx = w / S / 2, cy = h / S / 2; x.shadowColor = 'rgba(255,70,20,.95)'; x.shadowBlur = 16 * S; x.fillStyle = '#ff7a2a'; x.fillText(gl.ch, cx, cy); x.shadowBlur = 6 * S; x.fillStyle = '#ffe6b8'; x.fillText(gl.ch, cx, cy);
+    return { c, w: w / S, h: h / S }; });
+}
+/* spelling: letters light one after another, a glass planchette gliding to each */
+const SP = { q: [], cur: -1, until: 0, px: 1008, py: 860, a: 0 };
+function spell(text, per = 430) {
+  const t = String(text).toUpperCase();
+  if (['YES', 'NO', 'GOODBYE'].includes(t)) { SP.q.push({ g: gIdx(t), dur: 1600 }); return; }
+  for (const ch of t) { const i = /[A-Z0-9]/.test(ch) ? gIdx(ch) : -1; SP.q.push({ g: i, dur: i < 0 ? per * .8 : per }); }
+  SP.q.push({ g: -1, dur: 500 });
+}
+function neonTick() { if (!ctx || !ST.on) return; const t = ctx.currentTime + .003; noise(t, .025, 'white', 'highpass', 3000, .7, .05, POST); tone(t, 118, .06, .03, 'square'); }
+
+/* ---------------- the two LED dot-matrix screens ---------------- */
+const LED = { L: { rect: MAP.scrL, cols: 98, rows: 38, key: 0 }, R: { rect: MAP.scrR, cols: 96, rows: 38, key: 0 } };
+function ledBuild(o) {
+  const [x0, y0, x1, y1] = o.rect, pw = Math.round((x1 - x0) * S), ph = Math.round((y1 - y0) * S); o.key = cv.width;
+  o.buf = mk(o.cols, o.rows); o.bx = o.buf.getContext('2d'); o.up = mk(pw, ph); o.ux = o.up.getContext('2d'); o.ux.imageSmoothingEnabled = false;
+  o.mask = mk(pw, ph); const m = o.mask.getContext('2d'), cw = pw / o.cols, ch = ph / o.rows; m.fillStyle = '#fff';
+  for (let r = 0; r < o.rows; r++) for (let c = 0; c < o.cols; c++) { m.beginPath(); m.arc((c + .5) * cw, (r + .5) * ch, Math.min(cw, ch) * .42, 0, TAU); m.fill(); }
+  o.dark = mk(pw, ph); const d = o.dark.getContext('2d'); d.fillStyle = '#050304'; d.fillRect(0, 0, pw, ph); d.globalAlpha = .1; d.drawImage(o.mask, 0, 0);
+}
+function ledDraw(o, paint, wm) {
+  if (!cv.width) return;
+  if (o.key !== cv.width || !o.bx) ledBuild(o);
+  const b = o.bx; b.clearRect(0, 0, o.cols, o.rows); b.textBaseline = 'top'; paint(b, o.cols, o.rows);
+  const u = o.ux; u.globalCompositeOperation = 'source-over'; u.clearRect(0, 0, o.up.width, o.up.height); u.drawImage(o.buf, 0, 0, o.up.width, o.up.height); u.globalCompositeOperation = 'destination-in'; u.drawImage(o.mask, 0, 0);
+  const px = o.rect[0] * S, py = o.rect[1] * S; g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(o.dark, px, py); g.globalAlpha = wm; g.drawImage(o.up, px, py); g.globalCompositeOperation = 'lighter'; g.globalAlpha = .5 * wm; g.drawImage(o.up, px, py); g.restore();
+}
+const fitText = (b, s, maxW, fs, font) => { b.font = `${fs}px ${font}`; while (b.measureText(s).width > maxW && fs > 8) { fs -= 1; b.font = `${fs}px ${font}`; } return fs; };
+const WF = mk(98, 24), WX = WF.getContext('2d'); let wfT = 0;
+function paintTuner(b, C, Rw, t) {
+  const red = '#ff3a26', cy = '#9fe9ff', wh = '#eef8ff';
+  b.fillStyle = red; for (let c = 0; c < C; c += 2) { b.fillRect(c, 0, 1, 1); b.fillRect(c, Rw - 1, 1, 1); } for (let r = 0; r < Rw; r += 2) { b.fillRect(0, r, 1, 1); b.fillRect(C - 1, r, 1, 1); }
+  if (!ST.on && !ST.evp) {
+    b.fillStyle = cy; b.textAlign = 'center'; b.font = '13px VT323, monospace';
+    if (!ST.everOn) { b.globalAlpha = .55 + .45 * Math.sin(t * 3); b.fillText('◄ SLIDE TO WAKE', C / 2, 12); b.globalAlpha = .45; b.font = '10px VT323, monospace'; b.fillText('HEADPHONES ON', C / 2, 25); }
+    else { b.globalAlpha = .3; b.fillText('— OFF —', C / 2, 14); }
+    b.globalAlpha = 1; return;
+  }
+  const ch = ST.chan != null ? CH[ST.chan] : null;
+  b.font = '10px VT323, monospace'; b.textAlign = 'left'; b.fillStyle = wh; b.fillText(isLive(ST.band) ? `${ST.band} · ${freqText(ST.shownIdx ?? ST.idx)}`.slice(0, 26) : `${ST.band} ${freqText(ST.shownIdx ?? ST.idx)}${ST.band === 'FM' ? ' MHZ' : ST.band === 'SW' ? ' MHZ' : ' KHZ'}`, 3, 2);
+  b.textAlign = 'right'; b.fillStyle = ch ? `rgb(${RGB[ch.col]})` : cy; b.fillText(ch ? ch.name : ST.hold ? 'HOLD' : `${RATES[ST.rate]}MS ${ST.rev ? '◄' : '►'}`, C - 3, 2);
+  // the body: waterfall, scope or the band map
+  const y0 = 11, hh = Rw - 18;
+  if (ST.view === 0) {
+    if (AN && t - wfT > .045) { wfT = t; AN.getByteFrequencyData(FD); WX.globalCompositeOperation = 'copy'; WX.drawImage(WF, -1, 0); WX.globalCompositeOperation = 'source-over';
+      for (let r = 0; r < 24; r++) { const v = FD[Math.floor(Math.pow(1 - r / 24, 1.7) * FD.length * .55)] / 255; WX.fillStyle = v < .2 ? `rgba(30,60,140,${v * 3})` : v < .45 ? '#2a8cff' : v < .7 ? '#9fe9ff' : v < .85 ? '#ffffff' : '#ff3a26'; WX.fillRect(97, r, 1, 1); } }
+    b.drawImage(WF, 1, y0, C - 2, hh);
+  } else if (ST.view === 1 && AN) {
+    const td = new Uint8Array(256); AN.getByteTimeDomainData(td); b.fillStyle = cy; for (let c = 1; c < C - 1; c++) { const v = (td[Math.floor(c / C * 256)] - 128) / 128, y = y0 + hh / 2 + v * hh * 1.6; b.fillRect(c, Math.max(y0, Math.min(y0 + hh - 1, y)), 1, 1); }
+    b.globalAlpha = .25; for (let c = 1; c < C; c += 4) b.fillRect(c, y0 + hh / 2, 1, 1); b.globalAlpha = 1;
+  } else {   // the band: every station a tick, every channel a coloured mark
+    const n = bandSteps(), st = isLive(ST.band) ? LIVE.slots.map(x => x && x.ok ? { strength: .9 } : null) : STATIONS[ST.band] || []; b.fillStyle = cy;
+    for (let i = 0; i < n; i++) if (st[i]) { const x = 1 + Math.round(i / (n - 1) * (C - 3)), hgt = Math.round(st[i].strength * hh * .7); b.globalAlpha = .55; b.fillRect(x, y0 + hh - hgt, 1, hgt); }
+    b.globalAlpha = 1; for (const c of CH) if (c.band === ST.band) { const x = 1 + Math.round(c.idx / (n - 1) * (C - 3)); b.fillStyle = `rgb(${RGB[c.col]})`; b.fillRect(x - 1, y0, 3, 2); }
+  }
+  // the dial position along the bottom
+  const f = (ST.shownIdx ?? ST.idx) / (bandSteps() - 1), nx = 2 + Math.round(f * (C - 5)); b.globalAlpha = .35; b.fillStyle = cy; for (let c = 2; c < C - 2; c += 3) b.fillRect(c, Rw - 4, 1, 1); b.globalAlpha = 1; b.fillStyle = red; b.fillRect(nx - 1, Rw - 6, 3, 4);
+}
+function paintWords(b, C, Rw, t) {
+  const red = '#ff3a26', cy = '#9fe9ff', wh = '#eef8ff';
+  b.fillStyle = red; for (let c = 0; c < C; c += 2) { b.fillRect(c, 0, 1, 1); b.fillRect(c, Rw - 1, 1, 1); } for (let r = 0; r < Rw; r += 2) { b.fillRect(0, r, 1, 1); b.fillRect(C - 1, r, 1, 1); }
+  if (!ST.on && !ST.evp) { b.fillStyle = cy; b.globalAlpha = .28; b.font = '13px VT323, monospace'; b.textAlign = 'center'; b.fillText(ST.everOn ? '— OFF —' : 'WORD SCREEN', C / 2, 14); b.globalAlpha = 1; return; }
+  // top: words heard, the K-II lamps
+  b.font = '10px VT323, monospace'; b.textAlign = 'left'; b.fillStyle = wh; b.fillText(`WORDS ${ST.words}`, 3, 2);
+  const kc = ['#3dff6a', '#3dff6a', '#ffe14a', '#ff9a2a', '#ff3a2a']; for (let i = 0; i < 5; i++) { const lit = Math.max(0, Math.min(1, ST.k2 - i)); b.fillStyle = kc[i]; b.globalAlpha = .18 + .82 * lit; b.fillRect(C - 46 + i * 9, 3, 7, 5); } b.globalAlpha = 1;
+  let mid = null, sub = '', col = wh;
+  if (ST.evp) { mid = ST.evp.label; sub = ST.evp.sub || ''; col = '#ff6a5a'; }
+  else if (ST.word && t - ST.wordAt < 3.2 && !ST.blind) { mid = ST.word; sub = 'THE BOX SAID'; }
+  else if (ST.gate) { const left = Math.max(0, Math.ceil((ST.gate.t0 + ST.gate.dur - performance.now()) / 1000)); mid = 'GATE OPEN'; sub = `0:${String(left).padStart(2, '0')} · ASK NOW`; col = '#ff6a4a'; }
+  else if (ST.chan != null && CH[ST.chan].key === 'numbers' && ST.digits) { mid = ST.digits; sub = 'NUMBERS STATION'; col = `rgb(${RGB.blue})`; }
+  else if (performance.now() < ST.primeUntil) { mid = 'LISTEN'; sub = 'ASKED · ' + Math.ceil((ST.primeUntil - performance.now()) / 1000) + 'S'; }
+  if (mid) { b.textAlign = 'center'; b.fillStyle = col; const fs = fitText(b, mid, C - 10, 17, 'VT323, monospace'); b.fillText(mid, C / 2, 11 + (17 - fs) / 2); b.font = '9px VT323, monospace'; b.fillStyle = cy; b.globalAlpha = .75; b.fillText(sub, C / 2, 28); b.globalAlpha = 1; }
+  else { b.textAlign = 'center'; b.fillStyle = cy; b.globalAlpha = .5 + .3 * Math.sin(t * 1.7); b.font = '13px VT323, monospace'; b.fillText('LISTENING', C / 2, 13); b.globalAlpha = .7; b.font = '9px VT323, monospace'; b.fillText(ST.live ? 'ROOM: LIVE' : 'ROOM: STAND-IN', C / 2, 28); b.globalAlpha = 1; }
+  // the REM pod's level along the bottom
+  if (ST.remArm) { const n = Math.round(ST.rem * (Rw - 16)); b.fillStyle = '#e0389a'; b.globalAlpha = .3; for (let r = 12; r < Rw - 3; r += 3) b.fillRect(3, r, 1, 1); b.globalAlpha = 1; b.fillRect(2, Rw - 3 - n, 3, n); }
+}
+const isLive = b => b === 'WORLD' || b === 'VOICES';
+const freqOf = (band, i) => isLive(band) ? liveLabel(i) : band === 'FM' ? (87.5 + i * .1).toFixed(1) : band === 'SW' ? (2.3 + i * .2).toFixed(1) : String(530 + i * 10), freqText = i => freqOf(ST.band, i);
+const bandSteps = () => isLive(ST.band) ? LIVE.N : ST.band === 'FM' ? 206 : ST.band === 'AM' ? 118 : 120;
+
+/* ---------------- the base: the render, the engraved labels and the unlit neon, drawn once per size ---------------- */
+function drawBase() {
+  base = mk(cv.width, cv.height); const x = base.getContext('2d'); x.drawImage(art, 0, 0, cv.width, cv.height); x.setTransform(S, 0, 0, S, 0, 0);
+  // engraved gold labels where the gibberish was
+  const engrave = (s, X, Y, font, ls) => { x.font = font; x.textAlign = 'center'; x.textBaseline = 'middle'; if ('letterSpacing' in x) x.letterSpacing = ls || '0px'; x.fillStyle = 'rgba(0,0,0,.85)'; x.fillText(s, X + .8, Y + 1); x.fillStyle = '#d9b66e'; x.fillText(s, X, Y); };
+  engrave('SPIRIT BAND  ·  TUNER', (MAP.stripL[0] + MAP.stripL[2]) / 2, 775.5, '600 12px "IBM Plex Mono", monospace', '2.5px');
+  engrave('WORD SCREEN  ·  K-II  ·  REM', (MAP.stripR[0] + MAP.stripR[2]) / 2, 773.5, '600 12px "IBM Plex Mono", monospace', '2.5px');
+  for (const k in MAP.btn) { const b = MAP.btn[k]; if (b.lab) engrave(b.lab, b.x, 946, '600 10.5px "IBM Plex Mono", monospace', '1px'); }
+  if ('letterSpacing' in x) x.letterSpacing = '0px';
+  // the neon tubes, unlit: dark filament, a faint red skin
+  for (const gl of GL) { x.save(); x.translate(gl.x, gl.y); x.rotate(gl.rot); x.font = neonFont(gl); x.textAlign = 'center'; x.textBaseline = 'middle'; if ('letterSpacing' in x && gl.ch.length > 1) x.letterSpacing = '3px';
+    x.fillStyle = 'rgba(110,22,8,.62)'; x.fillText(gl.ch, 0, 0); x.strokeStyle = 'rgba(255,96,40,.2)'; x.lineWidth = .8; x.strokeText(gl.ch, 0, 0); x.restore(); }
+  buildLit();
+  VIG = mk(cv.width, cv.height); const v = VIG.getContext('2d'), vg = v.createRadialGradient(cv.width * .5, cv.height * .52, cv.height * .38, cv.width * .5, cv.height * .5, cv.width * .7);
+  vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(.75, 'rgba(0,0,0,.22)'); vg.addColorStop(1, 'rgba(0,0,0,.55)'); v.fillStyle = vg; v.fillRect(0, 0, cv.width, cv.height);
+  if (!GRAIN) { const n = mk(160, 160), nx = n.getContext('2d'), d = nx.createImageData(160, 160); for (let i = 0; i < d.data.length; i += 4) { const on = R() < .5, c = R() < .5 ? 255 : 0; d.data[i] = d.data[i + 1] = d.data[i + 2] = c; d.data[i + 3] = on ? 4 + R() * 8 : 0; } nx.putImageData(d, 0, 0); GRAIN = g.createPattern(n, 'repeat'); }
+}
+size();
+
+/* ---------------- sound ---------------- */
+let ctx = null, IN, LP, ECHO, WET, MASTER, AN, FD, POST, HUM, NZ = {};
+function audioInit() {
+  if (ctx) return ctx.resume();
+  ctx = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' });
+  const G = v => { const n = ctx.createGain(); n.gain.value = v; return n; }, F = (type, f, q) => { const n = ctx.createBiquadFilter(); n.type = type; n.frequency.value = f; if (q != null) n.Q.value = q; return n; };
+  const sr = ctx.sampleRate, buf = (sec, fn) => { const b = ctx.createBuffer(1, Math.floor(sr * sec), sr), d = b.getChannelData(0); fn(d); return b; };
+  NZ.white = buf(3, d => { for (let i = 0; i < d.length; i++) d[i] = R() * 2 - 1; });
+  NZ.brown = buf(3, d => { let l = 0; for (let i = 0; i < d.length; i++) { l = (l + .02 * (R() * 2 - 1)) / 1.02; d[i] = l * 3.5; } });
+  NZ.crackle = buf(3, d => { for (let i = 0; i < d.length; i++) d[i] = R() < .0009 ? (R() * 2 - 1) * (.4 + R() * .6) : (R() * 2 - 1) * .02; });
+  // the radio's own voice: a small speaker in a wooden box
+  IN = G(1); const hp = F('highpass', 240, .7), pk = F('peaking', 1300, 1); pk.gain.value = 5; LP = F('lowpass', 4200, .8);
+  const sh = ctx.createWaveShaper(), cu = new Float32Array(1024); for (let i = 0; i < 1024; i++) { const v = i / 511.5 - 1; cu[i] = Math.tanh(2.2 * v) / Math.tanh(2.2); } sh.curve = cu; sh.oversample = '2x';
+  IN.connect(hp); hp.connect(pk); pk.connect(LP); LP.connect(sh);
+  const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -20; comp.ratio.value = 4; comp.attack.value = .004; comp.release.value = .2;
+  const lim = ctx.createDynamicsCompressor(); lim.threshold.value = -2; lim.ratio.value = 20; lim.attack.value = .001; lim.release.value = .08;
+  MASTER = G(.0001); AN = ctx.createAnalyser(); AN.fftSize = 512; AN.smoothingTimeConstant = .7; FD = new Uint8Array(AN.frequencyBinCount);
+  const dry = G(.85); sh.connect(dry); dry.connect(comp);
+  const dl = ctx.createDelay(1), fb = G(.38), elp = F('lowpass', 2400); dl.delayTime.value = .23; ECHO = G(0); sh.connect(dl); dl.connect(elp); elp.connect(fb); fb.connect(dl); elp.connect(ECHO); ECHO.connect(comp);
+  const cv2 = ctx.createConvolver(), irL = Math.floor(sr * 1.6), ir = ctx.createBuffer(2, irL, sr); for (let c = 0; c < 2; c++) { const d = ir.getChannelData(c); let l = 0; for (let i = 0; i < irL; i++) { const t = i / irL; l += (R() * 2 - 1 - l) * (.7 - .6 * t); d[i] = l * Math.pow(1 - t, 3); } }
+  cv2.buffer = ir; WET = G(.18); sh.connect(cv2); cv2.connect(WET); WET.connect(comp);
+  comp.connect(lim); lim.connect(MASTER); MASTER.connect(AN); AN.connect(ctx.destination); POST = comp;
+  // the valves' own hum: low, soft, under everything, only while it is on
+  HUM = G(0); const hlp = F('lowpass', 380, .5); for (const [f, a] of [[100, 1], [200, .45], [300, .18]]) { const o = ctx.createOscillator(); o.frequency.value = f; const og = G(a); o.connect(og); og.connect(hlp); o.start(); } hlp.connect(HUM); HUM.connect(comp);
+  setVol(); addEventListener('vs-volume', setVol); applyKnobs();
+  setInterval(schedule, 25);
+}
+function setVol(tau) { if (!MASTER) return; const on = ST.on || ST.evp, tc = typeof tau === 'number' ? tau : .05; MASTER.gain.setTargetAtTime(on ? .9 * (window.VS_VOLUME ?? 1) : .0001, ctx.currentTime, tc); HUM.gain.setTargetAtTime(ST.on ? .022 : 0, ctx.currentTime, tc * 1.4); }
+/* a low sine straight into the mix (past the little speaker), for the thump of the switch and the sigh of the valves going out */
+function thump(t, f0, f1, dur, amp) { const o = ctx.createOscillator(); o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + dur); const gn = ctx.createGain(); gn.gain.setValueAtTime(0, t); gn.gain.linearRampToValueAtTime(amp, t + .012); gn.gain.exponentialRampToValueAtTime(.0001, t + dur); o.connect(gn); gn.connect(POST); o.start(t); o.stop(t + dur + .05); }
+function applyKnobs() { if (!ctx) return; const t = ctx.currentTime; LP.frequency.setTargetAtTime((isLive(ST.band) ? 5200 : ST.band === 'FM' ? 4200 : ST.band === 'AM' ? 2600 : 3200) * (ST.warmTone ? .62 : 1), t, .05); ECHO.gain.setTargetAtTime([0, .32, .55][ST.echo], t, .05); WET.gain.setTargetAtTime(ST.bigRoom ? .55 : .18, t, .1); }
+const ENV = (gn, t, peak, a, hold, rel) => { gn.gain.setValueAtTime(0, t); gn.gain.linearRampToValueAtTime(peak, t + a); gn.gain.setValueAtTime(peak, t + a + hold); gn.gain.linearRampToValueAtTime(0, t + a + hold + rel); };
+function noise(t, dur, bufName, type, f, q, peak, dest) {
+  const s = ctx.createBufferSource(); s.buffer = NZ[bufName]; const fl = ctx.createBiquadFilter(); fl.type = type; fl.frequency.value = f; fl.Q.value = q; const gn = ctx.createGain();
+  s.connect(fl); fl.connect(gn); gn.connect(dest || IN); ENV(gn, t, peak, .004, Math.max(0, dur - .012), .008); s.start(t, R() * (s.buffer.duration - dur - .1), dur + .02); return fl;
+}
+// a syllable: a buzzing throat through three moving vowel resonances, sometimes led by a consonant hiss. No real words.
+const VOW = [[800, 1200, 2500], [400, 2000, 2600], [300, 2300, 3000], [500, 900, 2400], [350, 800, 2300], [550, 1500, 2500], [650, 1700, 2600]];
+function syllable(t, dur, f0, k, amp, vow) {
+  const o = ctx.createOscillator(); o.type = 'sawtooth'; const p0 = f0 * (.92 + R() * .2); o.frequency.setValueAtTime(p0, t); o.frequency.linearRampToValueAtTime(p0 * (.82 + R() * .34), t + dur);
+  const a = vow || VOW[(R() * VOW.length) | 0], b = vow || VOW[(R() * VOW.length) | 0], sum = ctx.createGain();
+  [[12, 1], [14, .55], [16, .28]].forEach(([q, v], i) => { const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = q; bp.frequency.setValueAtTime(a[i] * k, t); bp.frequency.linearRampToValueAtTime(b[i] * k, t + dur); const gv = ctx.createGain(); gv.gain.value = v * 5; o.connect(bp); bp.connect(gv); gv.connect(sum); });
+  sum.connect(IN); const at = vow ? Math.min(.5, dur * .35) : .018; ENV(sum, t, amp, at, Math.max(0, dur - at - (vow ? .5 : .03)), vow ? .5 : .03); o.start(t); o.stop(t + dur + .6);
+  if (!vow && R() < .55) noise(t - .03, .035 + R() * .03, 'white', 'bandpass', 2500 + R() * 3500, 1.2, amp * .35);
+}
+// a whisper: breath through two vowel resonances, no throat
+function whisper(t, dur, amp) { const s = ctx.createBufferSource(); s.buffer = NZ.white; const sum = ctx.createGain(), a = VOW[(R() * VOW.length) | 0], b = VOW[(R() * VOW.length) | 0];
+  [0, 1].forEach(i => { const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 9; bp.frequency.setValueAtTime(a[i], t); bp.frequency.linearRampToValueAtTime(b[i], t + dur); s.connect(bp); bp.connect(sum); });
+  sum.connect(IN); ENV(sum, t, amp * 3, dur * .3, dur * .3, dur * .4); s.start(t, R() * 2, dur + .05); }
+function tone(t, f, dur, amp, type, f1) { const o = ctx.createOscillator(); o.type = type || 'sine'; o.frequency.setValueAtTime(f, t); if (f1) o.frequency.exponentialRampToValueAtTime(f1, t + dur); const gn = ctx.createGain(); o.connect(gn); gn.connect(IN); ENV(gn, t, amp, .006, Math.max(0, dur - .02), .012); o.start(t); o.stop(t + dur + .03); }
+// a purr: low breath chopped about 26 times a second
+function purr(t, dur, amp) { const s = ctx.createBufferSource(); s.buffer = NZ.brown; const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 520; const am = ctx.createGain(); am.gain.value = 0; const lfo = ctx.createOscillator(); lfo.frequency.value = 25 + R() * 3; const lg = ctx.createGain(); lg.gain.value = .5; const off = ctx.createConstantSource(); off.offset.value = .5;
+  lfo.connect(lg); lg.connect(am.gain); off.connect(am.gain); const env = ctx.createGain(); s.connect(lp); lp.connect(am); am.connect(env); env.connect(IN); ENV(env, t, amp, .15, dur - .3, .15); [s, lfo, off].forEach(n => { n.start(t); n.stop(t + dur + .05); }); }
+
+// the bands: a fixed map of stations per band, so the same frequencies come back with the same character each pass
+const STATIONS = { FM: [], AM: [], SW: [] };
+function seeded(seed) { let s = seed >>> 0; return () => { s = (s + 0x6D2B79F5) >>> 0; let x = Math.imul(s ^ (s >>> 15), 1 | s); x = (x + Math.imul(x ^ (x >>> 7), 61 | x)) ^ x; return ((x ^ (x >>> 14)) >>> 0) / 4294967296; }; }
+for (const [band, n, seed, mix] of [['FM', 206, 101, [.38, .66, .8, .85, .9]], ['AM', 118, 77, [.38, .66, .8, .85, .9]], ['SW', 120, 313, [.25, .4, .55, .72, .88]]]) { const r = seeded(seed); for (let i = 0; i < n; i++) { if (r() > .26) { STATIONS[band].push(null); continue; } const p = r();
+  STATIONS[band].push({ type: p < mix[0] ? 'voice' : p < mix[1] ? 'music' : p < mix[2] ? 'talk' : p < mix[3] ? 'numbers' : p < mix[4] ? 'morse' : 'whistle', strength: .4 + r() * .6, f0: 85 + r() * 150, k: r() < .45 ? 1.16 : 1, root: 110 * Math.pow(2, Math.floor(r() * 12) / 12), wf: 900 + r() * 1400 }); } }
+/* ---------------- the live bands: real broadcasts from around the world, swept the way the old box swept the dial ----------------
+   Stations come from the open Radio Browser directory (https streams that let a web page listen). Eight play at once,
+   silent; the sweep opens one at a time for a slice of a second and the rest stay closed. Every fragment is a live voice
+   or song somewhere on Earth, right now. Every few seconds one of the eight is swapped for a new station, so the sweep
+   travels. WORLD is everything; VOICES is talk and news only. Nothing here is made up: no static, no stand-in sound. */
+const LIVE = { N: 8, list: [], slots: [], loading: null, next: 0, rotAt: 0, band: '' };
+const RB = ['https://de1.api.radio-browser.info', 'https://fi1.api.radio-browser.info', 'https://at1.api.radio-browser.info'];
+async function liveFetch(band) {
+  const tags = band === 'VOICES' ? ['talk', 'news', 'spoken'] : ['talk', ''];
+  for (const h of RB) { try {
+    const q = tag => fetch(`${h}/json/stations/search?is_https=true&hidebroken=true&lastcheckok=1&codec=MP3&bitrateMax=160&order=random&limit=90${tag ? '&tag=' + tag : ''}`, { cache: 'no-store' }).then(r => r.json());
+    const lists = await Promise.all(tags.map(q)), seen = new Set(), out = [];
+    for (const s of lists.flat()) { const u = s.url_resolved || s.url; if (!u || !/^https:/.test(u) || seen.has(u)) continue; seen.add(u); out.push({ name: String(s.name || '').trim().replace(/\s+/g, ' '), cc: s.countrycode || '', url: u }); }
+    out.sort(() => R() - .5); if (out.length > 12) return out;
+  } catch (e) {} }
+  return [];
+}
+function liveSlot(i) {
+  const s = LIVE.slots[i] || (LIVE.slots[i] = { i });
+  if (!s.el) { s.el = new Audio(); s.el.crossOrigin = 'anonymous'; s.el.preload = 'auto'; s.node = ctx.createMediaElementSource(s.el); s.g = ctx.createGain(); s.g.gain.value = 0; s.node.connect(s.g); s.g.connect(IN);
+    s.el.addEventListener('error', () => { s.ok = false; if (ST.on && isLive(ST.band)) setTimeout(() => liveLoad(i), 200); });   // a station that won't let us listen (or is down) is replaced
+    s.el.addEventListener('playing', () => { s.ok = true; }); s.el.addEventListener('waiting', () => { s.ok = false; }); }
+  return s;
+}
+function liveLoad(i) { if (!LIVE.list.length) return; const s = liveSlot(i), st = LIVE.list[LIVE.next++ % LIVE.list.length]; s.st = st; s.ok = false; s.g.gain.cancelScheduledValues(ctx.currentTime); s.g.gain.value = 0; s.el.src = st.url; s.el.play().catch(() => {}); }
+function liveStart() {
+  if (!ctx || !isLive(ST.band)) return;
+  if (LIVE.band !== ST.band) { LIVE.band = ST.band; LIVE.list = []; LIVE.next = 0; LIVE.loading = null; LIVE.slots.forEach(s => { if (s && s.el) { s.ok = false; s.el.pause(); s.el.removeAttribute('src'); s.el.load(); } }); }
+  if (LIVE.list.length) { for (let i = 0; i < LIVE.N; i++) { const s = LIVE.slots[i]; if (!s || !s.el || !s.el.src) liveLoad(i); else if (s.el.paused) s.el.play().catch(() => {}); } return; }
+  if (!LIVE.loading) { const want = ST.band; LIVE.loading = liveFetch(want).then(l => { if (LIVE.band !== want) return; LIVE.list = l; LIVE.loading = null; if (!l.length) { say('No stations are answering. Check the connection.'); return; } if (ST.on) for (let i = 0; i < LIVE.N; i++) liveLoad(i); }); }
+}
+function liveSilence() { if (!ctx) return; const t = ctx.currentTime; for (const s of LIVE.slots) if (s && s.g && s.g.gain.value > .0001) { s.g.gain.cancelScheduledValues(t); s.g.gain.setTargetAtTime(0, t, .01); } }
+function liveStop() { liveSilence(); for (const s of LIVE.slots) if (s && s.el) { s.ok = false; s.el.pause(); s.el.removeAttribute('src'); s.el.load(); } }
+function liveLabel(i) { const s = LIVE.slots[i % LIVE.N]; return s && s.st ? `${s.st.cc ? s.st.cc + ' ' : ''}${s.st.name}`.toUpperCase() : (LIVE.loading || !LIVE.list.length ? 'TUNING…' : 'SEARCHING…'); }
+function liveStep(t, d) {
+  const now = performance.now(), j = ST.idx % LIVE.N, s = LIVE.slots[j], at = Math.max(t, ctx.currentTime), gap = !ST.hold && R() < .1;
+  // each cut is a 5-8 ms crossfade: still a hard chop to the ear, but never a click (hold stops the old ramp where it is instead of jumping)
+  const hold = (pg, at2) => { if (pg.cancelAndHoldAtTime) pg.cancelAndHoldAtTime(at2); else pg.cancelScheduledValues(at2); };
+  for (const o of LIVE.slots) if (o && o.g && o !== s) { hold(o.g.gain, at); o.g.gain.setTargetAtTime(0, at, .006); }
+  if (s && s.ok && !gap) { hold(s.g.gain, at); s.g.gain.setTargetAtTime(.8, at + .002, .008);
+    const prime = now < ST.primeUntil ? 1 : 0; wordChance(t, d, prime); catchLetter(t, .7); }
+  else if (s && s.g) { hold(s.g.gain, at); s.g.gain.setTargetAtTime(0, at, .006); }
+  if (!ST.hold && now - LIVE.rotAt > 8000 && LIVE.list.length) { LIVE.rotAt = now; let k = Math.floor(R() * LIVE.N); if (k === j) k = (k + 1) % LIVE.N; liveLoad(k); }   // the sweep travels: one station swapped for a new one
+}
+let nextT = 0; const steps = [];
+function schedule() {
+  if (!ctx) return;
+  if (!ST.on || ST.evp || ST.chan != null || !isLive(ST.band)) liveSilence();
+  if (!ST.on || ST.evp) return;
+  if (ST.chan == null && !isLive(ST.band)) { ST.band = ST.prevBand || 'WORLD'; ST.idx = 0; applyKnobs(); liveStart(); }   // leaving a jewel returns to the live sweep
+  if (nextT < ctx.currentTime) nextT = ctx.currentTime + .03;
+  while (nextT < ctx.currentTime + .12) {
+    if (ST.chan != null) { nextT += chanStep(nextT); continue; }
+    const d = RATES[ST.rate] / 1000; isLive(ST.band) ? liveStep(nextT, d) : step(nextT, d); steps.push([nextT, ST.idx]); if (steps.length > 40) steps.shift();
+    if (!ST.hold) ST.idx = (ST.idx + (ST.rev ? -1 : 1) + bandSteps()) % bandSteps(); nextT += d;
+  }
+}
+function step(t, d) {
+  const prime = performance.now() < ST.primeUntil ? 1 : 0, blind = ST.blind ? 1 : 0, gate = ST.gate ? 1 : 0, vb = ST.ghost ? 1.35 : 1, sb = (ST.ghost ? .6 : 1) * (ST.statLo ? .55 : 1);
+  noise(t, .006, 'white', 'bandpass', 2600, .8, .12 * sb);   // the squelch tick between channels
+  let st = STATIONS[ST.band][ST.idx];
+  if (!st && R() < .05 + ST.act * .3 + prime * .32 + blind * .18 + gate * .25) st = { type: R() < .8 ? 'voice' : 'talk', strength: .45 + R() * .45, f0: 85 + R() * 150, k: R() < .5 ? 1.16 : 1 };   // the busier the room (or your question), the busier the band
+  const sig = st ? st.strength * (.55 + .45 * R()) : 0;
+  const stat = .3 * (1 - sig * .75) * sb;
+  if (ST.band === 'FM') noise(t, d, 'white', 'bandpass', 3000, .35, stat);
+  else if (ST.band === 'AM') { noise(t, d, 'brown', 'lowpass', 1800, .7, stat * 1.3); noise(t, d, 'crackle', 'highpass', 900, .5, stat * 2); }
+  else { noise(t, d, 'white', 'bandpass', 1900, .5, stat * .8); noise(t, d, 'crackle', 'highpass', 1400, .5, stat * 1.6); if (R() < .3) tone(t, 600 + R() * 900, d, .02 * sb, 'sine', 500 + R() * 1200); }   // shortwave: hiss, crackle and drifting heterodyne
+  if (!st) return;
+  if (st.type === 'voice' || st.type === 'talk') {
+    const n = Math.max(1, Math.round(d / (.085 + R() * .07))), sd = d / n;
+    for (let i = 0; i < n; i++) if (R() < .85) syllable(t + i * sd + .01, sd * .85, st.f0, st.k, sig * .7 * vb);
+    if (st.type === 'talk') noise(t, d, 'brown', 'bandpass', 900, .6, sig * .25);
+    wordChance(t, d, prime); catchLetter(t, sig);
+  } else if (st.type === 'music') { [1, 1.2, 1.5].forEach((m, i) => tone(t + i * .004, st.root * m * (i === 2 && R() < .5 ? 1.335 : 1), d, sig * .07, i ? 'triangle' : 'sawtooth')); if (R() < .5) tone(t, st.root / 2, d * .6, sig * .12, 'sine'); }
+  else if (st.type === 'numbers') { tone(t + .01, 1000, Math.min(.07, d * .4), sig * .16); if (d > .12) tone(t + d * .5, 1200, Math.min(.07, d * .4), sig * .16); }
+  else if (st.type === 'morse') { let q = t + .005; while (q < t + d - .03) { const dash = R() < .4, len = dash ? .09 : .035; tone(q, 640, len, sig * .14); q += len + .035; } }
+  else tone(t, st.wf, d, sig * .09, 'sine', st.wf * .62);
+}
+/* the board catches a letter out of the static now and then: a single tube flickers when a voice comes through */
+function catchLetter(t, sig) { if (!ST.wordsOn || R() > .1 + sig * .12 + (ST.gate ? .15 : 0)) return; const i = Math.floor(R() * 26); setTimeout(() => { FLK[i] = .35 + sig * .4; }, Math.max(0, (t - ctx.currentTime) * 1000)); }
+
+/* ---------------- the thirteen channels ---------------- */
+const MORSE = { A: '.-', B: '-...', C: '-.-.', D: '-..', E: '.', F: '..-.', G: '--.', H: '....', I: '..', J: '.---', K: '-.-', L: '.-..', M: '--', N: '-.', O: '---', P: '.--.', Q: '--.-', R: '.-.', S: '...', T: '-', U: '..-', V: '...-', W: '.--', X: '-..-', Y: '-.--', Z: '--..' };
+const CS = {};   // each channel's running state
+const at = (t, fn) => setTimeout(fn, Math.max(0, (t - ctx.currentTime) * 1000));
+const CHF = {
+  ether(t, c) { noise(t, .42, 'white', 'bandpass', 5200, .25, .16); noise(t, .42, 'brown', 'lowpass', 600, .5, .1); if (R() < .3 + ST.act * .3) whisper(t + R() * .2, .3 + R() * .4, .14); if (R() < .12) catchLetter(t, .6); return .42; },
+  numbers(t, c) {
+    if (!c.q || !c.q.length) { const r = seeded(hash(ST.q + '|' + Math.floor(Date.now() / 60000) + '|' + (c.n = (c.n || 0) + 1))); c.q = Array.from({ length: 5 }, () => String(Math.floor(r() * 10))); c.q.push('·'); ST.digits = '';
+      [880, 1100, 1320].forEach((f, i) => tone(t + i * .16, f, .14, .07, 'sine')); return .7; }
+    const dg = c.q.shift(); if (dg === '·') { noise(t, 1.6, 'white', 'bandpass', 1900, .5, .05); return 1.6; }
+    syllable(t, .26, 128, 1, .55, VOW[(+dg) % VOW.length]); syllable(t + .27, .2, 112, 1, .4, VOW[(+dg + 3) % VOW.length]); noise(t, .8, 'white', 'bandpass', 1900, .5, .035);
+    at(t, () => { ST.digits = (ST.digits + ' ' + dg).trim().slice(-9); SP.q.push({ g: gIdx(dg), dur: 560 }); }); return .8;
+  },
+  ballroom(t, c) { const prog = [[220, 261.6, 329.6], [174.6, 220, 261.6], [196, 246.9, 293.7], [164.8, 207.7, 246.9]], ch = prog[Math.floor((c.k = (c.k || 0) + 1) / 3) % 4], wow = 1 + .006 * Math.sin(t * 2.1);
+    ch.forEach((f, i) => tone(t + i * .01, f * wow * (c.k % 3 ? 1 : 2), .44, i ? .035 : .05, 'triangle')); if (c.k % 3 === 0) tone(t, ch[0] / 2, .4, .08, 'sine'); noise(t, .5, 'crackle', 'highpass', 1200, .5, .5); return .5; },
+  hearth(t, c) { noise(t, .5, 'brown', 'lowpass', 420, .6, .32); noise(t, .5, 'crackle', 'highpass', 700, .5, .9); if (R() < .08) thump(t + R() * .3, 70, 26, 1.6, .22); if (R() < .25) syllable(t + .1, .3, 70, .8, .25); return .5; },
+  birdsong(t, c) { noise(t, .4, 'white', 'highpass', 6000, .3, .03); for (let i = 0, n = 1 + (R() * 3 | 0); i < n; i++) { const f = 2500 + R() * 1800, q = t + R() * .3; tone(q, f, .05 + R() * .07, .05, 'sine', f * (R() < .5 ? 1.4 : .7)); }
+    if (R() < .22 + ST.act * .3) { syllable(t + .1, .22, 150, 1.1, .18); catchLetter(t, .5); } return .4; },
+  sonar(t, c) { noise(t, .5, 'brown', 'lowpass', 280, .7, .3); c.k = (c.k || 0) + 1; if (c.k % 5 === 0) { tone(t, 1180, .4, .09, 'sine'); tone(t + .62, 1180, .35, .03, 'sine'); }
+    if (R() < .4) for (let i = 0; i < 3; i++) tone(t + i * .06 + R() * .1, 300 + R() * 200, .05, .03, 'sine', 900 + R() * 400); if (R() < .1) syllable(t, .5, 60, .7, .2); return .5; },
+  morse(t, c) {
+    if (!c.word || c.j >= c.word.length) { const r = seeded(hash(ST.q + '|' + Math.floor(Date.now() / 60000) + '|' + (c.n = (c.n || 0) + 1))); c.word = WORDS[Math.floor(r() * WORDS.length)]; c.j = 0; noise(t, 1.1, 'white', 'bandpass', 1900, .5, .05); return 1.1; }
+    const letter = c.word[c.j++], code = MORSE[letter] || '', u = .075; let q = t + .01; for (const s of code) { const len = s === '-' ? u * 3 : u; tone(q, 640, len, .11, 'sine'); q += len + u; }
+    noise(t, q - t + u * 2, 'white', 'bandpass', 1900, .5, .04); at(t, () => { SP.q.push({ g: gIdx(letter), dur: (q - t) * 1000 + 120 }); if (c.j === c.word.length) at(q + .3, () => { ST.word = c.word; ST.wordAt = performance.now() / 1000; logIt(`morse: ${c.word}`); }); }); return q - t + u * 3;
+  },
+  seance(t, c) { thump(t, 62, 42, .2, .28); thump(t + .3, 58, 40, .2, .2); c.k = (c.k || 0) + 1; noise(t + .1, .9, 'white', 'bandpass', c.k % 2 ? 700 : 1100, .7, .07); if (R() < .35 + ST.act * .3) whisper(t + .3, .5 + R() * .4, .18); if (R() < .1) catchLetter(t, .6); return 1.0; },
+  lullaby(t, c) { const mel = [880, 1046.5, 1318.5, 1046.5, 987.8, 1318.5, 880, 783.99, 698.5, 659.3, 698.5, 783.99, 880, 659.3], k = (c.k = (c.k || 0) + 1), f = mel[k % mel.length] * (1 - Math.min(.06, k * .0006));
+    tone(t, f, .5, .06, 'sine'); tone(t, f * 3.01, .22, .015, 'sine'); noise(t, .45, 'crackle', 'highpass', 1500, .5, .3); return .45 + (k % 7 === 6 ? .3 : 0); },
+  siren(t, c) { const up = (c.k = (c.k || 0) + 1) % 2; tone(t, up ? 560 : 880, 2, .045, 'sawtooth', up ? 880 : 560); noise(t, 2, 'white', 'bandpass', 2600, .4, .06); return 2; },
+  phone(t, c) { const k = (c.k = (c.k || 0) + 1) % 9;
+    if (k < 2) { tone(t, 350, .95, .05); tone(t, 440, .95, .05); return 1; }
+    if (k < 6) { tone(t, 440, .8, .05); tone(t, 480, .8, .05); return 1.5; }
+    noise(t, 1.2, 'white', 'bandpass', 1400, .9, .06); for (let i = 0; i < 4; i++) if (R() < .7) syllable(t + i * .26, .22, 120 + R() * 40, 1, .3); if (R() < .3) catchLetter(t, .6); return 1.2; },
+  choir(t, c) { const roots = [220, 174.6, 196, 164.8], r = roots[(c.k = (c.k || 0) + 1) % 4]; [1, 1.2, 1.5, 2].forEach((m, i) => syllable(t + i * .03, 2.4, r * m, 1, .16, VOW[i % 2 ? 0 : 4])); noise(t, 2.2, 'white', 'bandpass', 3000, .4, .025); return 2.2; },
+  cat(t, c) { const b = 60 / 86; purr(t, b + .05, .5); thump(t, 70, 44, .16, .2); c.k = (c.k || 0) + 1; if (c.k % 5 === 2) { tone(t + .3, 700, .09, .05, 'triangle', 1250); tone(t + .4, 1000, .1, .04, 'triangle', 620); } return b; },
+};
+function chanStep(t) { const ch = CH[ST.chan], c = CS[ch.key] || (CS[ch.key] = {}); return CHF[ch.key](t, c); }
+function setChannel(i) {
+  if (!ST.on) power();
+  if (ST.chan === i) { ST.chan = null; say('Back to the sweep.'); logIt('channel off'); return; }
+  const ch = CH[i]; if (isLive(ST.band)) ST.prevBand = ST.band; ST.chan = i; ST.hold = false; ST.band = ch.band; ST.idx = ch.idx; ST.shownIdx = ch.idx; ST.digits = ''; CS[ch.key] = {}; applyKnobs();
+  say(ch.line, `channel ${i + 1} · ${ch.band} ${freqOf(ch.band, ch.idx)}`); logIt(`channel ${ch.name}`);
+}
+
+/* ---------------- the word screen (the shows' word generator, done honestly: a fixed list, seeded) ---------------- */
+const WORDS = 'HELLO HERE LEAVE STAY BEHIND COLD DARK DOOR WAIT LISTEN NAME YES NO HELP WHO MOVE OUT HOME MOTHER BROTHER SISTER CHILD FIRE WATER KEY STAIRS WINDOW BASEMENT ATTIC SEVEN THREE NINE NOW SOON LATER AGAIN ALWAYS NEVER SORRY LIAR FRIEND HUNGRY TIRED LOST FOUND OPEN CLOSE BELL CANDLE MIRROR CAT BIRD RING LETTER PHOTO SONG DANCE RED BLUE GREEN GOLD NORTH EAST SOUTH WEST NIGHT MORNING SUNDAY MARCH RAIN SNOW TRAIN ROAD PHONE WIRE SIGNAL STATIC HUSH WHISPER SING LAUGH PLAY GAME HIDE FOLLOW COME GO UP DOWN UNDER ABOVE INSIDE OUTSIDE WALL FLOOR ROOF TREE GARDEN RIVER BRIDGE CHURCH KNOW FORGET REMEMBER DREAM SLEEP WAKE TRUTH SECRET PROMISE MONEY GIFT BOX BOOK PAGE OCEAN MOON STAR SUN PURR TUNA SMOKE GLASS SILVER BONE CLOCK MIDNIGHT HUSBAND WIFE BABY GRANDMA DOG HORSE CROW ANGEL DEVIL SAINT PRAY KNOCK THIRTEEN WRONG RIGHT HEAR SEE TOUCH'.split(' ');
+function hash(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+function wordChance(t, d, prime) {
+  if (!ST.wordsOn) return;
+  const now = performance.now(), spike = now - ST.spikeAt < 2500;
+  if (now - ST.lastWordAt < (ST.gate ? 4500 : 6000)) return;   // a word every few seconds at most: rarer is spookier
+  if (R() > .01 + ST.act * .035 + prime * .07 + (spike ? .25 : 0) + (ST.gate ? .05 : 0)) return;
+  ST.lastWordAt = now; const r = seeded(hash(ST.q + '|' + Math.floor(Date.now() / 60000) + '|' + ST.words)), w = WORDS[Math.floor(r() * WORDS.length)];
+  setTimeout(() => showWord(w, spike), Math.max(0, (t - ctx.currentTime) * 1000));
+}
+let GHOSTW = null;
+function showWord(w, spike) {
+  ST.word = w; ST.wordAt = performance.now() / 1000; ST.words++; RINGS.push({ r: 0, a: 1 }); spell(w);
+  // the word also surfaces in the glass, pre-drawn once
+  const c = mk(700, 160), x = c.getContext('2d'); x.font = '86px "IM Fell English SC", Georgia, serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.shadowColor = 'rgba(255,120,40,.9)'; x.shadowBlur = 28; x.fillStyle = 'rgba(255,226,180,.9)'; x.fillText(w, 350, 80); GHOSTW = c;
+  logIt(`word: ${w}`, ST.q ? `asked: “${ST.q}”` : '', spike ? `the room moved (${ST.spikeName})` : '');
+  if (!ST.blind && (R() < .4 || ST.words === 1)) say(pick(L.word).replace('{W}', w), spike ? `the room moved: ${ST.spikeName}` : 'word screen');
+}
+
+/* ---------------- the room: real sensors in live mode, a stand-in otherwise ---------------- */
+const EW = {};
+try { const es = new EventSource('/events'); es.onmessage = ev => { try { const e = JSON.parse(ev.data), k = e.source + '/' + e.channel; if (/mic|sound|audio/i.test(k)) return;   // the radio itself is loud: sound sensors would hear it
+  const s = EW[k] || (EW[k] = { n: 0, m: e.value, v: 1 }), d = e.value - s.m, z = s.n > 40 ? d / Math.sqrt(Math.max(s.v, 1e-6)) : 0; s.m += .02 * d; s.v = .98 * (s.v + .02 * d * d); s.n++;
+  ST.live = true; ST.lastEvent = performance.now(); const az = Math.min(6, Math.abs(z)); ST.act = Math.max(ST.act, az / 6);
+  if (az > 3.2 && performance.now() - ST.spikeAt > 4000) { ST.spikeAt = performance.now(); ST.spikeName = `${k} ${z > 0 ? '+' : ''}${z.toFixed(1)}σ`; if (ST.on && performance.now() - ST.sayAt > 12000) say(pick(L.spike).replace('{S}', k), `${z.toFixed(1)} σ from its own baseline`); }
+} catch (er) {} }; } catch (e) {}
+setInterval(() => {   // stand-in room when nothing live has arrived for a while
+  if (performance.now() - ST.lastEvent > 6000) { ST.live = false; ST.act = Math.max(ST.act, Math.max(0, .12 + .1 * Math.sin(performance.now() / 7000) + (R() < .015 ? .6 : 0) * R())); if (ST.act > .6 && performance.now() - ST.spikeAt > 8000) { ST.spikeAt = performance.now(); ST.spikeName = 'stand-in room'; } }
+  ST.act *= .9;
+}, 250);
+
+/* ---------------- what he says ---------------- */
+const L = {
+  on: ['Static. My favourite genre.', 'It sweeps and never stops. Listen in the gaps.', 'It never stops on one station. Listen for what’s left between them.', 'Put headphones on. You miss half of it on speakers.'],
+  off: ['Off. They’ll wait. They’re dead, not busy.', 'Click. Quiet.'],
+  word: ['{W}. Clear as anything.', '{W}. Don’t look at me. Look at the box.', '{W}. They heard you.', '{W}. Write it down. You’ll want it later.', '{W}? Dramatic. They usually are.', '{W}. Someone’s close. Be polite.'],
+  ask: ['Asked. Now shut up and listen.', 'Say it out loud too. They hate typing.', 'Fine question. Ask it nicer next time.', 'Nobody owes you an answer. Listen anyway.'],
+  rem: ['Something touched the pod.', 'The pod lit. Hold still.', 'Again. It likes attention.'],
+  spike: ['The room just moved ({S}). Ask now.', '{S} jumped. Not me. Ask something.'],
+  idle: ['Quiet. Suspicious.', 'Even the dead are on their phones.', 'Nothing. They heard you. They just don’t want to talk to you.', 'That’s my sister. She bites.', 'Stop poking us. Ask the box.'],
+  blindStart: ['Eyes shut. Type what you hear. Don’t edit.', 'Blindfold on. Your friend asks, you type. No peeking.'],
+  blindEnd: ['{N} words. Read them. Then tell me it’s nothing.', '{N} words in three minutes. Busy night.'],
+  evpStart: ['Ten seconds of your room. Ask, then shut up.', 'Recording. Stay quiet, they need the space.'],
+  evpEnd: ['Forward, backward, slow. Mark what you hear.', 'Your room, backwards. Listen for words.'],
+  gateOpen: ['The gate’s open. Forty-five seconds. Ask something worth it.', 'Open. They’re listening, and so am I.'],
+  gateClose: ['Goodbye. Always say goodbye. Manners.', 'Closed. Whatever came through can find its own way out.'],
+  band: { WORLD: 'The whole world at once. Somebody out there is talking to you.', VOICES: 'Voices only. Talk, news, the spoken word. Listen for your name.', AM: 'AM. Crackly. Old souls like it.', FM: 'FM. Cleaner. Snobbier.', SW: 'Shortwave. Where the numbers live.' },
+};
+const pick = a => a[Math.floor(R() * a.length)];
+let sayT = 0;
+function say(text, small) { const el = $('say'); el.innerHTML = `${esc(text)}${small ? `<small>${esc(small)}</small>` : ''}`; el.classList.add('on'); ST.sayAt = performance.now(); clearTimeout(sayT); sayT = setTimeout(() => el.classList.remove('on'), 5600); }
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+function logIt(...parts) { const d = new Date(); ST.log.push({ t: d.toTimeString().slice(0, 8), text: parts.filter(Boolean).join(' · ') }); if (DRAWER === 'log') openDeck('log'); }
+
+/* ---------------- controls ---------------- */
+// the bar's Power switch: the set goes off with the room, and comes back on if it was playing
+let barWasOn = false; addEventListener('vs-power', e => { if (!e.detail.on) { barWasOn = ST.on; if (ST.on) power(); } else if (barWasOn && !ST.on) { barWasOn = false; setTimeout(power, 400); } });
+function power() {
+  ST.on = !ST.on; ST.everOn = true;
+  if (ST.on) { audioInit(); click(); const t = ctx.currentTime + .01, n0 = ctx.currentTime; MASTER.gain.cancelScheduledValues(n0); MASTER.gain.setValueAtTime(Math.max(.0001, MASTER.gain.value), n0); thump(t, 72, 48, .45, .5); setVol(CALM ? .2 : .8); /* hold and swell start at the same instant: a hold scheduled after the swell used to pin the radio silent */ say(pick(L.on), 'the spirit band · listen between the stations'); logIt('power on'); liveStart(); }
+  else { if (ST.gate) gateEnd(true); liveStop(); if (ctx) { thump(ctx.currentTime + .01, 220, 38, .8, .16); click(); } setVol(CALM ? .15 : .45); say(pick(L.off)); logIt('power off'); }
+}
+function click() { if (!ctx) return; const t = ctx.currentTime + .005; noise(t, .02, 'white', 'highpass', 1800, .7, .5); tone(t, 90, .05, .2); }
+function glassPing() { if (!ctx) return; const t = ctx.currentTime + .005; [1, 2.76, 5.4].forEach((m, i) => { const o = ctx.createOscillator(); o.frequency.value = 1180 * m; const gn = ctx.createGain(); gn.gain.setValueAtTime(.06 / (i + 1), t); gn.gain.exponentialRampToValueAtTime(.0001, t + 1.8 / (i + 1)); o.connect(gn); gn.connect(POST); o.start(t); o.stop(t + 2); }); }
+const BANDS = ['WORLD', 'VOICES'];
+const ACT = {
+  sweep: () => { ST.chan = null; ST.hold = false; ST.rate = (ST.rate + 1) % RATES.length; },
+  band: () => { ST.chan = null; ST.band = ST.prevBand = BANDS[(BANDS.indexOf(ST.band) + 1) % BANDS.length]; ST.idx = 0; applyKnobs(); liveStart(); say(L.band[ST.band], 'live broadcasts, right now'); },
+  dir: () => { ST.chan = null; ST.rev = !ST.rev; },
+  echo: () => { ST.echo = (ST.echo + 1) % 3; applyKnobs(); },
+  hold: () => { if (ST.chan != null) { ST.chan = null; } ST.hold = !ST.hold; say(ST.hold ? 'Held. One frequency. Stare at it.' : 'Sweeping again.'); },
+  view: () => { ST.view = (ST.view + 1) % 3; },
+  rem: () => { ST.remArm = !ST.remArm; say(ST.remArm ? 'REM pod armed. The brass thing on the right.' : 'REM pod off.'); },
+  words: () => { ST.wordsOn = !ST.wordsOn; say(ST.wordsOn ? 'Word screen on.' : 'Word screen off. Just noise now.'); },
+  ghost: () => { ST.ghost = !ST.ghost; say(ST.ghost ? 'Ghost filter. Voices up, static down.' : 'Ghost filter off. Raw static.'); },
+  stat: () => { ST.statLo = !ST.statLo; }, tone: () => { ST.warmTone = !ST.warmTone; applyKnobs(); }, room: () => { ST.bigRoom = !ST.bigRoom; applyKnobs(); }, lamp: () => { ST.lamp = !ST.lamp; },
+  log: () => DRAWER === 'log' ? closeDeck() : openDeck('log'),
+};
+const STATE_TXT = { sweep: () => RATES[ST.rate] + ' ms', band: () => ST.band, dir: () => ST.rev ? 'reverse' : 'forward', echo: () => ['dry', 'echo', 'cave'][ST.echo], hold: () => ST.hold ? 'held' : 'sweeping', view: () => ['waterfall', 'scope', 'band map'][ST.view], rem: () => ST.remArm ? 'armed' : 'off', words: () => ST.wordsOn ? 'on' : 'off', ghost: () => ST.ghost ? 'on' : 'off', stat: () => ST.statLo ? 'low' : 'full', tone: () => ST.warmTone ? 'warm' : 'bright', room: () => ST.bigRoom ? 'big room' : 'small room', lamp: () => ST.lamp ? 'on' : 'off' };
+function ask(q) { q = q.trim(); if (!q) return; ST.q = q; ST.primeUntil = performance.now() + 9000; if (!ST.on) power(); logIt(`asked: “${q}”`); say(pick(L.ask), 'for nine seconds after a question the band opens up');
+  if (ctx) { const t = ctx.currentTime + .02; tone(t, 1750, .12, .08); tone(t + .14, 1750, .12, .08); } }
+$('ask').addEventListener('submit', e => { e.preventDefault(); ask($('q').value); $('q').blur(); });
+
+/* the gate: the pentagram button opens 45 seconds when the band runs hot, and closes with a goodbye on the board */
+let gateDrone = null;
+function gateStart() {
+  if (ST.gate) return gateEnd();
+  if (!ST.on) power(); ST.gate = { t0: performance.now(), dur: 45000 }; ST.primeUntil = Math.max(ST.primeUntil, performance.now() + 45000); spell('HELLO'); say(pick(L.gateOpen), 'the band runs hot while the gate is open'); logIt('the gate opened', ST.q ? `asked: “${ST.q}”` : '');
+  if (ctx) { const t = ctx.currentTime + .02; thump(t, 48, 30, 2.4, .35); gateDrone = [55, 82.4, 110.3].map((f, i) => { const o = ctx.createOscillator(); o.type = i ? 'sine' : 'triangle'; o.frequency.value = f; const gn = ctx.createGain(); gn.gain.setValueAtTime(0, t); gn.gain.linearRampToValueAtTime(i ? .035 : .06, t + 4); o.connect(gn); gn.connect(POST); o.start(t); return { o, gn }; }); }
+  clearTimeout(gateStart.tm); gateStart.tm = setTimeout(() => gateEnd(), 45000);
+}
+function gateEnd(quiet) {
+  if (!ST.gate) return; clearTimeout(gateStart.tm); ST.gate = null;
+  if (gateDrone && ctx) { const t = ctx.currentTime; gateDrone.forEach(({ o, gn }) => { gn.gain.cancelScheduledValues(t); gn.gain.setTargetAtTime(0, t, .6); o.stop(t + 3); }); gateDrone = null; }
+  if (quiet) return; spell('GOODBYE'); if (ctx) thump(ctx.currentTime + .02, 90, 34, 1.4, .3); say(pick(L.gateClose)); logIt('the gate closed');
+}
+
+/* the REM pod is the brass thing on the right with the red eye: it lights for your pointer, as the real one does for a hand */
+let remOsc = null;
+function remTick(dt) {
+  const p = ST.ptr, rp = MAP.pod; let near = 0; if (p && ST.remArm) { const dd = Math.hypot(p[0] - rp.x, p[1] - rp.y); near = Math.max(0, 1 - Math.max(0, dd - rp.r) / 160); }
+  const spike = ST.remArm && performance.now() - ST.spikeAt < 1500 ? .8 : 0, target = ST.on ? Math.max(near, spike) : 0; ST.rem += (target - ST.rem) * Math.min(1, dt * 8);
+  if (ctx && ST.on) { if (!remOsc) { remOsc = ctx.createOscillator(); remOsc.type = 'triangle'; remOsc.g = ctx.createGain(); remOsc.g.gain.value = 0; remOsc.connect(remOsc.g); remOsc.g.connect(IN); remOsc.start(); }
+    remOsc.frequency.setTargetAtTime(520 + ST.rem * 1100, ctx.currentTime, .05); remOsc.g.gain.setTargetAtTime(ST.rem > .25 ? (ST.rem - .25) * .1 * (.6 + .4 * Math.sin(performance.now() / (60 - ST.rem * 40))) : 0, ctx.currentTime, .03); }
+  else if (remOsc) remOsc.g.gain.setTargetAtTime(0, ctx.currentTime, .05);
+  if (ST.rem > .85 && !remTick.fired) { remTick.fired = true; logIt('the REM pod lit'); if (performance.now() - ST.sayAt > 6000) say(pick(L.rem), 'it answers to anything that comes near it'); }
+  if (ST.rem < .3) remTick.fired = false;
+}
+
+/* ---------------- the blindfold session (the Estes method) ---------------- */
+const QUESTIONS = ['Is anyone here with us?', 'What is your name?', 'Why are you here?', 'Who do you want to talk to?', 'What do you want us to know?', 'Can you say the name of someone in this room?', 'Where are you?', 'Is there something you want?', 'Do you want us to leave?', 'Say goodbye.'];
+function blindStart() {
+  if (ST.evp) return; if (!ST.on) power(); ST.blind = { t0: performance.now(), heard: [], qi: 0 }; $('blind').hidden = false; $('blindIn').value = ''; $('blindHeard').textContent = ''; $('blindIn').focus();
+  $('blindQ').innerHTML = `<b>For whoever is asking</b> (read one out loud every 15 seconds; the listener can’t hear you through the headphones):<br>${QUESTIONS.map((q, i) => `${i + 1}. ${esc(q)}`).join('<br>')}`;
+  say(pick(L.blindStart)); logIt('blindfold session begun'); clearInterval(blindStart.iv);
+  blindStart.iv = setInterval(() => { const left = 180 - (performance.now() - ST.blind.t0) / 1000; if (left <= 0) return blindEnd(); $('blindT').textContent = `${Math.floor(left / 60)}:${String(Math.floor(left % 60)).padStart(2, '0')}`; }, 250);
+}
+function blindEnd() { if (!ST.blind) return; clearInterval(blindStart.iv); const n = ST.blind.heard.length; logIt(`blindfold session ended · ${n} heard`, ST.blind.heard.map(h => `${h.s}s “${h.w}”`).join(', ')); ST.blind = null; $('blind').hidden = true; say(pick(L.blindEnd).replace('{N}', n), 'read them back. they’re in the log'); openDeck('log'); }
+$('blindIn').addEventListener('keydown', e => { if (e.key === 'Enter') { const w = $('blindIn').value.trim(); if (w && ST.blind) { const s = Math.round((performance.now() - ST.blind.t0) / 1000); ST.blind.heard.push({ s, w }); $('blindHeard').textContent = ST.blind.heard.slice(-6).map(h => h.w).join(' · '); $('blindIn').value = ''; } } if (e.key === 'Escape') blindEnd(); });
+$('blindEnd').addEventListener('click', blindEnd);
+
+/* ---------------- EVP: ten seconds of your room, played forward, backward and slow. Nothing is kept ---------------- */
+async function evp() {
+  if (ST.evp || ST.blind) return; audioInit();
+  let stream; try { stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: true } }); } catch (e) { say('No microphone. Either you said no or this browser did. Fine.'); return; }
+  const wasOn = ST.on; ST.on = false; ST.everOn = true; ST.evp = { label: 'REC 10', sub: 'ASK, THEN SILENCE', marks: [] }; setVol(); say(pick(L.evpStart), 'nothing is saved or sent'); logIt('EVP recording', ST.q ? `asked: “${ST.q}”` : '');
+  const rec = new MediaRecorder(stream), chunks = []; rec.ondataavailable = e => chunks.push(e.data); rec.start();
+  const t0 = performance.now(); await new Promise(r => { const iv = setInterval(() => { const left = 10 - (performance.now() - t0) / 1000; ST.evp.label = 'REC ' + String(Math.max(0, Math.ceil(left))).padStart(2, '0'); if (left <= 0) { clearInterval(iv); r(); } }, 100); });
+  await new Promise(r => { rec.onstop = r; rec.stop(); }); stream.getTracks().forEach(t => t.stop());
+  let buf; try { buf = await ctx.decodeAudioData(await new Blob(chunks).arrayBuffer()); } catch (e) { ST.evp = null; ST.on = wasOn; setVol(); say('The recording came back broken. The dead are not to blame.'); return; }
+  const rev = ctx.createBuffer(buf.numberOfChannels, buf.length, buf.sampleRate); for (let c = 0; c < buf.numberOfChannels; c++) { const a = buf.getChannelData(c), b = rev.getChannelData(c); for (let i = 0; i < a.length; i++) b[i] = a[a.length - 1 - i]; }
+  say(pick(L.evpEnd)); $('mark').hidden = false; setVol();
+  for (const [b, rate, label] of [[buf, 1, 'PLAY ►'], [rev, 1, 'REVERSE ◄'], [buf, .7, 'SLOW ½']]) {
+    ST.evp.label = label; ST.evp.sub = 'MARK WHAT YOU HEAR'; ST.evp.phase = label; ST.evp.t0 = performance.now();
+    const s = ctx.createBufferSource(); s.buffer = b; s.playbackRate.value = rate; const gn = ctx.createGain(); gn.gain.value = 2.2; s.connect(gn); gn.connect(IN); s.start(); await new Promise(r => { s.onended = r; }); await new Promise(r => setTimeout(r, 400));
+  }
+  $('mark').hidden = true; logIt(`EVP done · ${ST.evp.marks.length} marked`, ST.evp.marks.join(', ')); ST.evp = null; ST.on = wasOn; setVol();
+}
+$('mark').addEventListener('click', () => { if (!ST.evp) return; const s = ((performance.now() - ST.evp.t0) / 1000).toFixed(1); ST.evp.marks.push(`${ST.evp.phase} ${s}s`); $('mark').textContent = `Marked ${ST.evp.marks.length}`; setTimeout(() => { $('mark').textContent = 'I heard something'; }, 900); });
+
+/* ---------------- hit-testing ---------------- */
+function hitAt(x, y) {
+  for (const k in MAP.btn) { const b = MAP.btn[k]; if (Math.hypot(x - b.x, y - b.y) <= b.r + 5) return 'b:' + k; }
+  for (let i = 0; i < CH.length; i++) { const [jx, jy] = CH[i].j; if (((x - jx) / 30) ** 2 + ((y - jy) / 11) ** 2 <= 1) return 'c:' + i; }
+  const inR = b => x >= b[0] && x <= b[2] && y >= b[1] && y <= b[3];
+  if (inR(MAP.scrL)) return 'scrL'; if (inR(MAP.scrR)) return 'scrR'; if (inR(MAP.board)) return 'board';
+  if (Math.hypot(x - MAP.pod.x, y - MAP.pod.y) < MAP.pod.r + 12) return 'pod'; if (Math.hypot(x - MAP.fig.x, y - MAP.fig.y) < 40) return 'fig';
+  for (let i = 0; i < 2; i++) MAP.cats[i].eyes.forEach(([ex, ey, er], j) => { if (!hitAt.e && Math.hypot(x - ex, y - ey) <= er + 4) hitAt.e = 'eye' + i + j; });
+  if (hitAt.e) { const e = hitAt.e; hitAt.e = null; return e; }
+  for (let i = 0; i < 2; i++) { const C = MAP.cats[i]; if (((x - C.third[0]) / (C.third[2] + 6)) ** 2 + ((y - C.third[1]) / (C.third[3] + 8)) ** 2 <= 1) return 'third' + i; }
+  if (Math.hypot(x - MAP.ball.x, y - MAP.ball.y) < MAP.ball.r) return 'ball';
+  for (let i = 0; i < 2; i++) { const b = MAP.cats[i].box; if (inR(b)) return 'cat' + i; }
+  return null;
+}
+const TIPS = { scrL: 'The tuner: waterfall, scope or band map (VIEW)', scrR: 'The word screen, the K-II and the REM pod', board: 'The board spells what the box says', pod: 'REM pod: come closer', fig: 'The lookout', ball: 'The ball', third0: 'Her third eye: hold one voice', third1: 'His third eye: the word screen listens harder', eye00: 'Her left eye: the ghost filter', eye01: 'Her right eye: change band', eye10: 'His left eye: echo', eye11: 'His right eye: tuner view', cat0: 'Ouija Cat’s sister', cat1: 'Ouija Cat',
+  power: 'Power', sweep: 'Sweep speed', band: 'Band: FM, AM, shortwave', dir: 'Sweep direction', echo: 'Echo', evp: 'EVP: record your room', blind: 'Blindfold session', hold: 'Hold one frequency', ask: 'Ask', gate: 'The gate: 45 seconds', view: 'Tuner view', rem: 'REM pod', words: 'Word screen', ghost: 'Ghost filter', stat: 'Static level', tone: 'Tone', room: 'Room size', lamp: 'The ball’s light', log: 'The log' };
+const toXY = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * W, (e.clientY - r.top) / r.height * H]; };
+const tipFor = h => { if (!h) return ''; if (h.startsWith('c:')) { const c = CH[+h.slice(2)]; return `${c.name} · ${c.band} ${freqOf(c.band, c.idx)}`; } if (h.startsWith('b:')) { const k = h.slice(2); return TIPS[k] + (STATE_TXT[k] ? `: ${STATE_TXT[k]()}` : ''); } return TIPS[h] || ''; };
+cv.addEventListener('pointermove', e => { const p = toXY(e); ST.ptr = p; const h = hitAt(...p); ST.hover = h; cv.classList.toggle('hand', !!h); cv.title = tipFor(h); });
+cv.addEventListener('pointerleave', () => { ST.ptr = null; ST.hover = null; });
+const BLINK = [{ t: 0, next: 4 + R() * 6 }, { t: 0, next: 7 + R() * 6 }];
+cv.addEventListener('pointerdown', e => {
+  const h = hitAt(...toXY(e)); if (!h) return; ST.press[h] = performance.now();
+  if (h.startsWith('c:')) { audioInit(); click(); return setChannel(+h.slice(2)); }
+  if (h.startsWith('b:')) { const k = h.slice(2); if (!ctx && k !== 'log') audioInit();
+    if (k === 'power') return power(); if (k === 'evp') return evp(); if (k === 'blind') return blindStart(); if (k === 'gate') return gateStart();
+    if (k === 'ask') { const q = $('q').value.trim(); if (q) return ask(q); $('q').focus(); return say('Type it. Then the cat. Out loud helps.'); }
+    click(); ACT[k](); cv.title = tipFor(h); return; }
+  if (h === 'ball') { glassPing(); FLARE.v = 1; return say(ST.on ? 'Fingerprints on the glass. Great.' : 'It’s glass. It does nothing until the set is on.'); }
+  // every eye on the set has a job: the third eyes hold and sharpen the listening, the four others are shortcuts to the set
+  if (h === 'third0' || h === 'third1') { BLINK[+h.slice(5)].t = performance.now() / 1000; audioInit(); if (!ST.on) return say('Her eyes open when the set is on.');
+    if (h === 'third0') { glassPing(); return ACT.hold(); }
+    ST.primeUntil = performance.now() + 20000; glassPing(); return say('His third eye is open. The word screen listens harder for twenty seconds.'); }
+  if (h.startsWith('eye')) { const i = +h[3], j = +h[4]; BLINK[i].t = performance.now() / 1000; audioInit(); if (!ST.on) return say('Turn the set on first. Then look me in the eye.');
+    click(); return ACT[[['ghost', 'band'], ['echo', 'view']][i][j]](); }
+  if (h === 'cat0' || h === 'cat1') return say(ST.on ? pick(L.idle) : 'Turn it on. The slider, bottom left. I’m not doing it for you.');
+  if (h === 'scrL') { if (!ST.on) return power(); return ACT.view(); }
+  if (h === 'scrR' || h === 'board') { if (!ST.on) return power(); $('q').focus(); return; }
+  if (h === 'pod') return say(ST.remArm ? 'Hover, don’t touch. It feels you coming.' : 'The pod is off. The red button by WORDS.');
+  if (h === 'fig') return say('The lookout. His eye goes red when something comes near the pod.');
+});
+addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  const k = e.key;
+  if (k === 'H' && e.shiftKey) ST.outline = !ST.outline;
+  else if (k === ' ') { e.preventDefault(); power(); }
+  else if (k === 'ArrowRight') { ST.rate = Math.min(6, ST.rate + 1); } else if (k === 'ArrowLeft') { ST.rate = Math.max(0, ST.rate - 1); }
+  else if (k === 'b') ACT.band(); else if (k === 'r') ACT.dir(); else if (k === 'e') ACT.echo(); else if (k === 'h') ACT.hold(); else if (k === 'g') gateStart(); else if (k === 'v') ACT.view();
+  else if (/^[1-9]$/.test(k)) setChannel(+k - 1); else if (k === '0') setChannel(9); else if (k === '-') setChannel(10); else if (k === '=') setChannel(11); else if (k === '`') setChannel(12);
+  else if (k === 'Escape') closeDeck();
+});
+
+/* when nothing has moved for a while and the set is on, the page lets go of its buttons */
+let quietT = 0; const unquiet = () => { document.body.classList.remove('quiet'); clearTimeout(quietT); quietT = setTimeout(() => { if (ST.on && !DRAWER && !ST.blind) document.body.classList.add('quiet'); }, 9000); };
+['pointermove', 'pointerdown', 'keydown'].forEach(ev => addEventListener(ev, unquiet, { passive: true })); unquiet();
+
+/* ---------------- the frame ---------------- */
+const RINGS = [], FLARE = { v: 0 }; let lastF = performance.now();
+const MIST = Array.from({ length: 6 }, (_, i) => ({ a: i / 6 * TAU, rr: .25 + R() * .45, sp: (.05 + R() * .08) * (R() < .5 ? -1 : 1), s: 180 + R() * 160, ph: R() * TAU }));
+const MOTES = Array.from({ length: 30 }, () => ({ x: 650 + R() * 700, y: R() * 700, vy: -(3 + R() * 6), ph: R() * TAU, s: 4 + R() * 7, tw: .4 + R() * .8 }));
+let SMOKE = null; const glow0 = (x, y, w, h, a) => { if (!SMOKE) { SMOKE = mk(128, 128); const s = SMOKE.getContext('2d'), gr = s.createRadialGradient(64, 64, 0, 64, 64, 64); gr.addColorStop(0, 'rgba(8,4,2,1)'); gr.addColorStop(.6, 'rgba(8,4,2,.6)'); gr.addColorStop(1, 'rgba(8,4,2,0)'); s.fillStyle = gr; s.fillRect(0, 0, 128, 128); } g.globalAlpha = a; g.drawImage(SMOKE, x - w / 2, y - h / 2, w, h); };
+const glow = (k, x, y, w, h, a) => { if (a <= .004) return; g.globalAlpha = Math.min(1, a); g.drawImage(GLOW[k], x - w / 2, y - h / 2, w, h); };
+// the loop schedules itself first, so one bad frame can never stop the radio for good
+function frame(now) {
+  requestAnimationFrame(frame);
+  try { frameBody(now); } catch (e) { if (!frame.warned) { frame.warned = true; console.warn('radio frame', e); } }
+}
+function frameBody(now) {
+  const t = now / 1000, dt = Math.min(.05, (now - lastF) / 1000); lastF = now;
+  if (!art.complete || !art.naturalWidth || !cv.width) return;
+  if (!base) drawBase();
+  let lvl = 0; if (AN) { const td = new Uint8Array(256); AN.getByteTimeDomainData(td); let s = 0; for (let i = 0; i < 256; i++) { const v = (td[i] - 128) / 128; s += v * v; } lvl = Math.min(1, Math.sqrt(s / 256) * 4); } ST.level += (lvl - ST.level) * .3;
+  const on = ST.on || !!ST.evp, L2 = ST.level;
+  ST.warm = Math.max(0, Math.min(1, ST.warm + (on ? dt / (CALM ? .6 : 2.4) : -dt / (CALM ? .4 : 1.5))));
+  const flick = on && ST.warm < .55 && !CALM ? .72 + .28 * Math.abs(Math.sin(t * 31) * Math.sin(t * 7.3)) : 1, WM = ST.warm * ST.warm * (3 - 2 * ST.warm) * flick;
+  ST.gateLv += ((ST.gate ? 1 : 0) - ST.gateLv) * Math.min(1, dt * 1.2); const GT = ST.gateLv;
+  ST.k2 += ((on ? Math.min(5, ST.act * 6 + (now - ST.spikeAt < 1500 ? 2.5 : 0) + GT * 1.5) : 0) - ST.k2) * Math.min(1, dt * 6);
+  FLARE.v = Math.max(0, FLARE.v - dt * 1.4); const wordA = ST.word && t - ST.wordAt < 3.2 ? Math.sin(Math.min(1, (t - ST.wordAt) / 3.2) * Math.PI) : 0;
+  const chc = ST.chan != null ? CH[ST.chan].col : GT > .3 ? 'red' : 'amber', B = MAP.ball, lamp = ST.lamp ? 1 : .25;
+  g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(base, 0, 0); g.setTransform(S, 0, 0, S, 0, 0);
+  g.save(); g.globalCompositeOperation = 'lighter';
+  // the ball lights the room: a halo, the wall behind, the table in front
+  glow(chc, B.x, B.y, B.r * 3.4, B.r * 3, (WM * (.14 + L2 * .12) + GT * .12 + FLARE.v * .2) * lamp);
+  glow('amber', 1000, 1080, 1500, 160, WM * (.22 + L2 * .15) * lamp);
+  if (GT > .01) glow('red', B.x, B.y + 120, 2600, 1500, GT * (.13 + .05 * Math.sin(t * 2.2)));   // the gate floods the room red
+  // inside the glass: mist that turns with the sound, the pentagram's neon turned up, the word surfacing
+  g.save(); g.beginPath(); g.arc(B.x, B.y, B.r - 8, 0, TAU); g.clip();
+  for (const m of MIST) { if (!CALM) m.a += m.sp * dt * (1 + L2 * 3 + GT * 2); const mx = B.x + Math.cos(m.a) * B.r * m.rr, my = B.y + Math.sin(m.a * 1.3 + m.ph) * B.r * m.rr * .8; glow(chc, mx, my, m.s, m.s, (WM * (.08 + L2 * .25) + GT * .15) * lamp); }
+  if (PENT) { g.globalAlpha = Math.min(1, (WM * (.12 + L2 * 1.1) + GT * (.5 + .3 * Math.sin(t * 3)) + FLARE.v * .7 + wordA * .5) * lamp); g.drawImage(PENT.c, PENT.x, PENT.y, PENT.w, PENT.h); }
+  if (PENTR && GT > .01) { g.globalAlpha = Math.min(1, GT * (.75 + .25 * Math.sin(t * 3.3))); g.drawImage(PENTR, PENT.x, PENT.y, PENT.w, PENT.h); g.drawImage(PENTR, PENT.x, PENT.y, PENT.w, PENT.h); }
+  if (wordA && GHOSTW) { g.globalCompositeOperation = 'source-over'; glow0(B.x, B.y + 40, 560, 220, wordA * .55); g.globalCompositeOperation = 'lighter'; g.globalAlpha = wordA * .85; const wob = CALM ? 0 : Math.sin(t * 2) * 6; g.drawImage(GHOSTW, B.x - 300, B.y - 30 + wob, 600, 137); }
+  g.restore();
+  // the cats: runes burn with the meter and the gate, the ball shines in their eyes, the third eyes wake for a word
+  if (RUNES) for (const r of RUNES) { g.globalAlpha = Math.min(1, WM * (.04 + ST.k2 * .09) + GT * (.55 + .25 * Math.sin(t * 2.4)) + wordA * .3); g.drawImage(r.c, r.x, r.y, r.w, r.h); }
+  MAP.cats.forEach((C, i) => {
+    for (const [ex, ey, er] of C.eyes) glow(chc, ex, ey, er * 2.4, er * 1.8, (WM * (.07 + L2 * .25) + GT * .15) * lamp);
+    const [tx, ty, rx, ry] = C.third; glow('orange', tx, ty, rx * 3.4, ry * 4, WM * (.12 + L2 * .3) + wordA * .7 + GT * .5);
+  });
+  // the base of the ball: red lenses beat with the sound, the dark lenses follow the meter, the cat medallion answers a word
+  glow('red', MAP.lensL.x, MAP.lensL.y, 120, 120, WM * (.15 + L2 * 1.1)); glow('red', MAP.lensR.x, MAP.lensR.y, 120, 120, WM * (.15 + Math.max(0, L2 - .05) * 1.2));
+  glow('amber', MAP.darkL.x, MAP.darkL.y, 80, 80, WM * ST.k2 / 5 * .8); glow('amber', MAP.darkR.x, MAP.darkR.y, 80, 80, WM * Math.max(0, ST.k2 - 2) / 3 * .8);
+  glow('orange', MAP.emblem.x, MAP.emblem.y, 170, 170, WM * .12 + wordA * .8 + GT * .4);
+  // the jewels: the chosen channel burns, the sweep makes the others glint as it passes their frequency
+  CH.forEach((c, i) => { const [jx, jy] = c.j, sel = ST.chan === i, pass = ST.chan == null && ST.on && c.band === ST.band && Math.abs((ST.shownIdx ?? ST.idx) - c.idx) < 3 ? .6 : 0, hov = ST.hover === 'c:' + i ? .25 : 0, pr = Math.max(0, 1 - (now - (ST.press['c:' + i] || 0)) / 300);
+    glow(c.col, jx, jy - 2, 96, 54, (sel ? .75 + .2 * Math.sin(t * 4) : WM * (.05 + .04 * Math.sin(t * 1.3 + i))) + pass * WM + hov + pr * .8); });
+  // the lookout's eye and the REM pod
+  remTick(dt); glow('red', MAP.fig.x, MAP.fig.y, 60, 60, .12 + ST.rem * .9 * (CALM ? 1 : .7 + .3 * Math.sin(t * 9)));
+  glow('red', MAP.pod.x, MAP.pod.y, 110, 110, WM * .08 + ST.rem * .9); if (ST.rem > .3) glow('magenta', MAP.pod.x, MAP.pod.y, 200, 200, (ST.rem - .3) * .6);
+  // the control row: state lights, a gold ring on hover, a flash when pressed
+  for (const k in MAP.btn) { const b = MAP.btn[k], pr = Math.max(0, 1 - (now - (ST.press['b:' + k] || 0)) / 300);
+    const active = k === 'power' ? ST.on : k === 'hold' ? ST.hold : k === 'gate' ? !!ST.gate : k === 'rem' ? ST.remArm && ST.on : k === 'words' ? ST.wordsOn && ST.on : k === 'ghost' ? ST.ghost : k === 'evp' ? !!ST.evp : k === 'blind' ? !!ST.blind : k === 'stat' ? ST.statLo : k === 'tone' ? ST.warmTone : k === 'room' ? ST.bigRoom : k === 'lamp' ? ST.lamp && ST.on : false;
+    if (b.tog) { glow(active ? 'green' : 'red', b.x + b.r * .9, b.y - b.r * .95, 22, 22, ST.on || active ? .55 : .15); }
+    else if (b.col) { const pulse = k === 'gate' && ST.gate ? .5 + .3 * Math.sin(t * 5) : k === 'ask' && !ST.on && !CALM ? .15 + .12 * Math.sin(t * 1.6) : 0;
+      glow(b.col, b.x, b.y, b.r * 3.4, b.r * 3.4, (active ? .55 : 0) + pulse + pr * .9); }
+    if (k === 'power') glow('red', b.x + 31, b.y + 24, 24, 24, ST.on ? .9 : CALM ? .2 : .15 + .25 * (.5 - .5 * Math.cos(t * TAU / 5.5))); }
+  // the board: lit letters, flickers caught from the static, the planchette
+  if (now >= SP.until) { const it = SP.q.shift(); if (it) { SP.cur = it.g; SP.until = now + it.dur; if (it.g >= 0) neonTick(); } else SP.cur = -1; }
+  for (let i = 0; i < GL.length; i++) { const tg = i === SP.cur ? 1 : 0; LIT[i] += (tg - LIT[i]) * Math.min(1, dt * (tg ? 18 : 5)); FLK[i] = Math.max(0, FLK[i] - dt * 4);
+    const a = Math.max(LIT[i], FLK[i] * (CALM ? .5 : (.6 + .4 * Math.sin(t * 60 + i)))) * (on ? 1 : .6); if (a < .01 || !LITS) continue; const gl = GL[i], sp = LITS[i];
+    glow('orange', gl.x, gl.y, gl.size * (gl.ch.length > 1 ? gl.ch.length * 1.3 : 3.4), gl.size * 3, a * .9); glow('red', gl.x, gl.y, gl.size * (gl.ch.length > 1 ? gl.ch.length * 2 : 6), gl.size * 5, a * .35); g.save(); g.translate(gl.x, gl.y); g.rotate(gl.rot); g.globalAlpha = Math.min(1, a); g.drawImage(sp.c, -sp.w / 2, -sp.h / 2, sp.w, sp.h); g.globalAlpha = Math.min(1, a * .8); g.drawImage(sp.c, -sp.w / 2, -sp.h / 2, sp.w, sp.h); g.restore(); }
+  g.restore();
+  { const tgt = SP.cur >= 0 ? GL[SP.cur] : null; SP.a += ((tgt ? 1 : 0) - SP.a) * Math.min(1, dt * (tgt ? 6 : 1.5)); if (tgt) { const k = CALM ? 1 : Math.min(1, dt * 9); SP.px += (tgt.x - SP.px) * k; SP.py += (tgt.y - SP.py) * k; }
+    if (SP.a > .02) { g.save(); g.globalAlpha = SP.a * .9; g.translate(SP.px, SP.py); const pr = tgt && tgt.ch.length > 1 ? 18 + tgt.ch.length * 7 : 24; g.scale(pr / 24, 1);
+      const pg = g.createRadialGradient(-6, -8, 2, 0, 0, 24); pg.addColorStop(0, 'rgba(255,240,210,.07)'); pg.addColorStop(1, 'rgba(255,200,140,0)'); g.fillStyle = pg; g.beginPath(); g.arc(0, 0, 24, 0, TAU); g.fill();
+      g.strokeStyle = 'rgba(232,196,110,.85)'; g.lineWidth = 2; g.stroke(); g.strokeStyle = 'rgba(255,240,200,.35)'; g.lineWidth = 1; g.beginPath(); g.arc(0, 0, 19, 0, TAU); g.stroke(); g.restore(); } }
+  // the third eyes: closed while the set sleeps, open when it warms, a blink now and then
+  MAP.cats.forEach((C, i) => { const [tx, ty, rx, ry] = C.third, bk = BLINK[i]; if (!CALM && t > bk.next) { bk.t = t; bk.next = t + 6 + R() * 9; }
+    const bl = Math.max(0, 1 - Math.abs((t - bk.t) - .11) / .11), shut = Math.max(Math.max(0, .82 - WM * .82 - wordA), bl); if (shut < .02) return;
+    g.save(); g.beginPath(); g.ellipse(tx, ty, rx + 2, ry + 3, 0, 0, TAU); g.clip(); const ly = ty - ry - 3 + (ry * 2 + 6) * shut, lg = g.createLinearGradient(0, ty - ry, 0, ly); lg.addColorStop(0, LIDC[i]); lg.addColorStop(1, LIDC[i]); g.fillStyle = lg; g.fillRect(tx - rx - 4, ty - ry - 4, rx * 2 + 8, ly - (ty - ry - 4));
+    g.strokeStyle = 'rgba(0,0,0,.55)'; g.lineWidth = 1.5; g.beginPath(); g.ellipse(tx, ly - 2, rx * .95, 3, 0, 0, Math.PI); g.stroke(); g.restore(); });
+  // dust in the ball's light, and the rings a word sends out
+  if (!CALM && WM > .05) { g.save(); g.globalCompositeOperation = 'lighter'; for (const m of MOTES) { m.y += m.vy * dt; m.x += Math.sin(t * .25 + m.ph) * 5 * dt; if (m.y < -20) { m.y = 720; m.x = 650 + R() * 700; } const near = Math.max(0, 1 - Math.hypot(m.x - B.x, m.y - B.y) / 520); glow('amber', m.x, m.y, m.s, m.s, WM * near * .5 * (.55 + .45 * Math.sin(t * m.tw + m.ph)) * lamp); } g.restore(); }
+  for (let i = RINGS.length - 1; i >= 0; i--) { const r = RINGS[i]; r.r += dt * 420; r.a -= dt * .5; if (r.a <= 0) { RINGS.splice(i, 1); continue; } if (CALM) continue; g.strokeStyle = `rgba(255,170,90,${r.a * .45})`; g.lineWidth = 2.5; g.beginPath(); g.arc(B.x, B.y, B.r + r.r, 0, TAU); g.stroke(); }
+  // the screens
+  if (ctx) { for (const [st, i] of steps) if (st <= ctx.currentTime) ST.shownIdx = i; }
+  ledDraw(LED.L, (b, C, Rw) => paintTuner(b, C, Rw, t), on ? WM : .9); ledDraw(LED.R, (b, C, Rw) => paintWords(b, C, Rw, t), on ? WM : .9);
+  // hover ring
+  if (ST.hover && ST.hover.startsWith('b:')) { const b = MAP.btn[ST.hover.slice(2)]; g.strokeStyle = 'rgba(255,224,160,.55)'; g.lineWidth = 2; g.beginPath(); g.arc(b.x, b.y, b.r + 5, 0, TAU); g.stroke(); }
+  g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(VIG, 0, 0);
+  if (!CALM && GRAIN) { g.save(); const o = (now / 83 | 0) * 37 % 160; g.translate(-o, -(o * 1.7 % 160)); g.fillStyle = GRAIN; g.fillRect(0, 0, cv.width + 160, cv.height + 160); g.restore(); }
+  g.setTransform(S, 0, 0, S, 0, 0);
+  if (ST.outline) { g.strokeStyle = '#0ff'; g.lineWidth = 2; const box = b => g.strokeRect(b[0], b[1], b[2] - b[0], b[3] - b[1]), circ = (x, y, r) => { g.beginPath(); g.arc(x, y, r, 0, TAU); g.stroke(); };
+    [MAP.scrL, MAP.scrR, MAP.board, ...MAP.cats.map(c => c.box)].forEach(box); circ(B.x, B.y, B.r); for (const k in MAP.btn) circ(MAP.btn[k].x, MAP.btn[k].y, MAP.btn[k].r + 5); for (const c of CH) { g.beginPath(); g.ellipse(c.j[0], c.j[1], 30, 11, 0, 0, TAU); g.stroke(); }
+    circ(MAP.pod.x, MAP.pod.y, MAP.pod.r + 12); circ(MAP.fig.x, MAP.fig.y, 40); for (const C of MAP.cats) { g.beginPath(); g.ellipse(C.third[0], C.third[1], C.third[2] + 6, C.third[3] + 8, 0, 0, TAU); g.stroke(); } }
+}
+requestAnimationFrame(frame);
+document.fonts && document.fonts.ready.then(() => { base = null; });
+
+/* ---------------- the decks ---------------- */
+const DECKS = {
+  kit: ['The kit', 'what the shows carry, and what each one does here', [
+    ['The spirit box', 'A radio with its scan-lock cut, so it never settles: it jumps through the band every 50 to 350 milliseconds and leaves a chop of static, syllables and music. Investigators ask questions and listen for answers in the chop.', 'Here the radio sweeps live broadcasts from every country, real voices and songs happening right now, opening each for a slice of a second. SWEEP sets the speed, BAND picks WORLD or VOICES (talk and news only), DIR the direction, ECHO the space, HOLD stops on one frequency. The left screen shows the band as a waterfall, a scope or a map (VIEW).'],
+    ['The jewels', 'Thirteen channels along the top of the set, each a held frequency with its own character.', 'Press one to hold the dial there; press it again to go back to the sweep. The Channels deck lists them.'],
+    ['The board', 'Spirit boards spell answers letter by letter under a planchette.', 'Here the neon board spells whatever the word screen picks, and the Morse and Numbers channels key their letters and digits onto it. Between words, a tube sometimes flickers when a voice comes through the static.'],
+    ['The gate', 'Sessions on the shows open with a greeting and close with goodbye.', 'The pentagram opens 45 seconds when the band runs busier and words come more often ; it closes with GOODBYE on the board. Press it again to close early.'],
+    ['The K-II meter', 'Five lamps, green to red, for the strength of a low-frequency electromagnetic field. On the shows, a spike after a question is read as a yes. Wiring, phones and the crew’s own gear move it.', 'Here the five lamps on the word screen follow your Mac’s real sensors in live mode (radio, network, light, machine, sky; never the microphone, the radio would deafen it). The cats’ runes and the dark lenses burn with it. Without live mode the screen shows ROOM: STAND-IN.'],
+    ['The REM pod', 'A small antenna with its own field; it lights and sings when anything conductive comes near. Left alone in a room for “them” to touch.', 'Here it is the brass thing on the right with the red eye, and your pointer is the hand. Bring it close and it lights and rises; the lookout on the left goes red with it. REM arms it.'],
+    ['The word screen', 'A box that turns readings into numbers and numbers into words from a fixed list, shown and spoken.', 'Here it draws from 150 words, guided by your question and the moment, and speaks more when the room moves, when you’ve just asked, or when the gate is open. WORDS turns it off.'],
+    ['The blindfold session', 'One listener in a blindfold and noise-cancelling headphones says every word they hear; a friend asks questions the listener can’t hear. Meant to stop the asker leading the listener.', 'Three minutes, black screen; type what you hear. A list of questions sits at the top for your friend. The transcript lands in the Log.'],
+    ['The EVP recorder', 'Record a quiet room, ask questions, play it back slow and reversed, listen for answers in the gaps.', 'Ten seconds through your microphone (only when you press it), played forward, reversed and slow through the radio. Mark what you hear. Nothing is saved or sent.'],
+    ['The switches', '', 'GHOST lifts voices and cuts static. STATIC, TONE and ROOM are the toggles; LAMP dims the ball. Keys: space power, arrows sweep, B band, R direction, E echo, H hold, G gate, V view, 1 to 9, 0, minus, equals and ` for the channels.'],
+  ]],
+  why: ['How to listen', 'the way the old investigators work', [
+    ['Ask one thing at a time', 'Say the question out loud, clearly, then leave room for the answer. Ten seconds of quiet is not a long time to them.'],
+    ['Name yourself', 'Say who you are and why you came. They remember who was rude.'],
+    ['Listen between the stations', 'Answers come in the gaps: a word cut off by static, a name half said. Note the time on the screen when something lands.'],
+    ['Write everything down', 'Words that make no sense tonight often do next week. The Log keeps this visit; copy out what matters.'],
+    ['Close the session', 'Always say goodbye. The gate does it for you on the board; do it out loud too.'],
+  ]],
+  history: ['History', 'from birdsong tapes to the ghost box', [
+    ['1920s', 'An inventor is asked in an interview about a machine for talking to the dead. Nothing is ever built.'],
+    ['1959', 'A painter recording birdsong in a forest hears voices on the tape and starts recording on purpose, then between radio stations.'],
+    ['1965–1974', 'A psychologist joins in and logs tens of thousands of “voice texts” from microphone, radio and diode recordings. His book makes “EVP” a household phrase.'],
+    ['1980', 'A device is built for two-way conversation with the dead, and its builder records long exchanges through it.'],
+    ['1980s on', 'Instrumental transcommunication: televisions on empty channels, phone calls, computers.'],
+    ['2002', 'A home-built radio with its scan-lock cut becomes the ghost box. Television ghost hunts make it standard kit, with K-II meters, REM pods, word boxes and stick-figure cameras.'],
+    ['2017–2019', 'The blindfold method: headphones, a blindfold, a friend asking, so the listener can’t be led by the question.'],
+  ]],
+};
+let DRAWER = null;
+function openDeck(id) {
+  DRAWER = id; const dr = $('drawer'), body = $('dbody');
+  if (id === 'log') body.innerHTML = `<h2>The log</h2><p class="sub">this visit only · nothing is kept</p>${ST.log.length ? `<ol>${ST.log.map(l => `<li><time>${l.t}</time>${esc(l.text)}</li>`).join('')}</ol>` : '<p>Nothing yet. Turn it on. Ask something.</p>'}`;
+  else if (id === 'chans') body.innerHTML = `<h2>Channels</h2><p class="sub">the thirteen jewels</p><table>${CH.map((c, i) => `<tr><td>${i + 1} · ${c.name}</td><td>${c.band} ${freqOf(c.band, c.idx)} · ${esc(c.line)}</td></tr>`).join('')}</table>`;
+  else { const [title, sub, items] = DECKS[id]; body.innerHTML = `<h2>${title}</h2><p class="sub">${sub}</p>${items.map(([h, p, here]) => `<h3>${esc(h)}</h3>${p ? `<p>${esc(p)}</p>` : ''}${here ? `<p class="here">${esc(here)}</p>` : ''}`).join('')}`; }
+  dr.classList.add('on'); document.querySelectorAll('[data-deck]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.deck === id)));
+}
+function closeDeck() { DRAWER = null; $('drawer').classList.remove('on'); document.querySelectorAll('[data-deck]').forEach(b => b.setAttribute('aria-pressed', 'false')); }
+document.querySelectorAll('[data-deck]').forEach(b => b.addEventListener('click', () => DRAWER === b.dataset.deck ? closeDeck() : openDeck(b.dataset.deck)));
+$('dx').addEventListener('click', closeDeck);
+setTimeout(() => { if (!ST.everOn) say('Headphones on. The slider, bottom left, wakes it.', 'it takes a moment to warm up'); }, 1200);
+if (new URLSearchParams(location.search).has('debug')) window.__radio = { ST, MAP, CH, SP, LIT, GL, power, ask, showWord, setChannel, gateStart, spell, frame, get LITS() { return LITS; }, get AN() { return AN; }, get ctx() { return ctx; }, blindStart: typeof blindStart === "function" ? blindStart : null, evp: typeof evp === "function" ? evp : null };
+</script>
+</body>
+</html>

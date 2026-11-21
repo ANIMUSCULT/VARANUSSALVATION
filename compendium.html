@@ -1,0 +1,1069 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, noai, noimageai">
+<script>try{if(!localStorage.getItem('vs-motion-demo')){localStorage.setItem('vs-motion-demo','1');localStorage.setItem('vs-motion','full')}}catch(e){}</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Compendium · Ouija Cat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=VT323&display=swap" rel="stylesheet">
+<script>/* motion: macOS can ask for less; this site lets you opt back in (stored per browser, all pages) */
+{ let m = null; try { m = localStorage.getItem('vs-motion'); } catch (e) {} if (m !== 'calm') document.documentElement.classList.add('motion-full'); }   // full motion by default (the films and animations are the point); Calm motion is the opt-out
+addEventListener('DOMContentLoaded', () => { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) return; const full = document.documentElement.classList.contains('motion-full');
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'motion-btn'; b.textContent = full ? 'Calm motion' : 'Full motion'; b.title = full ? 'Your Mac asks for reduced motion: calm every animation on this site' : 'Show every animation again';
+  b.onclick = () => { try { full ? localStorage.setItem('vs-motion', 'calm') : localStorage.removeItem('vs-motion'); } catch (e) {} location.reload(); };
+  const bar = document.querySelector('.bar'); if (bar) { const h = bar.querySelector('h1'); h ? h.after(b) : bar.append(b); } });
+</script>
+<style>
+.motion-btn { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #f0d68f; background: rgba(214,164,67,.12); border: 1px solid rgba(214,164,67,.6); padding: 5px 9px; cursor: pointer; white-space: nowrap; }
+:root { --gold: #d6a443; --gold-pale: #f0d68f; --copper: #e9a27e; --rose: #ffb59a; --cream: #eee4cb; --muted: #a8aecb; --enamel: #5b7fc4; --bar: 42px;
+  --display: "IM Fell English SC", Georgia, serif; --serif: "IM Fell English", Georgia, serif; --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace; --led: "VT323", ui-monospace, monospace; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; height: 100%; background: #05060c; color: var(--cream); font-family: var(--serif); overflow: hidden; }
+.bar { position: fixed; top: 0; left: 0; right: 0; height: var(--bar); z-index: 20; display: flex; align-items: center; gap: 8px; padding: 0 12px; background: linear-gradient(rgba(0,0,0,.92), rgba(0,0,0,.5)); }
+.bar a, .bar button { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--cream); background: transparent; border: 1px solid rgba(214,164,67,.5); padding: 5px 9px; text-decoration: none; cursor: pointer; white-space: nowrap; }
+.bar a:hover, .bar button:hover { border-color: var(--gold-pale); color: var(--gold-pale); }
+.bar h1 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 18px; letter-spacing: .1em; color: var(--gold-pale); white-space: nowrap; flex: 1; }
+.wrap { position: fixed; top: var(--bar); left: 0; right: 0; bottom: 0; display: grid; place-items: center; overflow: hidden; }
+.board { position: relative; width: min(100vw, calc((100vh - var(--bar)) * 1.7857)); aspect-ratio: 2000 / 1120; }
+.board img, .board canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.board img { opacity: 0; transition: opacity 1.4s ease; }
+.board img.on { opacity: 1; }
+#fx.hand { cursor: pointer; }
+/* the question plate */
+.ask { position: fixed; z-index: 18; top: calc(var(--bar) + 10px); left: 50%; transform: translateX(-50%); width: min(560px, 92vw); display: flex; align-items: center; gap: 8px; padding: 7px 8px 7px 14px;
+  background: linear-gradient(180deg, rgba(36,48,86,.92), rgba(14,18,36,.94)); border: 1px solid rgba(233,162,126,.65); border-radius: 26px; box-shadow: 0 8px 26px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,220,200,.18); }
+.ask i { font-style: normal; color: var(--copper); font-size: 18px; }
+.ask input { flex: 1; min-width: 0; background: transparent; border: 0; outline: 0; color: var(--cream); font-family: var(--serif); font-size: 18px; }
+.ask input::placeholder { color: rgba(238,228,203,.5); font-style: italic; }
+.ask button { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--rose); background: rgba(0,0,0,.25); border: 1px solid rgba(233,162,126,.55); border-radius: 16px; padding: 6px 10px; cursor: pointer; }
+.ask button:hover { color: #fff; border-color: var(--rose); }
+.tip { position: fixed; z-index: 30; max-width: 280px; pointer-events: none; padding: 9px 12px; background: rgba(8,10,22,.94); border: 1px solid rgba(233,162,126,.5); box-shadow: 0 10px 28px rgba(0,0,0,.6); opacity: 0; transition: opacity .15s; }
+.tip.on { opacity: 1; }
+.tip h4 { margin: 0 0 2px; font-family: var(--display); font-weight: 400; font-size: 17px; color: var(--gold-pale); }
+.tip p { margin: 0; font-size: 14.5px; line-height: 1.3; }
+.say { position: fixed; left: 50%; bottom: 40px; transform: translateX(-50%); z-index: 15; max-width: min(620px, 92vw); text-align: center; font-family: var(--serif); font-style: italic; font-size: 20px; line-height: 1.3; color: var(--gold-pale); text-shadow: 0 2px 12px #000, 0 0 2px #000; opacity: 0; transition: opacity .6s; pointer-events: none; }
+.say.on { opacity: 1; }
+/* the shelf (results and cards) */
+.shelf { position: fixed; top: var(--bar); right: 0; bottom: 0; width: min(480px, 100vw); z-index: 25; background: linear-gradient(180deg, rgba(10,12,24,.97), rgba(6,6,12,.98)); border-left: 1px solid rgba(233,162,126,.32);
+  overflow-y: auto; padding: 16px 22px 60px; transform: translateX(102%); transition: transform .35s ease; overscroll-behavior: contain; }
+.shelf.on { transform: none; }
+.shelf .x { position: sticky; top: 0; float: right; margin: -4px -8px 0 0; background: none; border: 0; color: var(--cream); font-size: 20px; cursor: pointer; z-index: 2; }
+.shelf .back { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); background: none; border: 0; padding: 0; cursor: pointer; margin-bottom: 10px; }
+.shelf .back:hover { color: var(--gold-pale); }
+.shelf h2 { font-family: var(--display); font-weight: 400; color: var(--gold-pale); margin: 0 0 2px; font-size: 27px; line-height: 1.1; }
+.shelf h3 { font-family: var(--display); font-weight: 400; color: var(--copper); margin: 20px 0 5px; font-size: 18px; letter-spacing: .04em; }
+.shelf h3 small { font-family: var(--mono); font-size: 9.5px; letter-spacing: .12em; color: var(--muted); margin-left: 6px; text-transform: uppercase; }
+.shelf p { margin: 0 0 8px; font-size: 16px; line-height: 1.42; }
+.shelf .sub { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+.shelf .latin { font-style: italic; color: var(--muted); font-size: 16px; margin-bottom: 4px; }
+.shelf .aka { font-size: 14px; color: rgba(238,228,203,.72); margin-bottom: 10px; }
+.chips { display: flex; flex-wrap: wrap; gap: 5px; margin: 6px 0 4px; }
+.chip { font-family: var(--mono); font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 7px; border: 1px solid rgba(168,174,203,.35); color: var(--muted); border-radius: 10px; white-space: nowrap; }
+.chip.k { border-color: rgba(91,127,196,.7); color: #b9cdf4; }
+.chip.ev { border-color: rgba(214,164,67,.55); color: var(--gold-pale); }
+.chip.d-low { border-color: rgba(120,190,150,.5); color: #a9dcc0; }
+.chip.d-caution { border-color: rgba(230,180,80,.7); color: #f1cd7d; }
+.chip.d-high { border-color: rgba(240,110,90,.8); color: #ff9b86; }
+.chip.d-deadly { border-color: #ff4d4d; color: #ff7a7a; background: rgba(120,0,0,.25); }
+.chip.warn { border-color: #ff7a6a; color: #ffb3a6; background: rgba(110,20,10,.3); }
+.chip.pet { border-color: rgba(255,181,154,.6); color: var(--rose); }
+.filters { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0 12px; }
+.filters select { font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; color: var(--cream); background: #10142a; border: 1px solid rgba(233,162,126,.4); padding: 5px 6px; max-width: 100%; }
+.row { display: block; width: 100%; text-align: left; background: transparent; border: 0; border-top: 1px solid rgba(233,162,126,.14); padding: 10px 2px 11px; color: var(--cream); cursor: pointer; font: inherit; }
+.row:hover, .row:focus-visible { background: rgba(233,162,126,.06); outline: none; }
+.row b { font-family: var(--display); font-weight: 400; font-size: 19px; color: var(--gold-pale); }
+.row em { color: var(--muted); font-size: 14px; margin-left: 6px; }
+.row span.u { display: block; font-size: 14.5px; line-height: 1.35; color: rgba(238,228,203,.84); margin-top: 3px; }
+.row span.why { display: block; font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; color: rgba(168,174,203,.75); margin-top: 3px; }
+.row.dead b { color: #ff9b86; }
+.grid { display: flex; flex-wrap: wrap; gap: 6px; }
+.grid button { font-family: var(--serif); font-size: 15px; color: var(--cream); background: rgba(91,127,196,.12); border: 1px solid rgba(233,162,126,.35); padding: 6px 10px; cursor: pointer; border-radius: 4px; }
+.grid button:hover { border-color: var(--rose); color: #fff; }
+.grid button small { font-family: var(--mono); font-size: 9.5px; color: var(--muted); margin-left: 4px; }
+.az { display: flex; flex-wrap: wrap; gap: 3px; margin: 6px 0 10px; }
+.az button { width: 28px; height: 28px; font-family: var(--led); font-size: 20px; color: var(--rose); background: #0b0808; border: 1px solid rgba(233,162,126,.35); cursor: pointer; padding: 0; }
+.az button[aria-pressed="true"], .az button:hover { background: rgba(233,162,126,.2); color: #fff; }
+.note { border-left: 2px solid var(--copper); padding: 6px 10px; margin: 8px 0 12px; background: rgba(233,162,126,.06); font-size: 15px; line-height: 1.38; }
+.alarm { border: 1px solid #ff6a5a; background: rgba(120,16,10,.35); padding: 10px 12px; margin: 6px 0 14px; }
+.alarm p { margin: 0 0 8px; font-size: 16px; }
+.alarm button { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: #fff; background: rgba(255,106,90,.2); border: 1px solid #ff6a5a; padding: 6px 10px; cursor: pointer; }
+.safety { border: 1px solid rgba(240,140,110,.45); background: rgba(70,20,14,.25); padding: 10px 12px; margin-top: 6px; }
+.safety.deadly, .safety.high { border-color: #ff6a5a; background: rgba(110,16,10,.32); }
+.safety dl { margin: 6px 0 0; }
+.safety dt { font-family: var(--mono); font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--copper); margin-top: 8px; }
+.safety dd { margin: 2px 0 0; font-size: 15px; line-height: 1.38; }
+.catline { font-style: italic; color: var(--gold-pale); border-top: 1px dashed rgba(214,164,67,.35); margin-top: 18px; padding-top: 10px; }
+.src { font-size: 13.5px; line-height: 1.4; color: var(--muted); padding-left: 18px; margin: 4px 0 0; }
+.src a { color: #b9cdf4; }
+.rel { font-family: var(--serif); font-size: 14.5px; color: var(--rose); background: none; border: 1px solid rgba(233,162,126,.35); padding: 4px 8px; margin: 0 5px 5px 0; cursor: pointer; }
+.notice { margin-top: 18px; font-family: var(--mono); font-size: 10px; letter-spacing: .06em; line-height: 1.5; color: rgba(168,174,203,.7); }
+.more { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--cream); background: transparent; border: 1px solid rgba(233,162,126,.45); padding: 7px 12px; cursor: pointer; margin-top: 12px; }
+.gl { border-bottom: 1px dotted var(--copper); cursor: help; }
+.gl:focus { outline: 1px solid var(--copper); outline-offset: 1px; }
+.what { font-size: 18px !important; line-height: 1.38 !important; color: #fff3e6; margin: 8px 0 6px !important; }
+.know { border: 1px solid rgba(214,164,67,.45); background: rgba(214,164,67,.08); padding: 8px 11px; margin: 10px 0 2px; font-size: 15px; line-height: 1.4; }
+.know b { font-family: var(--mono); font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold-pale); display: block; margin-bottom: 2px; font-weight: 400; }
+.today { font-family: var(--display); font-size: 17px; color: var(--gold-pale); letter-spacing: .04em; margin-bottom: 6px; }
+.today::before { content: "✦ "; color: var(--rose); }
+.mine { font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; color: #a9dcc0; margin: 4px 0; }
+.facts { margin: 4px 0 0; }
+.facts dt { font-family: var(--mono); font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--copper); margin-top: 7px; }
+.facts dd { margin: 2px 0 0; font-size: 15.5px; line-height: 1.38; }
+details.src-d summary { cursor: pointer; font-family: var(--display); color: var(--copper); font-size: 17px; margin-top: 18px; }
+.quizopts { display: grid; gap: 7px; margin: 12px 0; }
+.quizopts button { text-align: left; font-family: var(--serif); font-size: 17px; color: var(--cream); background: rgba(91,127,196,.12); border: 1px solid rgba(233,162,126,.4); padding: 9px 12px; cursor: pointer; }
+.quizopts button:hover:not(:disabled) { border-color: var(--rose); color: #fff; }
+.quizopts button.right { border-color: #7fd3a4; background: rgba(60,140,90,.25); }
+.quizopts button.wrong { border-color: #ff7a6a; background: rgba(140,30,20,.25); }
+.clue { font-size: 19px; line-height: 1.4; font-style: italic; color: #fff3e6; border-left: 2px solid var(--copper); padding-left: 12px; margin: 10px 0; }
+.welcome { position: fixed; inset: 0; z-index: 40; background: rgba(3,4,10,.72); display: grid; place-items: center; padding: 16px; }
+.wbox { width: min(560px, 100%); max-height: 92vh; overflow-y: auto; background: linear-gradient(180deg, #121833, #080a16); border: 1px solid rgba(233,162,126,.55); padding: 22px 24px 18px; box-shadow: 0 20px 60px rgba(0,0,0,.7); }
+.wbox h2 { font-family: var(--display); font-weight: 400; color: var(--gold-pale); margin: 0 0 8px; font-size: 28px; }
+.wbox p { font-size: 16.5px; line-height: 1.45; margin: 0 0 10px; }
+.wbox .legend { border-top: 1px solid rgba(233,162,126,.25); padding-top: 10px; margin-top: 4px; }
+.wbox .legend p { font-size: 14.5px; }
+.wbox p.notice { font-size: 10.5px; margin-top: 12px; }
+.wbtns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.wbtns button { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #fff; background: rgba(233,162,126,.18); border: 1px solid var(--rose); padding: 9px 14px; cursor: pointer; }
+.wbtns button + button { background: transparent; color: var(--cream); border-color: rgba(233,162,126,.45); }
+.foot { position: fixed; left: 0; right: 0; bottom: 3px; text-align: center; font-family: var(--mono); font-size: 9px; letter-spacing: .08em; color: rgba(168,174,203,.5); pointer-events: none; z-index: 5; }
+.load { position: fixed; inset: 0; display: grid; place-items: center; font-family: var(--led); font-size: 26px; color: var(--rose); z-index: 4; pointer-events: none; }
+@media (max-width: 760px) { body.shelfon .ask { display: none; } .ask { top: auto; bottom: 22px; } .say { bottom: 84px; } .shelf { width: 100vw; } }
+html:not(.motion-full) .shelf, html:not(.motion-full) .board img { transition: none; }
+</style>
+</head>
+<body>
+<header class="bar">
+  <h1>The Compendium</h1>
+  <button type="button" id="bStart" title="The famous ones, to begin with">Start here</button>
+  <button type="button" id="bIndex" title="Every entry, A to Z">A–Z</button>
+  <button type="button" id="bToday" title="Today's plant">Today</button>
+  <button type="button" id="bRand" title="A random page">Surprise me</button>
+  <button type="button" id="bQuiz" title="Guess the plant">Quiz</button>
+  <button type="button" id="bMine" title="The pages you've opened">My shelf</button>
+  <button type="button" id="bHelp" title="What the little marks mean">How to read</button>
+</header>
+<div class="wrap">
+  <div class="board" id="board">
+    <img id="art" src="compendium-library.webp" alt="Ouija Cat in the blue and copper library, lying on his console under the eye mirror">
+    <canvas id="fx" aria-hidden="true"></canvas>
+  </div>
+</div>
+<div class="load" id="load">OPENING THE LIBRARY…</div>
+<form class="ask" id="ask" role="search" autocomplete="off">
+  <i aria-hidden="true">◉</i>
+  <label class="sr" for="q" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Ask the library</label>
+  <input id="q" type="search" placeholder="Ask the library: a plant, a feeling, a body part…" enterkeyhint="search">
+  <button type="submit">Seek</button>
+</form>
+<aside class="shelf" id="shelf" aria-label="The shelf" tabindex="-1">
+  <button class="x" id="shelfX" type="button" aria-label="Close">✕</button>
+  <div id="shelfIn"></div>
+</aside>
+<div class="tip" id="tip"><h4></h4><p></p></div>
+<div class="say" id="say"></div>
+<div class="foot" id="foot">This is information, not medical advice.</div>
+<div class="welcome" id="welcome" hidden role="dialog" aria-modal="true" aria-labelledby="wTitle">
+  <div class="wbox">
+    <h2 id="wTitle">Welcome to the library</h2>
+    <p>Hundreds of plants, spices, teas, oils, mushrooms, vitamins and old healing practices from around the world, with what people have done with them, the stories behind them, what studies found, and what to be careful about.</p>
+    <p><b>To look something up</b>, type in the box at the top: a plant (<i>ginger</i>), a feeling (<i>can’t sleep</i>), a part of the body (<i>sore feet</i>) or a tradition (<i>Ayurveda</i>).</p>
+    <p><b>Or touch the room.</b> The big eye dial is the alphabet. The mirror shows today’s plant. The little copper disc on the mat picks a page for you. The candle opens the poison garden.</p>
+    <div class="legend">
+      <p><span class="chip ev">●●●● Lots of good studies</span> down to <span class="chip ev">●○○○ Mostly tradition so far</span>: how much science has looked at it.</p>
+      <p><span class="chip d-low">Generally gentle</span> <span class="chip d-caution">Take care</span> <span class="chip d-high">Serious risks</span> <span class="chip d-deadly">☠ Poisonous</span>: how careful to be.</p>
+      <p><span class="chip pet">🐾 pets</span> harmful to cats or dogs. <span class="gl">Dotted words</span> explain themselves when you touch them.</p>
+    </div>
+    <p class="notice">This is information, not medical advice.</p>
+    <div class="wbtns"><button type="button" id="wStart">Show me the famous ones</button><button type="button" id="wLook">I’ll look around</button></div>
+  </div>
+</div>
+
+<script>
+'use strict';
+/* ================= the library image, mapped in its own pixels (2000 x 1120). Shift+H outlines every control ================= */
+const W = 2000, H = 1120;
+const M = {
+  dial: { cx: 442, cy: 322, rx: 248, ky: 1.08, rin: 152, rout: 247 },       // the eye LED dial: an A to Z ring of real LEDs over the fake letters
+  mirror: { cx: 1022, cy: 332, r: 280 },                                     // the eye mirror: today's plant
+  cat: [[812, 300, 1212, 700], [690, 600, 1285, 1000]],                       // Ouija Cat
+  screen: [1246, 682, 1448, 740],                                            // the small console screen: the count
+  btn: [[1236, 766], [1272, 767], [1306, 767], [1341, 767], [1377, 767]],    // five red buttons, r 15
+  slab: [[530, 824], [878, 828], [878, 932], [714, 932]],                    // the dark slab left of his paws: the question in LEDs
+  keys: [186, 636, 716, 816],                                                // the left keyboard: type
+  planchette: { cx: 1005, cy: 1036, r: 92 },                                 // the big copper disc: let it choose
+  phone: [1442, 690, 1870, 884],                                             // the rotary phone: Step outside
+  candle: [1476, 0, 1532, 196],                                              // the candle: the poison garden
+  booksR: [[1505, 440, 1890, 690], [1890, 380, 2000, 900]],                  // shelves right: traditions
+  booksL: [[0, 600, 160, 990], [0, 942, 420, 1120]],                         // stacks left: the wings (kinds)
+  strip: [60, 148, 114, 602],                                                // the black glyph strip: the body
+};
+const BTN = [['Traditions', 'Browse by tradition'], ['Wings', 'Browse by kind: herbs, teas, oils, mushrooms…'], ['Body', 'Browse by part of the body'], ['Actions', 'The herbalist’s words: nervine, bitter, adaptogen…'], ['How to read', 'Evidence, danger and the rest of a card']];
+const TIPS = {
+  dial: ['The dial', 'Touch a letter for its shelf. The eye opens every entry, A to Z.'],
+  mirror: ['The mirror', 'Today’s plant. The same one for everyone, all day.'],
+  cat: ['Ouija Cat', 'He has read all of it. Twice.'],
+  screen: ['The count', 'How many the library found.'],
+  planchette: ['The planchette', 'Let it choose a page for you.'],
+  phone: ['Step outside', 'Emergency numbers and help lines that answer now.'],
+  candle: ['The poison garden', 'Deadly plants, for history and lore only.'],
+  booksR: ['The shelves', 'Browse by tradition: Ayurveda, Chinese medicine, Slavic, Amazonian…'],
+  booksL: ['The stacks', 'Browse by kind: herbs, spices, teas, oils, mushrooms, practices…'],
+  strip: ['The body', 'Browse by part of the body.'],
+  keys: ['The keys', 'Type your question.'],
+};
+
+/* ================= state ================= */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const calm = matchMedia('(prefers-reduced-motion: reduce)').matches && !document.documentElement.classList.contains('motion-full');
+let D = null, V = null, BY = {}, LET = {}, TABLE = [];
+const S = { hover: null, outline: false, letter: null, readout: '', count: 0, query: '', stack: [], list: null, t0: performance.now() };
+
+/* ================= data ================= */
+Promise.all([fetch('compendium-data.json').then(r => r.json()), fetch('compendium-vocab.json').then(r => r.json())]).then(([d, v]) => {
+  D = d; V = v;
+  for (const e of D.entries) { BY[e.id] = e; (LET[e.letter] = LET[e.letter] || []).push(e); }
+  for (const f of ['concerns', 'regions', 'systems', 'actions', 'traditions', 'kinds'])
+    for (const [tag, x] of Object.entries(V[f])) { if (tag.startsWith('_')) continue;
+      for (const s of new Set([...(x.syn || []), tag.replace(/-/g, ' '), (x.label || '').toLowerCase()])) if (s && s.length > 1) TABLE.push([norm(s), f, tag]); }
+  TABLE.sort((a, b) => b[0].length - a[0].length);
+  glossInit();
+  S.count = D.count; S.readout = D.count + ' ENTRIES';
+  $('#load').hidden = true;
+  fromHash();
+  draw();
+  let met = false; try { met = !!localStorage.getItem('vs-comp-welcome'); } catch (e) {}
+  if (!met && !location.hash) $('#welcome').hidden = false;
+}).catch(() => { $('#load').textContent = 'THE LIBRARY IS LOCKED (DATA DID NOT LOAD)'; });
+
+function norm(s) { return ' ' + String(s).toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9'+-]+/g, ' ').trim() + ' '; }
+const label = (f, k) => (D.labels[f] && D.labels[f][k]) || k;
+
+/* ================= search (mirrors tools/build-compendium.py --search) ================= */
+function search(q) {
+  const nq = norm(q);
+  const flags = V.red_flags.phrases.filter(p => nq.includes(norm(p)));
+  const hit = { concerns: new Set(), regions: new Set(), systems: new Set(), actions: new Set(), traditions: new Set(), kinds: new Set() };
+  let rest = nq;
+  for (const [p, f, tag] of TABLE) if (rest.includes(p)) { hit[f].add(tag); rest = rest.replace(p, ' '); }
+  const soft = new Set();
+  for (const r of hit.regions) { const R = V.regions[r]; R.systems.forEach(s => hit.systems.add(s)); R.concerns.forEach(c => soft.add(c));
+    if (hit.concerns.has('pain') || hit.concerns.has('inflammation')) (R.with_pain || []).forEach(c => hit.concerns.add(c)); }
+  hit.concerns.forEach(c => soft.delete(c));
+  const fromAct = new Set(); for (const t of [...hit.concerns, ...hit.systems]) (V.expand[t] || []).forEach(a => fromAct.add(a));
+  const stop = new Set(V.stopwords), words = rest.trim().split(/\s+/).filter(w => w.length > 2 && !stop.has(w));
+  const kindFilter = [...hit.kinds].filter(k => ['peptide', 'homeopathic', 'practice', 'fungus', 'mineral', 'resin', 'oil', 'nutrient'].includes(k));
+  const kindBoost = [...hit.kinds].filter(k => !kindFilter.includes(k));
+  const out = [];
+  for (const e of D.entries) {
+    if (kindFilter.length && !kindFilter.includes(e.kind)) continue;
+    if (hit.traditions.size && !e.traditions.some(t => hit.traditions.has(t))) continue;
+    const T = e.tags, why = []; let sc = 0;
+    const mc = T.concerns.filter(c => hit.concerns.has(c)); sc += 3 * mc.length; why.push(...mc);
+    const msc = T.concerns.filter(c => soft.has(c)); sc += 1.5 * msc.length; why.push(...msc);
+    const ms = T.systems.filter(s => hit.systems.has(s)); sc += 1.5 * ms.length; why.push(...ms);
+    const ma = T.actions.filter(a => hit.actions.has(a)); sc += 2 * ma.length; why.push(...ma);
+    const mx = T.actions.filter(a => fromAct.has(a) && !hit.actions.has(a)); sc += mx.length; why.push(...mx);
+    const facets = [mc.length + msc.length, ms.length, ma.length + mx.length].filter(Boolean).length;
+    if (facets > 1) sc *= 1 + .3 * (facets - 1);
+    const hay = norm([e.name, e.latin, ...e.aka].join(' '));
+    let named = false; for (const w of words) if (hay.includes(' ' + w + ' ') || (w.length > 4 && hay.includes(' ' + w))) { sc += 6; named = true; }
+    if (named) why.unshift('name');
+    if (kindBoost.includes(e.kind) || (kindBoost.includes('tea') && e.preps.some(p => /infusion|tea/.test(p)))) sc += 1;
+    if (sc <= 0) continue;
+    const ct = norm([...e.safety.contra, e.safety.summary].join(' '));
+    const cautions = [...new Set([...hit.systems].flatMap(t => (V.caution_words[t] || []).filter(w => ct.includes(' ' + w))))];
+    sc *= ({ deadly: .3, high: .75 })[e.safety.danger] || 1;
+    out.push({ e, sc, why: [...new Set(why)], cautions });
+  }
+  out.sort((a, b) => b.sc - a.sc || a.e.name.localeCompare(b.e.name));
+  const notes = [...new Set([...hit.systems, ...hit.concerns])].sort().filter(t => V.notes[t]).map(t => V.notes[t]);
+  return { out, flags, notes, hit };
+}
+
+/* ================= the shelf ================= */
+const shelf = $('#shelf'), shelfIn = $('#shelfIn');
+function openShelf(html, push = true) {
+  if (push && shelf.classList.contains('on')) S.stack.push(shelfIn.innerHTML);
+  if (!shelf.classList.contains('on')) S.stack = [];
+  shelfIn.innerHTML = (S.stack.length ? '<button class="back" type="button" data-back>← Back</button>' : '') + html;
+  shelf.classList.add('on'); document.body.classList.add('shelfon'); shelf.scrollTop = 0;
+}
+function closeShelf() { shelf.classList.remove('on'); document.body.classList.remove('shelfon'); S.stack = []; S.letter = null; if (D) { S.readout = D.count + ' ENTRIES'; } draw(); history.replaceState(null, '', location.pathname); }
+$('#shelfX').onclick = closeShelf;
+shelfIn.addEventListener('click', ev => {
+  const b = ev.target.closest('button, a'); if (!b) return;
+  if (b.hasAttribute('data-back')) { const h = S.stack.pop(); if (h != null) { shelfIn.innerHTML = h; shelf.scrollTop = 0; } return; }
+  if (b.dataset.id) return showCard(b.dataset.id);
+  if (b.dataset.letter) return showLetter(b.dataset.letter);
+  if (b.dataset.trad) return showList('Tradition: ' + label('traditions', b.dataset.trad), D.entries.filter(e => e.traditions.includes(b.dataset.trad)));
+  if (b.dataset.kind) return showList(label('kinds', b.dataset.kind), D.entries.filter(e => e.kind === b.dataset.kind));
+  if (b.dataset.act) return showList(label('actions', b.dataset.act), D.entries.filter(e => e.tags.actions.includes(b.dataset.act)));
+  if (b.dataset.region) { const r = V.regions[b.dataset.region]; return runSearch(r.label.toLowerCase()); }
+  if (b.dataset.outside != null) return outside();
+  if (b.dataset.more) { const L = S.list; if (L) { L.shown += 60; renderRows(); } return; }
+  if (b.dataset.poison != null) return showPoison(true);
+  if (b.dataset.quiz) return quizAnswer(b);
+  if (b.dataset.next != null) return quizRound();
+  if (b.dataset.clearmine != null) { READ.clear(); saveRead(); return showMine(); }
+  if (b.dataset.start != null) return showStart();
+});
+/* glossary tips: hover, focus or tap a dotted word */
+function glTip(el) { const r = el.getBoundingClientRect(); tip.querySelector('h4').textContent = el.textContent; tip.querySelector('p').textContent = el.dataset.say;
+  tip.style.left = Math.max(8, Math.min(innerWidth - 290, r.left)) + 'px'; tip.style.top = Math.min(innerHeight - 100, r.bottom + 8) + 'px'; tip.classList.add('on'); }
+shelfIn.addEventListener('mouseover', ev => { const g = ev.target.closest('.gl'); if (g) glTip(g); });
+shelfIn.addEventListener('mouseout', ev => { if (ev.target.closest('.gl')) tip.classList.remove('on'); });
+shelfIn.addEventListener('focusin', ev => { const g = ev.target.closest('.gl'); if (g) glTip(g); });
+shelfIn.addEventListener('focusout', () => tip.classList.remove('on'));
+shelf.addEventListener('scroll', () => tip.classList.remove('on'));
+shelfIn.addEventListener('change', ev => { if (ev.target.matches('select') && S.list) { S.list[ev.target.name] = ev.target.value; S.list.shown = 60; renderRows(); } });
+
+function dots(k) { const n = (V.evidence_scale || {})[k] ?? 1; return '●'.repeat(n) + '○'.repeat(4 - n); }
+function evChip(k) { return `<span class="chip ev" title="How much science has looked at it">${dots(k)} ${esc(label('evidence', k))}</span>`; }
+function chipsFor(e) {
+  const pet = /toxic|deadly|poison/i.test(e.safety.pets || '');
+  return `<span class="chip k">${esc(label('kinds', e.kind))}</span><span class="chip d-${e.safety.danger}">${e.safety.danger === 'deadly' ? '☠ ' : ''}${esc(label('danger', e.safety.danger))}</span>`
+    + evChip(e.research.evidence) + (pet ? '<span class="chip pet" title="Harmful to cats or dogs">🐾 pets</span>' : '') + (READ.has(e.id) ? '<span class="chip" title="On your shelf">✓ read</span>' : '');
+}
+let GLRE = null, GLMAP = new Map();
+function glossInit() {
+  const all = Object.entries(V.glossary || {}).flatMap(([k, g]) => [k, ...(g.also || [])].map(t => ({ t, k, say: g.say })));
+  all.sort((a, b) => b.t.length - a.t.length); all.forEach(x => GLMAP.set(esc(x.t).toLowerCase(), x));
+  const reEsc = t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  GLRE = all.length ? new RegExp('(^|[^\\p{L}])(' + all.map(x => reEsc(esc(x.t))).join('|') + ')(?![\\p{L}])', 'giu') : null;
+}
+function gl(text, seen) {     // escape, then dot-underline the first use of each glossary word on this card
+  const s = esc(text); if (!GLRE) return s;
+  return s.replace(GLRE, (m, pre, term) => { const g = GLMAP.get(term.toLowerCase()); if (!g || seen.has(g.k)) return m; seen.add(g.k); return pre + `<span class="gl" tabindex="0" data-say="${esc(g.say)}">${term}</span>`; });
+}
+/* the pages you've opened (kept in this browser only) */
+const READ = new Set(); try { JSON.parse(localStorage.getItem('vs-comp-read') || '[]').forEach(id => READ.add(id)); } catch (e) {}
+function saveRead() { try { localStorage.setItem('vs-comp-read', JSON.stringify([...READ])); } catch (e) {} }
+function showList(title, entries, extra = '', sub = '', push = true, isSearch = false) {
+  S.list = { isSearch, title, items: entries.map(x => x.e ? x : { e: x, why: [], cautions: [] }), shown: 60, kind: '', trad: '', sort: entries[0] && entries[0].sc != null ? 'match' : 'az', extra, sub };
+  S.count = entries.length; S.readout = entries.length + (entries.length === 1 ? ' FOUND' : ' FOUND'); draw();
+  openShelf('<div id="listBox"></div>', push); renderRows();
+}
+function renderRows() {
+  const L = S.list, box = $('#listBox'); if (!L || !box) return;
+  let items = L.items.filter(x => (!L.kind || x.e.kind === L.kind) && (!L.trad || x.e.traditions.includes(L.trad)));
+  const order = { low: 0, caution: 1, high: 2, deadly: 3 }, evo = ['established', 'moderate', 'mixed', 'preliminary', 'lab', 'traditional', 'unsupported', 'not-studied'];
+  if (L.sort === 'az') items = [...items].sort((a, b) => a.e.name.localeCompare(b.e.name));
+  if (L.sort === 'gentle') items = [...items].sort((a, b) => order[a.e.safety.danger] - order[b.e.safety.danger] || a.e.name.localeCompare(b.e.name));
+  if (L.sort === 'evidence') items = [...items].sort((a, b) => evo.indexOf(a.e.research.evidence) - evo.indexOf(b.e.research.evidence));
+  const kinds = [...new Set(L.items.map(x => x.e.kind))].sort(), trads = [...new Set(L.items.flatMap(x => x.e.traditions))].sort((a, b) => label('traditions', a).localeCompare(label('traditions', b)));
+  const opt = (v, t, cur) => `<option value="${esc(v)}"${v === cur ? ' selected' : ''}>${esc(t)}</option>`;
+  box.innerHTML = `<h2>${esc(L.title)}</h2><div class="sub">${items.length} ${items.length === 1 ? 'entry' : 'entries'}${L.sub ? ' · ' + esc(L.sub) : ''}</div>${L.extra}
+    <div class="filters">
+      <select name="kind" aria-label="Kind">${opt('', 'Every kind', L.kind)}${kinds.map(k => opt(k, label('kinds', k), L.kind)).join('')}</select>
+      <select name="trad" aria-label="Tradition">${opt('', 'Every tradition', L.trad)}${trads.map(t => opt(t, label('traditions', t), L.trad)).join('')}</select>
+      <select name="sort" aria-label="Order">${L.items[0] && L.items[0].sc != null ? opt('match', 'Closest match', L.sort) : ''}${opt('az', 'A to Z', L.sort)}${opt('gentle', 'Gentlest first', L.sort)}${opt('evidence', 'Most researched first', L.sort)}</select>
+    </div>`
+    + items.slice(0, L.shown).map(({ e, why, cautions }) => `<button class="row${e.safety.danger === 'deadly' ? ' dead' : ''}" type="button" data-id="${esc(e.id)}"><b>${esc(e.name)}</b>${e.latin ? `<em>${esc(e.latin.split(';')[0])}</em>` : ''}
+      <span class="chips">${chipsFor(e)}${(cautions || []).length ? `<span class="chip warn">take care with: ${esc(cautions.join(', '))}</span>` : ''}</span>
+      <span class="u">${esc(e.uses.length > 190 ? e.uses.slice(0, 186) + '…' : e.uses)}</span>${(why || []).length ? `<span class="why">why it’s here: ${esc(why.map(w => w === 'name' ? 'name' : (D.labels.concerns[w] || D.labels.systems[w] || D.labels.actions[w] || w)).join(' · '))}</span>` : ''}</button>`).join('')
+    + (items.length > L.shown ? `<button class="more" type="button" data-more>Show more (${items.length - L.shown})</button>` : '')
+    + `<p class="notice">${esc(D.notice)}</p>`;
+}
+function runSearch(q) {
+  q = q.trim(); if (!q || !D) return;
+  $('#q').value = q; S.query = q;
+  const { out, flags, notes } = search(q);
+  let extra = '';
+  if (flags.length) extra += `<div class="alarm" role="alert"><p>If this is an emergency, call your local emergency number now: <b>911 · 999 · 112 · 000</b>.</p><button type="button" data-outside>Step outside: help lines</button></div>`;
+  extra += notes.map(n => `<div class="note">${esc(n)}</div>`).join('');
+  if (!out.length) extra += `<p>Nothing on the shelves answers to that yet. Try a plant’s name, a feeling (sleep, worry), a part of the body (feet, belly) or a tradition (Ayurveda, Slavic).</p>`;
+  const again = shelf.classList.contains('on') && S.list && S.list.isSearch && $('#listBox');
+  showList('“' + q + '”', out, extra, 'what people around the world have turned to', !again, true);
+  history.replaceState(null, '', '#q=' + encodeURIComponent(q));
+  catSays(null);
+}
+$('#ask').addEventListener('submit', ev => { ev.preventDefault(); runSearch($('#q').value); $('#q').blur(); });
+let typeT = 0; $('#q').addEventListener('input', () => { S.query = $('#q').value; draw(); clearTimeout(typeT); if ($('#q').value.trim().length > 2) typeT = setTimeout(() => runSearch($('#q').value), 420); });
+
+function showLetter(L) {
+  S.letter = L; draw();
+  const az = `<div class="az">${'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(c => `<button type="button" data-letter="${c}" aria-pressed="${c === L}"${LET[c] ? '' : ' disabled'}>${c}</button>`).join('')}</div>`;
+  showList(L ? 'The letter ' + L : 'Every entry, A to Z', (L ? LET[L] || [] : D.entries), az);
+}
+function showIndex() { showLetter(null); }
+function showTrads() {
+  const c = {}; D.entries.forEach(e => e.traditions.forEach(t => c[t] = (c[t] || 0) + 1));
+  openShelf(`<h2>The shelves</h2><div class="sub">${Object.keys(c).length} traditions</div><div class="grid">${Object.keys(c).sort((a, b) => label('traditions', a).localeCompare(label('traditions', b))).map(t => `<button type="button" data-trad="${esc(t)}">${esc(label('traditions', t))}<small>${c[t]}</small></button>`).join('')}</div><p class="notice">${esc(D.notice)}</p>`);
+}
+function showWings() {
+  const c = {}; D.entries.forEach(e => c[e.kind] = (c[e.kind] || 0) + 1);
+  openShelf(`<h2>The stacks</h2><div class="sub">by kind</div><div class="grid">${Object.keys(c).sort((a, b) => c[b] - c[a]).map(k => `<button type="button" data-kind="${esc(k)}">${esc(label('kinds', k))}<small>${c[k]}</small></button>`).join('')}</div><p class="notice">${esc(D.notice)}</p>`);
+}
+function showBody() {
+  openShelf(`<h2>The body</h2><div class="sub">touch a part: the library answers with what the traditions used there</div><div class="grid">${Object.entries(V.regions).filter(([k]) => !k.startsWith('_')).map(([k, r]) => `<button type="button" data-region="${esc(k)}">${esc(r.label)}</button>`).join('')}</div><p class="notice">${esc(D.notice)}</p>`);
+}
+function showActions() {
+  const c = {}; D.entries.forEach(e => e.tags.actions.forEach(a => c[a] = (c[a] || 0) + 1));
+  openShelf(`<h2>The herbalist’s words</h2><div class="sub">how the traditions name what a plant does</div><div class="grid">${Object.keys(c).sort((a, b) => label('actions', a).localeCompare(label('actions', b))).map(a => `<button type="button" data-act="${esc(a)}">${esc(label('actions', a))}<small>${c[a]}</small></button>`).join('')}</div><p class="notice">${esc(D.notice)}</p>`);
+}
+function showHelp() {
+  const ev = ['established', 'moderate', 'mixed', 'preliminary', 'lab', 'traditional', 'unsupported', 'not-studied'];
+  openShelf(`<h2>How to read a page</h2><div class="sub">what the little marks mean</div>
+    <h3>What it is</h3><p>One plain line at the top, for when you’ve never heard of it.</p>
+    <h3>What people use it for</h3><p>What people in a tradition actually do with it: drink it hot for colds, rub it on sore knees, burn it to clear a room. It tells you what people do, not what it will do for you.</p>
+    <h3>The story</h3><p>Where it comes from, the history, the myths and the magic.</p>
+    <h3>What studies found</h3><p>How much science has looked at it, and what turned up:</p>${ev.map(k => `<p>${evChip(k)}</p>`).join('')}
+    <h3>Be careful</h3><p>Medicines it can clash with, pregnancy, who should leave it alone, and pets. The coloured mark shows how careful to be:</p>${['low', 'caution', 'high', 'deadly'].map(k => `<p><span class="chip d-${k}">${k === 'deadly' ? '☠ ' : ''}${esc(label('danger', k))}</span></p>`).join('')}
+    <p><span class="chip pet">🐾 pets</span> means it can harm cats or dogs. <span class="gl" tabindex="0" data-say="Like this: a short explanation of an unusual word.">Dotted words</span> explain themselves when you touch them. No doses anywhere, on purpose (vitamin pages list the official upper limits, because those are safety facts).</p>
+    <h3>The room</h3><p>The eye dial is the alphabet. The mirror holds today’s plant. The five red buttons by the cat open the shelves. The copper disc on the mat picks a page. The candle opens the poison garden. The phone has help lines.</p>
+    <p><button class="more" type="button" data-start>Start with the famous ones</button></p>
+    <p class="notice">${esc(D.notice)}</p>`);
+}
+function showPoison(open) {
+  if (!open) return openShelf(`<h2>The poison garden</h2><div class="sub">behind the iron gate</div>
+    <div class="safety deadly"><p>These plants kill in small amounts. They are here for their history and their lore: the ointments, the oracles, the medicines that came out of them. Never grow, pick, burn or touch them as a remedy.</p></div>
+    <button class="more" type="button" data-poison>Open the gate</button><p class="notice">${esc(D.notice)}</p>`);
+  showList('The poison garden', D.entries.filter(e => e.safety.danger === 'deadly'), '<div class="safety deadly"><p>History and lore only.</p></div>');
+}
+function today() {
+  const d = new Date(), key = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+  let h = 2166136261; for (const c of 'VS-COMPENDIUM-1|' + key) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619) >>> 0; }
+  const planet = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn'][d.getDay()];
+  let pool = D.entries.filter(e => e.safety.danger !== 'deadly' && e.ritual.planet === planet);
+  if (pool.length < 3) pool = D.entries.filter(e => e.safety.danger !== 'deadly');
+  return { e: pool[h % pool.length], planet };
+}
+const dayKey = () => { const d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); };
+let todaySeen = false; try { todaySeen = localStorage.getItem('vs-comp-today') === dayKey(); } catch (e) {}
+function showToday() {
+  const { e, planet } = today(), d = new Date();
+  todaySeen = true; try { localStorage.setItem('vs-comp-today', dayKey()); } catch (er) {}
+  showCard(e.id, `Today’s plant · ${d.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' })}, the day of ${planet}`, true);
+  catSays({ cat: 'The mirror picked this one for you. Everyone gets the same today. Try not to take it personally.' });
+}
+const START = ['chamomile', 'ginger', 'turmeric', 'peppermint', 'lavender', 'garlic', 'green-tea', 'echinacea', 'aloe-vera', 'st-john-s-wort', 'ginseng', 'vitamin-d'];
+function showStart() { showList('Start here', START.filter(id => BY[id]).map(id => BY[id]), '<p>Twelve that most people have heard of. Open one, then follow the trail.</p>', 'the famous ones'); }
+function surprise() { const pool = D.entries.filter(e => e.safety.danger !== 'deadly'); const e = pool[Math.floor(Math.random() * pool.length)]; showCard(e.id, 'The planchette chose'); }
+function showMine() {
+  const mine = D.entries.filter(e => READ.has(e.id));
+  showList('My shelf', mine, `<p>You’ve opened <b>${mine.length}</b> of ${D.count} pages. They live in this browser only.</p>${mine.length ? '<p><button class="more" type="button" data-clearmine>Empty my shelf</button></p>' : '<p>Nothing yet. Open a page and it lands here.</p>'}`, 'the pages you’ve opened');
+}
+/* the quiz: read the clue, pick the plant */
+const Q = { round: 0, score: 0, of: 6, ans: null };
+function quizStart() { Q.round = 0; Q.score = 0; quizRound(true); }
+function quizRound(first) {
+  if (Q.round >= Q.of) {
+    const lines = ['Not bad. For a human.', 'I’ve seen goats do better. Still, you came.', 'Full marks. Suspicious. I’m watching you.'];
+    return openShelf(`<h2>Done</h2><p class="clue">${Q.score} out of ${Q.of}.</p><p class="catline">“${Q.score === Q.of ? lines[2] : Q.score >= 3 ? lines[0] : lines[1]}” <span class="aka">· Ouija Cat</span></p><p><button class="more" type="button" data-next>Play again</button></p>`, false), (Q.round = 0, Q.score = 0);
+  }
+  const pool = D.entries.filter(e => e.what && e.safety.danger !== 'deadly');
+  const e = pool[Math.floor(Math.random() * pool.length)]; Q.ans = e.id;
+  const same = pool.filter(x => x.kind === e.kind && x.id !== e.id), rest = pool.filter(x => x.id !== e.id);
+  const opts = new Set([e]); while (opts.size < 4) { const src = same.length > 6 ? same : rest; opts.add(src[Math.floor(Math.random() * src.length)]); }
+  const words = (e.name + ' ' + (e.latin || '')).split(/[^\p{L}]+/u).filter(w => w.length > 3).map(w => w.toLowerCase());
+  const clue = e.what.split(/(\p{L}+)/u).map(w => words.includes(w.toLowerCase()) ? '▒▒▒' : w).join('');
+  Q.round++;
+  openShelf(`<h2>Which one is it?</h2><div class="sub">question ${Q.round} of ${Q.of} · score ${Q.score}</div><p class="clue">${esc(clue)}</p>
+    <div class="quizopts">${[...opts].sort(() => Math.random() - .5).map(x => `<button type="button" data-quiz="${esc(x.id)}">${esc(x.name)}</button>`).join('')}</div><div id="quizAfter"></div>`, !!first);
+}
+function quizAnswer(b) {
+  const ok = b.dataset.quiz === Q.ans; if (ok) Q.score++;
+  shelfIn.querySelectorAll('.quizopts button').forEach(x => { x.disabled = true; if (x.dataset.quiz === Q.ans) x.classList.add('right'); else if (x === b) x.classList.add('wrong'); });
+  const e = BY[Q.ans];
+  $('#quizAfter').innerHTML = `<p>${ok ? 'Right.' : 'It was <b>' + esc(e.name) + '</b>.'} ${e.know ? esc(e.know) : ''}</p><p><button class="more" type="button" data-id="${esc(e.id)}">Open its page</button> <button class="more" type="button" data-next>${Q.round >= Q.of ? 'See your score' : 'Next'}</button></p>`;
+}
+
+function showCard(id, kicker = '', isToday = false) {
+  const e = BY[id]; if (!e) return;
+  const seen = new Set(), sf = e.safety, G = t => gl(t, seen);
+  const fact = (t, v) => v ? `<dt>${t}</dt><dd>${v}</dd>` : '';
+  const list = arr => arr && arr.length ? arr.map(x => G(x)).join(' · ') : '';
+  const first = !READ.has(e.id); READ.add(e.id); saveRead();
+  const N = e.nutrient;
+  const html = (kicker ? `<div class="${isToday ? 'today' : 'sub'}">${esc(kicker)}</div>` : '') +
+    `<h2>${esc(e.name)}</h2>${e.latin ? `<div class="latin">${esc(e.latin)}${e.family ? ' · ' + esc(e.family) : ''}</div>` : ''}
+    ${e.what ? `<p class="what">${G(e.what)}</p>` : ''}
+    <div class="chips">${chipsFor(e)}</div>
+    ${first ? `<div class="mine">✓ added to your shelf · ${READ.size} of ${D.count}</div>` : ''}
+    ${e.know ? `<div class="know"><b>Did you know?</b>${G(e.know)}</div>` : ''}
+    <h3>What people use it for</h3><p>${G(e.uses)}</p>
+    <dl class="facts">${fact('Comes from', e.traditions.map(t => esc(label('traditions', t))).join(' · '))}${fact('Made from', list(e.parts))}${fact('How people take it', list(e.preps))}${N ? fact('Where you find it', list(N.foods)) : ''}${e.aka.length ? fact('Other names', e.aka.map(esc).join(' · ')) : ''}</dl>
+    ${N && N.low ? `<h3>Signs people link with running low</h3><p>${G(N.low)}</p><p class="aka">These signs have many other causes too.</p>` : ''}
+    ${e.history.text || e.lore.text ? `<h3>The story</h3>${e.history.text ? `<p>${G(e.history.text)}</p>` : ''}${e.lore.text ? `<p>${G(e.lore.text)}</p>` : ''}${e.ritual.planet ? `<p class="aka">In old planetary herbals: ruled by ${esc(e.ritual.planet)}${e.ritual.element ? ', element ' + esc(e.ritual.element) : ''}.</p>` : ''}` : ''}
+    <h3>What studies found</h3><p>${evChip(e.research.evidence)}</p><p>${G(e.research.text)}</p>
+    <h3>Be careful</h3><div class="safety ${sf.danger}"><p>${G(sf.summary)}</p><dl>
+      ${N && N.limit ? `<dt>Upper limit</dt><dd>${G(N.limit)}</dd>` : ''}${fact('Pregnancy and breastfeeding', esc(label('pregnancy', sf.pregnancy)))}${fact('Can clash with', list(sf.interactions))}${fact('Not for people with', list(sf.contra))}
+      ${fact('Pets', sf.pets ? G(sf.pets) : '')}${fact('Law and status', sf.regulatory ? G(sf.regulatory) : '')}${fact('Ethics', sf.ethics ? G(sf.ethics) : '')}</dl></div>
+    ${e.cat ? `<p class="catline">“${esc(e.cat)}” <span class="aka">· Ouija Cat</span></p>` : ''}
+    ${e.related.filter(r => BY[r]).length ? `<h3>See also</h3>${e.related.filter(r => BY[r]).map(r => `<button class="rel" type="button" data-id="${esc(r)}">${esc(BY[r].name)}</button>`).join('')}` : ''}
+    <details class="src-d"><summary>Where this comes from</summary><ul class="src">${e.sources.map(s => `<li>${/^https?:/.test(s.url) ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a>` : esc(s.title)}</li>`).join('')}</ul></details>
+    <p class="notice">${esc(D.notice)}</p>`;
+  openShelf(html);
+  history.replaceState(null, '', '#' + e.id);
+  S.readout = e.name.toUpperCase().slice(0, 16); draw();
+}
+function fromHash() {
+  const h = decodeURIComponent(location.hash.slice(1));
+  if (!h) return;
+  if (h.startsWith('q=')) runSearch(h.slice(2)); else if (BY[h]) showCard(h);
+}
+function outside() { if (window.VS_OUTSIDE) window.VS_OUTSIDE(); else say('Emergency: 911 · 999 · 112 · 000.'); }
+
+/* ================= Ouija Cat ================= */
+const LINES = ['All these pages and you’ll read one and call it research.', 'Read the red box. I’m not cleaning up after you.', 'A library at this hour. Bold of you.', 'Touch the planchette. Let something smarter than you choose.', 'The poison garden is behind the candle. Admire, don’t nibble.', 'Lilies anywhere near me and we’re finished.', 'I’ve read every page. Twice. In Latin.', 'Search with words. Vibes also work, I’m told.', 'You hover like you’re waiting for permission. Take a book.', 'Today’s plant is in the mirror. It chose you. Don’t make it regret it.'];
+let sayT = 0;
+function say(t) { const el = $('#say'); el.textContent = t; el.classList.add('on'); clearTimeout(sayT); sayT = setTimeout(() => el.classList.remove('on'), 5200); }
+function catSays(e) {
+  if (e === null) return;
+  if (e && e.cat) return say(e.cat);
+  if (D && Math.random() < .5) { const k = D.entries.filter(x => x.know); const x = k[Math.floor(Math.random() * k.length)]; if (x) return say('Did you know? ' + x.know); }
+  say(LINES[Math.floor(Math.random() * LINES.length)]);
+}
+
+/* ================= drawing ================= */
+const cv = $('#fx'), cx = cv.getContext('2d'), board = $('#board');
+let SC = 1;
+function size() { const r = board.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 1.5); cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr); SC = cv.width / W; draw(); }
+addEventListener('resize', size);
+$('#art').addEventListener('load', () => { $('#art').classList.add('on'); size(); });
+if ($('#art').complete) { $('#art').classList.add('on'); }
+
+const FONT = { A: [14, 17, 17, 31, 17, 17, 17], B: [30, 17, 17, 30, 17, 17, 30], C: [14, 17, 16, 16, 16, 17, 14], D: [28, 18, 17, 17, 17, 18, 28], E: [31, 16, 16, 30, 16, 16, 31], F: [31, 16, 16, 30, 16, 16, 16], G: [14, 17, 16, 23, 17, 17, 15], H: [17, 17, 17, 31, 17, 17, 17], I: [14, 4, 4, 4, 4, 4, 14], J: [7, 2, 2, 2, 2, 18, 12], K: [17, 18, 20, 24, 20, 18, 17], L: [16, 16, 16, 16, 16, 16, 31], M: [17, 27, 21, 21, 17, 17, 17], N: [17, 17, 25, 21, 19, 17, 17], O: [14, 17, 17, 17, 17, 17, 14], P: [30, 17, 17, 30, 16, 16, 16], Q: [14, 17, 17, 17, 21, 18, 13], R: [30, 17, 17, 30, 20, 18, 17], S: [15, 16, 16, 14, 1, 1, 30], T: [31, 4, 4, 4, 4, 4, 4], U: [17, 17, 17, 17, 17, 17, 14], V: [17, 17, 17, 17, 17, 10, 4], W: [17, 17, 17, 21, 21, 21, 10], X: [17, 17, 10, 4, 10, 17, 17], Y: [17, 17, 17, 10, 4, 4, 4], Z: [31, 1, 2, 4, 8, 16, 31] };
+const AZ = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+let ringCache = null;
+function ringBase() {   // the black LED annulus that covers the fake letters, drawn once per size
+  const c = document.createElement('canvas'); c.width = cv.width; c.height = cv.height; const g = c.getContext('2d'); const d = M.dial;
+  g.setTransform(SC, 0, 0, SC * d.ky, d.cx * SC, d.cy * SC);
+  g.beginPath(); g.arc(0, 0, d.rout, 0, 7); g.arc(0, 0, d.rin, 0, 7, true); g.fillStyle = '#0b0606'; g.fill('evenodd');
+  g.fillStyle = 'rgba(233,162,126,.10)';
+  for (let y = -d.rout; y <= d.rout; y += 8.4) for (let x = -d.rout; x <= d.rout; x += 8.4) { const r = Math.hypot(x, y); if (r > d.rin + 4 && r < d.rout - 4) { g.beginPath(); g.arc(x, y, 1.6, 0, 7); g.fill(); } }
+  for (const [r, n] of [[d.rin + 1, 120], [d.rout - 1, 190]]) for (let i = 0; i < n; i++) { const a = i / n * Math.PI * 2; g.beginPath(); g.arc(Math.cos(a) * r, Math.sin(a) * r, 2.2, 0, 7); g.fillStyle = 'rgba(255,190,160,.75)'; g.fill(); }
+  return c;
+}
+function letterAt(px, py) {
+  const d = M.dial, x = px - d.cx, y = (py - d.cy) / d.ky, r = Math.hypot(x, y);
+  if (r < d.rin - 4 || r > d.rout + 8) return r < d.rin - 4 ? 'eye' : null;
+  let a = Math.atan2(y, x) + Math.PI / 2; if (a < 0) a += Math.PI * 2;
+  return AZ[Math.round(a / (Math.PI * 2 / 26)) % 26];
+}
+function draw() {
+  if (!cv.width) return;
+  cx.setTransform(1, 0, 0, 1, 0, 0); cx.clearRect(0, 0, cv.width, cv.height);
+  if (!ringCache || ringCache.width !== cv.width) ringCache = ringBase();
+  cx.drawImage(ringCache, 0, 0);
+  const t = (performance.now() - S.t0) / 1000, d = M.dial;
+  // the A to Z ring: 5x7 LED letters, tops outward
+  cx.setTransform(SC, 0, 0, SC * d.ky, d.cx * SC, d.cy * SC);
+  const p = 8.4, rr = (d.rin + d.rout) / 2;
+  for (let i = 0; i < 26; i++) {
+    const L = AZ[i], a = i / 26 * Math.PI * 2 - Math.PI / 2, has = D ? !!LET[L] : true;
+    const hot = S.hover === 'L:' + L || S.letter === L;
+    const tw = calm ? 1 : .82 + .18 * Math.sin(t * 1.7 + i * 1.3);
+    cx.save(); cx.rotate(a + Math.PI / 2); cx.translate(0, -rr);
+    const rows = FONT[L];
+    for (let ry = 0; ry < 7; ry++) for (let rx = 0; rx < 5; rx++) {
+      if (!(rows[ry] >> (4 - rx) & 1)) continue;
+      const x = (rx - 2) * p, y = (ry - 3) * p;
+      cx.beginPath(); cx.arc(x, y, hot ? 3.4 : 2.9, 0, 7);
+      cx.fillStyle = hot ? '#fff1e6' : has ? `rgba(255,${150 + 40 * tw | 0},${120 + 30 * tw | 0},${.55 + .4 * tw})` : 'rgba(233,162,126,.25)'; cx.fill();
+    }
+    if (hot) { cx.beginPath(); cx.arc(0, 0, 34, 0, 7); cx.fillStyle = 'rgba(255,180,150,.12)'; cx.fill(); }
+    cx.restore();
+  }
+  cx.setTransform(SC, 0, 0, SC, 0, 0);
+  // the dial's eye: a soft halo when hovered
+  if (S.hover === 'eye') { cx.beginPath(); cx.ellipse(d.cx, d.cy, d.rin - 8, (d.rin - 8) * d.ky, 0, 0, 7); cx.strokeStyle = 'rgba(255,200,170,.55)'; cx.lineWidth = 4; cx.stroke(); }
+  // the mirror: a slow glint, brighter on hover
+  { const m = M.mirror, a = calm ? .15 : .12 + .08 * Math.sin(t * .6), hot = S.hover === 'mirror';
+    const gr = cx.createRadialGradient(m.cx - 90, m.cy - 120, 10, m.cx, m.cy, m.r);
+    gr.addColorStop(0, `rgba(220,235,255,${hot ? .28 : a})`); gr.addColorStop(1, 'rgba(220,235,255,0)');
+    cx.save(); cx.beginPath(); cx.arc(m.cx, m.cy, m.r - 6, 0, 7); cx.clip(); cx.fillStyle = gr; cx.fillRect(m.cx - m.r, m.cy - m.r, m.r * 2, m.r * 2);
+    if (D && (hot || S.outline)) { const { e } = today(); cx.font = '400 34px "IM Fell English SC", Georgia, serif'; cx.textAlign = 'center'; cx.fillStyle = 'rgba(255,236,214,.95)'; cx.shadowColor = '#000'; cx.shadowBlur = 10; cx.fillText(e.name.length > 22 ? e.name.slice(0, 21) + '…' : e.name, m.cx, m.cy - 214); cx.shadowBlur = 0; }
+    if (!todaySeen && D && !calm) { const k = (t * .7) % 1; cx.beginPath(); cx.arc(m.cx, m.cy, m.r - 10 + k * 26, 0, 7); cx.strokeStyle = `rgba(255,215,180,${.55 * (1 - k)})`; cx.lineWidth = 6; cx.stroke(); }
+    cx.restore(); }
+  // the small screen: the count
+  { const [x0, y0, x1, y1] = M.screen; cx.fillStyle = 'rgba(10,6,6,.93)'; cx.fillRect(x0 + 4, y0 + 4, x1 - x0 - 8, y1 - y0 - 8);
+    cx.font = '30px VT323, monospace'; cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.fillStyle = '#ffb59a'; cx.shadowColor = 'rgba(255,150,110,.8)'; cx.shadowBlur = 8;
+    const txt = S.hover && TIPS[S.hover] ? TIPS[S.hover][0].toUpperCase() : S.hover && S.hover.startsWith('B:') ? BTN[+S.hover.slice(2)][0].toUpperCase() : S.hover && S.hover.startsWith('L:') ? 'LETTER ' + S.hover.slice(2) + (D ? ' · ' + (LET[S.hover.slice(2)] || []).length : '') : S.readout;
+    cx.fillText(txt.slice(0, 17), (x0 + x1) / 2, (y0 + y1) / 2 + 1); cx.shadowBlur = 0; }
+  // the five red buttons: glow on hover
+  M.btn.forEach(([bx, by], i) => { if (S.hover === 'B:' + i || S.outline) { cx.beginPath(); cx.arc(bx, by, 17, 0, 7); cx.strokeStyle = 'rgba(255,190,160,.9)'; cx.lineWidth = 3; cx.stroke(); } });
+  // the slab: the question in LEDs
+  { const q = (S.query || '').toUpperCase(); cx.save(); cx.beginPath(); M.slab.forEach(([x, y], i) => i ? cx.lineTo(x, y) : cx.moveTo(x, y)); cx.closePath(); cx.clip();
+    cx.fillStyle = 'rgba(8,6,8,.92)'; cx.fill(); cx.translate(782, 880); cx.rotate(.004);
+    cx.font = '30px VT323, monospace'; cx.textAlign = 'center'; cx.textBaseline = 'middle'; cx.fillStyle = q ? '#ffcfb5' : 'rgba(255,181,154,.45)'; cx.shadowColor = 'rgba(255,150,110,.8)'; cx.shadowBlur = 8;
+    const show = q ? (q.length > 14 ? '…' + q.slice(-13) : q) + (calm || (t % 1.1) < .6 ? '▮' : ' ') : 'ASK ME';
+    cx.fillText(show, 0, 0); cx.restore(); }
+  // hover glows on the rest
+  const glowRect = (r, c = 'rgba(255,200,170,.5)') => { cx.strokeStyle = c; cx.lineWidth = 3; cx.strokeRect(r[0], r[1], r[2] - r[0], r[3] - r[1]); };
+  if (S.hover === 'planchette') { const pc = M.planchette; cx.beginPath(); cx.arc(pc.cx, pc.cy, pc.r, 0, 7); cx.strokeStyle = 'rgba(255,215,180,.7)'; cx.lineWidth = 4; cx.stroke(); }
+  if (S.hover === 'candle' && !calm) { cx.beginPath(); cx.ellipse(1503, 22, 16 + 3 * Math.sin(t * 9), 30, 0, 0, 7); cx.fillStyle = 'rgba(255,200,120,.25)'; cx.fill(); }
+  // Shift+H: every control outlined and named
+  if (S.outline) {
+    cx.font = '20px "IBM Plex Mono", monospace'; cx.textAlign = 'left'; cx.textBaseline = 'top'; cx.fillStyle = '#7ef'; cx.strokeStyle = '#7ef'; cx.lineWidth = 2;
+    const lab = (s, x, y) => { cx.fillStyle = 'rgba(0,0,0,.7)'; cx.fillRect(x, y, cx.measureText(s).width + 8, 24); cx.fillStyle = '#7ef'; cx.fillText(s, x + 4, y + 2); };
+    cx.beginPath(); cx.ellipse(d.cx, d.cy, d.rout, d.rout * d.ky, 0, 0, 7); cx.stroke(); cx.beginPath(); cx.ellipse(d.cx, d.cy, d.rin, d.rin * d.ky, 0, 0, 7); cx.stroke(); lab('dial: A–Z / eye: index', d.cx - 110, d.cy + 8);
+    cx.beginPath(); cx.arc(M.mirror.cx, M.mirror.cy, M.mirror.r, 0, 7); cx.stroke(); lab('mirror: today', M.mirror.cx - 60, 70);
+    for (const [k, rs] of [['cat', M.cat], ['booksR', M.booksR], ['booksL', M.booksL], ['screen', [M.screen]], ['keys', [M.keys]], ['phone', [M.phone]], ['candle', [M.candle]], ['strip', [M.strip]]]) rs.forEach(r => { cx.strokeStyle = '#7ef'; cx.strokeRect(r[0], r[1], r[2] - r[0], r[3] - r[1]); lab(k, r[0] + 4, r[1] + 4); });
+    cx.beginPath(); cx.arc(M.planchette.cx, M.planchette.cy, M.planchette.r, 0, 7); cx.stroke(); lab('planchette', M.planchette.cx - 50, M.planchette.cy - 12);
+    cx.beginPath(); M.slab.forEach(([x, y], i) => i ? cx.lineTo(x, y) : cx.moveTo(x, y)); cx.closePath(); cx.stroke();
+    M.btn.forEach(([bx, by], i) => { cx.beginPath(); cx.arc(bx, by, 15, 0, 7); cx.stroke(); }); lab('buttons 1–5', 1230, 790);
+  }
+}
+let last = 0;
+(function loop(now) { requestAnimationFrame(loop); if (calm && !S.outline) return; if (now - last < 50) return; last = now; if (document.hidden) return; draw(); })(0);
+
+/* ================= hit testing ================= */
+const inR = (r, x, y) => x >= r[0] && x <= r[2] && y >= r[1] && y <= r[3];
+function hit(x, y) {
+  for (let i = 0; i < 5; i++) { const [bx, by] = M.btn[i]; if (Math.hypot(x - bx, y - by) < 17) return 'B:' + i; }
+  if (inR(M.screen, x, y)) return 'screen';
+  const L = letterAt(x, y); if (L === 'eye') return 'eye'; if (L) return 'L:' + L;
+  if (Math.hypot(x - M.planchette.cx, y - M.planchette.cy) < M.planchette.r) return 'planchette';
+  if (inR(M.phone, x, y)) return 'phone';
+  if (inR(M.candle, x, y)) return 'candle';
+  if (inR(M.strip, x, y)) return 'strip';
+  if (inR(M.keys, x, y)) return 'keys';
+  if (M.cat.some(r => inR(r, x, y))) return 'cat';
+  if (Math.hypot(x - M.mirror.cx, y - M.mirror.cy) < M.mirror.r) return 'mirror';
+  if (M.booksR.some(r => inR(r, x, y))) return 'booksR';
+  if (M.booksL.some(r => inR(r, x, y))) return 'booksL';
+  return null;
+}
+function toImg(ev) { const r = cv.getBoundingClientRect(); return [(ev.clientX - r.left) / r.width * W, (ev.clientY - r.top) / r.height * H]; }
+const tip = $('#tip');
+cv.addEventListener('pointermove', ev => {
+  const [x, y] = toImg(ev), h = hit(x, y);
+  if (h !== S.hover) { S.hover = h; cv.classList.toggle('hand', !!h); draw(); }
+  let tt = null;
+  if (h && TIPS[h]) tt = TIPS[h]; else if (h === 'eye') tt = ['The eye', 'Every entry, A to Z.']; else if (h && h.startsWith('B:')) tt = BTN[+h.slice(2)]; else if (h && h.startsWith('L:') && D) { const n = (LET[h.slice(2)] || []).length; tt = ['The letter ' + h.slice(2), n + (n === 1 ? ' entry' : ' entries')]; }
+  if (tt && ev.pointerType === 'mouse') { tip.querySelector('h4').textContent = tt[0]; tip.querySelector('p').textContent = tt[1]; tip.style.left = Math.min(innerWidth - 300, ev.clientX + 16) + 'px'; tip.style.top = Math.min(innerHeight - 90, ev.clientY + 16) + 'px'; tip.classList.add('on'); } else tip.classList.remove('on');
+});
+cv.addEventListener('pointerleave', () => { S.hover = null; tip.classList.remove('on'); draw(); });
+cv.addEventListener('click', ev => {
+  if (!D) return;
+  const [x, y] = toImg(ev), h = hit(x, y);
+  if (!h) return;
+  if (window.VS_BURST) window.VS_BURST(ev.clientX, ev.clientY, 10);
+  if (h.startsWith('L:')) return showLetter(h.slice(2));
+  if (h.startsWith('B:')) return [showTrads, showWings, showBody, showActions, showHelp][+h.slice(2)]();
+  ({ eye: showIndex, mirror: showToday, cat: () => catSays(), screen: showHelp, planchette: surprise,
+     phone: outside, candle: () => showPoison(false), strip: showBody, keys: () => $('#q').focus(), booksR: showTrads, booksL: showWings })[h]?.();
+});
+
+/* ================= welcome ================= */
+function closeWelcome() { $('#welcome').hidden = true; try { localStorage.setItem('vs-comp-welcome', '1'); } catch (e) {} }
+$('#wStart').onclick = () => { closeWelcome(); showStart(); };
+$('#wLook').onclick = closeWelcome;
+$('#welcome').addEventListener('click', ev => { if (ev.target.id === 'welcome') closeWelcome(); });
+/* ================= bar and keys ================= */
+$('#bIndex').onclick = () => D && showIndex(); $('#bToday').onclick = () => D && showToday(); $('#bHelp').onclick = () => D && showHelp();
+$('#bStart').onclick = () => D && showStart(); $('#bRand').onclick = () => D && surprise(); $('#bQuiz').onclick = () => D && quizStart(); $('#bMine').onclick = () => D && showMine();
+addEventListener('keydown', ev => {
+  const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName);
+  if (ev.key === 'Escape') { if (!$('#welcome').hidden) return closeWelcome(); if (typing) document.activeElement.blur(); else if (shelf.classList.contains('on')) closeShelf(); return; }
+  if (typing) return;
+  if (ev.key === '/') { ev.preventDefault(); $('#q').focus(); }
+  if (ev.code === 'KeyH' && ev.shiftKey) { S.outline = !S.outline; draw(); }
+});
+addEventListener('hashchange', () => { if (D && location.hash) fromHash(); });
+size();
+</script>
+<script id="vs-chrome">
+/* The shared frame for every page: the rooms as bold tabs (current room lit), a volume slider that every page's
+   sound obeys (window.VS_VOLUME, event 'vs-volume', remembered), gold sparks that follow the cursor and burst on a
+   click, and a dissolve between rooms. Costs nothing when idle: the spark canvas only draws while sparks are alive. */
+(function () {
+  /* ---------- the safety stage: every page's sound passes through it on the way to the speakers ----------
+     It fades in when a room's sound starts or wakes (no click on the first note), takes out sub-bass thumps and DC
+     (the usual cause of pops when things start and stop), catches anything that would clip (crackle), and fades out
+     when you leave a room, so nothing is cut off mid-wave. The Turntable gets no limiter: her masters stay as they are. */
+  (function safeAudio() {
+    if (!window.AudioNode || AudioNode.prototype.__vsSafe) return;
+    const P = AudioNode.prototype, orig = P.connect, bus = new WeakMap(), limit = !/deck\.html$/.test(location.pathname);
+    P.__vsSafe = true; window.__vsBuses = [];
+    function stage(ctx) {
+      let s = bus.get(ctx); if (s) return s;
+      const g = ctx.createGain(); g.gain.value = 0;
+      const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 16; hp.Q.value = .5; orig.call(g, hp); let last = hp;
+      if (limit) { const l = ctx.createDynamicsCompressor(); l.threshold.value = -1; l.knee.value = 0; l.ratio.value = 20; l.attack.value = .002; l.release.value = .12; orig.call(last, l); last = l; }
+      orig.call(last, ctx.destination);
+      const ramp = (to, d) => { const t = ctx.currentTime; g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(g.gain.value, t); g.gain.linearRampToValueAtTime(to, t + d); };
+      s = { g, ctx, up: (d = .45) => ramp(1, d), down: (d = .18) => ramp(0, d) };
+      if (ctx.state === 'running') s.up(.6);
+      ctx.addEventListener('statechange', () => { if (ctx.state === 'running') s.up(.35); });
+      bus.set(ctx, s); window.__vsBuses.push(s); return s;
+    }
+    P.connect = function (dest, out, inp) {
+      if (dest instanceof AudioDestinationNode) { const s = stage(dest.context); if (out == null) orig.call(this, s.g); else orig.call(this, s.g, out); return dest; }
+      return out == null ? orig.call(this, dest) : inp == null ? orig.call(this, dest, out) : orig.call(this, dest, out, inp);
+    };
+    // leaving: every sound on the page fades out (the stage for Web Audio, a quick ramp for films playing on their own)
+    window.VS_FADE_OUT = (ms = 200) => {
+      for (const s of window.__vsBuses) try { s.down(ms / 1000); } catch (e) {}
+      document.querySelectorAll('video, audio').forEach(m => { if (m.muted || m.paused || !m.volume) return; const v0 = m.__vsPre = m.volume, t0 = performance.now(); const step = () => { const k = Math.min(1, (performance.now() - t0) / ms); m.volume = v0 * (1 - k); if (k < 1) requestAnimationFrame(step); }; step(); });
+    };
+    addEventListener('pagehide', () => window.VS_FADE_OUT(60));
+  })();
+
+  /* ---------- films stay in the page: a phone never lifts one out ----------
+     iPhones play a video full-screen, offer picture-in-picture, or pop it into a floating preview on a long press, unless
+     told not to. Every film here is part of the room's background, so each one is pinned: inline, no picture-in-picture,
+     no AirPlay, no controls, and touches pass through it to the room. Films made later (by a room's own code) get the same
+     the moment they're added or played. */
+  (function pinFilms() {
+    const pin = v => { if (!v || v.__vsPinned || v.tagName !== 'VIDEO') return; v.__vsPinned = true;
+      v.playsInline = true; v.setAttribute('playsinline', ''); v.setAttribute('webkit-playsinline', ''); v.setAttribute('x-webkit-airplay', 'deny');
+      v.controls = false; v.removeAttribute('controls'); try { v.disablePictureInPicture = true; v.setAttribute('disablepictureinpicture', ''); } catch (e) {}
+      try { v.disableRemotePlayback = true; v.setAttribute('disableremoteplayback', ''); } catch (e) {}
+      v.addEventListener('webkitbeginfullscreen', () => { try { v.webkitExitFullscreen(); } catch (e) {} });
+      v.addEventListener('enterpictureinpicture', () => { try { document.exitPictureInPicture(); } catch (e) {} }); };
+    const all = () => document.querySelectorAll('video').forEach(pin); all();
+    const play = HTMLMediaElement.prototype.play; HTMLMediaElement.prototype.play = function () { pin(this); return play.apply(this, arguments); };
+    new MutationObserver(ms => { for (const m of ms) for (const n of m.addedNodes) { if (n.tagName === 'VIDEO') pin(n); else if (n.querySelectorAll) n.querySelectorAll('video').forEach(pin); } }).observe(document.documentElement, { childList: true, subtree: true });
+    const st = document.createElement('style'); st.textContent = 'video { pointer-events: none; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; } video::-webkit-media-controls, video::-webkit-media-controls-start-playback-button, video::-webkit-media-controls-overlay-play-button { display: none !important; -webkit-appearance: none; }';
+    (document.head || document.documentElement).append(st);
+  })();
+
+  const ROOMS = [['./', 'Templum', '☥', 'The board. Ask him.'], ['parlour.html', 'Parlour', '♄', 'His console. Every key plays.'], ['deck.html', 'Turntable', '◉', 'ANIMUSCULT on his decks.'], ['palm.html', 'Palm', '✶', 'Your hand, read.'], ['crystal.html', 'Crystal', '◎', 'The seer’s sitting.'], ['mirror.html', 'Mirror', '◐', 'Two mirrors, facing.'], ['mesmer.html', 'Trance', '❂', 'The magnetic tub. Go under.'], ['sleep.html', 'Sleep', '☾', 'Sleep sounds. The screen can go off.'], ['geometry.html', 'Geometry', '❋', 'Sacred geometry and mandalas.'], ['forge.html', 'Forge', '✧', 'Sigils from your words.'], ['engine.html', 'Engine', '⚙︎', 'The dome machine. Scry with him.'], ['radio.html', 'Radio', '⌁', 'Live voices from everywhere.'], ['compendium.html', 'Compendium', '☘', 'The library of plant medicine, A to Z.']];
+  window.VS_ROOMS = ROOMS;   // the Templum's floating doors read this, so a new room shows up there too
+  const here = (location.pathname.split('/').pop() || 'index.html').replace('index.html', '') || './';
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches && !document.documentElement.classList.contains('motion-full');
+
+  /* ---------- volume ---------- */
+  let vol = .8; try { const v = parseFloat(localStorage.getItem('vs-volume')); if (v >= 0 && v <= 1) vol = v; } catch (e) {}
+  window.VS_VOLUME = vol;
+  const setVol = v => { vol = window.VS_VOLUME = Math.max(0, Math.min(1, v)); try { localStorage.setItem('vs-volume', String(vol)); } catch (e) {} dispatchEvent(new CustomEvent('vs-volume', { detail: vol })); document.querySelectorAll('.vs-vol input').forEach(i => { i.value = Math.round(vol * 100); }); document.querySelectorAll('.vs-vol').forEach(l => l.classList.toggle('mute', vol === 0)); };
+  // media elements on the page follow it too (films, his recorded voice)
+  const mediaVol = () => document.querySelectorAll('video, audio').forEach(m => { if (m.dataset.vsBase == null) m.dataset.vsBase = m.volume; m.volume = Math.min(1, +m.dataset.vsBase * vol); });
+  addEventListener('vs-volume', () => { if (!document.body?.dataset.novol) mediaVol(); });
+
+  /* ---------- styles (added last, so they win) ---------- */
+  const css = `
+.bar { gap: 7px !important; }
+.bar h1 { display: none !important; }
+.bar .vs-rooms { display: flex; gap: 6px; align-items: center; overflow-x: auto; scrollbar-width: none; flex: 1 1 auto; min-width: 0; }
+.bar .vs-rooms::-webkit-scrollbar { display: none; }
+.bar a.vs-room { position: relative; display: inline-flex !important; align-items: center; gap: 7px; font-family: "IBM Plex Mono", ui-monospace, monospace !important; font-size: 11px !important; font-weight: 400; letter-spacing: .16em !important; text-transform: uppercase; color: rgba(243,230,196,.62) !important; text-decoration: none; padding: 7px 10px 7px 8px !important; border: 0 !important; border-radius: 0; background: none !important; box-shadow: none; transition: color .5s ease, text-shadow .5s ease; white-space: nowrap; }
+.bar a.vs-room i { font-style: normal; font-size: 14px; color: rgba(240,199,106,.7); transition: color .5s, text-shadow .5s; }
+.bar a.vs-room::after { content: ""; position: absolute; left: 10px; right: 10px; bottom: 2px; height: 1px; background: linear-gradient(90deg, transparent, rgba(240,214,143,.85), transparent); opacity: 0; transform: scaleX(.4); transition: opacity .5s ease, transform .5s ease; }
+.bar a.vs-room:hover { color: #fbefcf !important; text-shadow: 0 0 14px rgba(255,210,130,.45); }
+.bar a.vs-room:hover i { color: #f6d27e; text-shadow: 0 0 10px rgba(240,190,90,.7); }
+.bar a.vs-room:hover::after { opacity: .5; transform: none; }
+.bar a.vs-room[aria-current="page"] { color: #fff3d2 !important; text-shadow: 0 0 16px rgba(255,205,120,.55); }
+.bar a.vs-room[aria-current="page"] i { color: #ffd77e; text-shadow: 0 0 12px rgba(255,200,100,.9); }
+.bar a.vs-room[aria-current="page"]::after { opacity: 1; transform: none; }
+.bar > button:not(.unzoom):not(.vs-menu), .bar > a:not(.vs-room), .bar .motion-btn { background: none !important; border: 0 !important; border-bottom: 1px solid transparent !important; border-radius: 0 !important; box-shadow: none !important; color: rgba(238,228,203,.66) !important; transition: color .5s, border-color .5s !important; }
+.bar > button:not(.unzoom):not(.vs-menu):hover, .bar > a:not(.vs-room):hover, .bar .motion-btn:hover, .bar > button[aria-pressed="true"], .bar > button.on { color: #f0d68f !important; border-bottom-color: rgba(240,214,143,.55) !important; }
+.vs-vol { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border: 0; border-radius: 3px; color: rgba(240,199,106,.8); background: none; }
+/* the room breathes out when nobody is touching anything: the frame steps back and leaves the room */
+.bar, .foot, .vs-vol.float { transition: opacity 1.8s ease; }
+body.vs-quiet .bar, body.vs-quiet .foot, body.vs-quiet .vs-vol.float { opacity: 0; }
+body.sitting .bar { opacity: 0 !important; }   /* a sitting hides the frame completely: no half-dimmed grey bar */
+body.sitting .bar:hover, body.sitting .bar:focus-within { opacity: 1 !important; }
+body.vs-quiet .bar:hover, body.vs-quiet .bar:focus-within, body.vs-quiet .vs-vol.float:hover { opacity: 1; transition-duration: .4s; }
+/* one film over every room: a soft vignette and a fine grain, so the rooms read as one place */
+.vs-film { position: fixed; inset: 0; z-index: 19; pointer-events: none; background: radial-gradient(ellipse 75% 70% at 50% 54%, rgba(0,0,0,0) 55%, rgba(0,0,0,.34) 100%); }
+.vs-film::after { content: ""; position: absolute; inset: 0; opacity: .05; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -.35'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.foot { font-size: 11.5px !important; letter-spacing: .04em !important; color: rgba(238,228,203,.5) !important; bottom: 6px !important; }
+/* phones: the rooms fold into one menu button; the page's own buttons move into the same sheet */
+.bar .vs-menu { display: none; align-items: center; gap: 9px; flex: none; font: 500 11.5px/1 "IBM Plex Mono", ui-monospace, monospace; letter-spacing: .16em; text-transform: uppercase; color: #fff3d2; background: linear-gradient(rgba(214,164,67,.16), rgba(214,164,67,.06)); border: 1px solid rgba(240,214,143,.5); border-radius: 3px; padding: 0 12px 0 10px; height: 32px; cursor: pointer; box-shadow: 0 0 0 rgba(240,199,106,0), inset 0 0 12px rgba(214,164,67,.08); transition: border-color .3s, box-shadow .3s, background .3s; }
+.bar .vs-menu:hover, .bar .vs-menu[aria-expanded="true"] { border-color: #f0d68f; background: linear-gradient(rgba(214,164,67,.28), rgba(214,164,67,.1)); box-shadow: 0 0 18px rgba(240,199,106,.28), inset 0 0 12px rgba(214,164,67,.12); }
+.bar .vs-menu svg { width: 15px; height: 15px; flex: none; color: #ffd77e; }
+.bar .vs-menu .vs-n { font-weight: 400; font-size: 10px; letter-spacing: 0; color: #120a04; background: #e9c46e; border-radius: 8px; padding: 2px 5px 1px; }
+.bar .vs-menu .vs-here { display: inline-flex; align-items: center; gap: 6px; padding-left: 9px; border-left: 1px solid rgba(240,214,143,.3); color: rgba(243,230,196,.75); letter-spacing: .12em; }
+.bar .vs-menu .vs-here i { font-style: normal; font-size: 13px; color: #ffd77e; }
+.bar .vs-menu.vs-call { animation: vsCall 1.6s ease-in-out 4; }
+@keyframes vsCall { 50% { border-color: #ffe7a8; box-shadow: 0 0 26px rgba(255,205,110,.55), inset 0 0 14px rgba(255,205,110,.2); } }
+.bar.vs-tight .vs-rooms { display: none !important; }
+.bar.vs-tight .vs-menu { display: inline-flex; }
+.bar > button, .bar > a:not(.vs-room), .bar .motion-btn, .bar > label { white-space: nowrap; flex: none; }
+/* a room's opening screen sits under the bar, so the way to the other rooms is there from the first second */
+body:has(.gate:not([hidden])) .bar { z-index: 9 !important; opacity: 1 !important; }
+/* the first visit: one quiet word under the rooms, once */
+.vs-hint { position: fixed; z-index: 9991; max-width: 270px; padding: 11px 14px 12px; font: italic 400 15px/1.35 "IM Fell English", Georgia, serif; color: #f3e6c4; background: rgba(8,6,12,.94); border: 1px solid rgba(240,214,143,.45); box-shadow: 0 10px 40px rgba(0,0,0,.6), 0 0 22px rgba(214,164,67,.15); opacity: 0; transform: translateY(-4px); transition: opacity .5s ease, transform .5s ease; pointer-events: none; }
+.vs-hint.on { opacity: 1; transform: none; }
+.vs-hint::before { content: ""; position: absolute; top: -6px; left: var(--ax, 22px); width: 10px; height: 10px; background: inherit; border-left: 1px solid rgba(240,214,143,.45); border-top: 1px solid rgba(240,214,143,.45); transform: rotate(45deg); }
+.vs-hint b { display: block; margin-bottom: 3px; font: 500 10px/1 "IBM Plex Mono", ui-monospace, monospace; font-style: normal; letter-spacing: .2em; text-transform: uppercase; color: #f0c76a; }
+.vs-sheet { position: fixed; inset: 0; z-index: 9990; overflow-y: auto; background: rgba(5,4,10,.97); color: #efe4c8; padding: calc(14px + env(safe-area-inset-top, 0px)) max(18px, env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px)); display: grid; align-content: start; gap: 14px; opacity: 0; transition: opacity .25s ease; }
+.vs-sheet.on { opacity: 1; }
+.vs-sheet .vs-sh-top { display: flex; align-items: center; justify-content: space-between; }
+.vs-sheet h2 { margin: 0; font: 500 11px/1 "IBM Plex Mono", ui-monospace, monospace; letter-spacing: .22em; text-transform: uppercase; color: rgba(240,199,106,.85); }
+.vs-sheet .vs-x { width: 44px; height: 44px; border: 0; background: none; color: #efe4c8; font-size: 22px; cursor: pointer; }
+.vs-sheet .vs-sh-rooms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.vs-sheet .vs-sh-rooms a { display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 10px 14px; border: 1px solid rgba(214,164,67,.28); color: #f3e6c4; text-decoration: none; font: 400 19px/1.1 "IM Fell English SC", "IM Fell English", Georgia, serif; }
+.vs-sheet .vs-sh-rooms a i { font-style: normal; font-size: 22px; color: #f0c76a; width: 26px; text-align: center; }
+.vs-sheet .vs-sh-rooms a span { display: grid; gap: 4px; }
+.vs-sheet .vs-sh-rooms a small { font: italic 400 12.5px/1.25 "IM Fell English", Georgia, serif; color: rgba(239,228,200,.6); }
+.vs-sheet.drop { inset: auto; top: calc(var(--vs-bar-b, 46px) + 6px); left: var(--vs-drop-x, 10px); width: min(360px, calc(100vw - 20px)); max-height: calc(100vh - var(--vs-bar-b, 46px) - 20px); padding: 14px; gap: 10px; background: rgba(8,6,12,.96); border: 1px solid rgba(240,214,143,.4); box-shadow: 0 18px 60px rgba(0,0,0,.7), 0 0 30px rgba(214,164,67,.12); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); transform: translateY(-6px); transition: opacity .2s ease, transform .2s ease; }
+.vs-sheet.drop.on { transform: none; }
+.vs-sheet.drop .vs-x { width: 32px; height: 32px; font-size: 16px; }
+.vs-sheet.drop .vs-sh-rooms { grid-template-columns: 1fr; gap: 2px; }
+.vs-sheet.drop .vs-sh-rooms a { min-height: 50px; border-color: transparent; font-size: 18px; transition: background .2s, border-color .2s; }
+.vs-sheet.drop .vs-sh-rooms a:hover { background: rgba(214,164,67,.1); border-color: rgba(214,164,67,.3); }
+.vs-sheet .vs-sh-rooms a[aria-current="page"] { border-color: #f0d68f; background: rgba(214,164,67,.14); box-shadow: 0 0 22px rgba(214,164,67,.18); }
+.vs-sheet .vs-sh-tools { display: grid; gap: 0; border-top: 1px solid rgba(214,164,67,.2); }
+.vs-sheet .vs-sh-tools > * { display: flex !important; align-items: center; width: 100%; min-height: 48px; margin: 0 !important; padding: 0 4px !important; text-align: left; font: 500 12.5px/1.2 "IBM Plex Mono", ui-monospace, monospace !important; letter-spacing: .12em !important; text-transform: uppercase; color: #efe4c8 !important; background: none !important; border: 0 !important; border-bottom: 1px solid rgba(214,164,67,.14) !important; border-radius: 0 !important; box-shadow: none !important; position: static !important; opacity: 1 !important; text-decoration: none; cursor: pointer; }
+.vs-sheet .vs-sh-tools:empty { display: none; }
+@media (max-width: 760px) { .bar .vs-rooms { display: none !important; } .bar .vs-menu { display: inline-flex; } .bar .vs-menu .vs-here span { display: none; } .bar .vs-vol { margin-left: auto; } }
+/* power: every room switches off and on from the bar */
+.bar .vs-pow { display: inline-flex !important; align-items: center; gap: 7px; flex: none; font: 500 10.5px/1 "IBM Plex Mono", ui-monospace, monospace !important; letter-spacing: .16em !important; text-transform: uppercase; color: rgba(238,228,203,.7) !important; background: none !important; border: 0 !important; padding: 6px 6px !important; cursor: pointer; white-space: nowrap; }
+.bar .vs-pow i { width: 7px; height: 7px; border-radius: 50%; background: #7dffb0; box-shadow: 0 0 8px #3dff8a, 0 0 2px #fff inset; transition: background .4s, box-shadow .4s; }
+.bar .vs-pow svg { width: 14px; height: 14px; }
+.bar .vs-pow:hover { color: #f0d68f !important; }
+body.vs-off .bar .vs-pow i { background: #4a1712; box-shadow: none; }
+body.vs-off .bar { z-index: 9990 !important; opacity: 1 !important; }
+.vs-offveil { position: fixed; inset: 0; z-index: 9989; display: grid; place-items: center; background: #030206; opacity: 0; pointer-events: none; transition: opacity .45s ease .25s; }
+.vs-offveil::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px; background: linear-gradient(90deg, transparent, rgba(255,236,190,.9), transparent); box-shadow: 0 0 24px rgba(255,214,140,.8); transform: scaleX(0); opacity: 0; }
+body.vs-off .vs-offveil { opacity: 1; pointer-events: auto; }
+body.vs-off .vs-offveil::before { animation: vsCrt .6s ease-out; }
+@keyframes vsCrt { 0% { transform: scaleX(1) scaleY(30); opacity: .0; } 30% { transform: scaleX(1) scaleY(1); opacity: 1; } 100% { transform: scaleX(0); opacity: 0; } }
+.vs-offveil button { display: grid; justify-items: center; gap: 14px; background: none; border: 0; color: rgba(243,230,196,.7); font: italic 400 17px/1.3 "IM Fell English", Georgia, serif; cursor: pointer; opacity: 0; transition: opacity .6s ease .45s, color .3s; }
+body.vs-off .vs-offveil button { opacity: 1; }
+.vs-offveil button:hover { color: #fff3d2; }
+.vs-offveil button span { display: grid; place-items: center; width: 74px; height: 74px; border-radius: 50%; border: 1px solid rgba(240,214,143,.45); color: #f0c76a; box-shadow: 0 0 30px rgba(214,164,67,.15), inset 0 0 20px rgba(214,164,67,.08); transition: box-shadow .4s, border-color .4s; }
+.vs-offveil button:hover span { border-color: #f0d68f; box-shadow: 0 0 40px rgba(240,199,106,.35), inset 0 0 20px rgba(214,164,67,.15); }
+.vs-offveil button svg { width: 30px; height: 30px; }
+.vs-vol svg { width: 16px; height: 16px; flex: none; cursor: pointer; }
+.vs-vol.mute svg .w { display: none; }
+.vs-vol input { -webkit-appearance: none; appearance: none; width: 84px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, #f0c76a var(--p, 80%), rgba(214,164,67,.25) var(--p, 80%)); outline: none; cursor: pointer; }
+.vs-vol input::-webkit-slider-thumb { -webkit-appearance: none; width: 13px; height: 13px; border-radius: 50%; background: radial-gradient(#fff6d8, #d6a443); box-shadow: 0 0 8px rgba(240,200,120,.8); border: 0; }
+.vs-vol input::-moz-range-thumb { width: 13px; height: 13px; border-radius: 50%; background: #e8c070; border: 0; }
+.vs-vol.float { position: fixed; right: 14px; bottom: 14px; z-index: 40; background: rgba(6,5,10,.85); }
+.vs-fade { position: fixed; inset: 0; z-index: 9998; pointer-events: none; background: radial-gradient(ellipse at 50% 50%, rgba(255,214,140,.0), #030206 70%); opacity: 0; transition: opacity .32s ease; }
+.vs-fade.arrive { transition: opacity .9s cubic-bezier(.3,.1,.3,1); }
+.vs-fade.on { opacity: 1; background: radial-gradient(ellipse at 50% 50%, rgba(255,214,140,.25), #030206 60%); }
+#vs-sparks { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 9997; pointer-events: none; }
+@media (max-width: 1100px) { .bar a.vs-room { font-size: 10.5px !important; padding: 6px 9px 6px 8px !important; letter-spacing: .1em !important; } }
+@media (max-width: 760px) { .vs-vol input { width: 56px; } }
+/* step outside: real-world help, plain on purpose (outside the room's look and not in his voice); never fades, never hidden */
+.vs-out { position: fixed; left: max(10px, env(safe-area-inset-left, 0px)); bottom: max(10px, env(safe-area-inset-bottom, 0px)); z-index: 9995; display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; font: 500 11px/1 system-ui, -apple-system, "Segoe UI", sans-serif; letter-spacing: .02em; color: rgba(255,255,255,.62); background: rgba(20,20,24,.72); border: 1px solid rgba(255,255,255,.18); border-radius: 999px; cursor: pointer; opacity: .7; transition: opacity .3s, color .3s, border-color .3s; }
+.vs-out:hover, .vs-out:focus-visible { opacity: 1; color: #fff; border-color: rgba(255,255,255,.5); }
+.vs-out svg { width: 12px; height: 12px; }
+.vs-outp { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; padding: 16px; background: rgba(0,0,0,.6); }
+.vs-outp[hidden] { display: none; }
+.vs-outp .vs-ob { width: min(520px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; padding: 22px 22px 18px; background: #f6f6f4; color: #1d1d1f; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.5); font: 400 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+.vs-outp h2 { margin: 0 0 8px; font: 600 19px/1.25 system-ui, -apple-system, "Segoe UI", sans-serif; letter-spacing: 0; text-transform: none; color: #1d1d1f; }
+.vs-outp h3 { margin: 16px 0 6px; font: 600 13px/1.3 system-ui, -apple-system, "Segoe UI", sans-serif; color: #444; }
+.vs-outp p { margin: 0 0 8px; }
+.vs-outp ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.vs-outp li a { display: block; padding: 9px 12px; border-radius: 8px; background: #fff; border: 1px solid #ddd; color: #0b57d0; text-decoration: none; }
+.vs-outp li a:hover { border-color: #0b57d0; }
+.vs-outp li a small { display: block; color: #555; font-size: 13px; }
+.vs-outp .vs-oe { padding: 10px 12px; border-radius: 8px; background: #fff1f0; border: 1px solid #f3c2bd; }
+.vs-outp .vs-of { margin-top: 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; color: #666; font-size: 12.5px; }
+.vs-outp .vs-of button { padding: 8px 16px; border-radius: 8px; border: 1px solid #bbb; background: #fff; color: #1d1d1f; font: 500 14px system-ui, -apple-system, sans-serif; cursor: pointer; }
+@media print { .vs-out { display: none; } }
+`;
+  const st = document.createElement('style'); st.textContent = css;
+
+  function build() {
+    document.head.appendChild(st);
+    // the rooms
+    const bar = document.querySelector('header.bar, .bar');
+    if (bar) {
+      bar.querySelectorAll(':scope > a').forEach(a => { const h = a.getAttribute('href') || ''; if (ROOMS.some(([r]) => r === h || (r === './' && (h === './' || h === 'index.html')))) a.remove(); });
+      const nav = document.createElement('nav'); nav.className = 'vs-rooms'; nav.setAttribute('aria-label', 'Rooms');
+      for (const [href, name, glyph] of ROOMS) { const a = document.createElement('a'); a.className = 'vs-room'; a.href = href; a.innerHTML = `<i aria-hidden="true">${glyph}</i><span>${name}</span>`; a.title = name; if (href === here) a.setAttribute('aria-current', 'page'); nav.append(a); }
+      bar.prepend(nav);
+    }
+    // volume (the Turntable has its own big volume in the transport, so it gets none here)
+    if (!document.body.dataset.novol) {
+      const l = document.createElement('label'); l.className = 'vs-vol' + (bar ? '' : ' float'); l.title = 'Volume (every room)';
+      l.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path class="w" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><input type="range" min="0" max="100" step="1" aria-label="Volume">`;
+      const inp = l.querySelector('input'), paint = () => inp.style.setProperty('--p', inp.value + '%');
+      inp.value = Math.round(vol * 100); paint(); l.classList.toggle('mute', vol === 0);
+      inp.addEventListener('input', () => { setVol(inp.value / 100); paint(); });
+      let before = vol; l.querySelector('svg').addEventListener('click', e => { e.preventDefault(); if (vol > 0) { before = vol; setVol(0); } else setVol(before || .8); paint(); });
+      if (bar) { const last = bar.querySelector('#txBtn, #fsBtn, #listBtn'); last ? last.before(l) : bar.append(l); } else document.body.append(l);
+    }
+    power(bar);
+    outside();
+    if (bar) menu(bar);   // after the volume is placed, so the volume stays in the bar on a phone
+    if (!document.body.dataset.novol) mediaVol();
+    const fs = document.getElementById('fsBtn'); if (fs && innerWidth < 1180) { fs.textContent = '⤢'; fs.title = 'Full screen'; fs.setAttribute('aria-label', 'Full screen'); }
+    // the dissolve between rooms
+    const fade = document.createElement('div'); fade.className = 'vs-fade'; document.body.append(fade);
+    try { if (sessionStorage.getItem('vs-arrive')) { sessionStorage.removeItem('vs-arrive'); fade.style.transition = 'none'; fade.classList.add('on'); requestAnimationFrame(() => requestAnimationFrame(() => { fade.style.transition = ''; if (!calm) fade.classList.add('arrive'); fade.classList.remove('on'); setTimeout(() => fade.classList.remove('arrive'), 1000); })); } } catch (e) {}
+    // the film (pages that draw their own, like the radio, opt out with data-nofilm)
+    if (!document.body.dataset.nofilm) { const film = document.createElement('div'); film.className = 'vs-film'; film.setAttribute('aria-hidden', 'true'); document.body.append(film); }
+    // quiet: after a while with no hand on anything, the frame fades back. Never while typing or with a menu open
+    let qt = 0; const busy = () => { const a = document.activeElement; return a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable) || document.querySelector('.drawer.on, dialog[open], [aria-modal="true"]:not([hidden])'); };
+    const wake = () => { document.body.classList.remove('vs-quiet'); clearTimeout(qt); qt = setTimeout(function q() { if (busy()) { qt = setTimeout(q, 3000); return; } document.body.classList.add('vs-quiet'); }, 11000); };
+    ['pointermove', 'pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(ev => addEventListener(ev, wake, { passive: true })); wake();
+    document.addEventListener('click', e => {
+      const a = e.target.closest('a.vs-room, a.play-link'); if (!a || e.metaKey || e.ctrlKey || a.target === '_blank') return;
+      e.preventDefault(); burst(e.clientX, e.clientY, 26); fade.classList.add('on'); try { window.VS_FADE_OUT(calm ? 60 : 220); } catch (er) {} try { sessionStorage.setItem('vs-arrive', '1'); } catch (er) {}
+      setTimeout(() => { location.href = a.href; }, calm ? 60 : 240);
+    });
+    // instant rooms: when the pointer rests on a room tab, the browser builds that page in the background, so the click
+    // just swaps it in (Chrome's speculation rules; other browsers ignore this and load normally)
+    try { if (HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules')) { const sr = document.createElement('script'); sr.type = 'speculationrules';
+      sr.textContent = JSON.stringify({ prerender: [{ where: { and: [{ href_matches: '/*.html' }, { selector_matches: 'a.vs-room, a.play-link' }] }, eagerness: 'moderate' }] }); document.head.append(sr); } } catch (e) {}
+    sparks();
+  }
+
+  /* ---------- power: the room switches off (sound fades and stops, films pause, the screen closes like an old set) ---------- */
+  function power(bar) {
+    const ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v8M7.05 6.05a7.5 7.5 0 1 0 9.9 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+    const veil = document.createElement('div'); veil.className = 'vs-offveil'; veil.innerHTML = `<button type="button">${'<span>' + ICON + '</span>'}Switched off. Touch to wake the room.</button>`; document.body.append(veil);
+    let btn = null;
+    if (bar) { btn = document.createElement('button'); btn.type = 'button'; btn.className = 'vs-pow'; btn.innerHTML = '<i aria-hidden="true"></i>Power'; btn.title = 'Switch this room off and on'; btn.setAttribute('aria-pressed', 'true');
+      const v = bar.querySelector('.vs-vol'); v ? v.before(btn) : bar.append(btn); }
+    let paused = [];
+    const set = on => {
+      if (on === !document.body.classList.contains('vs-off')) return;
+      document.body.classList.toggle('vs-off', !on); if (btn) { btn.setAttribute('aria-pressed', String(on)); btn.title = on ? 'Switch this room off' : 'Switch this room on'; }
+      dispatchEvent(new CustomEvent('vs-power', { detail: { on } }));
+      if (!on) {
+        window.VS_FADE_OUT(260);
+        setTimeout(() => { if (document.body.classList.contains('vs-off')) { for (const s of window.__vsBuses) try { s.ctx.suspend(); } catch (e) {} paused = [...document.querySelectorAll('video')].filter(m => !m.paused); paused.forEach(m => m.pause()); } }, 300);
+      } else {
+        for (const s of window.__vsBuses) try { s.ctx.resume().then(() => s.up(.6)); } catch (e) {}
+        paused.forEach(m => { if (m.__vsPre != null) { m.volume = m.__vsPre; m.__vsPre = null; } m.play().catch(() => {}); }); paused = [];
+      }
+    };
+    window.VS_POWER = set;
+    btn && btn.addEventListener('click', () => set(document.body.classList.contains('vs-off')));
+    veil.querySelector('button').addEventListener('click', () => set(true));
+  }
+
+  /* ---------- step outside: real help, outside the game ---------- */
+  function outside() {
+    if (document.querySelector('.vs-out')) return;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'vs-out'; b.title = 'Real-world help, outside the game';
+    b.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2h7v12H3zM10 8h4M12 6l2 2-2 2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Step outside';
+    const p = document.createElement('div'); p.className = 'vs-outp'; p.hidden = true;
+    p.setAttribute('role', 'dialog'); p.setAttribute('aria-modal', 'true'); p.setAttribute('aria-labelledby', 'vs-out-h');
+    p.innerHTML = `<div class="vs-ob">
+      <h2 id="vs-out-h">Outside the game</h2>
+      <p>This is real-world help. The room's sound is switched off while you're here.</p>
+      <p class="vs-oe"><b>In danger, or might hurt yourself?</b> Call your local emergency number now: 911 (US, Canada), 999 (UK), 112 (EU and many countries), 000 (Australia).</p>
+      <h3>Talk to someone now</h3>
+      <ul>
+        <li><a href="tel:988">988 Suicide &amp; Crisis Lifeline<small>US · call or text 988, any time</small></a></li>
+        <li><a href="tel:116123">Samaritans · 116 123<small>UK and Ireland · free, any time</small></a></li>
+        <li><a href="https://findahelpline.com" target="_blank" rel="noopener">Find A Helpline<small>Free, confidential helplines in your country</small></a></li>
+      </ul>
+      <h3>Hearing voices, or seeing things others don't?</h3>
+      <ul>
+        <li><a href="https://www.hearing-voices.org" target="_blank" rel="noopener">Hearing Voices Network<small>Peer support groups</small></a></li>
+        <li><a href="https://www.intervoiceonline.org" target="_blank" rel="noopener">Intervoice<small>The international hearing voices network</small></a></li>
+      </ul>
+      <h3>Right now</h3>
+      <p>Feet on the floor. Name five things you can see, four you can touch, three you can hear, two you can smell, one you can taste. Breathe out slower than you breathe in.</p>
+      <div class="vs-of"><span>Nothing here is sent anywhere.</span><button type="button">Close</button></div></div>`;
+    // the floating corner button is off for now (the owner found it intrusive); the panel stays, opened by window.VS_OUTSIDE
+    // (the Compendium's rotary phone). To bring the button back, set SHOW_BUTTON to true.
+    const SHOW_BUTTON = false;
+    document.body.append(...(SHOW_BUTTON ? [b, p] : [p]));
+    let back = null;
+    const open = () => { back = document.activeElement; p.hidden = false; try { window.VS_POWER && window.VS_POWER(false); } catch (e) {} p.querySelector('.vs-ob').scrollTop = 0; p.querySelector('.vs-of button').focus({ preventScroll: true }); };
+    const close = () => { p.hidden = true; try { back && back.focus && back.focus(); } catch (e) {} };
+    b.addEventListener('click', open);
+    p.querySelector('.vs-of button').addEventListener('click', close);
+    p.addEventListener('click', e => { if (e.target === p) close(); });
+    addEventListener('keydown', e => {
+      if (p.hidden) return;
+      if (e.key === 'Escape') { e.stopImmediatePropagation(); e.preventDefault(); close(); return; }
+      if (e.key === 'Tab') { const f = [...p.querySelectorAll('a, button')], i = f.indexOf(document.activeElement); if (e.shiftKey ? i <= 0 : i === f.length - 1) { e.preventDefault(); f[e.shiftKey ? f.length - 1 : 0].focus(); } }
+      e.stopImmediatePropagation();   // the room's own keys (notes, Esc to end a sitting) stay quiet while this is open
+    }, true);
+    window.VS_OUTSIDE = open;
+    // a room with its own bar along the bottom (the Turntable's transport) gets the button lifted just above it
+    const place = () => {
+      b.style.bottom = ''; const o = b.getBoundingClientRect(); let lift = 0;
+      for (const e of document.querySelectorAll('body > *, body > * > *')) {
+        if (e === b || e === p || e.classList.contains('vs-film')) continue;
+        const cs = getComputedStyle(e); if (cs.position !== 'fixed' && cs.position !== 'absolute' || cs.display === 'none' || cs.visibility === 'hidden') continue;
+        const r = e.getBoundingClientRect(); if (r.height > innerHeight * .4 || r.bottom < innerHeight - 4 || r.left > o.right || r.right < o.left || r.top > o.bottom) continue;
+        lift = Math.max(lift, innerHeight - r.top + 8);
+      }
+      if (lift) b.style.bottom = lift + 'px';
+    };
+    if (SHOW_BUTTON) { place(); addEventListener('resize', place); setTimeout(place, 1500); setTimeout(place, 5000); }
+  }
+
+  /* ---------- the phone menu ---------- */
+  function menu(bar) {
+    const cur = ROOMS.find(([h]) => h === here) || ROOMS[0];
+    const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'vs-menu'; btn.setAttribute('aria-haspopup', 'dialog'); btn.setAttribute('aria-expanded', 'false');
+    btn.innerHTML = `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Rooms<span class="vs-n" aria-hidden="true">${ROOMS.length}</span><span class="vs-here"><i aria-hidden="true">${cur[2]}</i><span>${cur[1]}</span></span>`;
+    btn.title = 'All the rooms'; btn.setAttribute('aria-label', `Rooms (${ROOMS.length}). You are in ${cur[1]}`);
+    bar.prepend(btn);
+    const sh = document.createElement('div'); sh.className = 'vs-sheet'; sh.hidden = true; sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.setAttribute('aria-label', 'Rooms');
+    sh.innerHTML = `<div class="vs-sh-top"><h2>Rooms</h2><button type="button" class="vs-x" aria-label="Close">✕</button></div><nav class="vs-sh-rooms" aria-label="Rooms">${ROOMS.map(([h, n, g, d]) => `<a class="vs-room" href="${h}"${h === here ? ' aria-current="page"' : ''}><i aria-hidden="true">${g}</i><span>${n}<small>${d}</small></span></a>`).join('')}</nav><h2 class="vs-sh-th">This room</h2><div class="vs-sh-tools"></div>`;
+    document.body.append(sh);
+    const tools = sh.querySelector('.vs-sh-tools');
+    // the tools heading hides itself when the room has no buttons of its own
+    const syncHead = () => { sh.querySelector('.vs-sh-th').hidden = !tools.children.length; };
+    const phone = matchMedia('(max-width: 760px)');
+    const open = () => { if (sh.classList.contains('on')) return close(); hint.done();
+      // a computer gets a dropdown hanging from the button; a phone gets the whole screen
+      const drop = !phone.matches; sh.classList.toggle('drop', drop);
+      if (drop) { const b = btn.getBoundingClientRect(), r = bar.getBoundingClientRect(); sh.style.setProperty('--vs-bar-b', r.bottom + 'px'); sh.style.setProperty('--vs-drop-x', Math.max(10, b.left) + 'px'); }
+      sh.hidden = false; requestAnimationFrame(() => sh.classList.add('on')); btn.setAttribute('aria-expanded', 'true'); (sh.querySelector('.vs-sh-rooms a[aria-current]') || sh.querySelector('.vs-x')).focus({ preventScroll: true }); };
+    const close = () => { sh.classList.remove('on'); btn.setAttribute('aria-expanded', 'false'); setTimeout(() => { if (!sh.classList.contains('on')) sh.hidden = true; }, 250); };
+    btn.addEventListener('click', open); sh.querySelector('.vs-x').addEventListener('click', close);
+    sh.addEventListener('click', e => { if (e.target === sh) close(); });
+    document.addEventListener('pointerdown', e => { if (!sh.hidden && sh.classList.contains('drop') && !sh.contains(e.target) && !btn.contains(e.target)) close(); }, true);
+    tools.addEventListener('click', () => setTimeout(close, 0));   // a tool does its job, then the sheet gets out of the way
+    addEventListener('keydown', e => { if (e.key === 'Escape' && !sh.hidden) { close(); btn.focus({ preventScroll: true }); } });
+    // on a phone the page's own bar buttons live in the sheet; on a wider screen they go back where they came from
+    const pick = el => el.matches('button, a, .motion-btn') && !el.matches('.vs-menu, .vs-room, .unzoom');
+    let moving = false;
+    const place = () => { moving = true;
+      if (phone.matches) { [...bar.children].filter(pick).forEach(el => { if (!el.__vsHome) { el.__vsHome = document.createComment('vs'); el.before(el.__vsHome); } tools.append(el); }); }
+      else [...tools.children].forEach(el => { if (el.__vsHome && el.__vsHome.parentNode) el.__vsHome.replaceWith(el); else bar.append(el); el.__vsHome = null; });
+      syncHead(); moving = false; };
+    // the room names show in the bar when they all fit; when they don't, the ROOMS button takes their place
+    const nav = bar.querySelector('.vs-rooms');
+    const fit = () => { if (phone.matches || !nav) { bar.classList.add('vs-tight'); return; } bar.classList.remove('vs-tight'); if (nav.scrollWidth > nav.clientWidth + 2) bar.classList.add('vs-tight'); };
+    let fq = 0; const fitSoon = () => { cancelAnimationFrame(fq); fq = requestAnimationFrame(fit); };
+    place(); fit(); phone.addEventListener('change', () => { place(); fit(); }); addEventListener('resize', fitSoon);
+    try { document.fonts.ready.then(fitSoon); } catch (e) {}
+    new MutationObserver(() => { if (!moving && phone.matches) place(); fitSoon(); }).observe(bar, { childList: true });
+    // first visit to the house: the rooms announce themselves once, so nobody thinks this is the only one
+    const hint = { el: null, t: 0, done() { clearTimeout(this.t); try { localStorage.setItem('vs-rooms-hint', '1'); } catch (e) {} btn.classList.remove('vs-call'); if (this.el) { const el = this.el; this.el = null; el.classList.remove('on'); setTimeout(() => el.remove(), 600); } } };
+    let seen = true; try { seen = !!localStorage.getItem('vs-rooms-hint'); } catch (e) {}
+    if (!seen) hint.t = setTimeout(() => {
+      const tight = bar.classList.contains('vs-tight'), a = (tight ? btn : nav).getBoundingClientRect(); if (!a.width) return;
+      const el = hint.el = document.createElement('div'); el.className = 'vs-hint'; el.setAttribute('role', 'status');
+      el.innerHTML = `<b>${ROOMS.length} rooms</b>${tight ? 'There’s more than this one. Open the menu.' : 'This is one of them. The rest are up here.'}`;
+      document.body.append(el); el.style.left = Math.max(10, a.left) + 'px'; el.style.top = (a.bottom + 10) + 'px'; el.style.setProperty('--ax', Math.min(a.width / 2, 40) + 'px');
+      if (tight) btn.classList.add('vs-call'); requestAnimationFrame(() => el.classList.add('on'));
+      try { localStorage.setItem('vs-rooms-hint', '1'); } catch (e) {}
+      hint.t = setTimeout(() => hint.done(), 9000);
+    }, 2400);
+    nav && nav.addEventListener('click', () => hint.done());
+  }
+
+  /* ---------- sparks ---------- */
+  let cv, g, P = [], running = false, last = null;
+  function sparks() {
+    if (calm) return;
+    cv = document.createElement('canvas'); cv.id = 'vs-sparks'; document.body.append(cv); g = cv.getContext('2d');
+    const size = () => { cv.width = innerWidth; cv.height = innerHeight; }; size(); addEventListener('resize', size);
+    addEventListener('pointermove', e => { if (e.pointerType === 'touch') return; const d = last ? Math.hypot(e.clientX - last[0], e.clientY - last[1]) : 99; if (d < 26) return; last = [e.clientX, e.clientY]; add(e.clientX, e.clientY, 1, .22); });
+    addEventListener('pointerdown', e => burst(e.clientX, e.clientY, 9), true);
+  }
+  function add(x, y, n, spd) { for (let i = 0; i < n; i++) { const a = Math.random() * 6.28, v = spd * (.4 + Math.random()); P.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - .25, life: 1, d: .012 + Math.random() * .014, r: 1 + Math.random() * 2.2, hue: Math.random() < .2 ? 1 : 0 }); } if (P.length > 260) P.splice(0, P.length - 260); if (!running) { running = true; requestAnimationFrame(tick); } }
+  function burst(x, y, n) { if (calm || !cv) return; add(x, y, n, 2.6); P.push({ ring: true, x, y, life: 1, d: .045 }); }
+  function tick() {
+    g.clearRect(0, 0, cv.width, cv.height); g.globalCompositeOperation = 'lighter';
+    for (let i = P.length - 1; i >= 0; i--) { const p = P[i]; p.life -= p.d; if (p.life <= 0) { P.splice(i, 1); continue; }
+      if (p.ring) { g.strokeStyle = `rgba(255,214,140,${p.life * .7})`; g.lineWidth = 1.5; g.beginPath(); g.arc(p.x, p.y, (1 - p.life) * 46, 0, 7); g.stroke(); continue; }
+      p.x += p.vx; p.y += p.vy; p.vy -= .012; p.vx *= .985; const a = p.life, r = p.r * (.5 + a * .7);
+      g.fillStyle = p.hue ? `rgba(200,225,255,${a * .9})` : `rgba(255,${200 + 40 * a | 0},${120 + 60 * a | 0},${a * .9})`; g.beginPath(); g.arc(p.x, p.y, r, 0, 7); g.fill();
+      g.fillStyle = `rgba(255,200,120,${a * .12})`; g.beginPath(); g.arc(p.x, p.y, r * 4, 0, 7); g.fill(); }
+    g.globalCompositeOperation = 'source-over';
+    if (P.length) requestAnimationFrame(tick); else { running = false; g.clearRect(0, 0, cv.width, cv.height); }
+  }
+  window.VS_BURST = (x, y, n = 20) => burst(x, y, n);
+
+  if (document.readyState === 'loading') addEventListener('DOMContentLoaded', build); else build();
+})();
+
+</script>
+</body>
+</html>

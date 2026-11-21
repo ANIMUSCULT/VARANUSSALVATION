@@ -1,0 +1,978 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, noai, noimageai">
+<script>try{if(!localStorage.getItem('vs-motion-demo')){localStorage.setItem('vs-motion-demo','1');localStorage.setItem('vs-motion','full')}}catch(e){}</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Trance · Ouija Cat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>/* motion: macOS can ask for less; this site lets you opt back in (stored per browser, all pages) */
+{ let m = null; try { m = localStorage.getItem('vs-motion'); } catch (e) {} if (m !== 'calm') document.documentElement.classList.add('motion-full'); }   // full motion by default (the films and animations are the point); Calm motion is the opt-out
+addEventListener('DOMContentLoaded', () => { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) return; const full = document.documentElement.classList.contains('motion-full');
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'motion-btn'; b.textContent = full ? 'Calm motion' : 'Full motion'; b.title = full ? 'Your Mac asks for reduced motion: calm every animation on this site' : 'Show every animation again';
+  b.onclick = () => { try { full ? localStorage.setItem('vs-motion', 'calm') : localStorage.removeItem('vs-motion'); } catch (e) {} location.reload(); };
+  const bar = document.querySelector('.bar'); if (bar) { const h = bar.querySelector('h1'); h ? h.after(b) : bar.append(b); } });
+</script>
+<style>
+.motion-btn { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #f0d68f; background: rgba(214,164,67,.12); border: 1px solid rgba(214,164,67,.6); padding: 5px 9px; cursor: pointer; white-space: nowrap; }
+:root { --gold: #d6a443; --gold-pale: #f0d68f; --cream: #eee4cb; --muted: #a8aecb; --bar: 42px;
+  --display: "IM Fell English SC", Georgia, serif; --serif: "IM Fell English", Georgia, serif; --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; height: 100%; background: #070508; color: var(--cream); font-family: var(--serif); overflow: hidden; }
+.bar { position: fixed; top: 0; left: 0; right: 0; height: var(--bar); z-index: 20; display: flex; align-items: center; gap: 8px; padding: 0 12px; background: linear-gradient(rgba(0,0,0,.92), rgba(0,0,0,.5)); }
+.bar a, .bar button { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--cream); background: transparent; border: 1px solid rgba(214,164,67,.5); padding: 5px 9px; text-decoration: none; cursor: pointer; white-space: nowrap; }
+.bar a:hover, .bar button:hover, .bar button[aria-pressed="true"] { border-color: var(--gold-pale); color: var(--gold-pale); }
+.bar h1 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 18px; letter-spacing: .1em; color: var(--gold-pale); white-space: nowrap; flex: 1; }
+body.settling .bar { opacity: 0 !important; pointer-events: none; }
+.main { position: fixed; top: var(--bar); left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: minmax(0, 1fr) 360px; }
+body.sitting .main { top: 0; grid-template-columns: 1fr; }
+@media (max-width: 860px) { .main { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) auto; } .side { max-height: 52vh; } body.sitting .main { grid-template-rows: 1fr; } }
+.stage { position: relative; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; }
+#cv { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.side { overflow-y: auto; padding: 16px 18px 40px; background: rgba(6,5,9,.86); border-left: 1px solid rgba(214,164,67,.25); }
+body.sitting .side { display: none; }
+.side h2 { margin: 0 0 2px; font-family: var(--display); font-weight: 400; font-size: 22px; color: var(--gold-pale); }
+.side .sub { font-family: var(--mono); font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+.side label { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin: 14px 0 6px; }
+.side input[type=text] { width: 100%; margin-top: 6px; background: rgba(0,0,0,.5); color: var(--cream); border: 1px solid rgba(214,164,67,.4); font: 16px var(--serif); padding: 7px 10px; }
+.chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.chips.col { flex-direction: column; align-items: stretch; }
+.chips button { font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--cream); background: transparent; border: 1px solid rgba(214,164,67,.35); padding: 6px 8px; cursor: pointer; text-align: left; }
+.chips.col button { font-family: var(--serif); font-size: 15px; letter-spacing: 0; text-transform: none; }
+.chips button[aria-pressed="true"] { background: rgba(214,164,67,.18); border-color: var(--gold-pale); color: var(--gold-pale); }
+.chips button:disabled { opacity: .35; cursor: default; }
+.hint { font-size: 14px; line-height: 1.35; color: #cfc6ad; margin: 6px 0 0; }
+.consent { margin-top: 18px; padding: 12px 12px 4px; border: 1px solid rgba(214,164,67,.3); background: rgba(214,164,67,.05); }
+.consent p { margin: 0 0 8px; font-size: 14.5px; line-height: 1.38; }
+.consent b { font-family: var(--display); font-weight: 400; color: var(--gold-pale); font-size: 16px; }
+.begin { width: 100%; margin-top: 12px; font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #1a1206; background: linear-gradient(#f0d68f, #c9953a); border: 0; padding: 12px; cursor: pointer; }
+.begin:hover { filter: brightness(1.08); }
+.say { position: absolute; left: 50%; bottom: 13%; transform: translateX(-50%); width: min(640px, 90%); text-align: center; font-style: italic; font-size: clamp(18px, 2.4vw, 25px); line-height: 1.3; color: var(--gold-pale); text-shadow: 0 2px 12px #000, 0 0 2px #000; opacity: 0; transition: opacity 1.4s ease; pointer-events: none; }
+.say.on { opacity: 1; }
+.say.words { font-style: normal; font-family: var(--display); font-size: clamp(22px, 3.2vw, 34px); color: #fff1cf; }
+.count { position: absolute; left: 50%; top: 9%; transform: translateX(-50%); font-family: var(--display); font-size: clamp(40px, 7vw, 76px); color: rgba(240,214,143,.85); text-shadow: 0 0 30px rgba(240,180,90,.5); opacity: 0; transition: opacity 1.6s ease; pointer-events: none; }
+.count.on { opacity: 1; }
+.hold { position: absolute; left: 50%; top: 11%; transform: translateX(-50%); text-align: center; font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-pale); pointer-events: none; }
+.hold small { display: block; margin-top: 6px; color: var(--muted); letter-spacing: .1em; }
+.wake { position: fixed; right: 18px; bottom: 18px; z-index: 30; font-family: var(--mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--cream); background: rgba(0,0,0,.55); border: 1px solid rgba(214,164,67,.6); padding: 9px 14px; cursor: pointer; }
+.wake:hover { color: var(--gold-pale); border-color: var(--gold-pale); }
+.wake kbd { font-family: var(--mono); font-size: 9px; color: var(--muted); margin-left: 6px; }
+.settle { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; background: radial-gradient(ellipse at 50% 45%, rgba(60,32,12,.94), rgba(7,5,8,.98) 70%); }
+.settle-in { width: min(460px, 90vw); text-align: center; }
+.settle h2 { font-family: var(--display); font-weight: 400; font-size: 34px; color: var(--gold-pale); margin: 0 0 8px; }
+.settle p { font-size: 18px; margin: 0 0 14px; }
+.settle-n { font-family: var(--display); font-size: 64px; color: rgba(240,214,143,.7); }
+.settle form { text-align: left; margin-top: 10px; }
+.settle label { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin: 14px 0 6px; }
+.settle input[type=range] { width: 100%; accent-color: #d6a443; }
+.settle textarea { width: 100%; min-height: 90px; background: rgba(0,0,0,.5); color: var(--cream); border: 1px solid rgba(214,164,67,.4); font: 16px var(--serif); padding: 8px 10px; resize: vertical; }
+.settle .row { display: flex; gap: 8px; margin-top: 14px; }
+.settle .row button { flex: 1; font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--cream); background: rgba(214,164,67,.1); border: 1px solid rgba(214,164,67,.55); padding: 10px; cursor: pointer; }
+.settle .row button.go { color: #1a1206; background: linear-gradient(#f0d68f, #c9953a); border: 0; }
+.drawer { position: fixed; top: var(--bar); right: 0; bottom: 0; width: min(440px, 100vw); z-index: 25; background: rgba(6,6,10,.97); border-left: 1px solid rgba(214,164,67,.3); overflow-y: auto; padding: 18px 22px 40px; transform: translateX(100%); transition: transform .35s ease; }
+.drawer.on { transform: none; }
+.drawer h2 { font-family: var(--display); font-weight: 400; color: var(--gold-pale); margin: 0 0 4px; font-size: 26px; }
+.drawer h3 { font-family: var(--display); font-weight: 400; color: var(--gold); margin: 18px 0 4px; font-size: 18px; }
+.drawer p { margin: 0 0 8px; font-size: 16px; line-height: 1.4; }
+.drawer .x { position: absolute; top: 12px; right: 14px; background: none; border: 0; color: var(--cream); font-size: 18px; cursor: pointer; }
+.drawer .sub { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+.drawer .entry { border-top: 1px solid rgba(214,164,67,.18); padding-top: 8px; margin-top: 8px; }
+.drawer .entry small { font-family: var(--mono); font-size: 10.5px; color: var(--muted); letter-spacing: .06em; }
+.foot { position: fixed; left: 0; bottom: 3px; width: calc(100% - 360px); text-align: center; font-family: var(--mono); font-size: 9px; letter-spacing: .08em; color: rgba(168,174,203,.45); pointer-events: none; }
+body.sitting .foot { display: none; }
+@media (max-width: 860px) { .foot { display: none; } }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+</style>
+</head>
+<body>
+<header class="bar">
+  <a href="./">← Templum</a>
+  <a href="mirror.html">Mirror</a>
+  <h1>The Trance</h1>
+  <button type="button" id="learnBtn" aria-pressed="false" aria-controls="drawer">How it works</button>
+  <button type="button" id="bookBtn" aria-pressed="false" aria-controls="drawer">Journal</button>
+</header>
+<div class="main">
+  <div class="stage" id="stage">
+    <canvas id="cv" aria-label="The magnetic tub, its rods and the light you look at"></canvas>
+    <div class="hold" id="hold" hidden><span id="holdN">Hold the cord</span><small>space bar, or press and hold anywhere</small></div>
+    <div class="count" id="count" aria-hidden="true"></div>
+    <div class="say" id="say" aria-hidden="true"></div>
+  </div>
+  <aside class="side" id="side">
+    <h2>The magnetic tub</h2>
+    <p class="sub">a trance you run yourself</p>
+    <label>What it’s for</label>
+    <div class="chips" id="intents"></div>
+    <label>Your words <span id="sugN"></span></label>
+    <div class="chips col" id="sugs"></div>
+    <input type="text" id="own" maxlength="70" placeholder="Or write your own. Present tense." autocomplete="off">
+    <p class="hint">Up to three. You’ll hear nothing you didn’t pick here.</p>
+    <label>Look at</label>
+    <div class="chips" id="objs"></div>
+    <label>Charge something</label>
+    <div class="chips" id="charges"></div>
+    <p class="hint">Have it in your hand when you start. It sits in the tub with you.</p>
+    <label>How long</label>
+    <div class="chips" id="lens"></div>
+    <label>Sound</label>
+    <div class="chips" id="sounds"></div>
+    <p class="hint">Binaural needs headphones. Everything follows the volume up top.</p>
+    <div class="consent">
+      <p><b>This is a trance. You stay in charge.</b> Wake, or the Escape key, brings you up gently at any second.</p>
+      <p>No flashing. Every light in here changes slowly. If light patterns have ever made you unwell, skip this one.</p>
+      <p>Not while driving, and not while doing anything that needs you awake. Sound and light, not medicine.</p>
+    </div>
+    <button type="button" class="begin" id="beginBtn">I’m in. Begin</button>
+  </aside>
+</div>
+<button type="button" class="wake" id="wakeBtn" hidden>Wake<kbd>esc</kbd></button>
+<div class="settle" id="settle" hidden>
+  <div class="settle-in">
+    <h2 id="setH">Sit for a moment.</h2>
+    <p id="setP">Drink some water. Don’t text anyone yet.</p>
+    <div class="settle-n" id="setN">30</div>
+    <form id="jForm" hidden>
+      <label for="jDepth">How deep did it go? <output id="jDepthV">5</output> of 10</label>
+      <input type="range" id="jDepth" min="1" max="10" value="5">
+      <label for="jFelt">What did you feel?</label>
+      <textarea id="jFelt" maxlength="600" placeholder="Heavy hands, a colour, nothing, your nan’s kitchen…"></textarea>
+      <div class="row"><button type="button" id="jSkip">Skip</button><button type="submit" class="go">Keep it</button></div>
+    </form>
+  </div>
+</div>
+<aside class="drawer" id="drawer" aria-label="The Trance"></aside>
+<div class="foot">Nothing you pick or write leaves this computer. Sound and light, not medicine.</div>
+<div class="sr" id="sr" aria-live="polite"></div>
+
+<script type="module">
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const calm = matchMedia('(prefers-reduced-motion: reduce)').matches && !document.documentElement.classList.contains('motion-full');
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const FAST = /[?&]fast\b/.test(location.search);   // ?fast: a 1.5-second breath, for previewing the whole sitting
+const BR = FAST ? 1500 : 10000, IN = FAST ? 600 : 4000;   // one breath: 4 s in, 6 s out
+
+/* ---------- what the sitter chooses ---------- */
+const INTENTS = {
+  rest: { name: 'Rest', sugs: ['My shoulders drop.', 'My body is heavy and warm.', 'I have nowhere to be.'], quip: 'Rest. Finally. You’ve had your shoulders up round your ears since Tuesday.' },
+  focus: { name: 'Focus', sugs: ['I see one thing at a time.', 'My mind is quiet and sharp.', 'I start, and I keep going.'], quip: 'Focus. One tab. Just the one.' },
+  courage: { name: 'Courage', sugs: ['I say it out loud.', 'My voice is steady.', 'I go first.'], quip: 'You picked courage. Good. You’ll need it for your group chat.' },
+  sleep: { name: 'Sleep', sugs: ['I sleep deeply tonight.', 'My thoughts slow down.', 'I wake up rested.'], quip: 'Sleep. I do nineteen hours a day, so listen to me.' },
+  letgo: { name: 'Letting go', sugs: ['I put it down.', 'My hands are open.', 'I’m lighter on every breath.'], quip: 'Letting go. Open your hand. I’ll knock it off the table for you, I love doing that.' },
+};
+const OBJECTS = [['eye', 'Third eye'], ['spiral', 'Spiral'], ['pendulum', 'Pendulum'], ['wheel', 'Mirror wheel']];
+const CHARGE = [['', 'Nothing'], ['ring', 'A ring'], ['stone', 'A stone'], ['key', 'A key'], ['crystal', 'A crystal']];
+const LENS = [5, 12, 20];
+const ST = { intent: 'rest', sugs: [], obj: 'eye', charge: '', len: 5, glass: true, bin: false, bed: false };
+try { Object.assign(ST, JSON.parse(localStorage.getItem('vs-mesmer-set') || '{}')); } catch (e) {}
+if (!INTENTS[ST.intent]) ST.intent = 'rest';
+ST.sugs = (ST.sugs || []).filter(s => INTENTS[ST.intent].sugs.includes(s));
+const saveSet = () => { try { const { own, ...keep } = ST; localStorage.setItem('vs-mesmer-set', JSON.stringify(keep)); } catch (e) {} };   // your own words are never stored
+
+/* ---------- his lines (shown, never spoken) ---------- */
+const L = {
+  hello: 'Pick what it’s for. Pick your words. Then you hold the cord.',
+  cord: 'Hold the cord. Space bar, or press and hold anywhere.',
+  letgo: ['Don’t let go just because you’re bored.', 'Hand back on the cord.', 'You let go. Again. Hold it.'],
+  connected: 'Every rod’s lit. That’s you in there, by the way.',
+  fixStart: ['Look at the light. Not your phone. The light.', 'Find one spot on it and stay there.'],
+  fix: ['Your eyelids are getting heavy. Let them. Don’t close them yet.', 'Blink if you need to. I’m not a monster.', 'Out-breath longer than the in-breath. You know how breathing works.', 'It’s slowing down. Go down with it.', 'Heavier. That’s not me, that’s you.', 'Your mind wandered. Fine. Walk it back.', 'Your jaw’s tight. Unclench it. Yes, you.', 'Stay on the spot. The edges can do what they like.', 'You’re holding your breath at the top. Stop that.', 'Boring, isn’t it. Keep going.', 'Your arms want to be heavier. Let them.'],
+  passStart: 'Now the passes. Head to feet, slowly, on every out-breath.',
+  pass: ['Drag down over yourself if you want to help. Slowly.', 'Down through the shoulders. Down through the arms.', 'Your hands are heavier than they were. Check. See?', 'Down past the knees. Nobody’s watching.', 'Every pass takes a bit more of the day off you.', 'Your face just went slack. Leave it like that.', 'Down to the feet, then back to the top.'],
+  swipe: 'Slowly. This isn’t a swipe.',
+  closed: ['Close your eyes. When the glass rings twice, open them.', 'Eyes closed again. Deeper than last time. Two rings, then open.', 'Once more. Close them. You know the drill.'],
+  open: ['Eyes open. Look at the light.', 'Open. Find the spot again.', 'Open. Heavier this time, right?'],
+  stairs: 'Ten steps down. Each one darker. You won’t trip, I’m holding the light.',
+  count: { 10: 'Ten.', 9: 'Nine. You’re still fidgeting.', 8: 'Eight.', 7: 'Seven. Heavier.', 6: 'Six.', 5: 'Five. Halfway and you didn’t trip.', 4: 'Four.', 3: 'Three. Nearly.', 2: 'Two.', 1: 'One. Stay here.' },
+  sugIntro: 'Now your words. Say them with me, in your head. Don’t argue with them.',
+  crisis: 'Here it comes. Don’t do anything. Let it.',
+  charged: o => `And the ${o}. It’s charged now. Hold it if you’ve got it.`,
+  upIntro: 'Coming up now. Five counts.',
+  up: { 1: 'One. The light’s coming back.', 2: 'Two. Feel the chair under you.', 3: 'Three. Fingers and toes. Move them.', 4: 'Four. Big breath in.', 5: 'Five. Eyes open. You’re back. You were never not in charge.' },
+  keep: o => `Keep the ${o} on you today.`,
+  wake: ['Waking you. Three.', 'Two.', 'One. Eyes open. You’re fine.'],
+  quit: 'Fine. Another time. The tub’s not going anywhere.',
+};
+let sayT = 0;
+function line(t, { words = false, ms = 0 } = {}) {
+  const e = $('say'); clearTimeout(sayT);
+  if (!t) { e.classList.remove('on'); return; }
+  const show = () => { e.textContent = t; e.classList.toggle('words', words); e.classList.add('on'); $('sr').textContent = t; if (ms) sayT = setTimeout(() => e.classList.remove('on'), ms); };
+  if (e.classList.contains('on')) { e.classList.remove('on'); sayT = setTimeout(show, 900); } else show();
+}
+function count(n) { const e = $('count'); if (n == null) { e.classList.remove('on'); return; } e.textContent = n; e.classList.add('on'); }
+const drawn = {};   // lines used this sitting, so he doesn't repeat himself
+const next = (key) => { const pool = L[key], left = pool.filter(t => !drawn[t]); const t = pick(left.length ? left : pool); drawn[t] = 1; return t; };
+
+/* ---------- controls ---------- */
+function chips(el, items, isOn, on, dis = () => false) {
+  el.innerHTML = items.map(([k, label]) => `<button type="button" data-k="${esc(k)}" aria-pressed="${isOn(k)}"${dis(k) ? ' disabled' : ''}>${esc(label)}</button>`).join('');
+  el.onclick = e => { const b = e.target.closest('button'); if (b && !b.disabled) { on(b.dataset.k); saveSet(); controls(); } };
+}
+const ownText = () => $('own').value.trim();
+const total = () => ST.sugs.length + (ownText() ? 1 : 0);
+function controls() {
+  chips($('intents'), Object.entries(INTENTS).map(([k, v]) => [k, v.name]), k => k === ST.intent, k => { if (k !== ST.intent) { ST.intent = k; ST.sugs = []; } });
+  const I = INTENTS[ST.intent];
+  chips($('sugs'), I.sugs.map(s => [s, s]), k => ST.sugs.includes(k), k => { ST.sugs = ST.sugs.includes(k) ? ST.sugs.filter(s => s !== k) : [...ST.sugs, k]; }, k => !ST.sugs.includes(k) && total() >= 3);
+  $('sugN').textContent = `· ${total()} of 3`;
+  chips($('objs'), OBJECTS, k => k === ST.obj, k => { ST.obj = k; });
+  chips($('charges'), CHARGE, k => k === ST.charge, k => { ST.charge = k; });
+  chips($('lens'), LENS.map(n => [String(n), n + ' min']), k => +k === ST.len, k => { ST.len = +k; });
+  chips($('sounds'), [['glass', 'Glass'], ['bin', 'Binaural'], ['bed', 'Noise bed']], k => !!ST[k], k => { ST[k] = !ST[k]; });
+}
+$('own').addEventListener('input', () => { if (total() > 3) ST.sugs = ST.sugs.slice(0, 2); controls(); });
+
+/* ---------- sound: the glass harmonica, a binaural glide, a soft bed ---------- */
+let AC = null, master = null, bus = null, NOISE = null, PINK = null, bin = null, bed = null;
+const vol = () => (window.VS_VOLUME ?? .8);
+function audio() {
+  if (AC) { AC.resume?.(); return; }
+  AC = new (window.AudioContext || window.webkitAudioContext)();
+  master = AC.createGain(); master.gain.value = vol(); master.connect(AC.destination);
+  // a small dark room: a convolver fed with decaying noise
+  const len = AC.sampleRate * 3.4, ir = AC.createBuffer(2, len, AC.sampleRate);
+  for (let c = 0; c < 2; c++) { const d = ir.getChannelData(c); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3.2); }
+  const rev = AC.createConvolver(); rev.buffer = ir; const rg = AC.createGain(); rg.gain.value = .55; rev.connect(rg); rg.connect(master);
+  bus = AC.createGain(); bus.gain.value = 1; bus.connect(master); bus.connect(rev);
+  NOISE = AC.createBuffer(1, AC.sampleRate * 2, AC.sampleRate); { const d = NOISE.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
+  PINK = AC.createBuffer(1, AC.sampleRate * 6, AC.sampleRate); { const d = PINK.getChannelData(0); let b0 = 0, b1 = 0, b2 = 0; for (let i = 0; i < d.length; i++) { const w = Math.random() * 2 - 1; b0 = .99765 * b0 + w * .099046; b1 = .963 * b1 + w * .2965164; b2 = .57 * b2 + w * 1.0526913; d[i] = (b0 + b1 + b2 + w * .1848) * .2; } }
+}
+addEventListener('vs-volume', () => { if (master) master.gain.setTargetAtTime(vol(), AC.currentTime, .1); });
+// one rubbed glass bowl: partials at 1, 2, 3.01 and 4.2, a slow swell, a shimmer and the wet rub of a finger
+function bowl(f, amp = .1, dur = 5, attack = .45) {
+  if (!AC || !ST.glass) return;
+  const t = AC.currentTime, end = t + attack + dur + 1.5;
+  const env = AC.createGain(); env.gain.setValueAtTime(0, t); env.gain.linearRampToValueAtTime(amp, t + attack); env.gain.setTargetAtTime(0, t + attack + .2, dur / 4);
+  const trem = AC.createGain(); trem.gain.value = 1; const lfo = AC.createOscillator(); lfo.frequency.value = 4 + Math.random() * 1.5; const lg = AC.createGain(); lg.gain.value = .12; lfo.connect(lg); lg.connect(trem.gain);
+  for (const [m, a] of [[1, 1], [2, .3], [3.01, .11], [4.2, .05]]) { const o = AC.createOscillator(); o.frequency.value = f * m; const g = AC.createGain(); g.gain.value = a; o.connect(g); g.connect(trem); o.start(t); o.stop(end); }
+  const n = AC.createBufferSource(); n.buffer = NOISE; n.loop = true; const bp = AC.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = f * 2; bp.Q.value = 14; const ng = AC.createGain(); ng.gain.value = .3; n.connect(bp); bp.connect(ng); ng.connect(trem); n.start(t); n.stop(end);
+  trem.connect(env); env.connect(bus); lfo.start(t); lfo.stop(end);
+}
+const SCALE = [0, 3, 5, 7, 10, 12, 15];
+const hz = semi => 220 * Math.pow(2, semi / 12);
+function note(soft = 1) { if (!S.on) return; const deg = SCALE[Math.floor(Math.pow(Math.random(), 1.6) * SCALE.length)]; bowl(hz(S.root + deg), .09 * soft, 5 + Math.random() * 2); }
+function rings2() { bowl(hz(S.root + 24), .07, 2.5, .05); setTimeout(() => bowl(hz(S.root + 24), .07, 2.5, .05), 900); }
+function swell() { for (const [m, a] of [[1, .08], [1.5, .06], [2, .05], [3, .025]]) bowl(hz(S.root) * m, a, 14, 6); }
+function bedOn(on) {
+  if (!AC) return;
+  if (on && ST.bed && !bed) { const s = AC.createBufferSource(); s.buffer = PINK; s.loop = true; const lp = AC.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 650; const g = AC.createGain(); g.gain.value = 0; g.gain.setTargetAtTime(.07, AC.currentTime, 2); s.connect(lp); lp.connect(g); g.connect(master); s.start(); bed = { s, g }; }
+  if (!on && bed) { const b = bed; bed = null; b.g.gain.setTargetAtTime(0, AC.currentTime, 1); setTimeout(() => b.s.stop(), 5000); }
+}
+function binOn(on) {
+  if (!AC) return;
+  if (on && ST.bin && !bin) {
+    const mk = (f, pan) => { const o = AC.createOscillator(); o.frequency.value = f; const p = AC.createStereoPanner(); p.pan.value = pan; o.connect(p); return { o, p }; };
+    const g = AC.createGain(); g.gain.value = 0; g.gain.setTargetAtTime(.05, AC.currentTime, 3);
+    const l = mk(200, -1), r = mk(210, 1); l.p.connect(g); r.p.connect(g); g.connect(master); l.o.start(); r.o.start(); bin = { l, r, g };
+  }
+  if (!on && bin) { const b = bin; bin = null; b.g.gain.setTargetAtTime(0, AC.currentTime, 1); setTimeout(() => { b.l.o.stop(); b.r.o.stop(); }, 5000); }
+}
+
+/* ---------- the sitting ---------- */
+const S = { on: false, phase: 'idle', plan: [], k: -1, B0: 0, timers: [], depth: 0, dT: 0, ec: 0, ecT: 0, bloom: 0, bloomT: 0, rods: new Array(12).fill(0), lit: 0, holdT: 0, holding: false, letGoAt: 0, root: 0, started: 0, spin: 0, spin2: 0, pend: 0, passA: 0, trails: [], drag: null, swipeAt: 0 };
+const later = (ms, fn) => S.timers.push(setTimeout(fn, ms));
+const clearTimers = () => { S.timers.forEach(clearTimeout); S.timers = []; };
+const chargeName = () => ST.charge;
+
+function begin() {
+  saveSet(); audio(); for (const k in drawn) delete drawn[k];
+  Object.assign(S, { on: true, phase: 'connect', plan: [], k: -1, lit: 0, holdT: 0, holding: false, root: 0, depth: 0, dT: .05, ecT: 0, bloomT: 0, started: Date.now(), woke: false });
+  document.body.classList.add('sitting'); $('wakeBtn').hidden = false; $('hold').hidden = false; $('holdN').textContent = 'Hold the cord';
+  closeDrawer(); fit(); bedOn(true); binOn(true); line(L.cord);
+}
+function connected() {
+  $('hold').hidden = true; S.phase = 'settling'; line(L.connected); swell();
+  later(4500, () => { S.plan = makePlan(); S.B0 = performance.now(); S.k = -1; });
+}
+/* the plan, one entry per breath. Fixed parts first; fixation and the passes take whatever time is left */
+function makePlan() {
+  const Ln = ST.len, B = Ln * 6, rounds = Ln <= 5 ? 1 : Ln <= 12 ? 2 : 3;
+  const own = ownText(), words = [...ST.sugs, ...(own ? [own.replace(/\s+/g, ' ')] : [])];
+  if (!words.length) words.push(INTENTS[ST.intent].sugs[0]);
+  const gap = Ln <= 5 ? 1 : 2, cr = Ln <= 5 ? 3 : 4;
+  const fixed = 3 * rounds + 1 + 10 + 1 + words.length * 3 * gap + 1 + cr + 6;
+  const rem = Math.max(4, B - fixed), f = Math.max(2, Math.round(rem * .55)), p = Math.max(2, rem - f);
+  const P = [], add = (ph, fn) => P.push({ ph, fn });
+  const out = fn => later(IN, fn);   // on the out-breath
+  for (let i = 0; i < f; i++) add('fix', () => { S.dT = .08 + .25 * i / f; S.ecT = 0; count(); if (i === 0) line(pick(L.fixStart)); else if (i % 3 === 0) line(next('fix')); out(() => note()); });
+  for (let i = 0; i < p; i++) add('pass', () => { S.dT = .33 + .12 * i / p; S.ecT = 0; if (i === 0) line(L.passStart); else if (i % 3 === 1) line(next('pass')); out(() => note(.8)); });
+  for (let j = 0; j < rounds; j++) {
+    add('frac', () => { S.root -= 1; S.dT = .45 + .05 * j; S.ecT = 1; line(L.closed[j]); out(() => note(.7)); });
+    add('frac', () => { S.dT = .5 + .05 * j; S.ecT = 1; line(); out(() => note(.6)); });
+    add('frac', () => { rings2(); S.dT = .5 + .05 * j; later(1800, () => { S.ecT = 0; line(L.open[j]); }); });
+  }
+  add('stairs', () => { S.dT = .6; S.ecT = 0; line(L.stairs); out(() => note(.8)); });
+  for (let n = 10; n >= 1; n--) add('count', () => { S.dT = .6 + .25 * (10 - n) / 9; out(() => { count(n); line(L.count[n]); note(.8); }); });
+  add('sug', () => { count(); S.dT = .88; line(L.sugIntro); });
+  for (const w of words) for (let r = 0; r < 3; r++) for (let g = 0; g < gap; g++) add('sug', () => { S.dT = .9; if (g === 0) { line('“' + w + '”', { words: true }); out(() => note(.5)); } else line(); });
+  add('sug', () => { line(INTENTS[ST.intent].quip); });
+  for (let i = 0; i < cr; i++) add('crisis', () => {
+    S.dT = 1; S.ecT = 0;
+    if (i === 0) { line(L.crisis); later(2500, () => { S.bloomT = 1; swell(); }); later(16000, () => { S.bloomT = 0; }); }
+    else if (i === 1) line(chargeName() ? L.charged(chargeName()) : '');
+    else line();
+  });
+  add('up', () => { S.dT = .85; S.bloomT = 0; S.ecT = 0; line(L.upIntro); });
+  for (let n = 1; n <= 5; n++) add('up', () => {
+    S.dT = 1 - n * .2; S.root = Math.min(0, S.root + 1); count(n); line(L.up[n]); bowl(hz(S.root + 7 + n * 2), .08, 4);
+    if (n === 5) { rings2(); if (chargeName()) later(5200, () => line(L.keep(chargeName()))); }
+  });
+  return P;
+}
+function wake() {
+  if (!S.on || S.phase === 'wake') return;
+  if (S.phase === 'connect') { endSitting(); line(L.quit, { ms: 4000 }); return; }   // never went under: just stop
+  clearTimers(); S.plan = []; S.phase = 'wake'; S.woke = true; S.ecT = 0; S.bloomT = 0; S.dT = 0;
+  count(3); line(L.wake[0]); bowl(hz(7), .08, 3);
+  later(2000, () => { count(2); line(L.wake[1]); bowl(hz(11), .08, 3); });
+  later(4000, () => { count(1); line(L.wake[2]); rings2(); });
+  later(6500, () => settle());
+}
+function endSitting() {
+  clearTimers(); S.on = false; S.plan = []; S.phase = 'idle'; S.ecT = 0; S.bloomT = 0; S.dT = 0; count();
+  bedOn(false); binOn(false);
+  document.body.classList.remove('sitting'); $('wakeBtn').hidden = true; $('hold').hidden = true; fit();
+}
+/* 30 seconds sitting still before anything else, then the journal */
+function settle() {
+  const mins = Math.max(1, Math.round((Date.now() - S.started) / 60000)), woke = S.woke;
+  endSitting(); line();
+  document.body.classList.add('settling'); $('settle').hidden = false; $('jForm').hidden = true; $('setN').hidden = false;
+  $('setH').textContent = 'Sit for a moment.'; $('setP').textContent = 'Drink some water. Don’t text anyone yet.';
+  let n = 30; $('setN').textContent = n;
+  const iv = setInterval(() => { n--; $('setN').textContent = n; if (n <= 0) { clearInterval(iv); ask(); } }, 1000);
+  function ask() {
+    $('setN').hidden = true; $('setH').textContent = 'How was it?'; $('setP').textContent = 'Only you see this. It stays on this computer.';
+    $('jForm').hidden = false; $('jFelt').value = ''; $('jDepth').value = 5; $('jDepthV').textContent = 5; $('jFelt').focus();
+  }
+  const done = keep => {
+    if (keep) { let J = []; try { J = JSON.parse(localStorage.getItem('vs-mesmer-journal') || '[]'); } catch (e) {} J.unshift({ at: Date.now(), mins, intent: ST.intent, obj: ST.obj, depth: +$('jDepth').value, felt: $('jFelt').value.trim().slice(0, 600), woke }); try { localStorage.setItem('vs-mesmer-journal', JSON.stringify(J.slice(0, 200))); } catch (e) {} }
+    $('settle').hidden = true; document.body.classList.remove('settling');
+    line(keep ? 'Kept. Come back when you’ve been awake too long.' : 'Fine. I wasn’t going to read it anyway.', { ms: 4500 });
+  };
+  $('jForm').onsubmit = e => { e.preventDefault(); done(true); };
+  $('jSkip').onclick = () => done(false);
+}
+$('jDepth').oninput = () => { $('jDepthV').textContent = $('jDepth').value; };
+$('beginBtn').onclick = begin;
+$('wakeBtn').onclick = wake;
+
+/* ---------- holding the cord, making the passes ---------- */
+const stage = $('stage');
+const hold = on => {
+  if (S.phase !== 'connect') return;
+  if (on && !S.holding) bowl(hz(12 + S.lit), .04, 2);
+  if (!on && S.holding && S.lit > 0 && S.lit < 12 && performance.now() - S.letGoAt > 6000) { S.letGoAt = performance.now(); line(next('letgo')); }
+  S.holding = on;
+};
+stage.addEventListener('pointerdown', e => {
+  if (!S.on) return;
+  if (S.phase === 'connect') { hold(true); return; }
+  if (S.phase === 'pass') { stage.setPointerCapture(e.pointerId); S.drag = { x: e.clientX, y: e.clientY, t: performance.now() }; }
+});
+stage.addEventListener('pointermove', e => {
+  if (!S.drag || S.phase !== 'pass') return;
+  const now = performance.now(), dy = e.clientY - S.drag.y, v = dy / Math.max(1, now - S.drag.t) * 1000;
+  if (v > 1800 && now - S.swipeAt > 12000) { S.swipeAt = now; line(L.swipe); }
+  const r = stage.getBoundingClientRect(), d = Math.min(2, devicePixelRatio || 1);
+  for (let i = 0; i < 3; i++) S.trails.push({ x: (e.clientX - r.left) * d + (Math.random() - .5) * 10 * d, y: (e.clientY - r.top) * d, life: 1, s: .6 + Math.random() * .8 });
+  if (S.trails.length > 500) S.trails.splice(0, S.trails.length - 500);
+  S.drag = { x: e.clientX, y: e.clientY, t: now };
+});
+addEventListener('pointerup', () => { hold(false); S.drag = null; });
+addEventListener('pointercancel', () => { hold(false); S.drag = null; });
+addEventListener('keydown', e => {
+  if (e.key === 'Escape') { if (S.on) wake(); else closeDrawer(); return; }
+  if (e.key === ' ' && S.on && S.phase === 'connect') { e.preventDefault(); if (!e.repeat) hold(true); }
+});
+addEventListener('keyup', e => { if (e.key === ' ') hold(false); });
+addEventListener('blur', () => hold(false));
+
+/* ---------- drawing ---------- */
+const cv = $('cv'), cx = cv.getContext('2d');
+let W = 0, H = 0, D = 1;
+function fit() { const run = () => { D = Math.min(2, devicePixelRatio || 1); const r = stage.getBoundingClientRect(); cv.width = W = Math.max(2, Math.round(r.width * D)); cv.height = H = Math.max(2, Math.round(r.height * D)); }; run(); setTimeout(run, 60); }
+addEventListener('resize', fit);
+const FIB = Array.from({ length: 90 }, () => ({ a: Math.random() * Math.PI * 2, r0: .22 + Math.random() * .2, r1: .6 + Math.random() * .38, al: .15 + Math.random() * .35 }));
+const ease = x => x * x * (3 - 2 * x);
+// the breath, 0 (empty) to 1 (full): 4 s up, 6 s down
+function breath(now) { const t = ((now - (S.plan.length ? S.B0 : 0)) % BR) / BR; return t < .4 ? ease(t / .4) : 1 - ease((t - .4) / .6); }
+
+function drawEye(R, b, a) {
+  const w = R * 1.35, h = R * .62, lid = 1 - .38 * S.depth;
+  cx.save(); cx.globalAlpha = a;
+  const g0 = cx.createRadialGradient(0, 0, R * .2, 0, 0, R * 1.9); g0.addColorStop(0, 'rgba(240,170,60,.22)'); g0.addColorStop(1, 'rgba(240,170,60,0)'); cx.fillStyle = g0; cx.fillRect(-R * 2, -R * 2, R * 4, R * 4);
+  cx.beginPath(); cx.moveTo(-w, 0); cx.quadraticCurveTo(0, -h * 2 * lid, w, 0); cx.quadraticCurveTo(0, h * 2, -w, 0); cx.closePath();
+  cx.save(); cx.clip();
+  cx.fillStyle = '#120a05'; cx.fillRect(-w, -h * 2, w * 2, h * 4);
+  const ir = R * .5, gi = cx.createRadialGradient(0, 0, ir * .1, 0, 0, ir); gi.addColorStop(0, '#ffe08a'); gi.addColorStop(.45, '#e8a332'); gi.addColorStop(.85, '#8a4a0c'); gi.addColorStop(1, '#3a1a04');
+  cx.fillStyle = gi; cx.beginPath(); cx.arc(0, 0, ir, 0, 7); cx.fill();
+  cx.lineWidth = Math.max(1, R * .006);
+  for (const f of FIB) { cx.strokeStyle = `rgba(255,236,170,${f.al})`; cx.beginPath(); cx.moveTo(Math.cos(f.a) * ir * f.r0, Math.sin(f.a) * ir * f.r0); cx.lineTo(Math.cos(f.a) * ir * f.r1, Math.sin(f.a) * ir * f.r1); cx.stroke(); }
+  const pw = R * (.045 + .06 * S.depth + .03 * (1 - b)), ph = ir * .86;
+  cx.fillStyle = '#050302'; cx.beginPath(); cx.ellipse(0, 0, pw, ph, 0, 0, 7); cx.fill();
+  cx.fillStyle = 'rgba(255,250,235,.85)'; cx.beginPath(); cx.arc(-ir * .32, -ir * .38, ir * .09, 0, 7); cx.fill();
+  const gs = cx.createLinearGradient(0, -h * 2 * lid, 0, 0); gs.addColorStop(0, 'rgba(0,0,0,.75)'); gs.addColorStop(1, 'rgba(0,0,0,0)'); cx.fillStyle = gs; cx.fillRect(-w, -h * 2, w * 2, h * 2);
+  cx.restore();
+  cx.strokeStyle = 'rgba(214,164,67,.8)'; cx.lineWidth = R * .02; cx.beginPath(); cx.moveTo(-w, 0); cx.quadraticCurveTo(0, -h * 2 * lid, w, 0); cx.quadraticCurveTo(0, h * 2, -w, 0); cx.stroke();
+  cx.restore();
+}
+function drawSpiral(R, b, a) {
+  cx.save(); cx.globalAlpha = a; cx.rotate(S.spin);
+  const g = cx.createRadialGradient(0, 0, 0, 0, 0, R * 1.2); g.addColorStop(0, 'rgba(255,226,150,1)'); g.addColorStop(.7, 'rgba(214,164,67,.75)'); g.addColorStop(1, 'rgba(214,164,67,0)');
+  cx.strokeStyle = g; cx.lineCap = 'round'; cx.lineWidth = R * .085;
+  for (let arm = 0; arm < 2; arm++) { cx.beginPath(); for (let t = 0; t <= 1; t += .003) { const th = t * Math.PI * 2 * 4.5 + arm * Math.PI, r = R * 1.2 * t; const x = Math.cos(th) * r, y = Math.sin(th) * r; t ? cx.lineTo(x, y) : cx.moveTo(x, y); } cx.stroke(); }
+  cx.fillStyle = 'rgba(255,240,200,.9)'; cx.beginPath(); cx.arc(0, 0, R * (.035 + .01 * b), 0, 7); cx.fill();
+  cx.restore();
+}
+function drawPendulum(R, b, a) {
+  const piv = -R * 1.35, len = R * 1.6, A = (calm ? .18 : .42) * (1 - .25 * S.depth), th = A * Math.sin(S.pend);
+  const bx = Math.sin(th) * len, by = piv + Math.cos(th) * len;
+  cx.save(); cx.globalAlpha = a;
+  cx.strokeStyle = 'rgba(214,164,67,.75)'; cx.lineWidth = Math.max(1, R * .012); cx.beginPath(); cx.moveTo(0, piv); cx.lineTo(bx, by); cx.stroke();
+  cx.fillStyle = '#b8873a'; cx.beginPath(); cx.arc(0, piv, R * .05, 0, 7); cx.fill();
+  cx.translate(bx, by); cx.rotate(-th);
+  const s = R * .2, gl = cx.createRadialGradient(0, s * .3, 0, 0, s * .3, s * 3.2); gl.addColorStop(0, 'rgba(200,230,255,.28)'); gl.addColorStop(1, 'rgba(200,230,255,0)'); cx.fillStyle = gl; cx.fillRect(-s * 4, -s * 3, s * 8, s * 7);
+  cx.fillStyle = '#b8873a'; cx.fillRect(-s * .28, -s * .15, s * .56, s * .3);
+  const gc = cx.createLinearGradient(-s, 0, s, s * 2); gc.addColorStop(0, 'rgba(235,245,255,.95)'); gc.addColorStop(.5, 'rgba(140,170,200,.85)'); gc.addColorStop(1, 'rgba(250,250,255,.95)');
+  cx.fillStyle = gc; cx.beginPath(); cx.moveTo(0, s * .15); cx.lineTo(s * .55, s * .7); cx.lineTo(0, s * 2.1); cx.lineTo(-s * .55, s * .7); cx.closePath(); cx.fill();
+  cx.strokeStyle = 'rgba(255,255,255,.5)'; cx.lineWidth = 1; cx.beginPath(); cx.moveTo(0, s * .15); cx.lineTo(0, s * 2.1); cx.moveTo(-s * .55, s * .7); cx.lineTo(s * .55, s * .7); cx.stroke();
+  cx.fillStyle = `rgba(255,255,255,${.5 + .4 * b})`; cx.beginPath(); cx.arc(-s * .12, s * .55, s * .07, 0, 7); cx.fill();
+  cx.restore();
+}
+function drawWheel(R, b, a) {
+  const n = 12, rr = R * .92, dr = R * .15, LA = -Math.PI / 2;
+  cx.save(); cx.globalAlpha = a;
+  cx.strokeStyle = 'rgba(184,135,58,.6)'; cx.lineWidth = Math.max(1, R * .014);
+  for (let i = 0; i < n; i++) { const p = S.spin2 + i * Math.PI * 2 / n; cx.beginPath(); cx.moveTo(Math.cos(p) * R * .14, Math.sin(p) * R * .14); cx.lineTo(Math.cos(p) * (rr - dr), Math.sin(p) * (rr - dr)); cx.stroke(); }
+  cx.beginPath(); cx.arc(0, 0, rr, 0, 7); cx.stroke();
+  for (let i = 0; i < n; i++) {
+    const p = S.spin2 + i * Math.PI * 2 / n, x = Math.cos(p) * rr, y = Math.sin(p) * rr;
+    const glint = Math.pow(Math.max(0, Math.cos(p - LA)), 26);
+    const gm = cx.createRadialGradient(x - dr * .3, y - dr * .3, 0, x, y, dr); gm.addColorStop(0, `rgba(${200 + 55 * glint},${205 + 45 * glint},${215 + 30 * glint},1)`); gm.addColorStop(1, 'rgba(60,64,78,1)');
+    cx.fillStyle = gm; cx.beginPath(); cx.arc(x, y, dr, 0, 7); cx.fill();
+    cx.strokeStyle = '#b8873a'; cx.lineWidth = Math.max(1, R * .018); cx.stroke();
+    if (glint > .02) { const gg = cx.createRadialGradient(x, y, 0, x, y, dr * 3.2); gg.addColorStop(0, `rgba(255,236,190,${.75 * glint})`); gg.addColorStop(1, 'rgba(255,236,190,0)'); cx.fillStyle = gg; cx.beginPath(); cx.arc(x, y, dr * 3.2, 0, 7); cx.fill(); }
+  }
+  const hb = cx.createRadialGradient(0, 0, 0, 0, 0, R * .16); hb.addColorStop(0, '#f3d28a'); hb.addColorStop(1, '#6a4512'); cx.fillStyle = hb; cx.beginPath(); cx.arc(0, 0, R * .16, 0, 7); cx.fill();
+  cx.fillStyle = 'rgba(255,245,215,.95)'; cx.beginPath(); cx.arc(0, 0, R * (.03 + .008 * b), 0, 7); cx.fill();
+  cx.restore();
+}
+// the tub: an oak and brass ellipse, twelve bent rods rising to cradle the light. A placeholder until the art arrives
+function drawTub(ox, oy, R, b, a) {
+  const tx = ox, ty = H * .93, rx = Math.min(W * .4, R * 1.9), ry = R * .26;
+  cx.save(); cx.globalAlpha = a;
+  for (let i = 0; i < 12; i++) {
+    const ang = Math.PI * (.08 + .84 * i / 11), bxp = tx - Math.cos(ang) * rx * .82, byp = ty - Math.sin(ang) * ry * .6;
+    const tipA = Math.PI * (.12 + .76 * i / 11), tipx = ox - Math.cos(tipA) * R * 1.55, tipy = oy + Math.sin(tipA) * R * 1.25;
+    const lit = S.rods[i];
+    cx.strokeStyle = `rgba(${120 + 100 * lit},${90 + 70 * lit},${50 + 20 * lit},${.55 + .4 * lit})`; cx.lineWidth = Math.max(1.5, R * .022);
+    cx.beginPath(); cx.moveTo(bxp, byp); cx.quadraticCurveTo(bxp, (byp + tipy) / 2, tipx, tipy); cx.stroke();
+    if (lit > .02) { const gr = R * (.05 + .05 * lit * (.75 + .25 * b)), g = cx.createRadialGradient(tipx, tipy, 0, tipx, tipy, gr * 3); g.addColorStop(0, `rgba(255,214,140,${.9 * lit})`); g.addColorStop(1, 'rgba(255,170,80,0)'); cx.fillStyle = g; cx.beginPath(); cx.arc(tipx, tipy, gr * 3, 0, 7); cx.fill(); }
+  }
+  const gt = cx.createLinearGradient(0, ty - ry, 0, ty + ry * 2.2); gt.addColorStop(0, '#5a3a1c'); gt.addColorStop(1, '#1b0f07');
+  cx.fillStyle = gt; cx.beginPath(); cx.ellipse(tx, ty, rx, ry, 0, Math.PI, 0); cx.lineTo(tx + rx, ty + ry * 3); cx.lineTo(tx - rx, ty + ry * 3); cx.closePath(); cx.fill();
+  cx.fillStyle = '#2a1a0c'; cx.beginPath(); cx.ellipse(tx, ty, rx, ry, 0, 0, 7); cx.fill();
+  cx.strokeStyle = 'rgba(214,164,67,.85)'; cx.lineWidth = Math.max(1.5, R * .03); cx.beginPath(); cx.ellipse(tx, ty, rx, ry, 0, 0, 7); cx.stroke();
+  cx.lineWidth = Math.max(1, R * .015); cx.beginPath(); cx.ellipse(tx, ty + ry * 1.2, rx, ry, 0, 0, Math.PI); cx.stroke();
+  cx.restore();
+}
+function silhouette(ox, oy, R) {
+  const hy = oy - R * .55, hr = R * .38;
+  cx.beginPath(); cx.arc(ox, hy, hr, 0, 7);
+  cx.moveTo(ox - R * .16, hy + hr * .9); cx.lineTo(ox - R * .2, oy + R * .2);
+  cx.quadraticCurveTo(ox - R * 1.2, oy + R * .3, ox - R * 1.35, H); cx.lineTo(ox + R * 1.35, H);
+  cx.quadraticCurveTo(ox + R * 1.2, oy + R * .3, ox + R * .2, oy + R * .2); cx.lineTo(ox + R * .16, hy + hr * .9);
+}
+
+/* the sitting's clock runs on a timer, not the animation frame, so it keeps time when the tab is hidden or the screen sleeps */
+let lastTick = performance.now();
+setInterval(() => {
+  const now = performance.now(), raw = Math.min(1.5, (now - lastTick) / 1000); lastTick = now;
+  if (S.on && S.phase === 'connect') {
+    if (S.holding) { S.holdT += raw; const lit = Math.min(12, Math.floor(S.holdT / .8)); if (lit > S.lit) { S.lit = lit; bowl(hz(12 + lit), .035, 2, .1); $('holdN').textContent = lit < 12 ? `${lit} of 12 rods` : 'Connected'; if (lit === 12) connected(); } }
+  }
+  if (S.on && S.plan.length) { const k = Math.floor((now - S.B0) / BR); if (k !== S.k) { S.k = k; if (k >= S.plan.length) { S.plan = []; settle(); } else { S.phase = S.plan[k].ph; S.plan[k].fn(); } } }
+}, 100);
+
+let last = performance.now(), binAt = 0;
+function frame(now) { requestAnimationFrame(frame); draw(now); }
+if (FAST) setInterval(() => { if (document.hidden) draw(performance.now()); }, 120);   // preview only: keep drawing in a hidden pane
+function draw(now) {
+  const dt = Math.min(.1, (now - last) / 1000); last = now;
+  if (!W) return;
+  for (let i = 0; i < 12; i++) S.rods[i] += ((S.on && (i < S.lit || S.plan.length || S.phase === 'settling' || S.phase === 'wake') ? 1 : S.on ? 0 : .18) - S.rods[i]) * Math.min(1, dt * 3);
+  // everything eases: depth, the eyes-closed glow and the bloom all move over seconds, never in a flash
+  S.depth += (S.dT - S.depth) * Math.min(1, dt * .25);
+  S.ec += (S.ecT - S.ec) * Math.min(1, dt * .6);
+  S.bloom += (S.bloomT - S.bloom) * Math.min(1, dt * (S.bloomT > S.bloom ? .22 : .14));
+  S.passA += ((S.phase === 'pass' ? 1 : 0) - S.passA) * Math.min(1, dt * .5);
+  const mo = calm ? .35 : 1;
+  S.spin += dt * (12 - 8 * clamp(S.depth / .6)) / 60 * Math.PI * 2 * mo;
+  S.spin2 += dt * Math.PI * 2 * (.14 - .09 * clamp(S.depth / .6)) * mo;
+  S.pend += dt * Math.PI * 2 * (1 - .6 * clamp(S.depth / .45));
+  if (bin && now - binAt > 1000) { binAt = now; bin.r.o.frequency.setTargetAtTime(200 + 10 - 5 * S.depth, AC.currentTime, 1.5); }
+
+  const b = breath(now), R = Math.min(W, H) * (S.on ? .2 : .17), ox = W / 2, oy = H * .42, dim = 1 - .42 * S.depth;
+  cx.setTransform(1, 0, 0, 1, 0, 0); cx.globalAlpha = 1;
+  cx.fillStyle = '#070508'; cx.fillRect(0, 0, W, H);
+  const room = cx.createRadialGradient(ox, oy, 0, ox, oy, Math.max(W, H) * .7); room.addColorStop(0, `rgba(60,36,16,${.55 * dim})`); room.addColorStop(1, 'rgba(7,5,8,0)'); cx.fillStyle = room; cx.fillRect(0, 0, W, H);
+  const oa = (1 - S.ec) * dim;
+  drawTub(ox, oy, R, b, oa * .95);
+  const objA = oa * (1 - .7 * S.passA);
+  cx.save(); cx.translate(ox, oy);
+  ({ eye: drawEye, spiral: drawSpiral, pendulum: drawPendulum, wheel: drawWheel })[ST.obj](R, b, objA);
+  cx.restore();
+  // the breath ring
+  if (S.on) { cx.save(); cx.globalAlpha = oa * .35; cx.strokeStyle = '#f0d68f'; cx.lineWidth = Math.max(1, D); cx.beginPath(); cx.arc(ox, oy, R * (1.28 + .14 * b), 0, 7); cx.stroke(); cx.restore(); }
+  // the passes: a band of light down the sitter's outline on every out-breath
+  if (S.passA > .01) {
+    cx.save(); cx.globalAlpha = S.passA * oa; silhouette(ox, oy, R); cx.strokeStyle = 'rgba(240,214,143,.3)'; cx.lineWidth = Math.max(1, D * 1.2); cx.stroke(); cx.clip();
+    const t = ((now - S.B0) % BR) / BR;
+    if (t >= .4) { const p = ease((t - .4) / .6), top = oy - R * 1, y = top + (H - top) * p, bh = R * .7; const g = cx.createLinearGradient(0, y - bh, 0, y + bh * .3); g.addColorStop(0, 'rgba(240,214,143,0)'); g.addColorStop(.8, `rgba(255,222,160,${.3 * Math.sin(Math.PI * p)})`); g.addColorStop(1, 'rgba(240,214,143,0)'); cx.fillStyle = g; cx.fillRect(0, y - bh, W, bh * 1.3); }
+    cx.restore();
+  }
+  if (S.trails.length) {
+    cx.save();
+    for (const p of S.trails) { p.y += dt * 26 * D; p.life -= dt * .45; cx.globalAlpha = Math.max(0, p.life) * .75; cx.fillStyle = '#f0c46a'; cx.beginPath(); cx.arc(p.x, p.y, p.s * 2.2 * D, 0, 7); cx.fill(); }
+    S.trails = S.trails.filter(p => p.life > 0); cx.restore();
+  }
+  // eyes closed: a dim warm field to see through the lids
+  if (S.ec > .01) { cx.save(); cx.globalAlpha = S.ec; const g = cx.createRadialGradient(ox, oy, 0, ox, oy, Math.max(W, H) * .75); g.addColorStop(0, 'rgba(176,82,30,.55)'); g.addColorStop(1, 'rgba(70,26,10,.5)'); cx.fillStyle = g; cx.fillRect(0, 0, W, H); cx.restore(); }
+  // the crisis: one slow warm bloom
+  if (S.bloom > .005) { cx.save(); const g = cx.createRadialGradient(ox, oy, 0, ox, oy, Math.max(W, H) * .8); g.addColorStop(0, `rgba(255,206,140,${.5 * S.bloom})`); g.addColorStop(.5, `rgba(230,140,60,${.22 * S.bloom})`); g.addColorStop(1, 'rgba(120,50,20,0)'); cx.fillStyle = g; cx.fillRect(0, 0, W, H); cx.restore(); }
+}
+requestAnimationFrame(frame);
+
+/* ---------- drawers ---------- */
+function closeDrawer() { $('drawer').classList.remove('on'); ['learnBtn', 'bookBtn'].forEach(b => $(b).setAttribute('aria-pressed', 'false')); }
+function drawer(which) {
+  const d = $('drawer'), btn = which === 'learn' ? 'learnBtn' : 'bookBtn';
+  if (d.classList.contains('on') && d.dataset.w === which) { closeDrawer(); return; }
+  ['learnBtn', 'bookBtn'].forEach(b => $(b).setAttribute('aria-pressed', String(b === btn))); d.dataset.w = which;
+  let h = '<button type="button" class="x" aria-label="Close">✕</button>';
+  if (which === 'learn') h += `<h2>How it works</h2><p class="sub">the magnetic salon, the short version</p>
+    <h3>The fluid</h3><p>One fine fluid runs through the stars, the earth and every living body, in tides like the sea. When it flows you’re in harmony. When it sticks, you feel it. It can be stored in water, iron and glass, carried by sound, and thrown back by mirrors, which is why the old rooms had both.</p>
+    <h3>The tub</h3><p>Paris, the 1780s. Sitters gathered round a covered oak tub of magnetised water, bottles and iron filings. Bent iron rods came out of the lid. Each sitter held a rod to wherever it hurt and was roped to the next person, thumb to thumb, so the fluid went round the whole circle. Here you hold the cord and the rods light.</p>
+    <h3>The passes</h3><p>Slow sweeps of the hands down the body, head to feet, close enough to feel and barely touching. They move the fluid along. Here it’s a band of light on every out-breath, and your own hand if you drag down.</p>
+    <h3>The glass</h3><p>Glass bowls nested on a spinning rod and played with a wet finger. It was the sound of the salons. People said it went straight to the nerves, and some towns were said to have banned it. Every tone in here is built the same way: a few partials, a slow swell, the rub of a finger.</p>
+    <h3>The light you stare at</h3><p>Decades later a surgeon found that staring at a bright point held a little above the eyes made the lids heavy and the mind narrow. That’s the eye, the spiral, the pendulum and the mirror wheel. The wheel is the one bird-catchers used: spinning mirrors that birds can’t look away from.</p>
+    <h3>Going under twice</h3><p>Eyes closed, eyes open, eyes closed again. Each time you go back down, you go further. The glass rings twice when it’s time to open.</p>
+    <h3>The crisis</h3><p>The peak of the old sessions: sitters shook, laughed, cried or fainted, and were carried to a padded room to come round. Here it’s a slow bloom of warm light and some quiet. You won’t need the padded room.</p>
+    <h3>Your words</h3><p>You chose every line you hear in the deep part. Nothing’s hidden and nothing’s added. Present tense, short, said three times with space around them.</p>
+    <h3>Coming up</h3><p>Five counts up, always. Wake at any second gives you three. Then thirty seconds of sitting still before you go anywhere.</p>
+    <p class="hint">Sound and light, not medicine.</p>`;
+  else { let J = []; try { J = JSON.parse(localStorage.getItem('vs-mesmer-journal') || '[]'); } catch (e) {}
+    h += `<h2>Journal</h2><p class="sub">${J.length} sitting${J.length === 1 ? '' : 's'} · this computer only</p>` + (J.length ? J.map(j => `<div class="entry"><small>${esc(new Date(j.at).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }))} · ${esc(INTENTS[j.intent]?.name || '')} · ${j.mins} min · depth ${j.depth}/10${j.woke ? ' · woke early' : ''}</small>${j.felt ? `<p>${esc(j.felt)}</p>` : ''}</div>`).join('') : '<p>Nothing yet. Go under first.</p>'); }
+  d.innerHTML = h; d.classList.add('on'); d.querySelector('.x').onclick = closeDrawer;
+}
+$('learnBtn').onclick = () => drawer('learn');
+$('bookBtn').onclick = () => drawer('book');
+
+controls(); fit();
+setTimeout(() => line(L.hello, { ms: 5200 }), 900);
+</script>
+<script id="vs-chrome">
+/* The shared frame for every page: the rooms as bold tabs (current room lit), a volume slider that every page's
+   sound obeys (window.VS_VOLUME, event 'vs-volume', remembered), gold sparks that follow the cursor and burst on a
+   click, and a dissolve between rooms. Costs nothing when idle: the spark canvas only draws while sparks are alive. */
+(function () {
+  /* ---------- the safety stage: every page's sound passes through it on the way to the speakers ----------
+     It fades in when a room's sound starts or wakes (no click on the first note), takes out sub-bass thumps and DC
+     (the usual cause of pops when things start and stop), catches anything that would clip (crackle), and fades out
+     when you leave a room, so nothing is cut off mid-wave. The Turntable gets no limiter: her masters stay as they are. */
+  (function safeAudio() {
+    if (!window.AudioNode || AudioNode.prototype.__vsSafe) return;
+    const P = AudioNode.prototype, orig = P.connect, bus = new WeakMap(), limit = !/deck\.html$/.test(location.pathname);
+    P.__vsSafe = true; window.__vsBuses = [];
+    function stage(ctx) {
+      let s = bus.get(ctx); if (s) return s;
+      const g = ctx.createGain(); g.gain.value = 0;
+      const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 16; hp.Q.value = .5; orig.call(g, hp); let last = hp;
+      if (limit) { const l = ctx.createDynamicsCompressor(); l.threshold.value = -1; l.knee.value = 0; l.ratio.value = 20; l.attack.value = .002; l.release.value = .12; orig.call(last, l); last = l; }
+      orig.call(last, ctx.destination);
+      const ramp = (to, d) => { const t = ctx.currentTime; g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(g.gain.value, t); g.gain.linearRampToValueAtTime(to, t + d); };
+      s = { g, ctx, up: (d = .45) => ramp(1, d), down: (d = .18) => ramp(0, d) };
+      if (ctx.state === 'running') s.up(.6);
+      ctx.addEventListener('statechange', () => { if (ctx.state === 'running') s.up(.35); });
+      bus.set(ctx, s); window.__vsBuses.push(s); return s;
+    }
+    P.connect = function (dest, out, inp) {
+      if (dest instanceof AudioDestinationNode) { const s = stage(dest.context); if (out == null) orig.call(this, s.g); else orig.call(this, s.g, out); return dest; }
+      return out == null ? orig.call(this, dest) : inp == null ? orig.call(this, dest, out) : orig.call(this, dest, out, inp);
+    };
+    // leaving: every sound on the page fades out (the stage for Web Audio, a quick ramp for films playing on their own)
+    window.VS_FADE_OUT = (ms = 200) => {
+      for (const s of window.__vsBuses) try { s.down(ms / 1000); } catch (e) {}
+      document.querySelectorAll('video, audio').forEach(m => { if (m.muted || m.paused || !m.volume) return; const v0 = m.__vsPre = m.volume, t0 = performance.now(); const step = () => { const k = Math.min(1, (performance.now() - t0) / ms); m.volume = v0 * (1 - k); if (k < 1) requestAnimationFrame(step); }; step(); });
+    };
+    addEventListener('pagehide', () => window.VS_FADE_OUT(60));
+  })();
+
+  /* ---------- films stay in the page: a phone never lifts one out ----------
+     iPhones play a video full-screen, offer picture-in-picture, or pop it into a floating preview on a long press, unless
+     told not to. Every film here is part of the room's background, so each one is pinned: inline, no picture-in-picture,
+     no AirPlay, no controls, and touches pass through it to the room. Films made later (by a room's own code) get the same
+     the moment they're added or played. */
+  (function pinFilms() {
+    const pin = v => { if (!v || v.__vsPinned || v.tagName !== 'VIDEO') return; v.__vsPinned = true;
+      v.playsInline = true; v.setAttribute('playsinline', ''); v.setAttribute('webkit-playsinline', ''); v.setAttribute('x-webkit-airplay', 'deny');
+      v.controls = false; v.removeAttribute('controls'); try { v.disablePictureInPicture = true; v.setAttribute('disablepictureinpicture', ''); } catch (e) {}
+      try { v.disableRemotePlayback = true; v.setAttribute('disableremoteplayback', ''); } catch (e) {}
+      v.addEventListener('webkitbeginfullscreen', () => { try { v.webkitExitFullscreen(); } catch (e) {} });
+      v.addEventListener('enterpictureinpicture', () => { try { document.exitPictureInPicture(); } catch (e) {} }); };
+    const all = () => document.querySelectorAll('video').forEach(pin); all();
+    const play = HTMLMediaElement.prototype.play; HTMLMediaElement.prototype.play = function () { pin(this); return play.apply(this, arguments); };
+    new MutationObserver(ms => { for (const m of ms) for (const n of m.addedNodes) { if (n.tagName === 'VIDEO') pin(n); else if (n.querySelectorAll) n.querySelectorAll('video').forEach(pin); } }).observe(document.documentElement, { childList: true, subtree: true });
+    const st = document.createElement('style'); st.textContent = 'video { pointer-events: none; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; } video::-webkit-media-controls, video::-webkit-media-controls-start-playback-button, video::-webkit-media-controls-overlay-play-button { display: none !important; -webkit-appearance: none; }';
+    (document.head || document.documentElement).append(st);
+  })();
+
+  const ROOMS = [['./', 'Templum', '☥', 'The board. Ask him.'], ['parlour.html', 'Parlour', '♄', 'His console. Every key plays.'], ['deck.html', 'Turntable', '◉', 'ANIMUSCULT on his decks.'], ['palm.html', 'Palm', '✶', 'Your hand, read.'], ['crystal.html', 'Crystal', '◎', 'The seer’s sitting.'], ['mirror.html', 'Mirror', '◐', 'Two mirrors, facing.'], ['mesmer.html', 'Trance', '❂', 'The magnetic tub. Go under.'], ['sleep.html', 'Sleep', '☾', 'Sleep sounds. The screen can go off.'], ['geometry.html', 'Geometry', '❋', 'Sacred geometry and mandalas.'], ['forge.html', 'Forge', '✧', 'Sigils from your words.'], ['engine.html', 'Engine', '⚙︎', 'The dome machine. Scry with him.'], ['radio.html', 'Radio', '⌁', 'Live voices from everywhere.'], ['compendium.html', 'Compendium', '☘', 'The library of plant medicine, A to Z.']];
+  window.VS_ROOMS = ROOMS;   // the Templum's floating doors read this, so a new room shows up there too
+  const here = (location.pathname.split('/').pop() || 'index.html').replace('index.html', '') || './';
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches && !document.documentElement.classList.contains('motion-full');
+
+  /* ---------- volume ---------- */
+  let vol = .8; try { const v = parseFloat(localStorage.getItem('vs-volume')); if (v >= 0 && v <= 1) vol = v; } catch (e) {}
+  window.VS_VOLUME = vol;
+  const setVol = v => { vol = window.VS_VOLUME = Math.max(0, Math.min(1, v)); try { localStorage.setItem('vs-volume', String(vol)); } catch (e) {} dispatchEvent(new CustomEvent('vs-volume', { detail: vol })); document.querySelectorAll('.vs-vol input').forEach(i => { i.value = Math.round(vol * 100); }); document.querySelectorAll('.vs-vol').forEach(l => l.classList.toggle('mute', vol === 0)); };
+  // media elements on the page follow it too (films, his recorded voice)
+  const mediaVol = () => document.querySelectorAll('video, audio').forEach(m => { if (m.dataset.vsBase == null) m.dataset.vsBase = m.volume; m.volume = Math.min(1, +m.dataset.vsBase * vol); });
+  addEventListener('vs-volume', () => { if (!document.body?.dataset.novol) mediaVol(); });
+
+  /* ---------- styles (added last, so they win) ---------- */
+  const css = `
+.bar { gap: 7px !important; }
+.bar h1 { display: none !important; }
+.bar .vs-rooms { display: flex; gap: 6px; align-items: center; overflow-x: auto; scrollbar-width: none; flex: 1 1 auto; min-width: 0; }
+.bar .vs-rooms::-webkit-scrollbar { display: none; }
+.bar a.vs-room { position: relative; display: inline-flex !important; align-items: center; gap: 7px; font-family: "IBM Plex Mono", ui-monospace, monospace !important; font-size: 11px !important; font-weight: 400; letter-spacing: .16em !important; text-transform: uppercase; color: rgba(243,230,196,.62) !important; text-decoration: none; padding: 7px 10px 7px 8px !important; border: 0 !important; border-radius: 0; background: none !important; box-shadow: none; transition: color .5s ease, text-shadow .5s ease; white-space: nowrap; }
+.bar a.vs-room i { font-style: normal; font-size: 14px; color: rgba(240,199,106,.7); transition: color .5s, text-shadow .5s; }
+.bar a.vs-room::after { content: ""; position: absolute; left: 10px; right: 10px; bottom: 2px; height: 1px; background: linear-gradient(90deg, transparent, rgba(240,214,143,.85), transparent); opacity: 0; transform: scaleX(.4); transition: opacity .5s ease, transform .5s ease; }
+.bar a.vs-room:hover { color: #fbefcf !important; text-shadow: 0 0 14px rgba(255,210,130,.45); }
+.bar a.vs-room:hover i { color: #f6d27e; text-shadow: 0 0 10px rgba(240,190,90,.7); }
+.bar a.vs-room:hover::after { opacity: .5; transform: none; }
+.bar a.vs-room[aria-current="page"] { color: #fff3d2 !important; text-shadow: 0 0 16px rgba(255,205,120,.55); }
+.bar a.vs-room[aria-current="page"] i { color: #ffd77e; text-shadow: 0 0 12px rgba(255,200,100,.9); }
+.bar a.vs-room[aria-current="page"]::after { opacity: 1; transform: none; }
+.bar > button:not(.unzoom):not(.vs-menu), .bar > a:not(.vs-room), .bar .motion-btn { background: none !important; border: 0 !important; border-bottom: 1px solid transparent !important; border-radius: 0 !important; box-shadow: none !important; color: rgba(238,228,203,.66) !important; transition: color .5s, border-color .5s !important; }
+.bar > button:not(.unzoom):not(.vs-menu):hover, .bar > a:not(.vs-room):hover, .bar .motion-btn:hover, .bar > button[aria-pressed="true"], .bar > button.on { color: #f0d68f !important; border-bottom-color: rgba(240,214,143,.55) !important; }
+.vs-vol { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border: 0; border-radius: 3px; color: rgba(240,199,106,.8); background: none; }
+/* the room breathes out when nobody is touching anything: the frame steps back and leaves the room */
+.bar, .foot, .vs-vol.float { transition: opacity 1.8s ease; }
+body.vs-quiet .bar, body.vs-quiet .foot, body.vs-quiet .vs-vol.float { opacity: 0; }
+body.sitting .bar { opacity: 0 !important; }   /* a sitting hides the frame completely: no half-dimmed grey bar */
+body.sitting .bar:hover, body.sitting .bar:focus-within { opacity: 1 !important; }
+body.vs-quiet .bar:hover, body.vs-quiet .bar:focus-within, body.vs-quiet .vs-vol.float:hover { opacity: 1; transition-duration: .4s; }
+/* one film over every room: a soft vignette and a fine grain, so the rooms read as one place */
+.vs-film { position: fixed; inset: 0; z-index: 19; pointer-events: none; background: radial-gradient(ellipse 75% 70% at 50% 54%, rgba(0,0,0,0) 55%, rgba(0,0,0,.34) 100%); }
+.vs-film::after { content: ""; position: absolute; inset: 0; opacity: .05; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -.35'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.foot { font-size: 11.5px !important; letter-spacing: .04em !important; color: rgba(238,228,203,.5) !important; bottom: 6px !important; }
+/* phones: the rooms fold into one menu button; the page's own buttons move into the same sheet */
+.bar .vs-menu { display: none; align-items: center; gap: 9px; flex: none; font: 500 11.5px/1 "IBM Plex Mono", ui-monospace, monospace; letter-spacing: .16em; text-transform: uppercase; color: #fff3d2; background: linear-gradient(rgba(214,164,67,.16), rgba(214,164,67,.06)); border: 1px solid rgba(240,214,143,.5); border-radius: 3px; padding: 0 12px 0 10px; height: 32px; cursor: pointer; box-shadow: 0 0 0 rgba(240,199,106,0), inset 0 0 12px rgba(214,164,67,.08); transition: border-color .3s, box-shadow .3s, background .3s; }
+.bar .vs-menu:hover, .bar .vs-menu[aria-expanded="true"] { border-color: #f0d68f; background: linear-gradient(rgba(214,164,67,.28), rgba(214,164,67,.1)); box-shadow: 0 0 18px rgba(240,199,106,.28), inset 0 0 12px rgba(214,164,67,.12); }
+.bar .vs-menu svg { width: 15px; height: 15px; flex: none; color: #ffd77e; }
+.bar .vs-menu .vs-n { font-weight: 400; font-size: 10px; letter-spacing: 0; color: #120a04; background: #e9c46e; border-radius: 8px; padding: 2px 5px 1px; }
+.bar .vs-menu .vs-here { display: inline-flex; align-items: center; gap: 6px; padding-left: 9px; border-left: 1px solid rgba(240,214,143,.3); color: rgba(243,230,196,.75); letter-spacing: .12em; }
+.bar .vs-menu .vs-here i { font-style: normal; font-size: 13px; color: #ffd77e; }
+.bar .vs-menu.vs-call { animation: vsCall 1.6s ease-in-out 4; }
+@keyframes vsCall { 50% { border-color: #ffe7a8; box-shadow: 0 0 26px rgba(255,205,110,.55), inset 0 0 14px rgba(255,205,110,.2); } }
+.bar.vs-tight .vs-rooms { display: none !important; }
+.bar.vs-tight .vs-menu { display: inline-flex; }
+.bar > button, .bar > a:not(.vs-room), .bar .motion-btn, .bar > label { white-space: nowrap; flex: none; }
+/* a room's opening screen sits under the bar, so the way to the other rooms is there from the first second */
+body:has(.gate:not([hidden])) .bar { z-index: 9 !important; opacity: 1 !important; }
+/* the first visit: one quiet word under the rooms, once */
+.vs-hint { position: fixed; z-index: 9991; max-width: 270px; padding: 11px 14px 12px; font: italic 400 15px/1.35 "IM Fell English", Georgia, serif; color: #f3e6c4; background: rgba(8,6,12,.94); border: 1px solid rgba(240,214,143,.45); box-shadow: 0 10px 40px rgba(0,0,0,.6), 0 0 22px rgba(214,164,67,.15); opacity: 0; transform: translateY(-4px); transition: opacity .5s ease, transform .5s ease; pointer-events: none; }
+.vs-hint.on { opacity: 1; transform: none; }
+.vs-hint::before { content: ""; position: absolute; top: -6px; left: var(--ax, 22px); width: 10px; height: 10px; background: inherit; border-left: 1px solid rgba(240,214,143,.45); border-top: 1px solid rgba(240,214,143,.45); transform: rotate(45deg); }
+.vs-hint b { display: block; margin-bottom: 3px; font: 500 10px/1 "IBM Plex Mono", ui-monospace, monospace; font-style: normal; letter-spacing: .2em; text-transform: uppercase; color: #f0c76a; }
+.vs-sheet { position: fixed; inset: 0; z-index: 9990; overflow-y: auto; background: rgba(5,4,10,.97); color: #efe4c8; padding: calc(14px + env(safe-area-inset-top, 0px)) max(18px, env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px)); display: grid; align-content: start; gap: 14px; opacity: 0; transition: opacity .25s ease; }
+.vs-sheet.on { opacity: 1; }
+.vs-sheet .vs-sh-top { display: flex; align-items: center; justify-content: space-between; }
+.vs-sheet h2 { margin: 0; font: 500 11px/1 "IBM Plex Mono", ui-monospace, monospace; letter-spacing: .22em; text-transform: uppercase; color: rgba(240,199,106,.85); }
+.vs-sheet .vs-x { width: 44px; height: 44px; border: 0; background: none; color: #efe4c8; font-size: 22px; cursor: pointer; }
+.vs-sheet .vs-sh-rooms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.vs-sheet .vs-sh-rooms a { display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 10px 14px; border: 1px solid rgba(214,164,67,.28); color: #f3e6c4; text-decoration: none; font: 400 19px/1.1 "IM Fell English SC", "IM Fell English", Georgia, serif; }
+.vs-sheet .vs-sh-rooms a i { font-style: normal; font-size: 22px; color: #f0c76a; width: 26px; text-align: center; }
+.vs-sheet .vs-sh-rooms a span { display: grid; gap: 4px; }
+.vs-sheet .vs-sh-rooms a small { font: italic 400 12.5px/1.25 "IM Fell English", Georgia, serif; color: rgba(239,228,200,.6); }
+.vs-sheet.drop { inset: auto; top: calc(var(--vs-bar-b, 46px) + 6px); left: var(--vs-drop-x, 10px); width: min(360px, calc(100vw - 20px)); max-height: calc(100vh - var(--vs-bar-b, 46px) - 20px); padding: 14px; gap: 10px; background: rgba(8,6,12,.96); border: 1px solid rgba(240,214,143,.4); box-shadow: 0 18px 60px rgba(0,0,0,.7), 0 0 30px rgba(214,164,67,.12); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); transform: translateY(-6px); transition: opacity .2s ease, transform .2s ease; }
+.vs-sheet.drop.on { transform: none; }
+.vs-sheet.drop .vs-x { width: 32px; height: 32px; font-size: 16px; }
+.vs-sheet.drop .vs-sh-rooms { grid-template-columns: 1fr; gap: 2px; }
+.vs-sheet.drop .vs-sh-rooms a { min-height: 50px; border-color: transparent; font-size: 18px; transition: background .2s, border-color .2s; }
+.vs-sheet.drop .vs-sh-rooms a:hover { background: rgba(214,164,67,.1); border-color: rgba(214,164,67,.3); }
+.vs-sheet .vs-sh-rooms a[aria-current="page"] { border-color: #f0d68f; background: rgba(214,164,67,.14); box-shadow: 0 0 22px rgba(214,164,67,.18); }
+.vs-sheet .vs-sh-tools { display: grid; gap: 0; border-top: 1px solid rgba(214,164,67,.2); }
+.vs-sheet .vs-sh-tools > * { display: flex !important; align-items: center; width: 100%; min-height: 48px; margin: 0 !important; padding: 0 4px !important; text-align: left; font: 500 12.5px/1.2 "IBM Plex Mono", ui-monospace, monospace !important; letter-spacing: .12em !important; text-transform: uppercase; color: #efe4c8 !important; background: none !important; border: 0 !important; border-bottom: 1px solid rgba(214,164,67,.14) !important; border-radius: 0 !important; box-shadow: none !important; position: static !important; opacity: 1 !important; text-decoration: none; cursor: pointer; }
+.vs-sheet .vs-sh-tools:empty { display: none; }
+@media (max-width: 760px) { .bar .vs-rooms { display: none !important; } .bar .vs-menu { display: inline-flex; } .bar .vs-menu .vs-here span { display: none; } .bar .vs-vol { margin-left: auto; } }
+/* power: every room switches off and on from the bar */
+.bar .vs-pow { display: inline-flex !important; align-items: center; gap: 7px; flex: none; font: 500 10.5px/1 "IBM Plex Mono", ui-monospace, monospace !important; letter-spacing: .16em !important; text-transform: uppercase; color: rgba(238,228,203,.7) !important; background: none !important; border: 0 !important; padding: 6px 6px !important; cursor: pointer; white-space: nowrap; }
+.bar .vs-pow i { width: 7px; height: 7px; border-radius: 50%; background: #7dffb0; box-shadow: 0 0 8px #3dff8a, 0 0 2px #fff inset; transition: background .4s, box-shadow .4s; }
+.bar .vs-pow svg { width: 14px; height: 14px; }
+.bar .vs-pow:hover { color: #f0d68f !important; }
+body.vs-off .bar .vs-pow i { background: #4a1712; box-shadow: none; }
+body.vs-off .bar { z-index: 9990 !important; opacity: 1 !important; }
+.vs-offveil { position: fixed; inset: 0; z-index: 9989; display: grid; place-items: center; background: #030206; opacity: 0; pointer-events: none; transition: opacity .45s ease .25s; }
+.vs-offveil::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px; background: linear-gradient(90deg, transparent, rgba(255,236,190,.9), transparent); box-shadow: 0 0 24px rgba(255,214,140,.8); transform: scaleX(0); opacity: 0; }
+body.vs-off .vs-offveil { opacity: 1; pointer-events: auto; }
+body.vs-off .vs-offveil::before { animation: vsCrt .6s ease-out; }
+@keyframes vsCrt { 0% { transform: scaleX(1) scaleY(30); opacity: .0; } 30% { transform: scaleX(1) scaleY(1); opacity: 1; } 100% { transform: scaleX(0); opacity: 0; } }
+.vs-offveil button { display: grid; justify-items: center; gap: 14px; background: none; border: 0; color: rgba(243,230,196,.7); font: italic 400 17px/1.3 "IM Fell English", Georgia, serif; cursor: pointer; opacity: 0; transition: opacity .6s ease .45s, color .3s; }
+body.vs-off .vs-offveil button { opacity: 1; }
+.vs-offveil button:hover { color: #fff3d2; }
+.vs-offveil button span { display: grid; place-items: center; width: 74px; height: 74px; border-radius: 50%; border: 1px solid rgba(240,214,143,.45); color: #f0c76a; box-shadow: 0 0 30px rgba(214,164,67,.15), inset 0 0 20px rgba(214,164,67,.08); transition: box-shadow .4s, border-color .4s; }
+.vs-offveil button:hover span { border-color: #f0d68f; box-shadow: 0 0 40px rgba(240,199,106,.35), inset 0 0 20px rgba(214,164,67,.15); }
+.vs-offveil button svg { width: 30px; height: 30px; }
+.vs-vol svg { width: 16px; height: 16px; flex: none; cursor: pointer; }
+.vs-vol.mute svg .w { display: none; }
+.vs-vol input { -webkit-appearance: none; appearance: none; width: 84px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, #f0c76a var(--p, 80%), rgba(214,164,67,.25) var(--p, 80%)); outline: none; cursor: pointer; }
+.vs-vol input::-webkit-slider-thumb { -webkit-appearance: none; width: 13px; height: 13px; border-radius: 50%; background: radial-gradient(#fff6d8, #d6a443); box-shadow: 0 0 8px rgba(240,200,120,.8); border: 0; }
+.vs-vol input::-moz-range-thumb { width: 13px; height: 13px; border-radius: 50%; background: #e8c070; border: 0; }
+.vs-vol.float { position: fixed; right: 14px; bottom: 14px; z-index: 40; background: rgba(6,5,10,.85); }
+.vs-fade { position: fixed; inset: 0; z-index: 9998; pointer-events: none; background: radial-gradient(ellipse at 50% 50%, rgba(255,214,140,.0), #030206 70%); opacity: 0; transition: opacity .32s ease; }
+.vs-fade.arrive { transition: opacity .9s cubic-bezier(.3,.1,.3,1); }
+.vs-fade.on { opacity: 1; background: radial-gradient(ellipse at 50% 50%, rgba(255,214,140,.25), #030206 60%); }
+#vs-sparks { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 9997; pointer-events: none; }
+@media (max-width: 1100px) { .bar a.vs-room { font-size: 10.5px !important; padding: 6px 9px 6px 8px !important; letter-spacing: .1em !important; } }
+@media (max-width: 760px) { .vs-vol input { width: 56px; } }
+/* step outside: real-world help, plain on purpose (outside the room's look and not in his voice); never fades, never hidden */
+.vs-out { position: fixed; left: max(10px, env(safe-area-inset-left, 0px)); bottom: max(10px, env(safe-area-inset-bottom, 0px)); z-index: 9995; display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; font: 500 11px/1 system-ui, -apple-system, "Segoe UI", sans-serif; letter-spacing: .02em; color: rgba(255,255,255,.62); background: rgba(20,20,24,.72); border: 1px solid rgba(255,255,255,.18); border-radius: 999px; cursor: pointer; opacity: .7; transition: opacity .3s, color .3s, border-color .3s; }
+.vs-out:hover, .vs-out:focus-visible { opacity: 1; color: #fff; border-color: rgba(255,255,255,.5); }
+.vs-out svg { width: 12px; height: 12px; }
+.vs-outp { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; padding: 16px; background: rgba(0,0,0,.6); }
+.vs-outp[hidden] { display: none; }
+.vs-outp .vs-ob { width: min(520px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; padding: 22px 22px 18px; background: #f6f6f4; color: #1d1d1f; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.5); font: 400 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+.vs-outp h2 { margin: 0 0 8px; font: 600 19px/1.25 system-ui, -apple-system, "Segoe UI", sans-serif; letter-spacing: 0; text-transform: none; color: #1d1d1f; }
+.vs-outp h3 { margin: 16px 0 6px; font: 600 13px/1.3 system-ui, -apple-system, "Segoe UI", sans-serif; color: #444; }
+.vs-outp p { margin: 0 0 8px; }
+.vs-outp ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.vs-outp li a { display: block; padding: 9px 12px; border-radius: 8px; background: #fff; border: 1px solid #ddd; color: #0b57d0; text-decoration: none; }
+.vs-outp li a:hover { border-color: #0b57d0; }
+.vs-outp li a small { display: block; color: #555; font-size: 13px; }
+.vs-outp .vs-oe { padding: 10px 12px; border-radius: 8px; background: #fff1f0; border: 1px solid #f3c2bd; }
+.vs-outp .vs-of { margin-top: 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; color: #666; font-size: 12.5px; }
+.vs-outp .vs-of button { padding: 8px 16px; border-radius: 8px; border: 1px solid #bbb; background: #fff; color: #1d1d1f; font: 500 14px system-ui, -apple-system, sans-serif; cursor: pointer; }
+@media print { .vs-out { display: none; } }
+`;
+  const st = document.createElement('style'); st.textContent = css;
+
+  function build() {
+    document.head.appendChild(st);
+    // the rooms
+    const bar = document.querySelector('header.bar, .bar');
+    if (bar) {
+      bar.querySelectorAll(':scope > a').forEach(a => { const h = a.getAttribute('href') || ''; if (ROOMS.some(([r]) => r === h || (r === './' && (h === './' || h === 'index.html')))) a.remove(); });
+      const nav = document.createElement('nav'); nav.className = 'vs-rooms'; nav.setAttribute('aria-label', 'Rooms');
+      for (const [href, name, glyph] of ROOMS) { const a = document.createElement('a'); a.className = 'vs-room'; a.href = href; a.innerHTML = `<i aria-hidden="true">${glyph}</i><span>${name}</span>`; a.title = name; if (href === here) a.setAttribute('aria-current', 'page'); nav.append(a); }
+      bar.prepend(nav);
+    }
+    // volume (the Turntable has its own big volume in the transport, so it gets none here)
+    if (!document.body.dataset.novol) {
+      const l = document.createElement('label'); l.className = 'vs-vol' + (bar ? '' : ' float'); l.title = 'Volume (every room)';
+      l.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path class="w" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><input type="range" min="0" max="100" step="1" aria-label="Volume">`;
+      const inp = l.querySelector('input'), paint = () => inp.style.setProperty('--p', inp.value + '%');
+      inp.value = Math.round(vol * 100); paint(); l.classList.toggle('mute', vol === 0);
+      inp.addEventListener('input', () => { setVol(inp.value / 100); paint(); });
+      let before = vol; l.querySelector('svg').addEventListener('click', e => { e.preventDefault(); if (vol > 0) { before = vol; setVol(0); } else setVol(before || .8); paint(); });
+      if (bar) { const last = bar.querySelector('#txBtn, #fsBtn, #listBtn'); last ? last.before(l) : bar.append(l); } else document.body.append(l);
+    }
+    power(bar);
+    outside();
+    if (bar) menu(bar);   // after the volume is placed, so the volume stays in the bar on a phone
+    if (!document.body.dataset.novol) mediaVol();
+    const fs = document.getElementById('fsBtn'); if (fs && innerWidth < 1180) { fs.textContent = '⤢'; fs.title = 'Full screen'; fs.setAttribute('aria-label', 'Full screen'); }
+    // the dissolve between rooms
+    const fade = document.createElement('div'); fade.className = 'vs-fade'; document.body.append(fade);
+    try { if (sessionStorage.getItem('vs-arrive')) { sessionStorage.removeItem('vs-arrive'); fade.style.transition = 'none'; fade.classList.add('on'); requestAnimationFrame(() => requestAnimationFrame(() => { fade.style.transition = ''; if (!calm) fade.classList.add('arrive'); fade.classList.remove('on'); setTimeout(() => fade.classList.remove('arrive'), 1000); })); } } catch (e) {}
+    // the film (pages that draw their own, like the radio, opt out with data-nofilm)
+    if (!document.body.dataset.nofilm) { const film = document.createElement('div'); film.className = 'vs-film'; film.setAttribute('aria-hidden', 'true'); document.body.append(film); }
+    // quiet: after a while with no hand on anything, the frame fades back. Never while typing or with a menu open
+    let qt = 0; const busy = () => { const a = document.activeElement; return a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable) || document.querySelector('.drawer.on, dialog[open], [aria-modal="true"]:not([hidden])'); };
+    const wake = () => { document.body.classList.remove('vs-quiet'); clearTimeout(qt); qt = setTimeout(function q() { if (busy()) { qt = setTimeout(q, 3000); return; } document.body.classList.add('vs-quiet'); }, 11000); };
+    ['pointermove', 'pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(ev => addEventListener(ev, wake, { passive: true })); wake();
+    document.addEventListener('click', e => {
+      const a = e.target.closest('a.vs-room, a.play-link'); if (!a || e.metaKey || e.ctrlKey || a.target === '_blank') return;
+      e.preventDefault(); burst(e.clientX, e.clientY, 26); fade.classList.add('on'); try { window.VS_FADE_OUT(calm ? 60 : 220); } catch (er) {} try { sessionStorage.setItem('vs-arrive', '1'); } catch (er) {}
+      setTimeout(() => { location.href = a.href; }, calm ? 60 : 240);
+    });
+    // instant rooms: when the pointer rests on a room tab, the browser builds that page in the background, so the click
+    // just swaps it in (Chrome's speculation rules; other browsers ignore this and load normally)
+    try { if (HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules')) { const sr = document.createElement('script'); sr.type = 'speculationrules';
+      sr.textContent = JSON.stringify({ prerender: [{ where: { and: [{ href_matches: '/*.html' }, { selector_matches: 'a.vs-room, a.play-link' }] }, eagerness: 'moderate' }] }); document.head.append(sr); } } catch (e) {}
+    sparks();
+  }
+
+  /* ---------- power: the room switches off (sound fades and stops, films pause, the screen closes like an old set) ---------- */
+  function power(bar) {
+    const ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v8M7.05 6.05a7.5 7.5 0 1 0 9.9 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+    const veil = document.createElement('div'); veil.className = 'vs-offveil'; veil.innerHTML = `<button type="button">${'<span>' + ICON + '</span>'}Switched off. Touch to wake the room.</button>`; document.body.append(veil);
+    let btn = null;
+    if (bar) { btn = document.createElement('button'); btn.type = 'button'; btn.className = 'vs-pow'; btn.innerHTML = '<i aria-hidden="true"></i>Power'; btn.title = 'Switch this room off and on'; btn.setAttribute('aria-pressed', 'true');
+      const v = bar.querySelector('.vs-vol'); v ? v.before(btn) : bar.append(btn); }
+    let paused = [];
+    const set = on => {
+      if (on === !document.body.classList.contains('vs-off')) return;
+      document.body.classList.toggle('vs-off', !on); if (btn) { btn.setAttribute('aria-pressed', String(on)); btn.title = on ? 'Switch this room off' : 'Switch this room on'; }
+      dispatchEvent(new CustomEvent('vs-power', { detail: { on } }));
+      if (!on) {
+        window.VS_FADE_OUT(260);
+        setTimeout(() => { if (document.body.classList.contains('vs-off')) { for (const s of window.__vsBuses) try { s.ctx.suspend(); } catch (e) {} paused = [...document.querySelectorAll('video')].filter(m => !m.paused); paused.forEach(m => m.pause()); } }, 300);
+      } else {
+        for (const s of window.__vsBuses) try { s.ctx.resume().then(() => s.up(.6)); } catch (e) {}
+        paused.forEach(m => { if (m.__vsPre != null) { m.volume = m.__vsPre; m.__vsPre = null; } m.play().catch(() => {}); }); paused = [];
+      }
+    };
+    window.VS_POWER = set;
+    btn && btn.addEventListener('click', () => set(document.body.classList.contains('vs-off')));
+    veil.querySelector('button').addEventListener('click', () => set(true));
+  }
+
+  /* ---------- step outside: real help, outside the game ---------- */
+  function outside() {
+    if (document.querySelector('.vs-out')) return;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'vs-out'; b.title = 'Real-world help, outside the game';
+    b.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2h7v12H3zM10 8h4M12 6l2 2-2 2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Step outside';
+    const p = document.createElement('div'); p.className = 'vs-outp'; p.hidden = true;
+    p.setAttribute('role', 'dialog'); p.setAttribute('aria-modal', 'true'); p.setAttribute('aria-labelledby', 'vs-out-h');
+    p.innerHTML = `<div class="vs-ob">
+      <h2 id="vs-out-h">Outside the game</h2>
+      <p>This is real-world help. The room's sound is switched off while you're here.</p>
+      <p class="vs-oe"><b>In danger, or might hurt yourself?</b> Call your local emergency number now: 911 (US, Canada), 999 (UK), 112 (EU and many countries), 000 (Australia).</p>
+      <h3>Talk to someone now</h3>
+      <ul>
+        <li><a href="tel:988">988 Suicide &amp; Crisis Lifeline<small>US · call or text 988, any time</small></a></li>
+        <li><a href="tel:116123">Samaritans · 116 123<small>UK and Ireland · free, any time</small></a></li>
+        <li><a href="https://findahelpline.com" target="_blank" rel="noopener">Find A Helpline<small>Free, confidential helplines in your country</small></a></li>
+      </ul>
+      <h3>Hearing voices, or seeing things others don't?</h3>
+      <ul>
+        <li><a href="https://www.hearing-voices.org" target="_blank" rel="noopener">Hearing Voices Network<small>Peer support groups</small></a></li>
+        <li><a href="https://www.intervoiceonline.org" target="_blank" rel="noopener">Intervoice<small>The international hearing voices network</small></a></li>
+      </ul>
+      <h3>Right now</h3>
+      <p>Feet on the floor. Name five things you can see, four you can touch, three you can hear, two you can smell, one you can taste. Breathe out slower than you breathe in.</p>
+      <div class="vs-of"><span>Nothing here is sent anywhere.</span><button type="button">Close</button></div></div>`;
+    // the floating corner button is off for now (the owner found it intrusive); the panel stays, opened by window.VS_OUTSIDE
+    // (the Compendium's rotary phone). To bring the button back, set SHOW_BUTTON to true.
+    const SHOW_BUTTON = false;
+    document.body.append(...(SHOW_BUTTON ? [b, p] : [p]));
+    let back = null;
+    const open = () => { back = document.activeElement; p.hidden = false; try { window.VS_POWER && window.VS_POWER(false); } catch (e) {} p.querySelector('.vs-ob').scrollTop = 0; p.querySelector('.vs-of button').focus({ preventScroll: true }); };
+    const close = () => { p.hidden = true; try { back && back.focus && back.focus(); } catch (e) {} };
+    b.addEventListener('click', open);
+    p.querySelector('.vs-of button').addEventListener('click', close);
+    p.addEventListener('click', e => { if (e.target === p) close(); });
+    addEventListener('keydown', e => {
+      if (p.hidden) return;
+      if (e.key === 'Escape') { e.stopImmediatePropagation(); e.preventDefault(); close(); return; }
+      if (e.key === 'Tab') { const f = [...p.querySelectorAll('a, button')], i = f.indexOf(document.activeElement); if (e.shiftKey ? i <= 0 : i === f.length - 1) { e.preventDefault(); f[e.shiftKey ? f.length - 1 : 0].focus(); } }
+      e.stopImmediatePropagation();   // the room's own keys (notes, Esc to end a sitting) stay quiet while this is open
+    }, true);
+    window.VS_OUTSIDE = open;
+    // a room with its own bar along the bottom (the Turntable's transport) gets the button lifted just above it
+    const place = () => {
+      b.style.bottom = ''; const o = b.getBoundingClientRect(); let lift = 0;
+      for (const e of document.querySelectorAll('body > *, body > * > *')) {
+        if (e === b || e === p || e.classList.contains('vs-film')) continue;
+        const cs = getComputedStyle(e); if (cs.position !== 'fixed' && cs.position !== 'absolute' || cs.display === 'none' || cs.visibility === 'hidden') continue;
+        const r = e.getBoundingClientRect(); if (r.height > innerHeight * .4 || r.bottom < innerHeight - 4 || r.left > o.right || r.right < o.left || r.top > o.bottom) continue;
+        lift = Math.max(lift, innerHeight - r.top + 8);
+      }
+      if (lift) b.style.bottom = lift + 'px';
+    };
+    if (SHOW_BUTTON) { place(); addEventListener('resize', place); setTimeout(place, 1500); setTimeout(place, 5000); }
+  }
+
+  /* ---------- the phone menu ---------- */
+  function menu(bar) {
+    const cur = ROOMS.find(([h]) => h === here) || ROOMS[0];
+    const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'vs-menu'; btn.setAttribute('aria-haspopup', 'dialog'); btn.setAttribute('aria-expanded', 'false');
+    btn.innerHTML = `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Rooms<span class="vs-n" aria-hidden="true">${ROOMS.length}</span><span class="vs-here"><i aria-hidden="true">${cur[2]}</i><span>${cur[1]}</span></span>`;
+    btn.title = 'All the rooms'; btn.setAttribute('aria-label', `Rooms (${ROOMS.length}). You are in ${cur[1]}`);
+    bar.prepend(btn);
+    const sh = document.createElement('div'); sh.className = 'vs-sheet'; sh.hidden = true; sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.setAttribute('aria-label', 'Rooms');
+    sh.innerHTML = `<div class="vs-sh-top"><h2>Rooms</h2><button type="button" class="vs-x" aria-label="Close">✕</button></div><nav class="vs-sh-rooms" aria-label="Rooms">${ROOMS.map(([h, n, g, d]) => `<a class="vs-room" href="${h}"${h === here ? ' aria-current="page"' : ''}><i aria-hidden="true">${g}</i><span>${n}<small>${d}</small></span></a>`).join('')}</nav><h2 class="vs-sh-th">This room</h2><div class="vs-sh-tools"></div>`;
+    document.body.append(sh);
+    const tools = sh.querySelector('.vs-sh-tools');
+    // the tools heading hides itself when the room has no buttons of its own
+    const syncHead = () => { sh.querySelector('.vs-sh-th').hidden = !tools.children.length; };
+    const phone = matchMedia('(max-width: 760px)');
+    const open = () => { if (sh.classList.contains('on')) return close(); hint.done();
+      // a computer gets a dropdown hanging from the button; a phone gets the whole screen
+      const drop = !phone.matches; sh.classList.toggle('drop', drop);
+      if (drop) { const b = btn.getBoundingClientRect(), r = bar.getBoundingClientRect(); sh.style.setProperty('--vs-bar-b', r.bottom + 'px'); sh.style.setProperty('--vs-drop-x', Math.max(10, b.left) + 'px'); }
+      sh.hidden = false; requestAnimationFrame(() => sh.classList.add('on')); btn.setAttribute('aria-expanded', 'true'); (sh.querySelector('.vs-sh-rooms a[aria-current]') || sh.querySelector('.vs-x')).focus({ preventScroll: true }); };
+    const close = () => { sh.classList.remove('on'); btn.setAttribute('aria-expanded', 'false'); setTimeout(() => { if (!sh.classList.contains('on')) sh.hidden = true; }, 250); };
+    btn.addEventListener('click', open); sh.querySelector('.vs-x').addEventListener('click', close);
+    sh.addEventListener('click', e => { if (e.target === sh) close(); });
+    document.addEventListener('pointerdown', e => { if (!sh.hidden && sh.classList.contains('drop') && !sh.contains(e.target) && !btn.contains(e.target)) close(); }, true);
+    tools.addEventListener('click', () => setTimeout(close, 0));   // a tool does its job, then the sheet gets out of the way
+    addEventListener('keydown', e => { if (e.key === 'Escape' && !sh.hidden) { close(); btn.focus({ preventScroll: true }); } });
+    // on a phone the page's own bar buttons live in the sheet; on a wider screen they go back where they came from
+    const pick = el => el.matches('button, a, .motion-btn') && !el.matches('.vs-menu, .vs-room, .unzoom');
+    let moving = false;
+    const place = () => { moving = true;
+      if (phone.matches) { [...bar.children].filter(pick).forEach(el => { if (!el.__vsHome) { el.__vsHome = document.createComment('vs'); el.before(el.__vsHome); } tools.append(el); }); }
+      else [...tools.children].forEach(el => { if (el.__vsHome && el.__vsHome.parentNode) el.__vsHome.replaceWith(el); else bar.append(el); el.__vsHome = null; });
+      syncHead(); moving = false; };
+    // the room names show in the bar when they all fit; when they don't, the ROOMS button takes their place
+    const nav = bar.querySelector('.vs-rooms');
+    const fit = () => { if (phone.matches || !nav) { bar.classList.add('vs-tight'); return; } bar.classList.remove('vs-tight'); if (nav.scrollWidth > nav.clientWidth + 2) bar.classList.add('vs-tight'); };
+    let fq = 0; const fitSoon = () => { cancelAnimationFrame(fq); fq = requestAnimationFrame(fit); };
+    place(); fit(); phone.addEventListener('change', () => { place(); fit(); }); addEventListener('resize', fitSoon);
+    try { document.fonts.ready.then(fitSoon); } catch (e) {}
+    new MutationObserver(() => { if (!moving && phone.matches) place(); fitSoon(); }).observe(bar, { childList: true });
+    // first visit to the house: the rooms announce themselves once, so nobody thinks this is the only one
+    const hint = { el: null, t: 0, done() { clearTimeout(this.t); try { localStorage.setItem('vs-rooms-hint', '1'); } catch (e) {} btn.classList.remove('vs-call'); if (this.el) { const el = this.el; this.el = null; el.classList.remove('on'); setTimeout(() => el.remove(), 600); } } };
+    let seen = true; try { seen = !!localStorage.getItem('vs-rooms-hint'); } catch (e) {}
+    if (!seen) hint.t = setTimeout(() => {
+      const tight = bar.classList.contains('vs-tight'), a = (tight ? btn : nav).getBoundingClientRect(); if (!a.width) return;
+      const el = hint.el = document.createElement('div'); el.className = 'vs-hint'; el.setAttribute('role', 'status');
+      el.innerHTML = `<b>${ROOMS.length} rooms</b>${tight ? 'There’s more than this one. Open the menu.' : 'This is one of them. The rest are up here.'}`;
+      document.body.append(el); el.style.left = Math.max(10, a.left) + 'px'; el.style.top = (a.bottom + 10) + 'px'; el.style.setProperty('--ax', Math.min(a.width / 2, 40) + 'px');
+      if (tight) btn.classList.add('vs-call'); requestAnimationFrame(() => el.classList.add('on'));
+      try { localStorage.setItem('vs-rooms-hint', '1'); } catch (e) {}
+      hint.t = setTimeout(() => hint.done(), 9000);
+    }, 2400);
+    nav && nav.addEventListener('click', () => hint.done());
+  }
+
+  /* ---------- sparks ---------- */
+  let cv, g, P = [], running = false, last = null;
+  function sparks() {
+    if (calm) return;
+    cv = document.createElement('canvas'); cv.id = 'vs-sparks'; document.body.append(cv); g = cv.getContext('2d');
+    const size = () => { cv.width = innerWidth; cv.height = innerHeight; }; size(); addEventListener('resize', size);
+    addEventListener('pointermove', e => { if (e.pointerType === 'touch') return; const d = last ? Math.hypot(e.clientX - last[0], e.clientY - last[1]) : 99; if (d < 26) return; last = [e.clientX, e.clientY]; add(e.clientX, e.clientY, 1, .22); });
+    addEventListener('pointerdown', e => burst(e.clientX, e.clientY, 9), true);
+  }
+  function add(x, y, n, spd) { for (let i = 0; i < n; i++) { const a = Math.random() * 6.28, v = spd * (.4 + Math.random()); P.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - .25, life: 1, d: .012 + Math.random() * .014, r: 1 + Math.random() * 2.2, hue: Math.random() < .2 ? 1 : 0 }); } if (P.length > 260) P.splice(0, P.length - 260); if (!running) { running = true; requestAnimationFrame(tick); } }
+  function burst(x, y, n) { if (calm || !cv) return; add(x, y, n, 2.6); P.push({ ring: true, x, y, life: 1, d: .045 }); }
+  function tick() {
+    g.clearRect(0, 0, cv.width, cv.height); g.globalCompositeOperation = 'lighter';
+    for (let i = P.length - 1; i >= 0; i--) { const p = P[i]; p.life -= p.d; if (p.life <= 0) { P.splice(i, 1); continue; }
+      if (p.ring) { g.strokeStyle = `rgba(255,214,140,${p.life * .7})`; g.lineWidth = 1.5; g.beginPath(); g.arc(p.x, p.y, (1 - p.life) * 46, 0, 7); g.stroke(); continue; }
+      p.x += p.vx; p.y += p.vy; p.vy -= .012; p.vx *= .985; const a = p.life, r = p.r * (.5 + a * .7);
+      g.fillStyle = p.hue ? `rgba(200,225,255,${a * .9})` : `rgba(255,${200 + 40 * a | 0},${120 + 60 * a | 0},${a * .9})`; g.beginPath(); g.arc(p.x, p.y, r, 0, 7); g.fill();
+      g.fillStyle = `rgba(255,200,120,${a * .12})`; g.beginPath(); g.arc(p.x, p.y, r * 4, 0, 7); g.fill(); }
+    g.globalCompositeOperation = 'source-over';
+    if (P.length) requestAnimationFrame(tick); else { running = false; g.clearRect(0, 0, cv.width, cv.height); }
+  }
+  window.VS_BURST = (x, y, n = 20) => burst(x, y, n);
+
+  if (document.readyState === 'loading') addEventListener('DOMContentLoaded', build); else build();
+})();
+
+</script>
+</body>
+</html>

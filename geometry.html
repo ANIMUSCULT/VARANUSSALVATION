@@ -1,0 +1,1493 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, noai, noimageai">
+<script>try{if(!localStorage.getItem('vs-motion-demo')){localStorage.setItem('vs-motion-demo','1');localStorage.setItem('vs-motion','full')}}catch(e){}</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050407">
+<title>Sacred Geometry · Ouija Cat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>/* motion: macOS can ask for less; this site lets you opt back in (stored per browser, all pages) */
+{ let m = null; try { m = localStorage.getItem('vs-motion'); } catch (e) {} if (m !== 'calm') document.documentElement.classList.add('motion-full'); }   // full motion by default (the films and animations are the point); Calm motion is the opt-out
+addEventListener('DOMContentLoaded', () => { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) return; const full = document.documentElement.classList.contains('motion-full');
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'motion-btn'; b.textContent = full ? 'Calm motion' : 'Full motion'; b.title = full ? 'Your Mac asks for reduced motion: calm every animation on this site' : 'Show every animation again';
+  b.onclick = () => { try { full ? localStorage.setItem('vs-motion', 'calm') : localStorage.removeItem('vs-motion'); } catch (e) {} location.reload(); };
+  const bar = document.querySelector('.bar'); if (bar) { const h = bar.querySelector('h1'); h ? h.after(b) : bar.append(b); } });
+</script>
+<style>
+.motion-btn { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #f0d68f; background: rgba(214,164,67,.12); border: 1px solid rgba(214,164,67,.6); padding: 5px 9px; cursor: pointer; white-space: nowrap; }
+:root { --gold: #d6a443; --gold-pale: #f0d68f; --cream: #eee4cb; --muted: #a8aecb; --amber: #ffb34d; --bar: 42px;
+  --display: "IM Fell English SC", Georgia, serif; --serif: "IM Fell English", Georgia, serif; --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; height: 100%; background: #050407; color: var(--cream); font-family: var(--serif); overflow: hidden; }
+button { font: inherit; color: inherit; }
+.bar { position: fixed; top: 0; left: 0; right: 0; height: var(--bar); z-index: 20; display: flex; align-items: center; gap: 8px; padding: 0 12px; background: linear-gradient(rgba(0,0,0,.92), rgba(0,0,0,.5)); }
+.bar a, .bar button { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--cream); background: transparent; border: 1px solid rgba(214,164,67,.5); padding: 5px 9px; text-decoration: none; cursor: pointer; white-space: nowrap; }
+.bar a:hover, .bar button:hover, .bar button[aria-pressed="true"] { border-color: var(--gold-pale); color: var(--gold-pale); }
+.bar h1 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 18px; letter-spacing: .1em; color: var(--gold-pale); white-space: nowrap; flex: 1; }
+
+/* the console: the owner's render (2000 x 1120), lettering cleaned by tools/geometry-board/clean.mjs. Everything is placed in
+   image pixels inside #board and the board is scaled to fit. Map: M in the script (Shift+H outlines every control) */
+#stage { position: fixed; top: var(--bar); left: 0; right: 0; bottom: 0; overflow: hidden; background: radial-gradient(ellipse at 50% 40%, #0d1424 0%, #050407 75%); touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+#board { position: absolute; left: 0; top: 0; width: 2000px; height: 1120px; transform-origin: 0 0; }
+#art, #board canvas { position: absolute; left: 0; top: 0; width: 2000px; height: 1120px; display: block; pointer-events: none; }
+#glow { mix-blend-mode: screen; }
+.hs { position: absolute; border: 0; padding: 0; background: transparent; border-radius: 50%; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: box-shadow .35s ease; }
+.hs.rect { border-radius: 8px; }
+.hs:hover, .hs:focus-visible { box-shadow: 0 0 0 3px rgba(255,226,170,.5), 0 0 22px rgba(255,200,120,.5); outline: none; }
+.hs.big:hover, .hs.big:focus-visible { box-shadow: 0 0 0 3px rgba(255,226,170,.22), 0 0 60px rgba(255,200,120,.25); }
+#stage.outline .hs { box-shadow: 0 0 0 2px rgba(80,255,180,.9) !important; }
+.hs.drag { cursor: grab; } .hs.drag:active { cursor: grabbing; }
+
+/* the caption under everything: what you're pointing at, and his lines */
+.cap { position: fixed; left: 50%; bottom: 12px; transform: translateX(-50%); z-index: 16; max-width: min(760px, 92vw); text-align: center; pointer-events: none; }
+.cap .k { font-family: var(--mono); font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-pale); text-shadow: 0 1px 8px #000, 0 0 2px #000; min-height: 14px; }
+.cap .say { font-style: italic; font-size: clamp(16px, 1.6vw, 21px); color: #ffe7b0; text-shadow: 0 2px 12px #000, 0 0 3px #000; opacity: 0; transition: opacity .6s; margin-top: 4px; }
+.cap .say.on { opacity: 1; }
+
+/* the hologram: the figure lifted off the console, full size */
+#holo { position: fixed; top: var(--bar); left: 0; right: 0; bottom: 0; z-index: 14; opacity: 0; pointer-events: none; transition: opacity .7s ease; }
+#holo.on { opacity: 1; pointer-events: auto; }
+#holoCv { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; }
+#holoCv.draw { cursor: crosshair; }
+.hud { position: absolute; left: 50%; top: 14px; transform: translateX(-50%); display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; max-width: 96vw; }
+.hud button { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--cream); background: rgba(10,8,14,.7); border: 1px solid rgba(214,164,67,.45); padding: 7px 10px; cursor: pointer; }
+.hud button:hover, .hud button[aria-pressed="true"] { color: var(--gold-pale); border-color: var(--gold-pale); }
+.hname { position: absolute; left: 50%; bottom: 58px; transform: translateX(-50%); text-align: center; pointer-events: none; }
+.hname b { display: block; font-family: var(--display); font-weight: 400; font-size: clamp(22px, 2.6vw, 34px); color: var(--gold-pale); letter-spacing: .06em; text-shadow: 0 0 18px rgba(255,190,90,.35); }
+.hname span { font-family: var(--mono); font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+#holo.gaze .hud, #holo.gaze .hname { opacity: .0; transition: opacity 1.2s; } #holo.gaze:hover .hud { opacity: .8; }
+
+#words { position: absolute; opacity: 0; pointer-events: none; left: 0; top: 0; width: 10px; }
+
+.drawer { position: fixed; top: var(--bar); right: 0; bottom: 0; width: min(460px, 100vw); z-index: 25; background: rgba(6,6,10,.97); border-left: 1px solid rgba(214,164,67,.3); overflow-y: auto; padding: 18px 22px 60px; transform: translateX(100%); transition: transform .35s ease; }
+.drawer.on { transform: none; }
+.drawer h2 { font-family: var(--display); font-weight: 400; color: var(--gold-pale); margin: 0 0 4px; font-size: 26px; }
+.drawer h3 { font-family: var(--display); font-weight: 400; color: var(--gold); margin: 22px 0 6px; font-size: 19px; border-bottom: 1px solid rgba(214,164,67,.2); padding-bottom: 4px; }
+.drawer h4 { font-family: var(--display); font-weight: 400; color: var(--gold-pale); margin: 14px 0 3px; font-size: 17px; display: flex; align-items: baseline; gap: 8px; }
+.drawer h4 button { margin-left: auto; font-family: var(--mono); font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--cream); background: transparent; border: 1px solid rgba(214,164,67,.45); padding: 3px 7px; cursor: pointer; }
+.drawer p { margin: 0 0 6px; font-size: 15.5px; line-height: 1.4; }
+.drawer p i { color: var(--muted); font-style: normal; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; margin-right: 6px; }
+.drawer .x { position: absolute; top: 12px; right: 14px; background: none; border: 0; color: var(--cream); font-size: 18px; cursor: pointer; }
+.drawer .sub { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.drawer table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+.drawer td { padding: 4px 6px 4px 0; vertical-align: top; border-bottom: 1px solid rgba(214,164,67,.1); }
+.drawer td:first-child { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); white-space: nowrap; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+</style>
+</head>
+<body>
+<header class="bar">
+  <a href="./">← Templum</a>
+  <h1>Sacred Geometry</h1>
+  <button type="button" id="openBtn" aria-pressed="false">Open the figure</button>
+  <button type="button" id="formsBtn" aria-pressed="false" aria-controls="drawer">Book of forms</button>
+  <button type="button" id="mapBtn" aria-pressed="false" aria-controls="drawer">The console</button>
+</header>
+<div id="stage" aria-label="The geometry console">
+  <div id="board">
+    <img id="art" src="geometry-console.webp" alt="Ouija Cat's geometry console: a brass and blue enamel machine with a dotted light wheel, a great eye, and the cat in a round window" decoding="async">
+    <canvas id="plate"></canvas>
+    <canvas id="base"></canvas>
+    <canvas id="glow"></canvas>
+    <div id="hot"></div>
+  </div>
+</div>
+<div class="cap" aria-hidden="true"><div class="k" id="capK"></div><div class="say" id="say"></div></div>
+<div id="holo" aria-label="The figure, full size">
+  <canvas id="holoCv"></canvas>
+  <div class="hud">
+    <button type="button" id="hPrev" aria-label="Previous figure">◀</button>
+    <button type="button" id="hNext" aria-label="Next figure">▶</button>
+    <button type="button" id="hReplay">Draw again</button>
+    <button type="button" id="hGaze" aria-pressed="false">Gaze</button>
+    <button type="button" id="hDraw" aria-pressed="false" hidden>Draw in it</button>
+    <button type="button" id="hDissolve" hidden>Dissolve</button>
+    <button type="button" id="hKeep">Keep (PNG)</button>
+    <button type="button" id="hClose" aria-label="Back to the console">✕ Console</button>
+  </div>
+  <div class="hname"><b id="hTitle"></b><span id="hSub"></span></div>
+</div>
+<input type="text" id="words" maxlength="60" autocomplete="off" aria-label="Your intent, for the mandala">
+<aside class="drawer" id="drawer" aria-label="Book"></aside>
+<div class="sr" id="sr" aria-live="polite"></div>
+
+<script type="module">
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const calm = matchMedia('(prefers-reduced-motion: reduce)').matches && !document.documentElement.classList.contains('motion-full');
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const TAU = Math.PI * 2, PHI = (1 + Math.sqrt(5)) / 2;
+const IW = 2000, IH = 1120;
+let sayT = 0;
+const say = (t, ms = 5200) => { const e = $('say'); e.textContent = t; e.classList.add('on'); clearTimeout(sayT); sayT = setTimeout(() => e.classList.remove('on'), ms); $('sr').textContent = t; };
+
+/* =====================================================================================================================
+   THE FIGURES. Unit coordinates (the figure fits a circle of radius 1, y down). 2D figures are lists of strokes drawn
+   on in order (c = circle or arc, l = polyline, d = dot; g = guide line, only with Guides on; lab = a name).
+   3D figures are vertices and edges, turned live. Special ones draw themselves.
+   ===================================================================================================================== */
+const Cc = (x, y, r, o = {}) => ({ t: 'c', x, y, r, ...o });
+const Ln = (pts, o = {}) => ({ t: 'l', pts, ...o });
+const Dt = (x, y, r = .02, o = {}) => ({ t: 'd', x, y, r, ...o });
+const ring = (n, r, a0 = -Math.PI / 2) => Array.from({ length: n }, (_, k) => [Math.cos(a0 + k * TAU / n) * r, Math.sin(a0 + k * TAU / n) * r]);
+const closed = p => [...p, p[0]];
+const star = (n, step, r, a0 = -Math.PI / 2) => { const p = ring(n, r, a0), out = []; let i = 0; do { out.push(p[i]); i = (i + step) % n; } while (i !== 0); out.push(p[0]); return out; };
+
+function hexLattice(r, maxD) { const P = []; for (let j = -4; j <= 4; j++) for (let i = -4; i <= 4; i++) { const x = r * (i + j / 2), y = r * j * Math.sqrt(3) / 2; if (Math.hypot(x, y) <= maxD + 1e-6) P.push([x, y]); } return P.sort((a, b) => Math.hypot(...a) - Math.hypot(...b) || Math.atan2(a[1], a[0]) - Math.atan2(b[1], b[0])); }
+function fruit(d) { return [[0, 0], ...ring(6, d), ...ring(6, 2 * d)]; }
+function edgesByLength(V, tol = 1e-3) { let m = Infinity; for (let i = 0; i < V.length; i++) for (let j = i + 1; j < V.length; j++) m = Math.min(m, dist3(V[i], V[j])); const E = []; for (let i = 0; i < V.length; i++) for (let j = i + 1; j < V.length; j++) if (Math.abs(dist3(V[i], V[j]) - m) < tol * Math.max(1, m)) E.push([i, j]); return E; }
+function dist3(a, b) { return Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]); }
+function norm3(V) { const m = Math.max(...V.map(v => Math.hypot(...v))); return V.map(v => v.map(c => c / m)); }
+const signs = n => { const out = []; for (let i = 0; i < 1 << n; i++) out.push(Array.from({ length: n }, (_, k) => (i >> k) & 1 ? -1 : 1)); return out; };
+function solid(V) { V = norm3(V); return { V, E: edgesByLength(V) }; }
+const SOLIDS = {
+  tetra: () => solid([[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]]),
+  cube: () => solid(signs(3)),
+  octa: () => solid([[1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 0, -1]]),
+  icosa: () => solid([...signs(2).map(([a, b]) => [0, a, b * PHI]), ...signs(2).map(([a, b]) => [a, b * PHI, 0]), ...signs(2).map(([a, b]) => [a * PHI, 0, b])]),
+  dodeca: () => solid([...signs(3), ...signs(2).map(([a, b]) => [0, a / PHI, b * PHI]), ...signs(2).map(([a, b]) => [a / PHI, b * PHI, 0]), ...signs(2).map(([a, b]) => [a * PHI, 0, b / PHI])]),
+  ve: () => solid([...signs(2).map(([a, b]) => [a, b, 0]), ...signs(2).map(([a, b]) => [a, 0, b]), ...signs(2).map(([a, b]) => [0, a, b])]),
+};
+function torus() { const V = [], E = [], U = 28, W = 12, R = .66, r = .32; for (let i = 0; i < U; i++) for (let j = 0; j < W; j++) { const u = i / U * TAU, v = j / W * TAU; V.push([(R + r * Math.cos(v)) * Math.cos(u), r * Math.sin(v), (R + r * Math.cos(v)) * Math.sin(u)]); }
+  for (let i = 0; i < U; i++) for (let j = 0; j < W; j++) { const a = i * W + j; E.push([a, ((i + 1) % U) * W + j]); E.push([a, i * W + (j + 1) % W]); } return { V: norm3(V), E }; }
+
+// the golden rectangle, whirled: a square cut from each side in turn, a quarter arc through each square
+function golden() { const P = []; let x = 0, y = 0, w = PHI, h = 1; const sc = 1.86 / PHI, ox = PHI / 2, oy = .5, T = (a, b) => [(a - ox) * sc, (b - oy) * sc];
+  P.push(Ln([T(0, 0), T(w, 0), T(w, h), T(0, h), T(0, 0)], { w: 1.2 }));
+  const arcs = [];
+  for (let k = 0; k < 11; k++) { let s, cx, cy, a0;
+    if (k % 4 === 0) { s = h; P.push(Ln([T(x + s, y), T(x + s, y + h)], { g: 1 })); cx = x + s; cy = y + s; a0 = Math.PI; x += s; w -= s; }
+    else if (k % 4 === 1) { s = w; P.push(Ln([T(x, y + s), T(x + w, y + s)], { g: 1 })); cx = x; cy = y + s; a0 = -Math.PI / 2; y += s; h -= s; }
+    else if (k % 4 === 2) { s = h; P.push(Ln([T(x + w - s, y), T(x + w - s, y + h)], { g: 1 })); cx = x + w - s; cy = y; a0 = 0; w -= s; }
+    else { s = w; P.push(Ln([T(x, y + h - s), T(x + w, y + h - s)], { g: 1 })); cx = x + s; cy = y + h - s; a0 = Math.PI / 2; h -= s; }
+    const [X, Y] = T(cx, cy); arcs.push(Cc(X, Y, s * sc, { a0, a1: a0 + Math.PI / 2, w: 2.2, c: 1 })); }
+  return [...P, ...arcs];
+}
+// the Śrī Yantra from the optimised coordinates in research/SACRED-GEOMETRY.md §9 (triangle circle r = 1, y down)
+const SRI_TRI = [['D3', -.7190, .5951, .1066], ['D2', -.4688, .6902, .7004], ['D1', -.2679, .9634, 1], ['D4', -.1569, .3365, .4792], ['D5', -.0520, .2539, .2425], ['U4', .1066, .3505, -.4688], ['U1', .2425, .9702, -1], ['U2', .4792, .7174, -.7190], ['U3', .7004, .5128, -.2679]];
+function sri() { const s = .41, P = [], S = (x, y) => [x * s, y * s];
+  const petals = (n, r0, r1, c) => { for (let k = 0; k < n; k++) { const a = k * TAU / n - Math.PI / 2, da = Math.PI / n, pts = []; for (let i = 0; i <= 12; i++) { const u = i / 12, side = u < .5 ? -1 : 1, q = u < .5 ? u * 2 : (1 - u) * 2; const ang = a + side * da * .94 * Math.cos(q * Math.PI / 2) ** .65, rr = r0 + (r1 - r0) * Math.sin(q * Math.PI / 2); pts.push(S(Math.cos(ang) * rr, Math.sin(ang) * rr)); } P.push(Ln(pts, { c })); } };
+  // the earth city: three square lines with a T-gate in the middle of each side
+  for (const [i, hs] of [[0, 1.86], [1, 1.79], [2, 1.72]].map((v, i) => [i, v[1]])) { const g = .36, gd = .16, pts = []; for (let side = 0; side < 4; side++) { const rot = (x, y) => { const a = side * Math.PI / 2; return S(x * Math.cos(a) - y * Math.sin(a), x * Math.sin(a) + y * Math.cos(a)); }; pts.push(rot(-hs, -hs), rot(-g, -hs), rot(-g, -hs - gd), rot(g, -hs - gd), rot(g, -hs), rot(hs, -hs)); } pts.push(pts[0]); P.push(Ln(pts, { c: i === 1 ? 1 : 0, w: i === 1 ? 1.5 : 1 })); }
+  P.push(Cc(0, 0, 1.6 * s), Cc(0, 0, 1.5 * s, { c: 1 }), Cc(0, 0, 1.4 * s));
+  petals(16, 1.2, 1.4, 1); P.push(Cc(0, 0, 1.2 * s, { g: 1 })); petals(8, 1.0, 1.2, 0); P.push(Cc(0, 0, 1 * s, { w: 1.4 }));
+  for (const [id, yb, w, ya] of SRI_TRI) P.push(Ln([S(-w, yb), S(0, ya), S(w, yb), S(-w, yb)], { c: id[0] === 'U' ? 0 : 2, w: 1.5 }));
+  P.push(Dt(0, 0, .03, { c: 2, red: 1 }));
+  P.labs = [[0, -1.86 * s - .02, 'Bhūpura'], [0, -1.3 * s, '16 petals'], [0, -1.1 * s, '8 petals'], [0, .02, 'Bindu']];
+  return P;
+}
+const TREE = [['Keter', 0, 0], ['Chokhmah', 1, .577], ['Binah', -1, .577], ['Chesed', 1, 1.732], ['Gevurah', -1, 1.732], ['Tiferet', 0, 2.309], ['Netzach', 1, 2.887], ['Hod', -1, 2.887], ['Yesod', 0, 3.464], ['Malkhut', 0, 4.619]];
+const TREE_PATHS = [[0, 1], [0, 2], [0, 5], [1, 2], [1, 5], [1, 3], [2, 5], [2, 4], [3, 4], [3, 5], [3, 6], [4, 5], [4, 7], [5, 6], [5, 8], [5, 7], [6, 7], [6, 8], [6, 9], [7, 8], [7, 9], [8, 9]];
+function tree() { const s = .38, X = (x, y) => [x * s * .95, (y - 2.31) * s], P = [];
+  P.push(Cc(...X(0, 1.155), .09, { g: 1, dash: 1 }));
+  for (const [a, b] of TREE_PATHS) P.push(Ln([X(TREE[a][1], TREE[a][2]), X(TREE[b][1], TREE[b][2])], { c: 1, w: 1.1 }));
+  for (const [nm, x, y] of TREE) P.push(Cc(...X(x, y), .1, { w: 1.8, fill: 1 }));
+  P.labs = TREE.map(([nm, x, y]) => [...X(x, y + .36 * (x === 0 && y > 4 ? 1 : 0) + (x === 0 && y > 4 ? 0 : .33)), nm]);
+  return P;
+}
+function rose() { const P = [Cc(0, 0, .98, { w: 1.6 }), Cc(0, 0, .92)];
+  ring(12, .66).forEach(([x, y]) => P.push(Cc(x, y, .26, { c: 1 })));
+  ring(12, .66, -Math.PI / 2 + Math.PI / 12).forEach(([x, y]) => P.push(Ln([[x * .45 / .66, y * .45 / .66], [x * 1.39, y * 1.39]], { g: 1 })));
+  ring(12, .43, -Math.PI / 2 + Math.PI / 12).forEach(([x, y]) => P.push(Cc(x, y, .055, { c: 2 })));
+  P.push(Cc(0, 0, .4), Cc(0, 0, .34, { c: 1 }));
+  ring(6, .17).forEach(([x, y]) => P.push(Cc(x, y, .17, { c: 0 })));
+  P.push(Dt(0, 0, .035, { c: 2 }));
+  return P;
+}
+function squaring() { const s = 1 / 1.56, e = 1 * s, m = 3 / 11 * s, P = [];
+  P.push(Ln(closed([[-e, -e], [e, -e], [e, e], [-e, e]]), { w: 1.6 }));
+  P.push(Cc(0, 0, e, { c: 1, w: 1.6 }));
+  P.push(Cc(0, -(e + m), m, { c: 2, w: 1.6 }));
+  P.push(Ln([[0, 0], [0, -(e + m)]], { g: 1 }));
+  P.push(Cc(0, 0, e + m, { c: 0, w: 2.2 }));
+  P.labs = [[0, e + .07, 'square: 8 · circle: 7.99']];
+  return P;
+}
+const FIG = [
+  { k: 'monad', name: 'The Monad', n: '1', sub: 'one point, one circle', sym: 1, build: () => [Cc(0, 0, .9, { w: 1.8 }), Dt(0, 0, .055, { c: 2 })],
+    what: 'The point and the circle around it: the one, and the boundary it makes just by being there. The sun’s old sign, the bindu, the first mark on a blank page.', make: 'Set the compass point down. Swing it once. Everything else in this room starts from that.', mean: 'Taught as unity before any division: the self at the centre, the world around it.', practice: 'Rest your eyes on the dot. When the edge of the circle softens, stay there.', line: 'One dot. One circle. Even you can’t overthink this. Watch.' },
+  { k: 'vesica', name: 'Vesica Piscis', n: '2', sub: 'two circles, one almond', sym: 2, build: () => { const r = .62, c = .31, h = Math.sqrt(r * r - c * c); return [Cc(-c, 0, r, { w: 1.6 }), Cc(c, 0, r, { w: 1.6 }), Ln([[-c, 0], [c, 0]], { g: 1 }), Ln([[0, -h], [0, h]], { c: 1 }), Ln([[-c, 0], [c, 0], [0, -h], [-c, 0]], { c: 2 }), Ln([[-c, 0], [c, 0], [0, h], [-c, 0]], { c: 2 }), Dt(0, -h), Dt(0, h), Dt(-c, 0, .015), Dt(c, 0, .015)]; },
+    what: 'Two equal circles, each passing through the other’s centre. The almond between them is the vesica, the “fish’s bladder”; old windows frame the holy inside it as the mandorla.', make: 'Draw a circle. Put the compass on its edge, same width, and draw the second. Join the two centres and the two crossings: an equilateral triangle arrives, and with it the root of three.', mean: 'Held as the doorway where two become one and something new is born between them.', practice: 'Draw it by hand once. Feel the triangle turn up without being asked.', line: 'Two circles. That’s it. Two. You’ve been overcomplicating your whole life.' },
+  { k: 'seed', name: 'Seed of Life', n: '7', sub: 'six around one', sym: 6, build: () => { const r = .46; return [Cc(0, 0, r, { w: 1.6 }), ...ring(6, r, 0).map(([x, y]) => Cc(x, y, r, { c: 1 })), Cc(0, 0, 2 * r, { w: 1.8 })]; },
+    what: 'Seven circles: one in the middle, six around it, each passing through the centre.', make: 'The radius steps round a circle exactly six times. Draw a circle at every step.', mean: 'Read in many places as the days of making: six circles of work around the seventh at rest.', practice: 'Count the petals at the core. There are six. There are always six.', line: 'The radius goes round six times. Exactly six. Unlike your promises.' },
+  { k: 'egg', name: 'Egg of Life', n: '7', sub: 'seven spheres, touching', sym: 6, build: () => { const r = .3; return [Cc(0, 0, r, { w: 1.6 }), ...ring(6, 2 * r, 0).map(([x, y]) => Cc(x, y, r, { c: 1, w: 1.5 })), Cc(0, 0, 3 * r, { g: 1 }), ...ring(6, 2 * r, 0).map(([x, y]) => Ln([[0, 0], [x, y]], { g: 1 }))]; },
+    what: 'The Seed’s circles pulled apart until they only touch. In three dimensions it is eight spheres: the shape a cell makes as one becomes two, four, eight.', make: 'Keep the six around one, but step each one out twice as far.', mean: 'Held as the pattern of becoming: the body before it has a body.', practice: 'Breathe in as it grows, out as it settles. Seven breaths, one per circle.', line: 'It looks like frogspawn. That’s the point. Everything starts as frogspawn, including you.' },
+  { k: 'flower', name: 'Flower of Life', n: '19', sub: 'nineteen circles in a ring', sym: 6, build: () => { const r = 1 / 3.15; return [...hexLattice(r, 2 * r).map(([x, y], i) => Cc(x, y, r, { c: i === 0 ? 0 : i < 7 ? 1 : 0 })), Cc(0, 0, 3 * r, { w: 2 }), Cc(0, 0, 3 * r * 1.045, { w: 1.2 })]; },
+    what: 'Nineteen overlapping circles on a lattice of six, closed by a ring. It turns up across the centuries: on the granite of an Egyptian temple (its date still argued over), on Assyrian thresholds, in Renaissance notebooks.', make: 'Keep stepping the Seed outward: every new crossing becomes a centre. Stop at two rings and close it with a circle.', mean: 'Taught as the pattern every form is folded from. Half the figures in this room hide inside it.', practice: 'Find the Seed inside it. Then the Egg. Then the Fruit. The finding is the practice.', line: 'Nineteen circles and you still found a way to glance at your phone. Look again.' },
+  { k: 'fruit', name: 'Fruit of Life', n: '13', sub: 'thirteen circles, none overlapping', sym: 6, build: () => { const d = .38; return fruit(d).map(([x, y], i) => Cc(x, y, d / 2, { c: i < 7 ? 1 : 0, w: 1.5 })); },
+    what: 'Thirteen circles lifted from the Flower’s lattice and set so that none overlap: one in the middle, six one step out, six two steps out, all on the same six lines.', make: 'From the centre, six circles one step out along the six directions, then six more two steps out.', mean: 'Held as the ripe form of the Flower, what the pattern bears.', practice: 'Join every centre to every other and you have the next figure. Press the Cube.', line: 'Thirteen. Unlucky only for people who skip steps.' },
+  { k: 'metatron', name: 'Metatron’s Cube', n: '78', sub: 'thirteen centres, seventy-eight lines', sym: 6, build: () => { const d = .38, F = fruit(d), P = F.map(([x, y]) => Cc(x, y, d / 2, { g: 1 })); for (let i = 0; i < 13; i++) for (let j = i + 1; j < 13; j++) P.push(Ln([F[i], F[j]], { c: (i + j) % 3 === 0 ? 1 : 0, w: .9 })); F.forEach(([x, y]) => P.push(Dt(x, y, .018, { c: 2 }))); return P; },
+    what: 'Every centre of the Fruit joined to every other: seventy-eight straight lines. Named for the angel scribe of the old Hebrew writings and the traditions after them.', make: 'Draw the thirteen circles, then connect every pair of centres.', mean: 'The five solids are said to lie inside it, flattened: the cube, the star tetrahedron, the octahedron, the rest.', practice: 'Find the hexagram. Then the cube. Then stop hunting and let it find you.', line: 'Seventy-eight lines and not one of them is about you. Refreshing, isn’t it.' },
+  { k: 'tree', name: 'Tree of Life', n: '10', sub: 'ten spheres, twenty-two paths', sym: 2, build: tree,
+    what: 'The ten sefirot of the Kabbalah joined by twenty-two paths, one for each Hebrew letter: together the thirty-two paths of wisdom.', make: 'It sits exactly on the Flower’s lattice: every sphere on a crossing, in three pillars, expansion on the right, restraint on the left, balance down the middle.', mean: 'A map of how the infinite comes down into the world, and of how a person climbs back: Keter the crown at the top, Malkhut the kingdom at the root.', practice: 'Start at the bottom. Your feet are Malkhut. One path at a time.', line: 'Ten spheres. You’re standing on the bottom one. Everyone is. Start climbing.' },
+  { k: 'sri', name: 'Śrī Yantra', n: '43', sub: 'nine triangles, forty-three', sym: 1, dur: 11, build: sri,
+    what: 'The yantra of the goddess Lalitā Tripurasundarī in Śrī Vidyā: four triangles pointing up for Śiva, five pointing down for Śakti, interlocking into forty-three small triangles around the bindu.', make: 'Nine bases set on a diameter cut into forty-eight parts, every apex landing on another triangle’s base so the figure locks. Then the two lotuses, three circles, and the square earth city with its four gates.', mean: 'Her body and her city. Worship moves inward through nine enclosures, from the world to the point of union.', practice: 'Press Inward and let the drawing lead your eye from the gates to the dot. Outward is the world being made from it.', line: 'Draw it inward. Slowly. The goddess has waited longer than you’ve been alive.' },
+  { k: 'golden', name: 'Golden Spiral', n: 'φ', sub: 'one point six one eight', sym: 1, build: golden,
+    what: 'Cut a square from a golden rectangle and a smaller golden rectangle is left over. Keep cutting: the quarter arcs through the squares make the spiral of shells and storms.', make: 'Width φ, height one. Cut the square, turn, cut again. One quarter circle in every square.', mean: 'The divine proportion of the Renaissance books: the small part is to the large as the large is to the whole.', practice: 'Follow the line inward with your eyes until it’s too small to see. It keeps going without you.', line: 'One point six one eight. Move it a hair and it falls apart. Like you, when someone moves your coffee.' },
+  { k: 'penta', name: 'Pentagram', n: '5', sub: 'the golden star', sym: 5, build: () => { const r = .95, ri = r * Math.cos(TAU / 5) / Math.cos(TAU / 10); return [Cc(0, 0, r, { w: 1.4 }), Ln(closed(ring(5, r)), { g: 1 }), Ln(star(5, 2, r), { w: 2.2, c: 1 }), Ln(closed(ring(5, ri, Math.PI / 2)), { c: 0 }), Ln(star(5, 2, ri, Math.PI / 2), { c: 2 }), Cc(0, 0, ri * Math.cos(TAU / 10), { g: 1 })]; },
+    what: 'Five lines in one unbroken stroke, every crossing cutting its line in the golden ratio. Inside it a pentagon, inside that another star, forever.', make: 'Five points round a circle, 72° apart. Join every second one without lifting the pen.', mean: 'The old number schools’ sign of health; the five elements; drawn closed, a guard.', practice: 'Draw it in one stroke without lifting. Then with your eyes closed.', line: 'One stroke. Don’t lift. You lifted. Everyone lifts. Again.' },
+  { k: 'hexa', name: 'Hexagram', n: '6', sub: 'as above, so below', sym: 6, build: () => { const r = .95; return [Cc(0, 0, r, { w: 1.4 }), Ln(closed(ring(3, r)), { w: 2, c: 1 }), Ln(closed(ring(3, r, Math.PI / 2)), { w: 2, c: 2 }), Ln(closed(ring(6, r / Math.sqrt(3), 0)), { c: 0 }), Cc(0, 0, r / 2, { g: 1 })]; },
+    what: 'Two triangles, one up and one down, locked together: fire and water, sky and earth. A star of many faiths and of the old magical books alike.', make: 'Six points round a circle. Join every second one, twice.', mean: 'The marriage of opposites. In the planetary hours it is Saturn’s figure.', practice: 'Watch the two triangles. Decide which one you are today.', line: 'One points up, one points down. Pick one. You’re not doing both by Friday.' },
+  { k: 'tetra', name: 'Tetrahedron', n: '4', sub: 'fire', sym: 3, s3: 'tetra',
+    what: 'Four triangles, four corners: the fewest faces a solid can have.', make: 'Three triangles round a point, folded up and closed.', mean: 'Fire, in the old dialogue on the making of the world: the sharpest of the five, the one that cuts.', practice: 'Turn it with the left joystick. It never looks the same twice and never stops being itself.', line: 'Fire. Four faces. Fewer than you show at a party.' },
+  { k: 'cube', name: 'Cube', n: '6', sub: 'earth', sym: 4, s3: 'cube',
+    what: 'Six squares, eight corners: the steadiest solid. It stays where you put it.', make: 'Three squares at every corner.', mean: 'Earth: weight, the body, the four directions above and below.', practice: 'Hold it still with the joystick. Notice how much you want to spin it.', line: 'Earth. It doesn’t move unless pushed. Sound familiar.' },
+  { k: 'octa', name: 'Octahedron', n: '8', sub: 'air', sym: 4, s3: 'octa',
+    what: 'Eight triangles: two pyramids base to base.', make: 'Four triangles at every corner.', mean: 'Air: balanced on a point, turned by the lightest touch.', practice: 'Breathe at it. Watch it turn.', line: 'Air. One finger spins it. Yes, it’s that easy to influence. Like you.' },
+  { k: 'icosa', name: 'Icosahedron', n: '20', sub: 'water', sym: 5, s3: 'icosa',
+    what: 'Twenty triangles: the roundest of the triangle solids. It rolls.', make: 'Five triangles at every corner.', mean: 'Water: flowing, taking the shape it’s given.', practice: 'Let it roll slowly. Follow one corner round.', line: 'Water. Twenty faces and it still goes wherever it’s pushed.' },
+  { k: 'dodeca', name: 'Dodecahedron', n: '12', sub: 'the heavens', sym: 5, s3: 'dodeca',
+    what: 'Twelve pentagons, the golden ratio in every one.', make: 'Three pentagons at every corner.', mean: 'The fifth solid, kept back for the whole: the sky, the aether, the shape of the cosmos.', practice: 'Look through it, not at it.', line: 'Twelve pentagons. The shape of the heavens, and you haven’t looked up all week.' },
+  { k: 'merkaba', name: 'Merkaba', n: '8', sub: 'the star tetrahedron', sym: 6, s3: 'merkaba',
+    what: 'Two tetrahedra through each other, one pointing up, one down, turning opposite ways.', make: 'A tetrahedron and its mirror, sharing one centre.', mean: 'Taught as a vehicle of light around the body. The name echoes the chariot of the old visions.', practice: 'Watch both at once. You can’t. Try anyway; that’s the work.', line: 'Two of them, turning opposite ways. Like your plans and your actions.' },
+  { k: 've', name: 'Vector Equilibrium', n: '12', sub: 'the cuboctahedron', sym: 4, s3: 've',
+    what: 'Twelve corners, each exactly as far from the centre as from its neighbours: squares and triangles in balance.', make: 'Twelve spheres packed round one.', mean: 'Held as the one shape where every force is at rest: the still point before anything moves.', practice: 'Let the joystick go and watch it come to rest.', line: 'Perfect balance. Twelve corners, none of them dramatic. Take notes.' },
+  { k: 'torus', name: 'Torus', n: '0', sub: 'the flow that feeds itself', sym: 12, s3: 'torus',
+    what: 'A ring that turns through itself: what pours out of the top comes back in at the bottom.', make: 'A circle swept round a circle.', mean: 'Held as the shape of every thing that sustains itself: an apple, the field of a heart, a galaxy.', practice: 'Follow the flow up through the middle, over, and down round the outside. Breathe with it.', line: 'It goes out and comes back and feeds itself. You call that a weekend.' },
+  { k: 'khatam', name: 'Eight-pointed Star', n: '8', sub: 'the khātam', sym: 8, build: () => { const r = .95; return [Cc(0, 0, r, { w: 1.4 }), Ln(closed(ring(4, r, -Math.PI / 4)), { w: 1.8, c: 1 }), Ln(closed(ring(4, r, 0)), { w: 1.8, c: 1 }), Ln(star(8, 3, r), { c: 2 }), Ln(closed(ring(8, r * Math.cos(Math.PI / 4) / Math.cos(Math.PI / 8) * .54, -Math.PI / 8)), { c: 0 }), Cc(0, 0, r * .38, { g: 1 })]; },
+    what: 'Two squares, one turned an eighth of a circle: the khātam, the seal at the heart of Islamic tilework, repeated without end across domes and walls.', make: 'A square, then the same square turned 45°. Join every third point for the inner star.', mean: 'Order that never stops: one pattern continued forever, pointing past itself to what has no image.', practice: 'Find where the pattern would continue past the circle. It does.', line: 'Two squares. One turned. That’s all it took. You’ve turned a square before and done nothing with it.' },
+  { k: 'rose', name: 'Rose Window', n: '12', sub: 'light through stone', sym: 12, build: rose,
+    what: 'The great round windows of the cathedrals, laid out with compass and rule: twelve foils round a centre, and the light coming through.', make: 'Twelve circles round a ring, tracery between them, a six-petalled rose in the middle.', mean: 'The rose of the soul, the heavenly city, the whole year in twelve petals.', practice: 'Imagine the sun behind it. Let the colours fall on the floor.', line: 'Twelve petals of stone and light, built with fewer tools than you have apps.' },
+  { k: 'squaring', name: 'Squaring the Circle', n: '3.14', sub: 'the earth and the moon', sym: 4, build: squaring,
+    what: 'A square and a circle with the same perimeter. The old figure sets the earth inside the square and the moon on top: the circle through the moon’s centre measures the square to within a hair.', make: 'Earth, radius eleven. Moon, radius three, resting on it. A circle through the moon’s centre. A square around the earth.', mean: 'Heaven (the circle) and earth (the square) made equal: spirit and matter reconciled.', practice: 'Look from the circle to the square until they feel the same size.', line: 'Heaven and earth, almost equal. Almost. Story of your life.' },
+  { k: 'phyllo', name: 'Golden Angle', n: '137°', sub: 'the sunflower', sym: 5, dur: 9, special: 'phyllo',
+    what: 'Turn 137.5°, set a seed. Turn again, set another. The sunflower, the pinecone and the daisy all grow like this.', make: 'One turn of the golden angle per seed, each a little further out.', mean: 'Growth that never shades itself: every new seed finds its own light.', practice: 'Watch the spirals appear that nobody drew.', line: '137.5 degrees. Every seed gets its own light. Nobody blocks anybody. Imagine.' },
+  { k: 'cymatics', name: 'Cymatics', n: '♪', sub: 'sound into form', sym: 4, special: 'cymatics',
+    what: 'Sand on a ringing plate runs from where it shakes to where it is still. Every tone draws its own figure.', make: 'Press the cream keys on the panel. Each is a pure ratio, and each sets a different figure in the sand.', mean: 'The Word making the world: sound before shape.', practice: 'Play one note and wait. Let the sand finish.', line: 'Play a note. The sand obeys. The only thing in here that does what you say.' },
+  { k: 'mandala', name: 'Mandala', n: '◎', sub: 'your words, in circles', sym: 8, special: 'mandala', dur: 7,
+    what: 'A palace seen from above: a centre where your intent lives, rings that hold it, a square with four gates, a circle closing it all.', make: 'Type your intent on the left screen (or press its red WORDS square). Same words, same mandala, every time. Open it and draw in one slice: it repeats round every fold.', mean: 'White for calm, yellow for giving, red for desire turned to love, green for action without fear, blue for wisdom. Four for the body, six the heart, eight change, twelve the whole sky.', practice: 'Gaze at the centre. When you’re finished with it, dissolve it, the way the sand mandalas are swept to the river. Only its hash stays.', line: 'Type what you want. One thing. I’ll do the circles.' },
+];
+const FX = Object.fromEntries(FIG.map((f, i) => [f.k, i]));
+const LEFT12 = ['monad', 'vesica', 'seed', 'egg', 'flower', 'fruit', 'metatron', 'tree', 'sri', 'golden', 'penta', 'hexa'];
+const RIGHT14 = ['tetra', 'cube', 'octa', 'icosa', 'dodeca', 'merkaba', 've', 'torus', 'khatam', 'rose', 'squaring', 'phyllo', 'cymatics', 'mandala'];
+const S3 = { merkaba: (() => { const a = SOLIDS.tetra(); return { V: a.V, E: a.E, twin: { V: a.V.map(v => v.map(c => -c)), E: a.E } }; })(), torus: torus() };
+for (const k of Object.keys(SOLIDS)) S3[k] = SOLIDS[k]();
+FIG.forEach(f => { if (f.build) { f.P = f.build(); f.N = f.P.length; } else if (f.s3) f.N = S3[f.s3].E.length + (S3[f.s3].twin ? S3[f.s3].twin.E.length : 0); else f.N = 1; f.dur = f.dur || clamp(1.6 + f.N * .09, 2.5, 8.5); });
+
+/* ---------- palettes (the cream squares) ---------- */
+const PAL = [
+  { k: 'gold', name: 'Gold', a: [255, 206, 120], b: [255, 236, 190], c: [255, 120, 70] },
+  { k: 'rose', name: 'Rose', a: [255, 120, 170], b: [255, 200, 220], c: [255, 210, 120] },
+  { k: 'violet', name: 'Violet', a: [170, 130, 255], b: [220, 200, 255], c: [255, 120, 200] },
+  { k: 'lapis', name: 'Lapis', a: [90, 160, 255], b: [190, 225, 255], c: [255, 200, 110] },
+  { k: 'emerald', name: 'Emerald', a: [80, 225, 160], b: [200, 255, 225], c: [255, 220, 120] },
+  { k: 'ember', name: 'Ember', a: [255, 110, 60], b: [255, 190, 120], c: [255, 240, 200] },
+  { k: 'prism', name: 'Prism', prism: true, a: [255, 206, 120], b: [200, 230, 255], c: [255, 140, 200] },
+];
+const hsl = (h, s, l) => { s /= 100; l /= 100; const k = n => (n + h / 30) % 12, a = s * Math.min(l, 1 - l), f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))); return [255 * f(0), 255 * f(8), 255 * f(4)]; };
+const rgba = (c, a) => `rgba(${c[0] | 0},${c[1] | 0},${c[2] | 0},${a})`;
+
+/* ---------- state ---------- */
+const ST = {
+  fig: FX.flower, t0: performance.now(), pal: 0, inward: true, paused: false, pauseAt: 0, speed: 1,
+  layers: { guides: true, names: false, spin: true, breathe: true, halo: true, bells: true, drone: false },
+  sound: true, labels: true, night: 0, nightOn: false, open: false, gaze: false, draw: false,
+  spin: 0, spinV: .05, tiltX: -.35, tiltY: 0, zoom: 1, page: 0, pageT: 0, medA: 0, medV: 0, gearA: 0,
+  ptr: [1000, 560], ptrT: 0, ping: 0, pingAt: 0, keyLit: {}, planet: -1, jewel: [], mode: [1, 2], cyT: 0, burn: 0, words: '', typing: false,
+  hover: '', lastBell: 0, eyeStart: 0,
+};
+try { const s = JSON.parse(localStorage.getItem('vs-geo') || '{}'); if (s.pal >= 0 && s.pal < PAL.length) ST.pal = s.pal; if (s.fig in FX) ST.fig = FX[s.fig]; if (s.layers) Object.assign(ST.layers, s.layers); if (typeof s.sound === 'boolean') ST.sound = s.sound; } catch (e) {}
+const save = () => { try { localStorage.setItem('vs-geo', JSON.stringify({ pal: ST.pal, fig: FIG[ST.fig].k, layers: ST.layers, sound: ST.sound })); } catch (e) {} };
+const F = () => FIG[ST.fig];
+const prog = now => { const f = F(), t = ST.paused ? ST.pauseAt : (now - ST.t0) / 1000 * ST.speed; return clamp(t / f.dur, 0, 1); };
+
+/* =====================================================================================================================
+   SOUND: a monochord tuned in pure ratios, bells for every stroke, the seven planets' drones. Web Audio only, obeys VS_VOLUME
+   ===================================================================================================================== */
+const AU = {};
+const vol = () => (typeof window.VS_VOLUME === 'number' ? window.VS_VOLUME : .8) * (ST.sound ? 1 : 0);
+function au() {
+  if (AU.c) { if (AU.c.state === 'suspended') AU.c.resume(); return AU.c; }
+  const c = AU.c = new (window.AudioContext || window.webkitAudioContext)();
+  AU.master = c.createGain(); AU.master.gain.value = vol() * .9;
+  const comp = c.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 4; comp.attack.value = .004; comp.release.value = .25;
+  AU.master.connect(comp).connect(c.destination);
+  const len = c.sampleRate * 4.2, ir = c.createBuffer(2, len, c.sampleRate);
+  for (let ch = 0; ch < 2; ch++) { const d = ir.getChannelData(ch); for (let i = 0; i < len; i++) { const t = i / c.sampleRate; d[i] = (Math.random() * 2 - 1) * Math.exp(-t / 1.25) * (t < .02 ? t / .02 : 1); } }
+  AU.rev = c.createConvolver(); AU.rev.buffer = ir; AU.wet = c.createGain(); AU.wet.gain.value = .5; AU.rev.connect(AU.wet).connect(AU.master);
+  AU.dry = c.createGain(); AU.dry.gain.value = .75; AU.dry.connect(AU.master);
+  AU.bus = c.createGain(); AU.bus.connect(AU.dry); AU.bus.connect(AU.rev);
+  return c;
+}
+addEventListener('vs-volume', () => { if (AU.c) AU.master.gain.setTargetAtTime(vol() * .9, AU.c.currentTime, .05); });
+function partials(f, v, list, dec, pan = 0) {
+  const c = AU.c; if (!c || !vol()) return; const t = c.currentTime, out = c.createGain(); out.gain.value = v;
+  let p = null; if (c.createStereoPanner) { p = c.createStereoPanner(); p.pan.value = pan; out.connect(p).connect(AU.bus); } else out.connect(AU.bus);
+  for (const [m, a, beat] of list) { const o = c.createOscillator(), g = c.createGain(); o.type = 'sine'; o.frequency.value = f * m + (beat || 0); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(a, t + .006); g.gain.exponentialRampToValueAtTime(.0001, t + dec / Math.sqrt(m)); o.connect(g).connect(out); o.start(t); o.stop(t + dec / Math.sqrt(m) + .05); }
+}
+const bell = (f, v = .12, pan = 0) => partials(f, v, [[1, 1], [2.756, .38], [5.404, .16], [8.933, .07]], 3.2, pan);
+const bowl = (f, v = .16, pan = 0) => partials(f, v, [[1, 1], [1, .5, 1.3], [2.71, .45], [2.71, .2, 2.1], [5.15, .18], [8.6, .06]], 7.5, pan);
+function tick() { const c = AU.c; if (!c || !vol()) return; const t = c.currentTime, n = c.createBufferSource(), b = c.createBuffer(1, 600, c.sampleRate), d = b.getChannelData(0); for (let i = 0; i < 600; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / 70); n.buffer = b; const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 3200; bp.Q.value = 3; const g = c.createGain(); g.gain.value = .12; n.connect(bp).connect(g).connect(AU.bus); n.start(t); }
+// the seven planets' tones (the cosmic octave: each orbit's year raised by octaves into hearing)
+const PLANETS = [{ name: 'Saturn', g: '♄', f: 147.85 }, { name: 'Jupiter', g: '♃', f: 183.58 }, { name: 'Mars', g: '♂', f: 144.72 }, { name: 'Sun', g: '☉', f: 126.22 }, { name: 'Venus', g: '♀', f: 221.23 }, { name: 'Mercury', g: '☿', f: 141.27 }, { name: 'Moon', g: '☽', f: 210.42 }];
+const root = () => ST.planet >= 0 ? PLANETS[ST.planet].f : 216;
+function drone(on) {
+  const c = au(); if (!c) return; const t = c.currentTime;
+  if (AU.dr) { const d = AU.dr; d.g.gain.setTargetAtTime(0, t, .6); setTimeout(() => d.os.forEach(o => o.stop()), 4000); AU.dr = null; }
+  if (!on) return;
+  const f = root() / 2, g = c.createGain(), lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 900; g.gain.value = 0; g.gain.setTargetAtTime(.075, t, 1.4);
+  const os = [[f, 'sine', .9, 0], [f * 1.5, 'sine', .35, .7], [f * 2, 'triangle', .18, -.4], [f / 2, 'sine', .55, 0]].map(([fr, ty, a, det]) => { const o = c.createOscillator(), og = c.createGain(); o.type = ty; o.frequency.value = fr + det; og.gain.value = a; o.connect(og).connect(lp); o.start(t); return o; });
+  const lfo = c.createOscillator(), lg = c.createGain(); lfo.frequency.value = .09; lg.gain.value = .025; lfo.connect(lg).connect(g.gain); lfo.start(t); os.push(lfo);
+  lp.connect(g).connect(AU.bus); AU.dr = { g, os };
+}
+// the monochord: the panel's fourteen keys, pure Pythagorean ratios over two octaves
+const MONO = [[1, 1, '1:1', 'unison'], [9, 8, '9:8', 'the tone'], [81, 64, '81:64', 'the ditone'], [4, 3, '4:3', 'the fourth'], [3, 2, '3:2', 'the fifth'], [27, 16, '27:16', 'the sixth'], [243, 128, '243:128', 'the seventh'], [2, 1, '2:1', 'the octave'],
+  [9, 4, '9:4', 'octave and tone'], [81, 32, '81:32', 'octave and ditone'], [8, 3, '8:3', 'the eleventh'], [3, 1, '3:1', 'the twelfth'], [27, 8, '27:8', 'the thirteenth'], [243, 64, '243:64', 'the fourteenth']];
+const MODES = [[1, 2], [1, 3], [2, 3], [1, 4], [2, 5], [3, 4], [3, 5], [1, 6], [2, 7], [4, 5], [3, 7], [5, 6], [4, 7], [5, 8]];
+
+/* =====================================================================================================================
+   THE MAP: every control in image pixels
+   ===================================================================================================================== */
+const PK = [862, 902, 940, 980, 1030, 1070, 1108, 1142];
+const M = {
+  wheel: { x: 525, y: 330, r0: 82, r1: 132 }, portal: { x: 1005, y: 290, r: 200 }, third: { x: 1000, y: 213 }, eye: { x: 1500, y: 440 },
+  med: { x: 156, y: 413, r0: 62, r1: 108 }, gear: { x: 1575, y: 195, r: 54 }, small: [1370, 155, 1460, 240], led: [270, 760, 685, 1000], card: [1255, 798, 1362, 998],
+  logo: [845, 775, 1160, 910], moon: { x: 1820, y: 150, r: 100 }, crescent: { x: 185, y: 110, r: 75 },
+};
+const PANEL = [...PK.map(x => [x, 932]), ...PK.slice(0, 6).map(x => [x, 977])];
+const FNKEYS = ['GAZE', 'KEEP', 'NIGHT', 'BOOK'];
+const KEYS = []; { const rows = [892, 927, 962, 997]; let li = 0; rows.forEach(y => [1475, 1512, 1547].forEach(x => KEYS.push({ x, y, hw: 13, hh: 12, k: LEFT12[li++] })));
+  let ri = 0; rows.forEach((y, r) => [1590, 1622, 1653, 1685, 1718].forEach((x, c) => { if (c === 4 && r >= 2) return; KEYS.push({ x, y, hw: 13, hh: 12, k: RIGHT14[ri] || FNKEYS[ri - RIGHT14.length] }); ri++; })); KEYS.push({ x: 1718, y: 980, hw: 13, hh: 29, k: 'OPEN' }); }
+// the last five right-hand slots: mandala sits in RIGHT14; the remaining keys take functions
+const CATS = [892, 927, 962, 997].map(y => [1433, y]);
+const SQ = [1427, 1475, 1525, 1572, 1620, 1668, 1715];
+const PLANET_X = [1430, 1475, 1545, 1580, 1625, 1675, 1720];
+const JEWELS = [825, 865, 905, 945, 985, 1028, 1068, 1110, 1150, 1190];
+const FOLDS = [[320, 4], [380, 6], [445, 8], [500, 12], [555, 16], [610, 24]];
+const PAGES = [[275, 'WHAT'], [315, 'MAKING'], [355, 'MEANING'], [395, 'PRACTICE']];
+const REDSQ = [[720, 788, 'words', 'Words: type your intent on the screen'], [765, 788, 'seed', 'A new mandala from a random seed'], [720, 920, 'draw', 'Draw in the mandala'], [765, 920, 'clear', 'Clear what you drew'], [720, 975, 'keep', 'Keep the figure as a PNG'], [765, 975, 'dissolve', 'Dissolve the mandala']];
+const LAYERS = [['guides', 'Guides: the construction lines'], ['names', 'Names on the figure'], ['spin', 'Spin'], ['breathe', 'Breathe'], ['halo', 'Halo behind him'], ['bells', 'A bell for every stroke'], ['drone', 'The drone']];
+const TRANSPORT = [[1200, 790, 'replay', 'Draw it again'], [1200, 855, 'pause', 'Pause the drawing'], [1200, 925, 'inward', 'Draw inward: from the edge to the centre'], [1200, 980, 'outward', 'Draw outward: from the centre to the edge']];
+
+/* =====================================================================================================================
+   STAGE: fit, canvases, image masks
+   ===================================================================================================================== */
+const board = $('board'), stage = $('stage'), art = $('art');
+const plate = $('plate'), base = $('base'), glow = $('glow');
+const px = plate.getContext('2d'), bx = base.getContext('2d'), gx = glow.getContext('2d');
+let K = 1, Q = 1, QG = .6, OX = 0, OY = 0;
+function fit() {
+  const w = stage.clientWidth, h = stage.clientHeight; K = Math.min(w / IW, h / IH);
+  // fill more of a wide screen: allow a little crop of the plants and rug rather than bars
+  K = Math.min(Math.max(K, Math.min(w / (IW * .92), h / (IH * .9))), Math.max(w / IW, h / IH));
+  OX = (w - IW * K) / 2; OY = (h - IH * K) / 2; board.style.transform = `translate(${OX}px, ${OY}px) scale(${K})`;
+  const d = Math.min(2, devicePixelRatio || 1); Q = Math.min(1.25, K * d); QG = Math.min(.7, K * d * .6);
+  for (const [cv, q] of [[plate, Q], [base, Q], [glow, QG]]) { cv.width = Math.round(IW * q); cv.height = Math.round(IH * q); }
+  drawPlate(); fitHolo();
+}
+addEventListener('resize', fit);
+const toImg = e => [(e.clientX - stage.getBoundingClientRect().left - OX) / K, (e.clientY - stage.getBoundingClientRect().top - OY) / K];
+
+// read the render once: the sky inside his window (the halo shows only there), the rays above it, the eye's slit, the gear
+const MASK = {};
+function readArt() {
+  const c = document.createElement('canvas'); c.width = IW; c.height = IH; const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(art, 0, 0);
+  let D; try { D = x.getImageData(0, 0, IW, IH).data; } catch (e) { return; }
+  const at = (X, Y) => (Y * IW + X) * 4;
+  // sky in the portal
+  { const { x: cx, y: cy, r } = M.portal, S = 2 * r, m = document.createElement('canvas'); m.width = m.height = S; const mx = m.getContext('2d'), id = mx.createImageData(S, S);
+    for (let y = 0; y < S; y++) for (let X = 0; X < S; X++) { const gx0 = cx - r + X, gy0 = cy - r + y, dd = Math.hypot(X - r, y - r); if (dd > r - 2) continue; const k = at(gx0, gy0), R = D[k], G = D[k + 1], B = D[k + 2];
+      const a = clamp((B - R - 35) / 45, 0, 1) * clamp((B - G - 10) / 30, 0, 1) * clamp((r - 4 - dd) / 8, 0, 1); id.data[(y * S + X) * 4 + 3] = a * 255; }
+    mx.putImageData(id, 0, 0); const s2 = document.createElement('canvas'); s2.width = s2.height = S / 2; s2.getContext('2d').drawImage(m, 0, 0, S / 2, S / 2); mx.clearRect(0, 0, S, S); mx.drawImage(s2, 0, 0, S, S); MASK.sky = m; }
+  // the sunburst rays above the console: tan next to blue
+  { const X0 = 560, Y0 = 0, W = 900, H = 230, blue = new Uint8Array(W * H), tan = new Uint8Array(W * H);
+    for (let y = 0; y < H; y++) for (let X = 0; X < W; X++) { const k = at(X0 + X, Y0 + y), R = D[k], G = D[k + 1], B = D[k + 2]; if (B > R + 40) blue[y * W + X] = 1; else if (R > 175 && G > 125 && R - B > 45) tan[y * W + X] = 1; }
+    const near = new Uint8Array(W * H), rad = 7; for (let y = 0; y < H; y++) { let run = -99; for (let X = 0; X < W; X++) { if (blue[y * W + X]) run = X; if (X - run <= rad) near[y * W + X] = 1; } run = 9999; for (let X = W - 1; X >= 0; X--) { if (blue[y * W + X]) run = X; if (run - X <= rad) near[y * W + X] = 1; } }
+    const m = document.createElement('canvas'); m.width = W; m.height = H; const mx = m.getContext('2d'), id = mx.createImageData(W, H);
+    for (let y = 0; y < H; y++) for (let X = 0; X < W; X++) { const i = y * W + X; if (!tan[i] || !near[i]) continue; const gx0 = X0 + X, gy0 = Y0 + y; if (Math.hypot(gx0 - M.portal.x, gy0 - M.portal.y) < M.portal.r + 22) continue; if (gx0 > 1215 && gx0 < 1300) continue; const k = at(gx0, gy0); id.data[i * 4] = D[k]; id.data[i * 4 + 1] = D[k + 1]; id.data[i * 4 + 2] = D[k + 2]; id.data[i * 4 + 3] = 255; }
+    mx.putImageData(id, 0, 0); MASK.rays = { c: m, x: X0, y: Y0 }; }
+  // the big eye: find the slit, fill it from the iris either side so a new pupil can move
+  { const X0 = 1440, Y0 = 330, W = 120, H = 220, m = document.createElement('canvas'); m.width = W; m.height = H; const mx = m.getContext('2d'); mx.drawImage(art, X0, Y0, W, H, 0, 0, W, H); const id = mx.getImageData(0, 0, W, H), d = id.data;
+    let top = H, bot = 0, cxs = 0, n = 0; const L = (X, y) => { const k = (y * W + X) * 4; return .3 * d[k] + .59 * d[k + 1] + .11 * d[k + 2]; };
+    const inAlm = (X, y) => { const gx0 = X0 + X, gy0 = Y0 + y, u = (gx0 - 1500) / 165; if (Math.abs(u) >= 1) return false; return Math.abs(gy0 - 445) < 72 * (1 - u * u); };
+    for (let y = 0; y < H; y++) { let l = -1, r = -1; for (let X = 35; X < W - 35; X++) if (L(X, y) < 52 && inAlm(X, y)) { if (l < 0) l = X; r = X; } if (l < 0 || r - l > 50 || l > 66 || r < 54) continue; top = Math.min(top, y); bot = Math.max(bot, y); cxs += (l + r) / 2; n++;
+      const a = Math.max(0, l - 4), b = Math.min(W - 1, r + 4); for (let X = a; X <= b; X++) { const u = (X - a) / Math.max(1, b - a); for (let ch = 0; ch < 3; ch++) d[(y * W + X) * 4 + ch] = d[(y * W + a) * 4 + ch] * (1 - u) + d[(y * W + b) * 4 + ch] * u + (Math.random() - .5) * 14; } }
+    mx.putImageData(id, 0, 0);
+    if (n > 20) MASK.eye = { c: m, x: X0, y: Y0, cx: X0 + cxs / n, top: Y0 + top, bot: Y0 + bot }; }
+  // the gear medallion, so it can turn
+  { const { x: cx, y: cy, r } = M.gear, m = document.createElement('canvas'); m.width = m.height = 2 * r; m.getContext('2d').drawImage(art, cx - r, cy - r, 2 * r, 2 * r, 0, 0, 2 * r, 2 * r); MASK.gear = m; }
+  // the medallion's eye (for a glint) and the cream of the ring (for the engraving's paper)
+}
+
+/* =====================================================================================================================
+   DRAWING A FIGURE (shared by the halo, the hologram, the card, the keys and the PNG)
+   ===================================================================================================================== */
+function colOf(p, i, pal, t) { if (pal.prism) return hsl((i * 23 + t * 18 + (p.c || 0) * 90) % 360, 90, 70); return p.c === 1 ? pal.b : p.c === 2 ? pal.c : pal.a; }
+function polyLen(pts) { let L = 0; for (let i = 1; i < pts.length; i++) L += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); return L; }
+function tracePrim(c, p, f) {
+  c.beginPath();
+  if (p.t === 'c') { const a0 = p.a0 ?? -Math.PI / 2, a1 = p.a1 ?? a0 + TAU; c.arc(p.x, p.y, p.r, a0, a0 + (a1 - a0) * f); }
+  else if (p.t === 'l') { const pts = p.pts, L = p._L ?? (p._L = polyLen(pts)); let left = L * f; c.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length && left > 0; i++) { const sl = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]), u = Math.min(1, left / sl); c.lineTo(pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * u, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * u); left -= sl; } }
+  else if (p.t === 'd') c.arc(p.x, p.y, p.r * Math.min(1, f * 1.5), 0, TAU);
+}
+// mode: 'holo' (big, glowing), 'halo' (behind him), 'card' (red neon), 'icon' (ink on a key), 'png'
+function drawFigure(c, f, cx, cy, R, o) {
+  const { mode, p = 1, t = 0, pal = PAL[ST.pal] } = o, ink = mode === 'icon', px1 = 1 / R;
+  c.save(); c.translate(cx, cy);
+  const br = ST.layers.breathe && !calm && !ink ? 1 + .018 * Math.sin(t * TAU / 10) : 1;
+  const burn = (mode === 'holo' || mode === 'halo') ? ST.burn : 0;
+  c.scale(R * br * (1 - burn * .92), R * br * (1 - burn * .92));
+  if (!ink && (f.P || f.special === 'mandala')) c.rotate((ST.layers.spin ? ST.spin : 0) + burn * burn * 7);
+  c.lineCap = 'round'; c.lineJoin = 'round';
+  if (!ink) c.globalCompositeOperation = 'lighter';
+  const A = ink ? 1 : (1 - burn);
+  const widths = mode === 'holo' || mode === 'png' ? [7, 2.6, 1.1] : mode === 'halo' ? [6, 2.4, 1] : mode === 'card' ? [5, 2, .9] : [0, 0, 1.1];
+  const alphas = mode === 'halo' ? [.22, .6, 1] : [.13, .42, .95];
+  if (f.P) {
+    const P = f.P, N = P.length, order = ST.inward ? P : [...P].reverse(), pr = p * N;
+    for (let i = 0; i < N; i++) {
+      const q = order[i], fr = clamp(pr - i, 0, 1); if (fr <= 0) break; if (q.g && !ST.layers.guides) continue;
+      const col = mode === 'card' ? (q.c === 2 ? [255, 210, 150] : [255, 70, 50]) : colOf(q, i, pal, t), wm = (q.w || 1) * (q.g ? .55 : 1);
+      if (q.dash) c.setLineDash([.03, .03]); else c.setLineDash([]);
+      if (ink) { c.strokeStyle = 'rgba(38,24,12,.85)'; c.fillStyle = c.strokeStyle; c.lineWidth = px1 * 1.15 * Math.min(wm, 1.4); tracePrim(c, q, 1); q.t === 'd' ? c.fill() : c.stroke(); continue; }
+      for (let pass = 0; pass < 3; pass++) {
+        const w = widths[pass]; if (!w) continue; c.lineWidth = w * wm * px1 * (mode === 'halo' ? 1.1 : 1); c.strokeStyle = rgba(pass === 2 ? mix(col, [255, 255, 255], .45) : col, alphas[pass] * A * (q.g ? .45 : 1)); c.fillStyle = c.strokeStyle;
+        tracePrim(c, q, fr); if (q.t === 'd' || (q.fill && pass === 0)) c.fill(); else c.stroke();
+      }
+      if (fr < 1 && !ink && q.t !== 'd') { const pt = tipOf(q, fr); c.fillStyle = rgba([255, 250, 230], .9 * A); c.beginPath(); c.arc(pt[0], pt[1], 3.2 * px1, 0, TAU); c.fill(); }
+    }
+    if (ST.layers.names && P.labs && !ink && mode !== 'card') { c.setLineDash([]); c.globalCompositeOperation = 'source-over'; c.font = `${12 * px1}px "IBM Plex Mono"`; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillStyle = rgba(pal.b, .8 * A * clamp(p * 2 - 1, 0, 1)); for (const [x, y, s] of P.labs) c.fillText(s, x, y); }
+  } else if (f.s3) draw3d(c, f, p, t, pal, mode, px1, widths, alphas, A);
+  else if (f.special === 'phyllo') phyllo(c, p, t, pal, mode, px1, A);
+  else if (f.special === 'cymatics') cymatics(c, t, pal, mode, px1, A);
+  else if (f.special === 'mandala') mandalaDraw(c, p, t, pal, mode, px1, A);
+  c.restore();
+}
+const mix = (a, b, u) => [a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u, a[2] + (b[2] - a[2]) * u];
+function tipOf(q, f) { if (q.t === 'c') { const a0 = q.a0 ?? -Math.PI / 2, a1 = q.a1 ?? a0 + TAU, a = a0 + (a1 - a0) * f; return [q.x + Math.cos(a) * q.r, q.y + Math.sin(a) * q.r]; }
+  const pts = q.pts, L = q._L ?? polyLen(pts); let left = L * f; for (let i = 1; i < pts.length; i++) { const sl = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); if (left <= sl) { const u = left / sl; return [pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * u, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * u]; } left -= sl; } return pts[pts.length - 1]; }
+function rot3(v, ax, ay, az = 0) { let [x, y, z] = v; let c = Math.cos(ay), s = Math.sin(ay); [x, z] = [x * c + z * s, -x * s + z * c]; c = Math.cos(ax); s = Math.sin(ax); [y, z] = [y * c - z * s, y * s + z * c]; if (az) { c = Math.cos(az); s = Math.sin(az); [x, y] = [x * c - y * s, x * s + y * c]; } return [x, y, z]; }
+function draw3d(c, f, p, t, pal, mode, px1, widths, alphas, A) {
+  const S = S3[f.s3], ink = mode === 'icon', spin = ink ? .6 : ST.spin * 2.2, ax = ink ? -.45 : ST.tiltX, ay0 = ink ? .5 : ST.tiltY;
+  const parts = [[S, 1, 0]]; if (S.twin) parts.push([S.twin, -1, 2]);
+  const total = parts.reduce((a, [s]) => a + s.E.length, 0); let idx = 0; const pr = p * total;
+  for (const [s, dir, ci] of parts) {
+    const P = s.V.map(v => { const r = rot3(v, ax, ay0 + spin * dir, f.s3 === 'torus' ? 0 : 0); const k = 2.8 / (2.8 + r[2]); return [r[0] * k * .92, r[1] * k * .92, r[2]]; });
+    for (const [a, b] of s.E) {
+      const fr = ink ? 1 : clamp(pr - idx++, 0, 1); if (fr <= 0) continue; const za = (P[a][2] + P[b][2]) / 2, depth = clamp(.62 - za * .38, .2, 1);
+      const x2 = P[a][0] + (P[b][0] - P[a][0]) * fr, y2 = P[a][1] + (P[b][1] - P[a][1]) * fr;
+      if (ink) { c.strokeStyle = `rgba(38,24,12,${.35 + .55 * depth})`; c.lineWidth = px1 * 1.1; c.beginPath(); c.moveTo(P[a][0], P[a][1]); c.lineTo(x2, y2); c.stroke(); continue; }
+      const col = mode === 'card' ? [255, 70, 50] : pal.prism ? hsl((za * 120 + t * 20 + ci * 60) % 360, 90, 70) : ci === 2 ? pal.c : (depth > .7 ? pal.b : pal.a);
+      for (let pass = 0; pass < 3; pass++) { c.lineWidth = widths[pass] * px1 * (f.s3 === 'torus' ? .6 : 1); c.strokeStyle = rgba(pass === 2 ? mix(col, [255, 255, 255], .4) : col, alphas[pass] * depth * A * (f.s3 === 'torus' ? .7 : 1)); c.beginPath(); c.moveTo(P[a][0], P[a][1]); c.lineTo(x2, y2); c.stroke(); }
+    }
+    if (!ink && f.s3 !== 'torus') for (const v of P) { const d = clamp(.62 - v[2] * .38, .2, 1); c.fillStyle = rgba([255, 245, 220], .8 * d * A * p); c.beginPath(); c.arc(v[0], v[1], 3.4 * px1 * d, 0, TAU); c.fill(); }
+  }
+}
+function phyllo(c, p, t, pal, mode, px1, A) {
+  const N = mode === 'icon' ? 90 : 520, n = Math.floor(N * (mode === 'icon' ? 1 : p)), ga = TAU * (1 - 1 / PHI);
+  for (let i = 0; i < n; i++) { const r = .95 * Math.sqrt(i / N), a = i * ga + (mode === 'icon' ? 0 : ST.spin), x = Math.cos(a) * r, y = Math.sin(a) * r, s = (mode === 'icon' ? 1.2 : 2.2 + 3.2 * r) * px1 * (mode === 'halo' ? 1.2 : 1);
+    if (mode === 'icon') { c.fillStyle = 'rgba(38,24,12,.85)'; c.beginPath(); c.arc(x, y, s, 0, TAU); c.fill(); continue; }
+    const col = mode === 'card' ? [255, 80, 60] : pal.prism ? hsl((i * 1.7 + t * 20) % 360, 90, 68) : (i % 21 === 0 ? pal.c : i % 13 === 0 ? pal.b : pal.a);
+    const fresh = clamp((n - i) / 30, 0, 1); c.fillStyle = rgba(col, (.35 + .6 * (1 - fresh)) * A); c.beginPath(); c.arc(x, y, s * (1 + fresh), 0, TAU); c.fill(); }
+}
+/* ---------- the Chladni plate: sand runs to the still lines of the mode (n, m) ---------- */
+const SAND = Array.from({ length: 1700 }, () => [Math.random() * 2 - 1, Math.random() * 2 - 1]);
+const chl = (n, m, x, y) => { const X = (x + 1) / 2 * Math.PI, Y = (y + 1) / 2 * Math.PI; return Math.cos(n * X) * Math.cos(m * Y) - Math.cos(m * X) * Math.cos(n * Y); };
+function sandStep(dt) {
+  const [n, m] = ST.mode, h = .004, k = calm ? .2 : 1;
+  for (const s of SAND) { const v = chl(n, m, s[0], s[1]), gxv = (chl(n, m, s[0] + h, s[1]) - chl(n, m, s[0] - h, s[1])) / (2 * h), gyv = (chl(n, m, s[0], s[1] + h) - chl(n, m, s[0], s[1] - h)) / (2 * h);
+    const shake = Math.abs(v) * .03 * k; s[0] += (-v * gxv * .0045 + (Math.random() - .5) * shake) * dt * 60; s[1] += (-v * gyv * .0045 + (Math.random() - .5) * shake) * dt * 60;
+    if (Math.abs(s[0]) > 1 || Math.abs(s[1]) > 1) { s[0] = Math.random() * 2 - 1; s[1] = Math.random() * 2 - 1; } }
+}
+function cymatics(c, t, pal, mode, px1, A) {
+  const s = .68;
+  if (mode === 'icon') { c.strokeStyle = 'rgba(38,24,12,.85)'; c.lineWidth = px1 * 1.1; c.strokeRect(-s, -s, 2 * s, 2 * s); c.beginPath(); c.moveTo(-s, 0); c.quadraticCurveTo(0, -s * .7, s, 0); c.moveTo(-s, 0); c.quadraticCurveTo(0, s * .7, s, 0); c.moveTo(0, -s); c.lineTo(0, s); c.stroke(); return; }
+  c.strokeStyle = rgba(pal.a, .35 * A); c.lineWidth = 1.4 * px1; c.strokeRect(-s, -s, 2 * s, 2 * s);
+  const col = mode === 'card' ? [255, 90, 60] : pal.b, sz = (mode === 'halo' ? 2.4 : 2) * px1; c.fillStyle = rgba(col, .75 * A);
+  for (const q of SAND) c.fillRect(q[0] * s - sz / 2, q[1] * s - sz / 2, sz, sz);
+}
+/* ---------- the mandala: seeded from your words (SHA-256), so the same words give the same mandala ---------- */
+async function sha(s) { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return [...new Uint8Array(b)]; }
+function rng(bytes) { let x = bytes.reduce((a, b, j) => (a ^ (b << ((j % 4) * 8))) >>> 0, 2166136261) || 1; return () => { x ^= x << 13; x ^= x >>> 17; x ^= x << 5; x >>>= 0; return x / 4294967296; }; }
+const FIVE = [{ name: 'white', c: [240, 234, 220], m: 'calm, clarity' }, { name: 'yellow', c: [255, 200, 90], m: 'richness, giving' }, { name: 'red', c: [255, 90, 70], m: 'desire turned into love' }, { name: 'green', c: [90, 220, 150], m: 'action without fear' }, { name: 'blue', c: [100, 160, 255], m: 'wisdom, space' }];
+const MOT = ['petal', 'tri', 'dot', 'arc', 'spoke', 'chevron', 'lotus', 'star', 'drop', 'eye'];
+let MAND = null, STROKES = [];
+async function mandalaBuild(words, foldPick) {
+  const raw = (words || '').trim(), bytes = await sha('VS-MANDALA-1|' + raw.toLowerCase()), R = rng(bytes);
+  const fold = foldPick || [4, 6, 8, 12, 16, 24][bytes[0] % 6], c1 = FIVE[bytes[1] % 5], c2 = FIVE[(bytes[1] + 1 + bytes[2] % 4) % 5];
+  const rings = []; let r = .1; const nR = 5 + bytes[3] % 3;
+  for (let i = 0; i < nR; i++) { const w = .07 + R() * .05; rings.push({ r0: r, r1: r + w, m: MOT[Math.floor(R() * MOT.length)], k: fold * (1 + Math.floor(R() * 3)), c: i % 2, a: R() * Math.PI, sp: (R() - .5) * .3 }); r += w + .015; }
+  const top = rings[rings.length - 1].r1, fitK = (.66 - .12) / Math.max(.01, top - .1); for (const g of rings) { g.r0 = .12 + (g.r0 - .1) * fitK; g.r1 = .12 + (g.r1 - .1) * fitK; }
+  rings.push({ r0: .86, r1: .97, m: bytes[4] % 2 ? 'chevron' : 'petal', k: fold * 4, c: 0, a: 0, sp: .05, fire: 1 });
+  MAND = { raw, fold, c1, c2, rings, hash: bytes.map(b => b.toString(16).padStart(2, '0')).join('') }; STROKES = [];
+  return MAND;
+}
+function motif(c, m, a, r0, r1, k) {
+  const rm = (r0 + r1) / 2, w = r1 - r0, da = TAU / k, P = (ang, rr) => [Math.cos(ang) * rr, Math.sin(ang) * rr];
+  c.beginPath();
+  if (m === 'petal' || m === 'lotus') { c.moveTo(...P(a - da * .45, r0)); c.quadraticCurveTo(...P(a - da * .3, r1 * 1.02), ...P(a, r1)); c.quadraticCurveTo(...P(a + da * .3, r1 * 1.02), ...P(a + da * .45, r0)); if (m === 'lotus') { c.moveTo(...P(a, r0)); c.lineTo(...P(a, r0 + w * .6)); } }
+  else if (m === 'tri') { c.moveTo(...P(a - da * .4, r0)); c.lineTo(...P(a, r1)); c.lineTo(...P(a + da * .4, r0)); c.closePath(); }
+  else if (m === 'dot') { const [x, y] = P(a, rm); c.moveTo(x + w * .22, y); c.arc(x, y, w * .22, 0, TAU); }
+  else if (m === 'arc') { const [x, y] = P(a, r0); c.arc(x, y, w, a - Math.PI / 2, a + Math.PI / 2); }
+  else if (m === 'spoke') { c.moveTo(...P(a, r0)); c.lineTo(...P(a, r1)); }
+  else if (m === 'chevron') { c.moveTo(...P(a - da * .35, r0)); c.lineTo(...P(a, rm)); c.lineTo(...P(a + da * .35, r0)); c.moveTo(...P(a - da * .35, rm)); c.lineTo(...P(a, r1)); c.lineTo(...P(a + da * .35, rm)); }
+  else if (m === 'star') { const [cx, cy] = P(a, rm), s = w * .32; for (let j = 0; j < 5; j++) { const b = a + j * Math.PI * 4 / 5; j ? c.lineTo(cx + Math.cos(b) * s, cy + Math.sin(b) * s) : c.moveTo(cx + Math.cos(b) * s, cy + Math.sin(b) * s); } c.closePath(); }
+  else if (m === 'drop') { c.moveTo(...P(a, r1)); c.quadraticCurveTo(...P(a - da * .4, r0 + w * .2), ...P(a, r0)); c.quadraticCurveTo(...P(a + da * .4, r0 + w * .2), ...P(a, r1)); }
+  else if (m === 'eye') { c.moveTo(...P(a - da * .4, rm)); c.quadraticCurveTo(...P(a, r1), ...P(a + da * .4, rm)); c.quadraticCurveTo(...P(a, r0), ...P(a - da * .4, rm)); const [x, y] = P(a, rm); c.moveTo(x + w * .1, y); c.arc(x, y, w * .1, 0, TAU); }
+  c.stroke();
+}
+function mandalaDraw(c, p, t, pal, mode, px1, A) {
+  const Md = MAND; if (!Md) return; const ink = mode === 'icon', nR = Md.rings.length, usePal = !pal.prism && ST.palPicked;
+  const colA = usePal ? pal.a : Md.c1.c, colB = usePal ? pal.b : Md.c2.c;
+  if (ink) { c.strokeStyle = 'rgba(38,24,12,.85)'; c.lineWidth = px1 * 1.1; c.beginPath(); c.arc(0, 0, .95, 0, TAU); c.stroke(); for (let i = 0; i < 8; i++) motif(c, 'petal', i * TAU / 8, .3, .7, 8); c.beginPath(); c.arc(0, 0, .12, 0, TAU); c.stroke(); return; }
+  const passes = mode === 'card' ? [[5, .14], [1.6, .9]] : [[7, .12], [2.4, .4], [1, .95]];
+  const stroke = (col, a, fn) => { for (const [w, al] of passes) { c.lineWidth = w * px1; c.strokeStyle = rgba(mode === 'card' ? [255, 70, 50] : col, al * a * A); fn(); } };
+  // the square palace with four gates and the closing circle
+  const gp = clamp(p * (nR + 2) - nR, 0, 1);
+  stroke(colA, gp, () => { c.beginPath(); c.arc(0, 0, 1, 0, TAU * gp); c.stroke(); });
+  stroke(pal.c, gp * .8, () => { const g = .74; c.beginPath(); for (let i = 0; i < 4; i++) { c.save(); c.rotate(i * Math.PI / 2); c.moveTo(-g, -g); c.lineTo(-.12, -g); c.lineTo(-.12, -g - .07); c.lineTo(.12, -g - .07); c.lineTo(.12, -g); c.lineTo(g, -g); c.restore(); } c.stroke(); });
+  for (let i = 0; i < nR; i++) {
+    const g = Md.rings[i], ap = clamp(p * (nR + 2) - i, 0, 1); if (ap <= 0) continue; const col = g.fire ? pal.c : g.c ? colB : colA;
+    c.save(); c.rotate(calm ? 0 : t * g.sp * .08); c.scale(.6 + .4 * ap, .6 + .4 * ap);
+    stroke(col, ap * .9, () => { c.beginPath(); c.arc(0, 0, g.r0, 0, TAU); c.stroke(); for (let j = 0; j < g.k; j++) motif(c, g.m, g.a + j * TAU / g.k, g.r0, g.r1, g.k); });
+    c.restore();
+  }
+  // the centre: the seed point, and the fold guides
+  stroke(pal.c, clamp(p * 4, 0, 1), () => { c.beginPath(); c.arc(0, 0, .035 + .01 * Math.sin(t * 2), 0, TAU); c.stroke(); });
+  if (ST.layers.guides) { c.strokeStyle = rgba(colA, .1 * A); c.lineWidth = px1; c.beginPath(); for (let i = 0; i < Md.fold; i++) { const a = i * TAU / Md.fold; c.moveTo(0, 0); c.lineTo(Math.cos(a) * .98, Math.sin(a) * .98); } c.stroke(); }
+  // what you drew, mirrored round every fold
+  if (STROKES.length) for (let fI = 0; fI < Md.fold; fI++) for (const mir of [1, -1]) { c.save(); c.rotate(fI * TAU / Md.fold); c.scale(1, mir); stroke(colB, 1, () => { for (const s of STROKES) { c.beginPath(); s.forEach(([x, y], i) => i ? c.lineTo(x, y) : c.moveTo(x, y)); c.stroke(); } }); c.restore(); }
+}
+
+/* =====================================================================================================================
+   THE LED SCREENS: a 5x7 dot font, a matrix buffer, a dot mask
+   ===================================================================================================================== */
+const FONT = {}; ((src) => { for (const line of src.trim().split('\n')) { const [ch, ...rows] = line.trim().split(' '); FONT[ch === 'SP' ? ' ' : ch] = rows; } })(`
+A .###. #...# #...# ##### #...# #...# #...#
+B ####. #...# #...# ####. #...# #...# ####.
+C .###. #...# #.... #.... #.... #...# .###.
+D ####. #...# #...# #...# #...# #...# ####.
+E ##### #.... #.... ####. #.... #.... #####
+F ##### #.... #.... ####. #.... #.... #....
+G .###. #...# #.... #.### #...# #...# .####
+H #...# #...# #...# ##### #...# #...# #...#
+I .###. ..#.. ..#.. ..#.. ..#.. ..#.. .###.
+J ..### ...#. ...#. ...#. ...#. #..#. .##..
+K #...# #..#. #.#.. ##... #.#.. #..#. #...#
+L #.... #.... #.... #.... #.... #.... #####
+M #...# ##.## #.#.# #.#.# #...# #...# #...#
+N #...# #...# ##..# #.#.# #..## #...# #...#
+O .###. #...# #...# #...# #...# #...# .###.
+P ####. #...# #...# ####. #.... #.... #....
+Q .###. #...# #...# #...# #.#.# #..#. .##.#
+R ####. #...# #...# ####. #.#.. #..#. #...#
+S .#### #.... #.... .###. ....# ....# ####.
+T ##### ..#.. ..#.. ..#.. ..#.. ..#.. ..#..
+U #...# #...# #...# #...# #...# #...# .###.
+V #...# #...# #...# #...# #...# .#.#. ..#..
+W #...# #...# #...# #.#.# #.#.# #.#.# .#.#.
+X #...# #...# .#.#. ..#.. .#.#. #...# #...#
+Y #...# #...# .#.#. ..#.. ..#.. ..#.. ..#..
+Z ##### ....# ...#. ..#.. .#... #.... #####
+0 .###. #...# #..## #.#.# ##..# #...# .###.
+1 ..#.. .##.. ..#.. ..#.. ..#.. ..#.. .###.
+2 .###. #...# ....# ...#. ..#.. .#... #####
+3 ####. ....# ....# .###. ....# ....# ####.
+4 ...#. ..##. .#.#. #..#. ##### ...#. ...#.
+5 ##### #.... ####. ....# ....# #...# .###.
+6 ..##. .#... #.... ####. #...# #...# .###.
+7 ##### ....# ...#. ..#.. .#... .#... .#...
+8 .###. #...# #...# .###. #...# #...# .###.
+9 .###. #...# #...# .#### ....# ...#. .##..
+SP ..... ..... ..... ..... ..... ..... .....
+. ..... ..... ..... ..... ..... .##.. .##..
+, ..... ..... ..... ..... .##.. ..#.. .#...
+: ..... .##.. .##.. ..... .##.. .##.. .....
+' ..#.. ..#.. .#... ..... ..... ..... .....
+- ..... ..... ..... ##### ..... ..... .....
+/ ....# ...#. ...#. ..#.. .#... .#... #....
+! ..#.. ..#.. ..#.. ..#.. ..#.. ..... ..#..
+? .###. #...# ....# ...#. ..#.. ..... ..#..
++ ..... ..#.. ..#.. ##### ..#.. ..#.. .....
+( ...#. ..#.. .#... .#... .#... ..#.. ...#.
+) .#... ..#.. ...#. ...#. ...#. ..#.. .#...
+= ..... ..... ##### ..... ##### ..... .....
+· ..... ..... ..... ..#.. ..... ..... .....
+φ ..#.. .###. #.#.# #.#.# .###. ..#.. ..#..
+° .##.. #..#. .##.. ..... ..... ..... .....
+> .#... ..#.. ...#. ....# ...#. ..#.. .#...
+< ...#. ..#.. .#... #.... .#... ..#.. ...#.
+* ..... #.#.# .###. ##### .###. #.#.# .....
+× ..... #...# .#.#. ..#.. .#.#. #...# .....
+♪ ..##. ..#.# ..#.. ..#.. ###.. ###.. .....
+◎ .###. #...# #.#.# ##.## #.#.# #...# .###.
+& .##.. #..#. #.#.. .#... #.#.# #..#. .##.#
+`);
+const fold = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[’‘]/g, "'").replace(/[“”]/g, '').replace(/—|–/g, '-').toUpperCase();
+function ledText(buf, cols, rows, s, x0, y0, I = 1, sc = 1) { let x = x0; for (const ch of s) { const g = FONT[ch] || FONT['·']; for (let r = 0; r < 7; r++) for (let c = 0; c < 5; c++) if (g[r][c] === '#') for (let a = 0; a < sc; a++) for (let b = 0; b < sc; b++) { const X = x + c * sc + a, Y = y0 + r * sc + b; if (X >= 0 && X < cols && Y >= 0 && Y < rows) buf[Y * cols + X] = Math.max(buf[Y * cols + X], I); } x += 6 * sc; } return x; }
+function wrap(s, n) { const out = []; let line = ''; for (const w of fold(s).split(/\s+/)) { if ((line + ' ' + w).trim().length > n) { if (line) out.push(line); line = w; while (line.length > n) { out.push(line.slice(0, n)); line = line.slice(n); } } else line = (line + ' ' + w).trim(); } if (line) out.push(line); return out; }
+function makeLed(rect, pitch, on, off) {
+  const [x0, y0, x1, y1] = rect, cols = Math.floor((x1 - x0) / pitch), rows = Math.floor((y1 - y0) / pitch), lo = document.createElement('canvas'); lo.width = cols; lo.height = rows;
+  return { x0, y0, x1, y1, cols, rows, pitch, on, off, buf: new Float32Array(cols * rows), lo, lx: lo.getContext('2d'), id: lo.getContext('2d').createImageData(cols, rows), mask: null };
+}
+function ledMask(L) {   // black everywhere except round dots, at the plate's resolution
+  const w = Math.round((L.x1 - L.x0) * Q), h = Math.round((L.y1 - L.y0) * Q), m = document.createElement('canvas'); m.width = w; m.height = h; const c = m.getContext('2d');
+  c.fillStyle = '#050302'; c.fillRect(0, 0, w, h); c.globalCompositeOperation = 'destination-out'; const p = L.pitch * Q, r = p * .36;
+  for (let y = 0; y < L.rows; y++) for (let x = 0; x < L.cols; x++) { c.beginPath(); c.arc((x + .5) * p, (y + .5) * p, r, 0, TAU); c.fill(); }
+  L.mask = m; L.maskQ = Q;
+}
+function ledPaint(L, ctx, gctx, bloom = .7) {
+  const d = L.id.data, [r1, g1, b1] = L.on, [r0, g0, b0] = L.off;
+  for (let i = 0; i < L.buf.length; i++) { const v = L.buf[i]; d[i * 4] = r0 + (r1 - r0) * v; d[i * 4 + 1] = g0 + (g1 - g0) * v; d[i * 4 + 2] = b0 + (b1 - b0) * v; d[i * 4 + 3] = 255; }
+  L.lx.putImageData(L.id, 0, 0);
+  const w = L.cols * L.pitch, h = L.rows * L.pitch;
+  ctx.fillStyle = '#050302'; ctx.fillRect(L.x0 - 2, L.y0 - 2, L.x1 - L.x0 + 4, L.y1 - L.y0 + 4);
+  ctx.imageSmoothingEnabled = false; ctx.drawImage(L.lo, L.x0, L.y0, w, h); ctx.imageSmoothingEnabled = true;
+  if (!L.mask || L.maskQ !== Q) ledMask(L); ctx.drawImage(L.mask, L.x0, L.y0, L.x1 - L.x0, L.y1 - L.y0);
+  if (gctx) { gctx.globalAlpha = bloom; gctx.drawImage(L.lo, L.x0 - L.pitch, L.y0 - L.pitch, w + 2 * L.pitch, h + 2 * L.pitch); gctx.globalAlpha = 1; }
+}
+const LED = makeLed(M.led, 4.5, [255, 176, 70], [34, 16, 6]);
+const SMALL = makeLed(M.small, 5.6, [255, 196, 110], [30, 14, 6]);
+
+/* =====================================================================================================================
+   THE PLATE: engraved labels, drawn once (the logo, the ratios on the monochord, a figure on every key, the palettes)
+   ===================================================================================================================== */
+function inkText(c, s, x, y, size, font, col = '#1a120a') { c.font = `${size}px ${font}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillStyle = col; c.fillText(s, x, y); }
+function drawPlate() {
+  const c = px; c.setTransform(Q, 0, 0, Q, 0, 0); c.clearRect(0, 0, IW, IH); if (!ST.labels) return;
+  // the logo: OUIJA arched, CAT, V1
+  c.save(); c.shadowColor = 'rgba(255,240,210,.55)'; c.shadowOffsetY = 1.2; c.shadowBlur = 0;
+  { const word = 'OUIJA', R = 230, cx = 1002, cy = 1065, span = .5, fs = 50; c.font = `${fs}px "IM Fell English SC", Georgia, serif`; c.fillStyle = '#17100a'; c.strokeStyle = '#17100a'; c.lineWidth = 1.6; c.textAlign = 'center'; c.textBaseline = 'alphabetic';
+    const ws = [...word].map(ch => c.measureText(ch).width + 5), tot = ws.reduce((a, b) => a + b, 0); let acc = -tot / 2;
+    [...word].forEach((ch, i) => { const a = -Math.PI / 2 + (acc + ws[i] / 2) / R; acc += ws[i]; c.save(); c.translate(cx + Math.cos(a) * R, cy + Math.sin(a) * R); c.rotate(a + Math.PI / 2); c.fillText(ch, 0, 0); c.strokeText(ch, 0, 0); c.restore(); }); }
+  c.font = '46px "IM Fell English SC", Georgia, serif'; c.textAlign = 'center'; c.textBaseline = 'alphabetic'; c.fillStyle = '#17100a'; c.strokeStyle = '#17100a'; c.lineWidth = 1.5; c.fillText('CAT', 1002, 884); c.strokeText('CAT', 1002, 884);
+  c.restore();
+  inkText(c, 'V1', 1002, 900, 15, '"IBM Plex Mono", monospace', '#9e2418');
+  inkText(c, '· SACRED GEOMETRY ·', 1002, 803, 9.5, '"IBM Plex Mono", monospace', 'rgba(60,36,18,.75)');
+  // the monochord ratios
+  PANEL.forEach(([x, y], i) => { const red = (i === 6) || (i === 9); inkText(c, MONO[i][2], x, y + 1, MONO[i][2].length > 5 ? 7.6 : 9.5, '"IBM Plex Mono", monospace', red ? 'rgba(255,230,210,.92)' : 'rgba(40,26,14,.88)'); });
+  // a figure on every key
+  for (const K2 of KEYS) {
+    if (K2.k === 'OPEN') { c.strokeStyle = 'rgba(38,24,12,.85)'; c.lineWidth = 1.2; c.beginPath(); c.arc(K2.x, K2.y - 6, 7, 0, TAU); c.stroke(); for (let i = 0; i < 8; i++) { const a = i * TAU / 8; c.beginPath(); c.moveTo(K2.x + Math.cos(a) * 9.5, K2.y - 6 + Math.sin(a) * 9.5); c.lineTo(K2.x + Math.cos(a) * 12.5, K2.y - 6 + Math.sin(a) * 12.5); c.stroke(); } inkText(c, 'OPEN', K2.x, K2.y + 16, 7.5, '"IBM Plex Mono", monospace', 'rgba(40,26,14,.88)'); continue; }
+    if (FNKEYS.includes(K2.k)) { fnIcon(c, K2.k, K2.x, K2.y); continue; }
+    drawFigure(c, FIG[FX[K2.k]], K2.x, K2.y, 9.5, { mode: 'icon' });
+  }
+  // the palettes: a small enamel jewel in each cream square
+  SQ.forEach((x, i) => { const P = PAL[i], g = c.createRadialGradient(x - 3, 792, 1, x, 795, 9); const a = P.prism ? [255, 160, 210] : P.a; g.addColorStop(0, 'rgba(255,255,255,.95)'); g.addColorStop(.35, rgba(a, 1)); g.addColorStop(1, rgba(mix(a, [0, 0, 0], .55), 1));
+    c.fillStyle = g; c.beginPath(); c.arc(x, 795, 8, 0, TAU); c.fill(); if (P.prism) { for (let k = 0; k < 6; k++) { c.fillStyle = rgba(hsl(k * 60, 90, 60), .6); c.beginPath(); c.moveTo(x, 795); c.arc(x, 795, 8, k * TAU / 6, (k + 1) * TAU / 6); c.fill(); } } c.strokeStyle = 'rgba(60,40,20,.5)'; c.lineWidth = 1; c.beginPath(); c.arc(x, 795, 8, 0, TAU); c.stroke(); });
+}
+
+function fnIcon(c, k, x, y) {
+  c.save(); c.strokeStyle = 'rgba(38,24,12,.85)'; c.fillStyle = c.strokeStyle; c.lineWidth = 1.2; c.beginPath();
+  if (k === 'GAZE') { c.moveTo(x - 9, y); c.quadraticCurveTo(x, y - 8, x + 9, y); c.quadraticCurveTo(x, y + 8, x - 9, y); c.stroke(); c.beginPath(); c.arc(x, y, 2.6, 0, TAU); c.fill(); }
+  else if (k === 'KEEP') { c.moveTo(x, y - 8); c.lineTo(x, y + 4); c.moveTo(x - 5, y); c.lineTo(x, y + 5); c.lineTo(x + 5, y); c.moveTo(x - 8, y + 8); c.lineTo(x + 8, y + 8); c.stroke(); }
+  else if (k === 'NIGHT') { c.arc(x, y, 7.5, Math.PI * .35, Math.PI * 1.65); c.arc(x + 4, y, 6, Math.PI * 1.45, Math.PI * .55, true); c.closePath(); c.fill(); }
+  else if (k === 'BOOK') { c.moveTo(x, y - 6); c.quadraticCurveTo(x - 5, y - 8, x - 9, y - 6); c.lineTo(x - 9, y + 7); c.quadraticCurveTo(x - 5, y + 5, x, y + 7); c.quadraticCurveTo(x + 5, y + 5, x + 9, y + 7); c.lineTo(x + 9, y - 6); c.quadraticCurveTo(x + 5, y - 8, x, y - 6); c.lineTo(x, y + 7); c.stroke(); }
+  c.restore();
+}
+
+/* =====================================================================================================================
+   HOTSPOTS
+   ===================================================================================================================== */
+const HOT = [];
+function hs(id, x, y, w, h, label, act, cls = '') {
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'hs ' + cls; b.style.left = (x - w / 2) + 'px'; b.style.top = (y - h / 2) + 'px'; b.style.width = w + 'px'; b.style.height = h + 'px';
+  b.setAttribute('aria-label', label); b.dataset.id = id; b.addEventListener('click', e => { au(); act(e); }); b.addEventListener('pointerenter', () => hover(label)); b.addEventListener('pointerleave', () => hover('')); b.addEventListener('focus', () => hover(label)); b.addEventListener('blur', () => hover(''));
+  $('hot').append(b); HOT.push(b); return b;
+}
+function hover(s) { ST.hover = s; $('capK').textContent = s; }
+function buildHot() {
+  hs('wheel', M.wheel.x, M.wheel.y, 270, 270, 'The light wheel: open the figure full size', () => openHolo(true), 'big');
+  hs('third', M.third.x, M.third.y, 44, 34, 'His third eye: gaze', () => { openHolo(true); setGaze(true); });
+  hs('portal', M.portal.x, M.portal.y + 40, 260, 120, 'Ouija Cat: he’ll tell you what you’re looking at', () => talk(), 'big');
+  hs('eye', M.eye.x, M.eye.y, 300, 150, 'The great eye: the reading of this figure', () => { ST.eyeStart = performance.now(); say(F().line); bell(root() * 2, .08); });
+  const med = hs('med', M.med.x, M.med.y, 225, 225, 'The wheel of forms: turn it to choose', () => {}, 'drag big');
+  dial(med);
+  hs('gear', M.gear.x, M.gear.y, 110, 110, 'The fate gear: a figure by chance', () => { ST.gearKick = 1; choose(Math.floor(Math.random() * FIG.length), 'fate'); });
+  hs('small', 1415, 197, 96, 92, 'The number', () => { ST.smallMode = ST.smallMode ? 0 : 1; tick(); }, 'rect');
+  hs('led', 478, 880, 420, 245, 'The screen: type your intent here for a mandala', () => typeWords(), 'rect');
+  hs('card', 1308, 898, 112, 205, 'The card: draw it again', () => replay(), 'rect');
+  hs('moon', M.moon.x, M.moon.y, 190, 190, 'The moon: night', () => setNight(!ST.nightOn), 'big');
+  hs('crescent', M.crescent.x, M.crescent.y, 150, 150, 'The crescent: today’s figure', () => today(), 'big');
+  PANEL.forEach(([x, y], i) => hs('mono' + i, x, y, 36, 38, `Monochord ${MONO[i][2]}: ${MONO[i][3]}`, () => mono(i), 'rect'));
+  const FN = { OPEN: ['Open the figure full size', () => openHolo(true)], GAZE: ['Gaze', () => { openHolo(true); setGaze(true); }], KEEP: ['Keep the figure as a PNG', () => keep()], NIGHT: ['Night', () => setNight(!ST.nightOn)], BOOK: ['The book of forms', () => drawer('forms')] };
+  KEYS.forEach(K2 => hs('key-' + K2.k, K2.x, K2.y, K2.hw * 2 + 4, K2.hh * 2 + 4, FN[K2.k] ? FN[K2.k][0] : FIG[FX[K2.k]].name, () => FN[K2.k] ? FN[K2.k][1]() : choose(FX[K2.k], 'key'), 'rect'));
+  const CATACT = [['Previous figure', () => step(-1)], ['Next figure', () => step(1)], ['Draw it again', () => replay()], ['A figure by chance', () => choose(Math.floor(Math.random() * FIG.length), 'fate')]];
+  CATS.forEach(([x, y], i) => hs('cat' + i, x, y, 30, 30, CATACT[i][0], () => { ST.catLit = [i, performance.now()]; CATACT[i][1](); }));
+  SQ.forEach((x, i) => hs('pal' + i, x, 795, 36, 34, 'Colour: ' + PAL[i].name, () => { ST.pal = i; ST.palPicked = true; save(); bell(root() * [1, 9 / 8, 5 / 4, 4 / 3, 3 / 2, 5 / 3, 15 / 8][i] * 2, .07); hover('Colour: ' + PAL[i].name); }, 'rect'));
+  SQ.forEach((x, i) => hs('lay' + i, x, 840, 30, 40, LAYERS[i][1], () => toggleLayer(i), 'rect'));
+  PLANET_X.forEach((x, i) => hs('pl' + i, x, 745, 34, 34, `${PLANETS[i].name}’s tone (${PLANETS[i].f} Hz)`, () => planet(i)));
+  JEWELS.forEach((x, i) => hs('jw' + i, x, 738, 32, 32, `Overtone ${i + 1}`, () => jewel(i)));
+  FOLDS.forEach(([x, n]) => hs('fold' + n, x, 668, 44, 34, `Mandala fold: ${n}`, () => setFold(n)));
+  PAGES.forEach(([x, nm], i) => hs('page' + i, x, 731, 32, 32, `The screen: ${nm.toLowerCase()}`, () => { ST.page = i; ST.pageT = performance.now(); tick(); }));
+  REDSQ.forEach(([x, y, k, label]) => hs('rs-' + k, x, y, 36, 36, label, () => redsq(k), 'rect'));
+  hs('sw-sound', 720, 855, 32, 44, 'Sound on or off', () => { ST.sound = !ST.sound; save(); if (AU.c) AU.master.gain.setTargetAtTime(vol() * .9, AU.c.currentTime, .05); hover(ST.sound ? 'Sound on' : 'Sound off'); }, 'rect');
+  hs('sw-labels', 765, 855, 32, 44, 'Engraved labels on or off', () => { ST.labels = !ST.labels; drawPlate(); }, 'rect');
+  TRANSPORT.forEach(([x, y, k, label]) => hs('tr-' + k, x, y, 40, 40, label, () => transport(k)));
+  [[860, 640, 'left', 'Left joystick: drag to turn and tilt'], [1175, 640, 'right', 'Right joystick: drag up and down to change speed']].forEach(([x, y, k, label]) => joystick(hs('joy-' + k, x, y, 130, 120, label, () => {}, 'drag'), k));
+}
+// drag the wheel of forms: it turns, and lets go on the nearest figure
+function dial(b) {
+  let last = null, moved = 0;
+  b.addEventListener('pointerdown', e => { b.setPointerCapture(e.pointerId); const [x, y] = toImg(e); last = Math.atan2(y - M.med.y, x - M.med.x); moved = 0; ST.medDrag = true; au(); });
+  b.addEventListener('pointermove', e => { if (last == null) return; const [x, y] = toImg(e), a = Math.atan2(y - M.med.y, x - M.med.x); let d = a - last; if (d > Math.PI) d -= TAU; if (d < -Math.PI) d += TAU; ST.medA += d; ST.medV = d * 60; moved += Math.abs(d); last = a;
+    const idx = medIdx(); if (idx !== ST.medLast) { ST.medLast = idx; tick(); hover(FIG[FX[LEFT12[idx]]].name); } });
+  const end = () => { if (last == null) return; last = null; ST.medDrag = false; if (moved < .05) { const idx = (FIG[ST.fig] && LEFT12.indexOf(F().k) >= 0 ? (LEFT12.indexOf(F().k) + 1) % 12 : 0); ST.medTarget = -idx * TAU / 12; choose(FX[LEFT12[idx]], 'dial'); } else { ST.medSettle = true; } };
+  b.addEventListener('pointerup', end); b.addEventListener('pointercancel', end);
+}
+const medIdx = () => ((Math.round(-ST.medA / (TAU / 12)) % 12) + 12) % 12;
+function joystick(b, side) {
+  let st = null;
+  b.addEventListener('pointerdown', e => { b.setPointerCapture(e.pointerId); st = { p: toImg(e), tx: ST.tiltX, ty: ST.tiltY, v: ST.spinV, z: ST.speed }; ST.joy = side; au(); });
+  b.addEventListener('pointermove', e => { if (!st) return; const [x, y] = toImg(e), dx = x - st.p[0], dy = y - st.p[1]; ST.joyD = [clamp(dx / 60, -1, 1), clamp(dy / 60, -1, 1)];
+    if (side === 'left') { ST.tiltY = st.ty + dx * .02; ST.tiltX = clamp(st.tx + dy * .015, -1.4, 1.4); ST.spin += dx * .0006; }
+    else { ST.spinV = clamp(st.v - dy * .002, -.6, .6); hover(`Spin ${ST.spinV >= 0 ? '' : '−'}${Math.abs(ST.spinV * 100).toFixed(0)}`); } });
+  const end = () => { st = null; ST.joy = null; ST.joyD = [0, 0]; }; b.addEventListener('pointerup', end); b.addEventListener('pointercancel', end);
+}
+
+/* =====================================================================================================================
+   ACTIONS
+   ===================================================================================================================== */
+async function choose(i, why) {
+  ST.fig = i; ST.t0 = performance.now(); ST.paused = false; ST.lastI = -1; ST.burn = 0; save();
+  const f = F(); ST.page = 0; ST.pageT = performance.now(); ST.cardFlip = performance.now();
+  if (f.special === 'mandala' && !MAND) await mandalaBuild(ST.words);
+  if (f.special === 'cymatics') { for (const s of SAND) { s[0] = Math.random() * 2 - 1; s[1] = Math.random() * 2 - 1; } }
+  const li = LEFT12.indexOf(f.k); if (li >= 0 && why !== 'dial') { ST.medTarget = -li * TAU / 12 + Math.round(ST.medA / TAU) * TAU; ST.medSettle = false; }
+  hud(); bell(root() * 2, .1); tick();
+  if (why === 'key' || why === 'fate' || why === 'today') say(f.line, 6000);
+  $('sr').textContent = f.name + '. ' + f.sub;
+}
+const step = d => choose((ST.fig + d + FIG.length) % FIG.length, 'step');
+const replay = () => { ST.t0 = performance.now(); ST.paused = false; ST.lastI = -1; tick(); };
+function transport(k) {
+  if (k === 'replay') replay();
+  else if (k === 'pause') { if (ST.paused) { ST.t0 = performance.now() - ST.pauseAt * 1000 / ST.speed; ST.paused = false; } else { ST.pauseAt = (performance.now() - ST.t0) / 1000 * ST.speed; ST.paused = true; } hover(ST.paused ? 'Paused' : 'Drawing'); }
+  else { ST.inward = k === 'inward'; replay(); say(ST.inward ? 'Inward. From the gate to the point. Take your time.' : 'Outward. The point first, then everything it makes.'); }
+  ST.trLit = [k, performance.now()];
+}
+function toggleLayer(i) { const k = LAYERS[i][0]; ST.layers[k] = !ST.layers[k]; save(); hover(`${LAYERS[i][1]}: ${ST.layers[k] ? 'on' : 'off'}`); tick(); if (k === 'drone') drone(ST.layers.drone); }
+function planet(i) { ST.planet = ST.planet === i ? -1 : i; ST.layers.drone = ST.planet >= 0; save(); drone(ST.layers.drone); bowl(root(), .1); hover(ST.planet >= 0 ? `${PLANETS[i].g} ${PLANETS[i].name}: the drone and the monochord in his tone` : 'Drone off'); }
+function jewel(i) { const f = root() / 2 * (i + 1); bell(f, .1, (i - 4.5) / 6); ST.jewel[i] = performance.now(); ST.ping = 1; ST.pingAt = performance.now(); hover(`Overtone ${i + 1}: ${(f).toFixed(1)} Hz`); }
+function mono(i) {
+  const [a, b, lab, nm] = MONO[i], f = root() * a / b; bowl(f, .15, (i % 8 - 3.5) / 8); ST.keyLit[i] = performance.now(); ST.mode = MODES[i]; ST.ping = 1; ST.pingAt = performance.now();
+  ST.monoText = [lab, nm, performance.now()]; hover(`${lab} · ${nm} · ${f.toFixed(1)} Hz`);
+  if (F().special !== 'cymatics' && !ST.monoHinted) { ST.monoHinted = true; setTimeout(() => say('Want to see that? Press the sand key, the plate. It draws what you play.'), 1200); }
+}
+async function setFold(n) { ST.foldPick = n; await mandalaBuild(ST.words, n); if (F().special !== 'mandala') await choose(FX.mandala, 'fold'); else replay(); hover(`${n}-fold`); }
+async function redsq(k) {
+  ST.rsLit = [k, performance.now()];
+  if (k === 'words') typeWords();
+  else if (k === 'seed') { ST.words = ''; await mandalaBuild(String(Math.random()), ST.foldPick); MAND.raw = ''; choose(FX.mandala, 'seed'); say('A mandala from nowhere. Still yours if you look at it long enough.'); }
+  else if (k === 'draw') { if (F().special !== 'mandala') await choose(FX.mandala, 'draw'); openHolo(true); setDraw(!ST.draw); }
+  else if (k === 'clear') { STROKES = []; hover('Cleared'); }
+  else if (k === 'keep') keep();
+  else if (k === 'dissolve') dissolve();
+}
+function typeWords() {
+  const w = $('words'); ST.typing = true; w.value = ST.words; w.focus(); hover('Type your intent. Enter to make the mandala. Esc to leave it.');
+  say('One thing. Present tense, as if it’s already true. Nothing you type leaves this computer.', 6500);
+}
+$('words').addEventListener('input', e => { ST.words = e.target.value; });
+$('words').addEventListener('keydown', async e => { e.stopPropagation(); if (e.key === 'Enter') { e.preventDefault(); $('words').blur(); ST.typing = false; await mandalaBuild(ST.words, ST.foldPick); await choose(FX.mandala, 'words'); openHolo(true); say(ST.words.trim() ? mandalaLine() : 'Nothing typed. You get the mandala of nothing. It’s beautiful, annoyingly.'); } else if (e.key === 'Escape') { $('words').blur(); } });
+$('words').addEventListener('blur', () => { ST.typing = false; });
+function mandalaLine() { const m = MAND; return `${m.fold}-fold, ${m.c1.name} and ${m.c2.name}: ${m.c1.m}; ${m.c2.m}. Look at the centre, not at the edges. The edges are for people who leave.`; }
+function today() { const d = new Date().getDay(); const byDay = { 0: 'monad', 1: 'vesica', 2: 'penta', 3: 'khatam', 4: 'cube', 5: 'seed', 6: 'hexa' }; const nm = ['Sun', 'Moon', 'Mars', 'Mercury', 'Jupiter', 'Venus', 'Saturn'][d];
+  choose(FX[byDay[d]], 'day'); say(`Today belongs to the ${nm}. This is his figure. Don’t argue with the calendar.`, 6000); }
+function talk() { const lines = [F().line, `${F().name}. ${F().sub}. Keep looking, it’s not going to explain itself.`, 'Turn the wheel on the left. Every form has a place on it. So do you, apparently.', 'The cream keys sing in pure ratios. Play the fifth. Everyone likes the fifth.', 'Press the moon. Everything looks better in the dark, including you.']; say(pick(lines), 6000); ST.eyeStart = performance.now(); }
+function setNight(on) { ST.nightOn = on; hover(on ? 'Night' : 'Day'); bell(on ? root() : root() * 2, .08); if (on) say(pick(['Lights down. Now the geometry can see you.', 'Night. Better. You look less tired from here.'])); }
+async function keep() {
+  const f = F(), S = 1600, out = document.createElement('canvas'); out.width = out.height = S; const c = out.getContext('2d'); c.fillStyle = '#05040a'; c.fillRect(0, 0, S, S);
+  const g = c.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S * .7); g.addColorStop(0, 'rgba(40,30,60,.5)'); g.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = g; c.fillRect(0, 0, S, S);
+  drawFigure(c, f, S / 2, S / 2, S * .43, { mode: 'png', p: 1, t: (performance.now() - ST.t0) / 1000 });
+  c.font = '28px "IM Fell English SC", Georgia, serif'; c.fillStyle = 'rgba(240,214,143,.75)'; c.textAlign = 'center'; c.fillText(f.name, S / 2, S - 54);
+  const a = document.createElement('a'); a.download = `${f.k}${f.special === 'mandala' && MAND ? '-' + MAND.hash.slice(0, 10) : ''}.png`; a.href = out.toDataURL('image/png'); a.click();
+  if (f.special === 'mandala' && MAND) book(true);
+  say(pick(['Kept. Put it where you’ll see it without looking.', 'Kept. Don’t make it your lock screen and then never unlock your phone.']));
+}
+function dissolve() {
+  if (F().special !== 'mandala' || !MAND) { say('Only a mandala gets dissolved. The others were here before you and they’ll stay.'); return; }
+  if (ST.burn) return; ST.burn = .001; ST.burnDone = false; say('Sweeping it to the centre. Let it go to the river.');
+}
+function book(kept) { let B = []; try { B = JSON.parse(localStorage.getItem('vs-mandala-book') || '[]'); } catch (e) {} B.unshift({ at: Date.now(), hash: MAND.hash.slice(0, 16), fold: MAND.fold, kept }); try { localStorage.setItem('vs-mandala-book', JSON.stringify(B.slice(0, 300))); } catch (e) {} }
+
+/* =====================================================================================================================
+   THE HOLOGRAM
+   ===================================================================================================================== */
+const holo = $('holo'), hc = $('holoCv'), hx = hc.getContext('2d'); let HW = 0, HH = 0, HD = 1;
+function fitHolo() { HD = Math.min(2, devicePixelRatio || 1); HW = hc.clientWidth; HH = hc.clientHeight; hc.width = Math.round(HW * HD); hc.height = Math.round(HH * HD); }
+function hud() { const f = F(); $('hTitle').textContent = f.name; $('hSub').textContent = f.sub; const isM = f.special === 'mandala'; $('hDraw').hidden = !isM; $('hDissolve').hidden = !isM; if (!isM && ST.draw) setDraw(false); }
+function openHolo(on) { ST.open = on; holo.classList.toggle('on', on); $('openBtn').setAttribute('aria-pressed', on); if (on) { fitHolo(); hud(); if (performance.now() - ST.t0 > F().dur * 1000 + 400) replay(); bell(root() * 3, .06); } else { setGaze(false); setDraw(false); } }
+function setGaze(on) { ST.gaze = on; holo.classList.toggle('gaze', on); $('hGaze').setAttribute('aria-pressed', on); $('hGaze').textContent = on ? 'Stop gazing' : 'Gaze'; if (on) say(pick(['Soft eyes. The centre, not the edges. Stop whenever you like.', 'Look at the middle until the edges forget you. Esc brings the room back.', 'Breathe with it. It breathes every ten seconds. You can keep up.']), 7000); }
+function setDraw(on) { ST.draw = on; hc.classList.toggle('draw', on); $('hDraw').setAttribute('aria-pressed', on); $('hDraw').textContent = on ? 'Stop drawing' : 'Draw in it'; if (on && MAND) say(`Draw in one slice. It repeats ${MAND.fold * 2} times. Repetition is the point.`); }
+$('openBtn').onclick = () => { au(); openHolo(!ST.open); };
+$('hClose').onclick = () => openHolo(false);
+$('hPrev').onclick = () => { au(); step(-1); }; $('hNext').onclick = () => { au(); step(1); };
+$('hReplay').onclick = () => { au(); replay(); };
+$('hGaze').onclick = () => setGaze(!ST.gaze);
+$('hDraw').onclick = () => setDraw(!ST.draw);
+$('hDissolve').onclick = () => dissolve();
+$('hKeep').onclick = () => keep();
+let cur = null, hdrag = null;
+const holoUnit = e => { const r = hc.getBoundingClientRect(), R = Math.min(HW, HH) * .42 * ST.zoom, x = (e.clientX - r.left - HW / 2) / R, y = (e.clientY - r.top - HH / 2) / R, a = -(ST.layers.spin ? ST.spin : 0); return [x * Math.cos(a) - y * Math.sin(a), x * Math.sin(a) + y * Math.cos(a)]; };
+hc.addEventListener('pointerdown', e => { hc.setPointerCapture(e.pointerId); au(); if (ST.draw && MAND) { cur = [holoUnit(e)]; STROKES.push(cur); } else hdrag = { x: e.clientX, y: e.clientY, tx: ST.tiltX, ty: ST.tiltY, s: ST.spin, moved: 0 }; });
+hc.addEventListener('pointermove', e => { if (cur) cur.push(holoUnit(e)); else if (hdrag) { const dx = e.clientX - hdrag.x, dy = e.clientY - hdrag.y; hdrag.moved = Math.max(hdrag.moved, Math.hypot(dx, dy)); if (F().s3) { ST.tiltY = hdrag.ty + dx * .008; ST.tiltX = clamp(hdrag.tx + dy * .006, -1.4, 1.4); } else ST.spin = hdrag.s + dx * .004; } });
+hc.addEventListener('pointerup', () => { if (hdrag && hdrag.moved < 5 && !ST.draw) { /* a tap: nothing; the HUD has the buttons */ } cur = null; hdrag = null; });
+hc.addEventListener('wheel', e => { e.preventDefault(); ST.zoom = clamp(ST.zoom * Math.exp(-e.deltaY * .001), .5, 1.8); }, { passive: false });
+
+/* =====================================================================================================================
+   THE FRAME LOOP
+   ===================================================================================================================== */
+let lastNow = performance.now(), fps = 60;
+const DIM = 'rgba(2,3,10,';
+function frame(now) {
+  requestAnimationFrame(frame);
+  const dt = Math.min(.05, (now - lastNow) / 1000); lastNow = now; fps += (1 / Math.max(dt, .001) - fps) * .05;
+  const t = now / 1000, f = F(), p = prog(now), pal = PAL[ST.pal];
+  // motion state
+  ST.night += ((ST.nightOn ? 1 : 0) - ST.night) * Math.min(1, dt * 1.6);
+  if (ST.layers.spin && !calm) ST.spin += ST.spinV * dt * (ST.gaze ? .5 : 1);
+  if (!ST.medDrag) { if (ST.medSettle) { const target = Math.round(ST.medA / (TAU / 12)) * (TAU / 12); ST.medA += (target - ST.medA) * Math.min(1, dt * 6); if (Math.abs(target - ST.medA) < .002) { ST.medSettle = false; const idx = medIdx(); if (FX[LEFT12[idx]] !== ST.fig) choose(FX[LEFT12[idx]], 'dial'); } } else if (ST.medTarget != null) { ST.medA += (ST.medTarget - ST.medA) * Math.min(1, dt * 4); } }
+  ST.gearA += dt * (.15 + (ST.gearKick || 0) * 6); ST.gearKick = Math.max(0, (ST.gearKick || 0) - dt * .8);
+  ST.ping = Math.max(0, ST.ping - dt * .9);
+  if (f.special === 'cymatics') sandStep(dt);
+  if (ST.burn > 0) { ST.burn = Math.min(1, ST.burn + dt * .28); if (ST.burn >= 1 && !ST.burnDone) { ST.burnDone = true; book(false); setTimeout(async () => { STROKES = []; ST.words = ''; await mandalaBuild(String(Math.random()), ST.foldPick); ST.burn = 0; replay(); say('Gone. Only its hash is left. Now stop thinking about it.', 5600); }, 700); } }
+  // a bell as each stroke lands
+  if (f.P) { const i = Math.floor(p * f.N); if (ST.lastI == null || i < ST.lastI) ST.lastI = i; if (i > ST.lastI && p < 1) { ST.lastI = i; if (ST.layers.bells && now - ST.lastBell > 120) { ST.lastBell = now; const deg = [1, 9 / 8, 81 / 64, 4 / 3, 3 / 2, 27 / 16, 243 / 128, 2][i % 8] * (i % 16 < 8 ? 2 : 4); bell(root() * deg, .045, (Math.random() - .5) * .6); ST.ping = Math.max(ST.ping, .6); ST.pingAt = now; } } }
+
+  /* ---- base: the opaque layer (screens, eye, wheel, dial) ---- */
+  const c = bx; c.setTransform(Q, 0, 0, Q, 0, 0); c.clearRect(0, 0, IW, IH);
+  if (ST.night > .01) { c.fillStyle = DIM + (ST.night * .5) + ')'; c.fillRect(0, 0, IW, IH); }
+  drawWheel(c, t, p, f, pal);
+  drawMedallion(c, t);
+  drawGear(c);
+  drawEye(c, t, now);
+  // the bottom-left screen
+  ledFill(LED, t, now, f, p); ledPaint(LED, c, null);
+  ledSmall(SMALL, t, f); ledPaint(SMALL, c, null);
+  // the card: the figure in red neon
+  drawCard(c, t, p, f);
+
+  /* ---- glow: everything that gives off light (screen-blended over the console) ---- */
+  const g = gx; g.setTransform(QG, 0, 0, QG, 0, 0); g.clearRect(0, 0, IW, IH);
+  g.globalCompositeOperation = 'lighter';
+  drawRays(g, t);
+  if (ST.layers.halo && MASK.sky) drawHalo(g, t, p, f, pal);
+  wheelGlow(g, t);
+  g.globalAlpha = .75; g.drawImage(LED.lo, LED.x0 - 6, LED.y0 - 6, LED.cols * LED.pitch + 12, LED.rows * LED.pitch + 12); g.drawImage(SMALL.lo, SMALL.x0 - 6, SMALL.y0 - 6, SMALL.cols * SMALL.pitch + 12, SMALL.rows * SMALL.pitch + 12); g.globalAlpha = 1;
+  lamps(g, t, now);
+  cardGlow(g, t, p, f);
+  g.globalCompositeOperation = 'source-over';
+
+  /* ---- the hologram ---- */
+  if (ST.open) drawHolo(t, p, f, pal);
+}
+requestAnimationFrame(frame);
+
+/* ---------- the light wheel: eight rings of dots, its pattern in the figure's symmetry ---------- */
+const WR = Array.from({ length: 8 }, (_, j) => { const r = 87 + j * 6.1, n = Math.round(TAU * r / 6.2); return { r, n }; });
+let wheelLit = [];
+function drawWheel(c, t, p, f, pal) {
+  const { x, y, r0, r1 } = M.wheel; c.fillStyle = '#080503'; c.beginPath(); c.arc(x, y, r1 + 1, 0, TAU); c.arc(x, y, r0 - 2, 0, TAU, true); c.fill('evenodd');
+  const n = Math.max(1, f.sym), sp = ST.spin * 1.5, prA = p * TAU, pingR = (1 - ST.ping) * 9, buckets = [[], [], [], [], []]; wheelLit = [];
+  const on = pal.prism ? null : mix(pal.b, [255, 236, 200], .5);
+  WR.forEach(({ r, n: cnt }, j) => { for (let i = 0; i < cnt; i++) {
+    const a = i / cnt * TAU, rel = (a + Math.PI / 2 + TAU) % TAU;
+    let v = Math.pow(.5 + .5 * Math.cos(n * (a - sp) + j * .35 * Math.sin(t * .4)), 8) * (.35 + .65 * (j / 7));
+    if (p < 1) v = rel < prA ? Math.max(v, .3 + .5 * (1 - (prA - rel) / 1.2)) : v * .25;
+    if (ST.ping > .02) v = Math.max(v, Math.max(0, 1 - Math.abs(j - pingR) * .8) * ST.ping);
+    v = Math.min(1, v + .04 * Math.sin(t * 3 + i * 1.7 + j)); v = clamp(v, 0, 1); const bk = Math.min(4, Math.floor(v * 5)); buckets[bk].push(a, r);
+    if (v > .55) wheelLit.push(x + Math.cos(a) * r, y + Math.sin(a) * r, v);
+  } });
+  const cols = ['rgba(40,22,8,1)', 'rgba(110,58,20,1)', 'rgba(190,110,45,1)', 'rgba(250,180,90,1)', 'rgba(255,240,205,1)'];
+  buckets.forEach((arr, bk) => { if (!arr.length) return; c.fillStyle = (pal.prism || bk < 3) ? cols[bk] : rgba(mix(on, [255, 255, 255], bk === 4 ? .5 : 0), 1); c.beginPath(); for (let k = 0; k < arr.length; k += 2) { const a = arr[k], r = arr[k + 1], X = x + Math.cos(a) * r, Y = y + Math.sin(a) * r; c.moveTo(X + 2.3, Y); c.arc(X, Y, 2.3, 0, TAU); } c.fill(); });
+}
+function wheelGlow(g, t) {
+  const pal = PAL[ST.pal], col = pal.prism ? [255, 200, 160] : mix(pal.a, [255, 220, 170], .4);
+  g.fillStyle = rgba(col, .6); for (let k = 0; k < wheelLit.length; k += 3) { const v = wheelLit[k + 2]; g.globalAlpha = v * .7; g.beginPath(); g.arc(wheelLit[k], wheelLit[k + 1], 5.5, 0, TAU); g.fill(); } g.globalAlpha = 1;
+  // the hub breathes when the figure is drawing
+  const { x, y } = M.wheel, hub = g.createRadialGradient(x, y, 0, x, y, 70); hub.addColorStop(0, rgba(col, .22 + .12 * Math.sin(t * 1.3) + ST.ping * .3)); hub.addColorStop(1, rgba(col, 0)); g.fillStyle = hub; g.beginPath(); g.arc(x, y, 70, 0, TAU); g.fill();
+}
+/* ---------- the wheel of forms (the left medallion): twelve figures engraved in the ring, turning ---------- */
+function drawMedallion(c, t) {
+  const { x, y, r0, r1 } = M.med; if (!ST.medDrag && !ST.medSettle && ST.medTarget == null && !calm) ST.medA += .0008;
+  c.save(); c.beginPath(); c.arc(x, y, r1, 0, TAU); c.arc(x, y, r0, 0, TAU, true); c.clip('evenodd');
+  // keep the eye clear
+  c.beginPath(); c.rect(x - r1, y - r1, 2 * r1, 2 * r1); c.moveTo(x - 108, y); c.quadraticCurveTo(x, y - 84, x + 108, y); c.quadraticCurveTo(x, y + 84, x - 108, y); c.clip('evenodd');
+  c.strokeStyle = 'rgba(40,24,12,.55)'; c.lineWidth = 1; c.beginPath(); c.arc(x, y, r1 - 4, 0, TAU); c.stroke(); c.beginPath(); c.arc(x, y, r0 + 6, 0, TAU); c.stroke();
+  for (let i = 0; i < 60; i++) { const a = i / 60 * TAU + ST.medA; c.beginPath(); c.moveTo(x + Math.cos(a) * (r1 - 4), y + Math.sin(a) * (r1 - 4)); c.lineTo(x + Math.cos(a) * (r1 - (i % 5 ? 8 : 12)), y + Math.sin(a) * (r1 - (i % 5 ? 8 : 12))); c.stroke(); }
+  const sel = LEFT12.indexOf(F().k);
+  LEFT12.forEach((k, i) => { const a = -Math.PI / 2 + i * TAU / 12 + ST.medA, gxp = x + Math.cos(a) * 86, gyp = y + Math.sin(a) * 86; drawFigure(c, FIG[FX[k]], gxp, gyp, 12, { mode: 'icon' }); if (i === sel) { c.strokeStyle = 'rgba(160,30,20,.85)'; c.lineWidth = 1.6; c.beginPath(); c.arc(gxp, gyp, 15.5, 0, TAU); c.stroke(); } });
+  c.restore();
+  // the pointer at the top
+  c.fillStyle = 'rgba(150,26,18,.9)'; c.beginPath(); c.moveTo(x, y - r1 + 1); c.lineTo(x - 6, y - r1 - 9); c.lineTo(x + 6, y - r1 - 9); c.closePath(); c.fill();
+}
+function drawGear(c) { if (!MASK.gear) return; const { x, y, r } = M.gear; c.save(); c.beginPath(); c.arc(x, y, r - 3, 0, TAU); c.clip(); c.translate(x, y); c.rotate(ST.gearA); c.drawImage(MASK.gear, -r, -r); c.restore(); }
+/* ---------- the great eye: the slit follows you, opens in the dark, narrows when poked ---------- */
+function drawEye(c, t, now) {
+  const E = MASK.eye; if (!E) return; c.drawImage(E.c, E.x, E.y);
+  const cx = E.cx, cy = (E.top + E.bot) / 2, hh = (E.bot - E.top) / 2;
+  let tx = ST.ptr[0] - cx, ty = ST.ptr[1] - cy; const d = Math.hypot(tx, ty) || 1, k = Math.min(1, d / 500); tx = tx / d * k * 13; ty = ty / d * k * 5;
+  if (now - ST.ptrT > 4000) { tx = Math.sin(t * .31) * 7; ty = Math.sin(t * .23) * 2; }
+  ST.eyeX = (ST.eyeX || 0) + (tx - (ST.eyeX || 0)) * .12; ST.eyeY = (ST.eyeY || 0) + (ty - (ST.eyeY || 0)) * .12;
+  const poke = clamp(1 - (now - ST.eyeStart) / 900, 0, 1), dil = 10 + ST.night * 12 + (ST.open ? 4 : 0) + Math.sin(t * .7) * 1.2 - poke * 4;
+  ST.dil = (ST.dil || dil) + (dil - (ST.dil || dil)) * .06;
+  const X = cx + ST.eyeX, Y = cy + ST.eyeY, w = Math.max(3, ST.dil);
+  c.save(); c.beginPath(); c.moveTo(1335, 445); c.quadraticCurveTo(1500, 300, 1665, 445); c.quadraticCurveTo(1500, 590, 1335, 445); c.clip(); c.beginPath(); c.arc(cx, cy, 98, 0, TAU); c.clip();
+  const gr = c.createLinearGradient(X - w * 2, Y, X + w * 2, Y); gr.addColorStop(0, '#0b0704'); gr.addColorStop(.5, '#010000'); gr.addColorStop(1, '#0b0704');
+  c.fillStyle = gr; c.beginPath(); c.moveTo(X, Y - hh); c.quadraticCurveTo(X + w * 2.1, Y, X, Y + hh); c.quadraticCurveTo(X - w * 2.1, Y, X, Y - hh); c.fill();
+  c.fillStyle = 'rgba(255,250,235,.55)'; c.beginPath(); c.ellipse(X - w * .5 - 3, Y - hh * .42, 2.2, 6, -.2, 0, TAU); c.fill();
+  c.restore();
+}
+/* ---------- the screens ---------- */
+function ledFill(L, t, now, f, p) {
+  const b = L.buf; b.fill(0); const C = L.cols, R = L.rows;
+  if (ST.typing || (now - (ST.typedAt || 0) < 0)) {
+    ledText(b, C, R, 'YOUR INTENT', 2, 1, .55); const lines = wrap(ST.words + (Math.floor(t * 2) % 2 ? '_' : ' '), 15); lines.slice(-4).forEach((ln, i) => ledText(b, C, R, ln, 2, 11 + i * 9, 1));
+    ledText(b, C, R, 'ENTER = MANDALA', 2, R - 8, .45); return;
+  }
+  if (ST.monoText && now - ST.monoText[2] < 2600) { const [lab, nm] = ST.monoText; ledText(b, C, R, lab, Math.max(1, Math.floor((C - lab.length * 12) / 2)), 6, 1, 2); const w2 = wrap(nm, 15); w2.forEach((ln, i) => ledText(b, C, R, ln, Math.floor((C - ln.length * 6) / 2), 26 + i * 9, .85)); return; }
+  // the name (scrolls if long), then the page, scrolling up slowly
+  const title = fold(f.name); if (title.length <= 15) ledText(b, C, R, title, Math.floor((C - title.length * 6) / 2), 1, 1);
+  else { const w = title.length * 6 + 30, off = Math.floor((t * 16) % w); ledText(b, C, R, title + '     ' + title, 2 - off, 1, 1); }
+  for (let x = 0; x < C; x++) b[9 * C + x] = .25;
+  const pages = [f.what, f.make, f.mean, f.practice], txt = pages[ST.page] || f.what, lines = wrap(txt, 15), vis = 5, sc = Math.max(0, lines.length - vis), dur = 3.2;
+  const el = (now - ST.pageT) / 1000, off = sc ? Math.min(sc * 9, Math.max(0, (el - dur) / dur * 9)) % (sc * 9 + 30) : 0;
+  for (let i = 0; i < lines.length; i++) { const yy = 12 + i * 9 - Math.floor(off); if (yy < 10 || yy > R - 7) continue; ledText(b, C, R, lines[i], 2, yy, .92); }
+  if (el > dur * (sc + 3)) { ST.page = (ST.page + 1) % 4; ST.pageT = now; }
+  // a progress dot row at the bottom while it draws
+  if (p < 1) for (let x = 0; x < Math.floor(C * p); x++) b[(R - 1) * C + x] = .6;
+}
+function ledSmall(L, t, f) {
+  const b = L.buf; b.fill(0); const C = L.cols, R = L.rows, s = ST.smallMode ? String(ST.fig + 1).padStart(2, '0') : f.n;
+  const sc = s.length === 1 ? 2 : 1, w = s.length * 6 * sc - sc, x0 = Math.floor((C - w) / 2), y0 = Math.floor((R - 7 * sc) / 2);
+  if (s.length <= 2 || sc === 1) ledText(b, C, R, s.length > 2 ? s.slice(0, 2) : s, x0, y0, 1, sc);
+  if (s.length > 2) { const off = Math.floor((t * 8) % (s.length * 6 + 10)); b.fill(0); ledText(b, C, R, s + '  ' + s, 1 - off, y0, 1); }
+  const a = (t * 1.5) % 1, per = 2 * (C + R) - 4, pos = Math.floor(a * per); for (let k = 0; k < 6; k++) { const q = (pos - k + per) % per; let X, Y; if (q < C) { X = q; Y = 0; } else if (q < C + R - 1) { X = C - 1; Y = q - C + 1; } else if (q < 2 * C + R - 2) { X = C - 1 - (q - C - R + 2); Y = R - 1; } else { X = 0; Y = R - 1 - (q - 2 * C - R + 3); } if (X >= 0 && X < C && Y >= 0 && Y < R) b[Y * C + X] = Math.max(b[Y * C + X], 1 - k / 6); }
+}
+function drawCard(c, t, p, f) {
+  const [x0, y0, x1, y1] = M.card, w = x1 - x0, h = y1 - y0; c.save(); c.beginPath(); c.roundRect ? c.roundRect(x0, y0, w, h, 8) : c.rect(x0, y0, w, h); c.fillStyle = '#060203'; c.fill(); c.clip();
+  const flip = clamp((performance.now() - (ST.cardFlip || 0)) / 500, 0, 1); c.translate(x0 + w / 2, y0 + h / 2); c.scale(Math.abs(Math.cos((1 - flip) * Math.PI / 2)) || .02, 1);
+  c.strokeStyle = 'rgba(200,150,70,.55)'; c.lineWidth = 1.2; c.strokeRect(-w / 2 + 6, -h / 2 + 6, w - 12, h - 12);
+  drawFigure(c, f, 0, -18, w * .38, { mode: 'card', p, t });
+  c.font = '9px "IBM Plex Mono", monospace'; c.textAlign = 'center'; c.fillStyle = 'rgba(255,200,140,.85)'; c.fillText(fold(f.name).slice(0, 18), 0, h / 2 - 34); c.fillStyle = 'rgba(255,120,90,.7)'; c.fillText(f.n, 0, h / 2 - 20);
+  c.restore();
+}
+function cardGlow(g, t, p, f) { const [x0, y0, x1, y1] = M.card; g.globalAlpha = .5; g.drawImage(base, x0 * Q, y0 * Q, (x1 - x0) * Q, (y1 - y0) * Q, x0 - 4, y0 - 4, x1 - x0 + 8, y1 - y0 + 8); g.globalAlpha = 1; }
+/* ---------- the halo: the figure in the sky behind his head ---------- */
+const haloCv = document.createElement('canvas'), hcx = haloCv.getContext('2d');
+function drawHalo(g, t, p, f, pal) {
+  const { x, y, r } = M.portal, S = Math.round(2 * r * QG * 1.1); if (haloCv.width !== S) { haloCv.width = haloCv.height = S; }
+  hcx.setTransform(1, 0, 0, 1, 0, 0); hcx.globalCompositeOperation = 'source-over'; hcx.clearRect(0, 0, S, S);
+  const gl = hcx.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2); gl.addColorStop(0, rgba(pal.a, .14 + ST.ping * .15)); gl.addColorStop(.7, rgba(pal.a, .05)); gl.addColorStop(1, rgba(pal.a, 0)); hcx.fillStyle = gl; hcx.fillRect(0, 0, S, S);
+  drawFigure(hcx, f, S / 2, S / 2 - 6 * QG, S * .44, { mode: 'halo', p, t, pal });
+  hcx.globalCompositeOperation = 'destination-in'; hcx.drawImage(MASK.sky, 0, 0, MASK.sky.width, MASK.sky.height, S * (1 - 1 / 1.1) / 2, S * (1 - 1 / 1.1) / 2, S / 1.1, S / 1.1);
+  g.globalAlpha = 1; g.drawImage(haloCv, x - r * 1.1, y - r * 1.1, 2 * r * 1.1, 2 * r * 1.1); g.globalAlpha = .55 + ST.night * .4; g.drawImage(haloCv, x - r * 1.1, y - r * 1.1, 2 * r * 1.1, 2 * r * 1.1); g.globalAlpha = 1;
+}
+function drawRays(g, t) { if (!MASK.rays) return; const a = .1 + .09 * (.5 + .5 * Math.sin(t * .8)) + ST.ping * .18 + ST.night * .1; g.globalAlpha = a; g.drawImage(MASK.rays.c, MASK.rays.x, MASK.rays.y); g.globalAlpha = 1; }
+/* ---------- lamps: jewels, planet buttons, toggles, keys, third eye ---------- */
+const SPR = new Map();   // one soft light per colour, drawn once
+function sprite(g, x, y, r, col, a) { if (a <= .005) return; const key = col.map(v => v | 0).join(','); let s = SPR.get(key);
+  if (!s) { s = document.createElement('canvas'); s.width = s.height = 64; const x2 = s.getContext('2d'), gr = x2.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, rgba(col, 1)); gr.addColorStop(.4, rgba(col, .35)); gr.addColorStop(1, rgba(col, 0)); x2.fillStyle = gr; x2.fillRect(0, 0, 64, 64); if (SPR.size > 200) SPR.clear(); SPR.set(key, s); }
+  g.globalAlpha = Math.min(1, a); g.drawImage(s, x - r, y - r, 2 * r, 2 * r); g.globalAlpha = 1; }
+function lamps(g, t, now) {
+  const pal = PAL[ST.pal], f = F();
+  // the jewels: a slow chase while drawing, each one flaring when struck
+  JEWELS.forEach((x, i) => { const hit = clamp(1 - (now - (ST.jewel[i] || 0)) / 1400, 0, 1), chase = Math.pow(.5 + .5 * Math.cos(t * 1.4 - i * .7), 6) * .35; sprite(g, x, 738, 22 + hit * 16, [255, 120, 80], chase + hit * .9); });
+  // planet buttons: the one that's humming
+  PLANET_X.forEach((x, i) => { const on = ST.planet === i; sprite(g, x, 745, on ? 30 : 16, on ? [255, 90, 60] : [255, 120, 80], on ? .75 + .2 * Math.sin(t * 2.4) : .06); });
+  // layer toggles: a pilot light under each brass switch
+  SQ.forEach((x, i) => { const on = ST.layers[LAYERS[i][0]]; sprite(g, x, 858, on ? 9 : 5, on ? [255, 190, 90] : [120, 60, 30], on ? .9 : .25); });
+  // the palette jewel that's picked
+  sprite(g, SQ[ST.pal], 795, 20, pal.prism ? hsl(Math.round(t * 6) * 10 % 360, 90, 65) : pal.a, .7);
+  // monochord keys light when played; the fold buttons, the page knobs, the transport
+  PANEL.forEach(([x, y], i) => { const h = clamp(1 - (now - (ST.keyLit[i] || 0)) / 1100, 0, 1); if (h > 0) sprite(g, x, y, 30, [255, 220, 150], h * .8); });
+  FOLDS.forEach(([x, n]) => { const on = MAND && MAND.fold === n && f.special === 'mandala'; sprite(g, x, 668, on ? 26 : 14, [255, 80, 60], on ? .75 : .08); });
+  PAGES.forEach(([x], i) => sprite(g, x, 731, i === ST.page ? 16 : 8, [255, 190, 100], i === ST.page ? .6 : .1));
+  TRANSPORT.forEach(([x, y, k]) => { const on = (k === 'pause' && ST.paused) || (k === 'inward' && ST.inward) || (k === 'outward' && !ST.inward) || (ST.trLit && ST.trLit[0] === k && now - ST.trLit[1] < 600); sprite(g, x, y, on ? 26 : 14, [255, 70, 50], on ? .7 : .12); });
+  REDSQ.forEach(([x, y, k]) => { const on = (k === 'draw' && ST.draw) || (ST.rsLit && ST.rsLit[0] === k && now - ST.rsLit[1] < 700) || (k === 'words' && ST.typing); sprite(g, x, y, on ? 28 : 12, [255, 60, 50], on ? .75 : .1); });
+  CATS.forEach(([x, y], i) => { const h = ST.catLit && ST.catLit[0] === i ? clamp(1 - (now - ST.catLit[1]) / 700, 0, 1) : 0; sprite(g, x, y, 20, [255, 90, 60], .12 + h * .8); });
+  // the keypad key of the current figure glows
+  const kk = KEYS.find(k2 => k2.k === f.k); if (kk) sprite(g, kk.x, kk.y, 24, [255, 220, 160], .45 + .15 * Math.sin(t * 2));
+  // the third eye and his two eyes: eyeshine in the dark, the third opens while gazing
+  sprite(g, M.third.x, M.third.y, 28 + 20 * (ST.gaze ? 1 : 0), [255, 210, 140], .12 + ST.night * .25 + (ST.gaze ? .5 : 0) + ST.ping * .2);
+  if (ST.night > .05) { for (const [ex, ey] of [[943, 250], [1060, 250]]) sprite(g, ex, ey, 16, [255, 230, 120], ST.night * .5); sprite(g, MASK.eye ? MASK.eye.cx : 1500, 440, 70, [255, 210, 120], ST.night * .22); }
+  // the moon glows at night, the crescent winks
+  sprite(g, M.moon.x, M.moon.y, 130, [220, 225, 255], .08 + ST.night * .3);
+  sprite(g, M.crescent.x, M.crescent.y, 90, [255, 220, 150], .06 + .05 * Math.sin(t * .5));
+  // the joysticks: a ring while held
+  if (ST.joy) { const [x, y] = ST.joy === 'left' ? [860, 670] : [1175, 670]; g.strokeStyle = rgba(pal.a, .7); g.lineWidth = 3; g.beginPath(); g.ellipse(x, y, 90, 26, 0, 0, TAU); g.stroke(); sprite(g, x + (ST.joyD?.[0] || 0) * 40, y - 30 + (ST.joyD?.[1] || 0) * 20, 40, pal.a, .5); }
+  // the dial's glint on the medallion eye when turning
+  const sp = Math.min(1, Math.abs(ST.medV || 0) * .3); ST.medV = (ST.medV || 0) * .9; if (sp > .02) sprite(g, M.med.x, M.med.y, 60, [255, 210, 150], sp * .5);
+}
+/* ---------- the hologram ---------- */
+const STARS = Array.from({ length: 160 }, () => [Math.random(), Math.random(), Math.random()]);
+function drawHolo(t, p, f, pal) {
+  const c = hx; c.setTransform(HD, 0, 0, HD, 0, 0); c.globalCompositeOperation = 'source-over';
+  const veil = c.createRadialGradient(HW / 2, HH / 2, 0, HW / 2, HH / 2, Math.max(HW, HH) * .7); veil.addColorStop(0, ST.gaze ? 'rgba(3,2,8,.9)' : 'rgba(6,5,14,.78)'); veil.addColorStop(1, ST.gaze ? 'rgba(0,0,0,.97)' : 'rgba(0,0,0,.9)'); c.clearRect(0, 0, HW, HH); c.fillStyle = veil; c.fillRect(0, 0, HW, HH);
+  c.globalCompositeOperation = 'lighter';
+  for (const [sx, sy, sz] of STARS) { c.fillStyle = `rgba(255,240,220,${(.15 + .25 * Math.sin(t * (.4 + sz) + sx * 20)) * (ST.gaze ? .4 : 1)})`; c.fillRect(sx * HW, sy * HH, 1 + sz, 1 + sz); }
+  const R = Math.min(HW, HH) * .42 * ST.zoom, cx = HW / 2, cy = HH / 2 - (ST.gaze ? 0 : 10);
+  const gl = c.createRadialGradient(cx, cy, 0, cx, cy, R * 1.3); gl.addColorStop(0, rgba(pal.a, .12 + ST.ping * .12)); gl.addColorStop(1, rgba(pal.a, 0)); c.fillStyle = gl; c.beginPath(); c.arc(cx, cy, R * 1.3, 0, TAU); c.fill();
+  drawFigure(c, f, cx, cy, R, { mode: 'holo', p, t, pal });
+  // a sand sweep while it dissolves
+  if (ST.burn > 0) { const b = ST.burn; c.fillStyle = rgba(MAND ? MAND.c1.c : pal.a, .8 * (1 - b)); for (let i = 0; i < 520; i++) { const a = i * 2.39996, rr = R * (1 - b) * Math.sqrt((i % 97) / 97); c.fillRect(cx + Math.cos(a + b * 5) * rr + b * b * HW * .6, cy + Math.sin(a + b * 5) * rr + b * b * HH * .15, 2, 2); } }
+}
+
+/* ---------- pointer, keys, drawers ---------- */
+stage.addEventListener('pointermove', e => { ST.ptr = toImg(e); ST.ptrT = performance.now(); });
+addEventListener('keydown', e => {
+  if (ST.typing || e.target.tagName === 'INPUT') return;
+  if (e.key === 'H' && e.shiftKey) { stage.classList.toggle('outline'); return; }
+  if (e.key === 'Escape') { if ($('drawer').classList.contains('on')) { closeDrawer(); return; } if (ST.gaze) { setGaze(false); return; } if (ST.open) { openHolo(false); return; } }
+  if (e.key === 'ArrowRight') { au(); step(1); } else if (e.key === 'ArrowLeft') { au(); step(-1); }
+  else if (e.key === 'o' || e.key === 'O') { au(); openHolo(!ST.open); }
+  else if (e.key === 'g' || e.key === 'G') { au(); if (!ST.open) openHolo(true); setGaze(!ST.gaze); }
+  else if (e.key === 'n' || e.key === 'N') setNight(!ST.nightOn);
+  else if (e.key === ' ' && !e.target.closest?.('button')) { e.preventDefault(); replay(); }
+  else { const i = '12345678qwerty'.indexOf(e.key.toLowerCase()); if (i >= 0 && !e.metaKey && !e.ctrlKey) { au(); mono(i); } }
+});
+function closeDrawer() { $('drawer').classList.remove('on'); $('formsBtn').setAttribute('aria-pressed', 'false'); $('mapBtn').setAttribute('aria-pressed', 'false'); }
+function drawer(which) {
+  const d = $('drawer'), btn = which === 'forms' ? 'formsBtn' : 'mapBtn';
+  if (d.classList.contains('on') && d.dataset.w === which) { closeDrawer(); return; }
+  ['formsBtn', 'mapBtn'].forEach(b => $(b).setAttribute('aria-pressed', String(b === btn))); d.dataset.w = which;
+  let h = '<button type="button" class="x" aria-label="Close">✕</button>';
+  if (which === 'forms') {
+    const groups = [['The circle family', ['monad', 'vesica', 'seed', 'egg', 'flower', 'fruit', 'metatron', 'tree']], ['Stars and yantras', ['sri', 'penta', 'hexa', 'khatam', 'rose']], ['The golden cut', ['golden', 'phyllo', 'squaring']], ['The five solids and their kin', ['tetra', 'cube', 'octa', 'icosa', 'dodeca', 'merkaba', 've', 'torus']], ['Sound and your own', ['cymatics', 'mandala']]];
+    h += '<h2>Book of forms</h2><p class="sub">every figure on the console · meaning as the traditions teach it</p>' + groups.map(([gname, ks]) => `<h3>${esc(gname)}</h3>` + ks.map(k => { const f = FIG[FX[k]]; return `<h4>${esc(f.name)} <span style="font-family:var(--mono);font-size:10px;color:var(--muted)">${esc(f.sub)}</span><button type="button" data-k="${k}">Draw it</button></h4><p>${esc(f.what)}</p><p><i>How it’s made</i>${esc(f.make)}</p><p><i>What it holds</i>${esc(f.mean)}</p><p><i>Practice</i>${esc(f.practice)}</p>`; }).join('')).join('');
+  } else {
+    h += `<h2>The console</h2><p class="sub">every control · hover one to see its name · Shift+H outlines them all</p><table>
+      <tr><td>Light wheel</td><td>Opens the figure full size (or O). Drag it there to turn it; wheel or pinch to zoom.</td></tr>
+      <tr><td>Wheel of forms</td><td>The eye medallion, left. Drag it round to choose one of the twelve classic figures; tap it for the next.</td></tr>
+      <tr><td>Keypad</td><td>Left block: the twelve classic figures. Right block: the five solids, the Merkaba, the Vector Equilibrium, the Torus, the eight-pointed star, the rose window, the squared circle, the golden angle, the sand plate, the mandala, and OPEN.</td></tr>
+      <tr><td>Red cat buttons</td><td>Previous, next, draw again, a figure by chance.</td></tr>
+      <tr><td>Cream panel</td><td>The monochord: fourteen pure ratios over two octaves (keys 1–8 and Q–Y too). Each one also sets the sand plate’s figure.</td></tr>
+      <tr><td>Jewels</td><td>The overtone ladder: the first ten harmonics of the tone.</td></tr>
+      <tr><td>Red planet buttons</td><td>Saturn, Jupiter, Mars, Sun, Venus, Mercury, Moon: a drone in that planet’s tone. The monochord retunes to it.</td></tr>
+      <tr><td>Cream squares</td><td>Colours: gold, rose, violet, lapis, emerald, ember, prism.</td></tr>
+      <tr><td>Brass switches</td><td>Guides, names, spin, breathe, halo, bells, drone. A pilot light shows which are on.</td></tr>
+      <tr><td>Round red buttons</td><td>Beside the logo: draw again, pause, inward, outward.</td></tr>
+      <tr><td>Left screen</td><td>The figure’s name and its four pages (the brass squares above it: what, making, meaning, practice). Click the screen to type an intent for a mandala.</td></tr>
+      <tr><td>Red squares</td><td>Mandala: words, a random seed, draw in it, clear, keep, dissolve.</td></tr>
+      <tr><td>Red-topped buttons</td><td>Top left: the mandala’s fold, 4, 6, 8, 12, 16, 24.</td></tr>
+      <tr><td>Joysticks</td><td>Left: turn and tilt. Right: up and down for spin speed.</td></tr>
+      <tr><td>White switches</td><td>Sound, engraved labels.</td></tr>
+      <tr><td>The great eye</td><td>Watches you. Click it for his reading of the figure.</td></tr>
+      <tr><td>Third eye</td><td>Gaze: the figure full size, breathing, the room dark. Esc brings you back.</td></tr>
+      <tr><td>Moon · crescent</td><td>Night (or N) · today’s figure, by the planet of the day.</td></tr>
+      <tr><td>Fate gear</td><td>A figure by chance.</td></tr>
+    </table>`;
+  }
+  d.innerHTML = h; d.classList.add('on'); d.querySelector('.x').onclick = closeDrawer;
+  d.querySelectorAll('button[data-k]').forEach(b => b.onclick = () => { au(); choose(FX[b.dataset.k], 'key'); closeDrawer(); });
+}
+$('formsBtn').onclick = () => drawer('forms');
+$('mapBtn').onclick = () => drawer('map');
+
+/* ---------- start ---------- */
+async function start() {
+  try { await Promise.all([document.fonts.load('46px "IM Fell English SC"'), document.fonts.load('10px "IBM Plex Mono"')]); } catch (e) {}
+  if (!art.complete) await new Promise(r => { art.onload = r; art.onerror = r; });
+  readArt(); buildHot(); fit(); await mandalaBuild(''); hud();
+  const li = LEFT12.indexOf(F().k); if (li >= 0) ST.medA = -li * TAU / 12;
+  ST.t0 = performance.now();
+  setTimeout(() => say('Sacred geometry. Turn the wheel, press a key, or touch the light wheel to open it. I’ll draw.', 6500), 900);
+  if (ST.layers.drone) { const kick = () => { drone(true); removeEventListener('pointerdown', kick); }; addEventListener('pointerdown', kick); }
+  if (location.search.includes('debug')) window.__geo = { ST, FIG, M, MASK, choose, openHolo, fps: () => fps };
+}
+start();
+</script>
+<script id="vs-chrome">
+/* The shared frame for every page: the rooms as bold tabs (current room lit), a volume slider that every page's
+   sound obeys (window.VS_VOLUME, event 'vs-volume', remembered), gold sparks that follow the cursor and burst on a
+   click, and a dissolve between rooms. Costs nothing when idle: the spark canvas only draws while sparks are alive. */
+(function () {
+  /* ---------- the safety stage: every page's sound passes through it on the way to the speakers ----------
+     It fades in when a room's sound starts or wakes (no click on the first note), takes out sub-bass thumps and DC
+     (the usual cause of pops when things start and stop), catches anything that would clip (crackle), and fades out
+     when you leave a room, so nothing is cut off mid-wave. The Turntable gets no limiter: her masters stay as they are. */
+  (function safeAudio() {
+    if (!window.AudioNode || AudioNode.prototype.__vsSafe) return;
+    const P = AudioNode.prototype, orig = P.connect, bus = new WeakMap(), limit = !/deck\.html$/.test(location.pathname);
+    P.__vsSafe = true; window.__vsBuses = [];
+    function stage(ctx) {
+      let s = bus.get(ctx); if (s) return s;
+      const g = ctx.createGain(); g.gain.value = 0;
+      const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 16; hp.Q.value = .5; orig.call(g, hp); let last = hp;
+      if (limit) { const l = ctx.createDynamicsCompressor(); l.threshold.value = -1; l.knee.value = 0; l.ratio.value = 20; l.attack.value = .002; l.release.value = .12; orig.call(last, l); last = l; }
+      orig.call(last, ctx.destination);
+      const ramp = (to, d) => { const t = ctx.currentTime; g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(g.gain.value, t); g.gain.linearRampToValueAtTime(to, t + d); };
+      s = { g, ctx, up: (d = .45) => ramp(1, d), down: (d = .18) => ramp(0, d) };
+      if (ctx.state === 'running') s.up(.6);
+      ctx.addEventListener('statechange', () => { if (ctx.state === 'running') s.up(.35); });
+      bus.set(ctx, s); window.__vsBuses.push(s); return s;
+    }
+    P.connect = function (dest, out, inp) {
+      if (dest instanceof AudioDestinationNode) { const s = stage(dest.context); if (out == null) orig.call(this, s.g); else orig.call(this, s.g, out); return dest; }
+      return out == null ? orig.call(this, dest) : inp == null ? orig.call(this, dest, out) : orig.call(this, dest, out, inp);
+    };
+    // leaving: every sound on the page fades out (the stage for Web Audio, a quick ramp for films playing on their own)
+    window.VS_FADE_OUT = (ms = 200) => {
+      for (const s of window.__vsBuses) try { s.down(ms / 1000); } catch (e) {}
+      document.querySelectorAll('video, audio').forEach(m => { if (m.muted || m.paused || !m.volume) return; const v0 = m.__vsPre = m.volume, t0 = performance.now(); const step = () => { const k = Math.min(1, (performance.now() - t0) / ms); m.volume = v0 * (1 - k); if (k < 1) requestAnimationFrame(step); }; step(); });
+    };
+    addEventListener('pagehide', () => window.VS_FADE_OUT(60));
+  })();
+
+  /* ---------- films stay in the page: a phone never lifts one out ----------
+     iPhones play a video full-screen, offer picture-in-picture, or pop it into a floating preview on a long press, unless
+     told not to. Every film here is part of the room's background, so each one is pinned: inline, no picture-in-picture,
+     no AirPlay, no controls, and touches pass through it to the room. Films made later (by a room's own code) get the same
+     the moment they're added or played. */
+  (function pinFilms() {
+    const pin = v => { if (!v || v.__vsPinned || v.tagName !== 'VIDEO') return; v.__vsPinned = true;
+      v.playsInline = true; v.setAttribute('playsinline', ''); v.setAttribute('webkit-playsinline', ''); v.setAttribute('x-webkit-airplay', 'deny');
+      v.controls = false; v.removeAttribute('controls'); try { v.disablePictureInPicture = true; v.setAttribute('disablepictureinpicture', ''); } catch (e) {}
+      try { v.disableRemotePlayback = true; v.setAttribute('disableremoteplayback', ''); } catch (e) {}
+      v.addEventListener('webkitbeginfullscreen', () => { try { v.webkitExitFullscreen(); } catch (e) {} });
+      v.addEventListener('enterpictureinpicture', () => { try { document.exitPictureInPicture(); } catch (e) {} }); };
+    const all = () => document.querySelectorAll('video').forEach(pin); all();
+    const play = HTMLMediaElement.prototype.play; HTMLMediaElement.prototype.play = function () { pin(this); return play.apply(this, arguments); };
+    new MutationObserver(ms => { for (const m of ms) for (const n of m.addedNodes) { if (n.tagName === 'VIDEO') pin(n); else if (n.querySelectorAll) n.querySelectorAll('video').forEach(pin); } }).observe(document.documentElement, { childList: true, subtree: true });
+    const st = document.createElement('style'); st.textContent = 'video { pointer-events: none; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; } video::-webkit-media-controls, video::-webkit-media-controls-start-playback-button, video::-webkit-media-controls-overlay-play-button { display: none !important; -webkit-appearance: none; }';
+    (document.head || document.documentElement).append(st);
+  })();
+
+  const ROOMS = [['./', 'Templum', '☥', 'The board. Ask him.'], ['parlour.html', 'Parlour', '♄', 'His console. Every key plays.'], ['deck.html', 'Turntable', '◉', 'ANIMUSCULT on his decks.'], ['palm.html', 'Palm', '✶', 'Your hand, read.'], ['crystal.html', 'Crystal', '◎', 'The seer’s sitting.'], ['mirror.html', 'Mirror', '◐', 'Two mirrors, facing.'], ['mesmer.html', 'Trance', '❂', 'The magnetic tub. Go under.'], ['sleep.html', 'Sleep', '☾', 'Sleep sounds. The screen can go off.'], ['geometry.html', 'Geometry', '❋', 'Sacred geometry and mandalas.'], ['forge.html', 'Forge', '✧', 'Sigils from your words.'], ['engine.html', 'Engine', '⚙︎', 'The dome machine. Scry with him.'], ['radio.html', 'Radio', '⌁', 'Live voices from everywhere.'], ['compendium.html', 'Compendium', '☘', 'The library of plant medicine, A to Z.']];
+  window.VS_ROOMS = ROOMS;   // the Templum's floating doors read this, so a new room shows up there too
+  const here = (location.pathname.split('/').pop() || 'index.html').replace('index.html', '') || './';
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches && !document.documentElement.classList.contains('motion-full');
+
+  /* ---------- volume ---------- */
+  let vol = .8; try { const v = parseFloat(localStorage.getItem('vs-volume')); if (v >= 0 && v <= 1) vol = v; } catch (e) {}
+  window.VS_VOLUME = vol;
+  const setVol = v => { vol = window.VS_VOLUME = Math.max(0, Math.min(1, v)); try { localStorage.setItem('vs-volume', String(vol)); } catch (e) {} dispatchEvent(new CustomEvent('vs-volume', { detail: vol })); document.querySelectorAll('.vs-vol input').forEach(i => { i.value = Math.round(vol * 100); }); document.querySelectorAll('.vs-vol').forEach(l => l.classList.toggle('mute', vol === 0)); };
+  // media elements on the page follow it too (films, his recorded voice)
+  const mediaVol = () => document.querySelectorAll('video, audio').forEach(m => { if (m.dataset.vsBase == null) m.dataset.vsBase = m.volume; m.volume = Math.min(1, +m.dataset.vsBase * vol); });
+  addEventListener('vs-volume', () => { if (!document.body?.dataset.novol) mediaVol(); });
+
+  /* ---------- styles (added last, so they win) ---------- */
+  const css = `
+.bar { gap: 7px !important; }
+.bar h1 { display: none !important; }
+.bar .vs-rooms { display: flex; gap: 6px; align-items: center; overflow-x: auto; scrollbar-width: none; flex: 1 1 auto; min-width: 0; }
+.bar .vs-rooms::-webkit-scrollbar { display: none; }
+.bar a.vs-room { position: relative; display: inline-flex !important; align-items: center; gap: 7px; font-family: "IBM Plex Mono", ui-monospace, monospace !important; font-size: 11px !important; font-weight: 400; letter-spacing: .16em !important; text-transform: uppercase; color: rgba(243,230,196,.62) !important; text-decoration: none; padding: 7px 10px 7px 8px !important; border: 0 !important; border-radius: 0; background: none !important; box-shadow: none; transition: color .5s ease, text-shadow .5s ease; white-space: nowrap; }
+.bar a.vs-room i { font-style: normal; font-size: 14px; color: rgba(240,199,106,.7); transition: color .5s, text-shadow .5s; }
+.bar a.vs-room::after { content: ""; position: absolute; left: 10px; right: 10px; bottom: 2px; height: 1px; background: linear-gradient(90deg, transparent, rgba(240,214,143,.85), transparent); opacity: 0; transform: scaleX(.4); transition: opacity .5s ease, transform .5s ease; }
+.bar a.vs-room:hover { color: #fbefcf !important; text-shadow: 0 0 14px rgba(255,210,130,.45); }
+.bar a.vs-room:hover i { color: #f6d27e; text-shadow: 0 0 10px rgba(240,190,90,.7); }
+.bar a.vs-room:hover::after { opacity: .5; transform: none; }
+.bar a.vs-room[aria-current="page"] { color: #fff3d2 !important; text-shadow: 0 0 16px rgba(255,205,120,.55); }
+.bar a.vs-room[aria-current="page"] i { color: #ffd77e; text-shadow: 0 0 12px rgba(255,200,100,.9); }
+.bar a.vs-room[aria-current="page"]::after { opacity: 1; transform: none; }
+.bar > button:not(.unzoom):not(.vs-menu), .bar > a:not(.vs-room), .bar .motion-btn { background: none !important; border: 0 !important; border-bottom: 1px solid transparent !important; border-radius: 0 !important; box-shadow: none !important; color: rgba(238,228,203,.66) !important; transition: color .5s, border-color .5s !important; }
+.bar > button:not(.unzoom):not(.vs-menu):hover, .bar > a:not(.vs-room):hover, .bar .motion-btn:hover, .bar > button[aria-pressed="true"], .bar > button.on { color: #f0d68f !important; border-bottom-color: rgba(240,214,143,.55) !important; }
+.vs-vol { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border: 0; border-radius: 3px; color: rgba(240,199,106,.8); background: none; }
+/* the room breathes out when nobody is touching anything: the frame steps back and leaves the room */
+.bar, .foot, .vs-vol.float { transition: opacity 1.8s ease; }
+body.vs-quiet .bar, body.vs-quiet .foot, body.vs-quiet .vs-vol.float { opacity: 0; }
+body.sitting .bar { opacity: 0 !important; }   /* a sitting hides the frame completely: no half-dimmed grey bar */
+body.sitting .bar:hover, body.sitting .bar:focus-within { opacity: 1 !important; }
+body.vs-quiet .bar:hover, body.vs-quiet .bar:focus-within, body.vs-quiet .vs-vol.float:hover { opacity: 1; transition-duration: .4s; }
+/* one film over every room: a soft vignette and a fine grain, so the rooms read as one place */
+.vs-film { position: fixed; inset: 0; z-index: 19; pointer-events: none; background: radial-gradient(ellipse 75% 70% at 50% 54%, rgba(0,0,0,0) 55%, rgba(0,0,0,.34) 100%); }
+.vs-film::after { content: ""; position: absolute; inset: 0; opacity: .05; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -.35'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.foot { font-size: 11.5px !important; letter-spacing: .04em !important; color: rgba(238,228,203,.5) !important; bottom: 6px !important; }
+/* phones: the rooms fold into one menu button; the page's own buttons move into the same sheet */
+.bar .vs-menu { display: none; align-items: center; gap: 9px; flex: none; font: 500 11.5px/1 "IBM Plex Mono", ui-monospace, monospace; letter-spacing: .16em; text-transform: uppercase; color: #fff3d2; background: linear-gradient(rgba(214,164,67,.16), rgba(214,164,67,.06)); border: 1px solid rgba(240,214,143,.5); border-radius: 3px; padding: 0 12px 0 10px; height: 32px; cursor: pointer; box-shadow: 0 0 0 rgba(240,199,106,0), inset 0 0 12px rgba(214,164,67,.08); transition: border-color .3s, box-shadow .3s, background .3s; }
+.bar .vs-menu:hover, .bar .vs-menu[aria-expanded="true"] { border-color: #f0d68f; background: linear-gradient(rgba(214,164,67,.28), rgba(214,164,67,.1)); box-shadow: 0 0 18px rgba(240,199,106,.28), inset 0 0 12px rgba(214,164,67,.12); }
+.bar .vs-menu svg { width: 15px; height: 15px; flex: none; color: #ffd77e; }
+.bar .vs-menu .vs-n { font-weight: 400; font-size: 10px; letter-spacing: 0; color: #120a04; background: #e9c46e; border-radius: 8px; padding: 2px 5px 1px; }
+.bar .vs-menu .vs-here { display: inline-flex; align-items: center; gap: 6px; padding-left: 9px; border-left: 1px solid rgba(240,214,143,.3); color: rgba(243,230,196,.75); letter-spacing: .12em; }
+.bar .vs-menu .vs-here i { font-style: normal; font-size: 13px; color: #ffd77e; }
+.bar .vs-menu.vs-call { animation: vsCall 1.6s ease-in-out 4; }
+@keyframes vsCall { 50% { border-color: #ffe7a8; box-shadow: 0 0 26px rgba(255,205,110,.55), inset 0 0 14px rgba(255,205,110,.2); } }
+.bar.vs-tight .vs-rooms { display: none !important; }
+.bar.vs-tight .vs-menu { display: inline-flex; }
+.bar > button, .bar > a:not(.vs-room), .bar .motion-btn, .bar > label { white-space: nowrap; flex: none; }
+/* a room's opening screen sits under the bar, so the way to the other rooms is there from the first second */
+body:has(.gate:not([hidden])) .bar { z-index: 9 !important; opacity: 1 !important; }
+/* the first visit: one quiet word under the rooms, once */
+.vs-hint { position: fixed; z-index: 9991; max-width: 270px; padding: 11px 14px 12px; font: italic 400 15px/1.35 "IM Fell English", Georgia, serif; color: #f3e6c4; background: rgba(8,6,12,.94); border: 1px solid rgba(240,214,143,.45); box-shadow: 0 10px 40px rgba(0,0,0,.6), 0 0 22px rgba(214,164,67,.15); opacity: 0; transform: translateY(-4px); transition: opacity .5s ease, transform .5s ease; pointer-events: none; }
+.vs-hint.on { opacity: 1; transform: none; }
+.vs-hint::before { content: ""; position: absolute; top: -6px; left: var(--ax, 22px); width: 10px; height: 10px; background: inherit; border-left: 1px solid rgba(240,214,143,.45); border-top: 1px solid rgba(240,214,143,.45); transform: rotate(45deg); }
+.vs-hint b { display: block; margin-bottom: 3px; font: 500 10px/1 "IBM Plex Mono", ui-monospace, monospace; font-style: normal; letter-spacing: .2em; text-transform: uppercase; color: #f0c76a; }
+.vs-sheet { position: fixed; inset: 0; z-index: 9990; overflow-y: auto; background: rgba(5,4,10,.97); color: #efe4c8; padding: calc(14px + env(safe-area-inset-top, 0px)) max(18px, env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px)); display: grid; align-content: start; gap: 14px; opacity: 0; transition: opacity .25s ease; }
+.vs-sheet.on { opacity: 1; }
+.vs-sheet .vs-sh-top { display: flex; align-items: center; justify-content: space-between; }
+.vs-sheet h2 { margin: 0; font: 500 11px/1 "IBM Plex Mono", ui-monospace, monospace; letter-spacing: .22em; text-transform: uppercase; color: rgba(240,199,106,.85); }
+.vs-sheet .vs-x { width: 44px; height: 44px; border: 0; background: none; color: #efe4c8; font-size: 22px; cursor: pointer; }
+.vs-sheet .vs-sh-rooms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.vs-sheet .vs-sh-rooms a { display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 10px 14px; border: 1px solid rgba(214,164,67,.28); color: #f3e6c4; text-decoration: none; font: 400 19px/1.1 "IM Fell English SC", "IM Fell English", Georgia, serif; }
+.vs-sheet .vs-sh-rooms a i { font-style: normal; font-size: 22px; color: #f0c76a; width: 26px; text-align: center; }
+.vs-sheet .vs-sh-rooms a span { display: grid; gap: 4px; }
+.vs-sheet .vs-sh-rooms a small { font: italic 400 12.5px/1.25 "IM Fell English", Georgia, serif; color: rgba(239,228,200,.6); }
+.vs-sheet.drop { inset: auto; top: calc(var(--vs-bar-b, 46px) + 6px); left: var(--vs-drop-x, 10px); width: min(360px, calc(100vw - 20px)); max-height: calc(100vh - var(--vs-bar-b, 46px) - 20px); padding: 14px; gap: 10px; background: rgba(8,6,12,.96); border: 1px solid rgba(240,214,143,.4); box-shadow: 0 18px 60px rgba(0,0,0,.7), 0 0 30px rgba(214,164,67,.12); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); transform: translateY(-6px); transition: opacity .2s ease, transform .2s ease; }
+.vs-sheet.drop.on { transform: none; }
+.vs-sheet.drop .vs-x { width: 32px; height: 32px; font-size: 16px; }
+.vs-sheet.drop .vs-sh-rooms { grid-template-columns: 1fr; gap: 2px; }
+.vs-sheet.drop .vs-sh-rooms a { min-height: 50px; border-color: transparent; font-size: 18px; transition: background .2s, border-color .2s; }
+.vs-sheet.drop .vs-sh-rooms a:hover { background: rgba(214,164,67,.1); border-color: rgba(214,164,67,.3); }
+.vs-sheet .vs-sh-rooms a[aria-current="page"] { border-color: #f0d68f; background: rgba(214,164,67,.14); box-shadow: 0 0 22px rgba(214,164,67,.18); }
+.vs-sheet .vs-sh-tools { display: grid; gap: 0; border-top: 1px solid rgba(214,164,67,.2); }
+.vs-sheet .vs-sh-tools > * { display: flex !important; align-items: center; width: 100%; min-height: 48px; margin: 0 !important; padding: 0 4px !important; text-align: left; font: 500 12.5px/1.2 "IBM Plex Mono", ui-monospace, monospace !important; letter-spacing: .12em !important; text-transform: uppercase; color: #efe4c8 !important; background: none !important; border: 0 !important; border-bottom: 1px solid rgba(214,164,67,.14) !important; border-radius: 0 !important; box-shadow: none !important; position: static !important; opacity: 1 !important; text-decoration: none; cursor: pointer; }
+.vs-sheet .vs-sh-tools:empty { display: none; }
+@media (max-width: 760px) { .bar .vs-rooms { display: none !important; } .bar .vs-menu { display: inline-flex; } .bar .vs-menu .vs-here span { display: none; } .bar .vs-vol { margin-left: auto; } }
+/* power: every room switches off and on from the bar */
+.bar .vs-pow { display: inline-flex !important; align-items: center; gap: 7px; flex: none; font: 500 10.5px/1 "IBM Plex Mono", ui-monospace, monospace !important; letter-spacing: .16em !important; text-transform: uppercase; color: rgba(238,228,203,.7) !important; background: none !important; border: 0 !important; padding: 6px 6px !important; cursor: pointer; white-space: nowrap; }
+.bar .vs-pow i { width: 7px; height: 7px; border-radius: 50%; background: #7dffb0; box-shadow: 0 0 8px #3dff8a, 0 0 2px #fff inset; transition: background .4s, box-shadow .4s; }
+.bar .vs-pow svg { width: 14px; height: 14px; }
+.bar .vs-pow:hover { color: #f0d68f !important; }
+body.vs-off .bar .vs-pow i { background: #4a1712; box-shadow: none; }
+body.vs-off .bar { z-index: 9990 !important; opacity: 1 !important; }
+.vs-offveil { position: fixed; inset: 0; z-index: 9989; display: grid; place-items: center; background: #030206; opacity: 0; pointer-events: none; transition: opacity .45s ease .25s; }
+.vs-offveil::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px; background: linear-gradient(90deg, transparent, rgba(255,236,190,.9), transparent); box-shadow: 0 0 24px rgba(255,214,140,.8); transform: scaleX(0); opacity: 0; }
+body.vs-off .vs-offveil { opacity: 1; pointer-events: auto; }
+body.vs-off .vs-offveil::before { animation: vsCrt .6s ease-out; }
+@keyframes vsCrt { 0% { transform: scaleX(1) scaleY(30); opacity: .0; } 30% { transform: scaleX(1) scaleY(1); opacity: 1; } 100% { transform: scaleX(0); opacity: 0; } }
+.vs-offveil button { display: grid; justify-items: center; gap: 14px; background: none; border: 0; color: rgba(243,230,196,.7); font: italic 400 17px/1.3 "IM Fell English", Georgia, serif; cursor: pointer; opacity: 0; transition: opacity .6s ease .45s, color .3s; }
+body.vs-off .vs-offveil button { opacity: 1; }
+.vs-offveil button:hover { color: #fff3d2; }
+.vs-offveil button span { display: grid; place-items: center; width: 74px; height: 74px; border-radius: 50%; border: 1px solid rgba(240,214,143,.45); color: #f0c76a; box-shadow: 0 0 30px rgba(214,164,67,.15), inset 0 0 20px rgba(214,164,67,.08); transition: box-shadow .4s, border-color .4s; }
+.vs-offveil button:hover span { border-color: #f0d68f; box-shadow: 0 0 40px rgba(240,199,106,.35), inset 0 0 20px rgba(214,164,67,.15); }
+.vs-offveil button svg { width: 30px; height: 30px; }
+.vs-vol svg { width: 16px; height: 16px; flex: none; cursor: pointer; }
+.vs-vol.mute svg .w { display: none; }
+.vs-vol input { -webkit-appearance: none; appearance: none; width: 84px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, #f0c76a var(--p, 80%), rgba(214,164,67,.25) var(--p, 80%)); outline: none; cursor: pointer; }
+.vs-vol input::-webkit-slider-thumb { -webkit-appearance: none; width: 13px; height: 13px; border-radius: 50%; background: radial-gradient(#fff6d8, #d6a443); box-shadow: 0 0 8px rgba(240,200,120,.8); border: 0; }
+.vs-vol input::-moz-range-thumb { width: 13px; height: 13px; border-radius: 50%; background: #e8c070; border: 0; }
+.vs-vol.float { position: fixed; right: 14px; bottom: 14px; z-index: 40; background: rgba(6,5,10,.85); }
+.vs-fade { position: fixed; inset: 0; z-index: 9998; pointer-events: none; background: radial-gradient(ellipse at 50% 50%, rgba(255,214,140,.0), #030206 70%); opacity: 0; transition: opacity .32s ease; }
+.vs-fade.arrive { transition: opacity .9s cubic-bezier(.3,.1,.3,1); }
+.vs-fade.on { opacity: 1; background: radial-gradient(ellipse at 50% 50%, rgba(255,214,140,.25), #030206 60%); }
+#vs-sparks { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 9997; pointer-events: none; }
+@media (max-width: 1100px) { .bar a.vs-room { font-size: 10.5px !important; padding: 6px 9px 6px 8px !important; letter-spacing: .1em !important; } }
+@media (max-width: 760px) { .vs-vol input { width: 56px; } }
+/* step outside: real-world help, plain on purpose (outside the room's look and not in his voice); never fades, never hidden */
+.vs-out { position: fixed; left: max(10px, env(safe-area-inset-left, 0px)); bottom: max(10px, env(safe-area-inset-bottom, 0px)); z-index: 9995; display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; font: 500 11px/1 system-ui, -apple-system, "Segoe UI", sans-serif; letter-spacing: .02em; color: rgba(255,255,255,.62); background: rgba(20,20,24,.72); border: 1px solid rgba(255,255,255,.18); border-radius: 999px; cursor: pointer; opacity: .7; transition: opacity .3s, color .3s, border-color .3s; }
+.vs-out:hover, .vs-out:focus-visible { opacity: 1; color: #fff; border-color: rgba(255,255,255,.5); }
+.vs-out svg { width: 12px; height: 12px; }
+.vs-outp { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; padding: 16px; background: rgba(0,0,0,.6); }
+.vs-outp[hidden] { display: none; }
+.vs-outp .vs-ob { width: min(520px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; padding: 22px 22px 18px; background: #f6f6f4; color: #1d1d1f; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.5); font: 400 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+.vs-outp h2 { margin: 0 0 8px; font: 600 19px/1.25 system-ui, -apple-system, "Segoe UI", sans-serif; letter-spacing: 0; text-transform: none; color: #1d1d1f; }
+.vs-outp h3 { margin: 16px 0 6px; font: 600 13px/1.3 system-ui, -apple-system, "Segoe UI", sans-serif; color: #444; }
+.vs-outp p { margin: 0 0 8px; }
+.vs-outp ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.vs-outp li a { display: block; padding: 9px 12px; border-radius: 8px; background: #fff; border: 1px solid #ddd; color: #0b57d0; text-decoration: none; }
+.vs-outp li a:hover { border-color: #0b57d0; }
+.vs-outp li a small { display: block; color: #555; font-size: 13px; }
+.vs-outp .vs-oe { padding: 10px 12px; border-radius: 8px; background: #fff1f0; border: 1px solid #f3c2bd; }
+.vs-outp .vs-of { margin-top: 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; color: #666; font-size: 12.5px; }
+.vs-outp .vs-of button { padding: 8px 16px; border-radius: 8px; border: 1px solid #bbb; background: #fff; color: #1d1d1f; font: 500 14px system-ui, -apple-system, sans-serif; cursor: pointer; }
+@media print { .vs-out { display: none; } }
+`;
+  const st = document.createElement('style'); st.textContent = css;
+
+  function build() {
+    document.head.appendChild(st);
+    // the rooms
+    const bar = document.querySelector('header.bar, .bar');
+    if (bar) {
+      bar.querySelectorAll(':scope > a').forEach(a => { const h = a.getAttribute('href') || ''; if (ROOMS.some(([r]) => r === h || (r === './' && (h === './' || h === 'index.html')))) a.remove(); });
+      const nav = document.createElement('nav'); nav.className = 'vs-rooms'; nav.setAttribute('aria-label', 'Rooms');
+      for (const [href, name, glyph] of ROOMS) { const a = document.createElement('a'); a.className = 'vs-room'; a.href = href; a.innerHTML = `<i aria-hidden="true">${glyph}</i><span>${name}</span>`; a.title = name; if (href === here) a.setAttribute('aria-current', 'page'); nav.append(a); }
+      bar.prepend(nav);
+    }
+    // volume (the Turntable has its own big volume in the transport, so it gets none here)
+    if (!document.body.dataset.novol) {
+      const l = document.createElement('label'); l.className = 'vs-vol' + (bar ? '' : ' float'); l.title = 'Volume (every room)';
+      l.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path class="w" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><input type="range" min="0" max="100" step="1" aria-label="Volume">`;
+      const inp = l.querySelector('input'), paint = () => inp.style.setProperty('--p', inp.value + '%');
+      inp.value = Math.round(vol * 100); paint(); l.classList.toggle('mute', vol === 0);
+      inp.addEventListener('input', () => { setVol(inp.value / 100); paint(); });
+      let before = vol; l.querySelector('svg').addEventListener('click', e => { e.preventDefault(); if (vol > 0) { before = vol; setVol(0); } else setVol(before || .8); paint(); });
+      if (bar) { const last = bar.querySelector('#txBtn, #fsBtn, #listBtn'); last ? last.before(l) : bar.append(l); } else document.body.append(l);
+    }
+    power(bar);
+    outside();
+    if (bar) menu(bar);   // after the volume is placed, so the volume stays in the bar on a phone
+    if (!document.body.dataset.novol) mediaVol();
+    const fs = document.getElementById('fsBtn'); if (fs && innerWidth < 1180) { fs.textContent = '⤢'; fs.title = 'Full screen'; fs.setAttribute('aria-label', 'Full screen'); }
+    // the dissolve between rooms
+    const fade = document.createElement('div'); fade.className = 'vs-fade'; document.body.append(fade);
+    try { if (sessionStorage.getItem('vs-arrive')) { sessionStorage.removeItem('vs-arrive'); fade.style.transition = 'none'; fade.classList.add('on'); requestAnimationFrame(() => requestAnimationFrame(() => { fade.style.transition = ''; if (!calm) fade.classList.add('arrive'); fade.classList.remove('on'); setTimeout(() => fade.classList.remove('arrive'), 1000); })); } } catch (e) {}
+    // the film (pages that draw their own, like the radio, opt out with data-nofilm)
+    if (!document.body.dataset.nofilm) { const film = document.createElement('div'); film.className = 'vs-film'; film.setAttribute('aria-hidden', 'true'); document.body.append(film); }
+    // quiet: after a while with no hand on anything, the frame fades back. Never while typing or with a menu open
+    let qt = 0; const busy = () => { const a = document.activeElement; return a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable) || document.querySelector('.drawer.on, dialog[open], [aria-modal="true"]:not([hidden])'); };
+    const wake = () => { document.body.classList.remove('vs-quiet'); clearTimeout(qt); qt = setTimeout(function q() { if (busy()) { qt = setTimeout(q, 3000); return; } document.body.classList.add('vs-quiet'); }, 11000); };
+    ['pointermove', 'pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(ev => addEventListener(ev, wake, { passive: true })); wake();
+    document.addEventListener('click', e => {
+      const a = e.target.closest('a.vs-room, a.play-link'); if (!a || e.metaKey || e.ctrlKey || a.target === '_blank') return;
+      e.preventDefault(); burst(e.clientX, e.clientY, 26); fade.classList.add('on'); try { window.VS_FADE_OUT(calm ? 60 : 220); } catch (er) {} try { sessionStorage.setItem('vs-arrive', '1'); } catch (er) {}
+      setTimeout(() => { location.href = a.href; }, calm ? 60 : 240);
+    });
+    // instant rooms: when the pointer rests on a room tab, the browser builds that page in the background, so the click
+    // just swaps it in (Chrome's speculation rules; other browsers ignore this and load normally)
+    try { if (HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules')) { const sr = document.createElement('script'); sr.type = 'speculationrules';
+      sr.textContent = JSON.stringify({ prerender: [{ where: { and: [{ href_matches: '/*.html' }, { selector_matches: 'a.vs-room, a.play-link' }] }, eagerness: 'moderate' }] }); document.head.append(sr); } } catch (e) {}
+    sparks();
+  }
+
+  /* ---------- power: the room switches off (sound fades and stops, films pause, the screen closes like an old set) ---------- */
+  function power(bar) {
+    const ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v8M7.05 6.05a7.5 7.5 0 1 0 9.9 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+    const veil = document.createElement('div'); veil.className = 'vs-offveil'; veil.innerHTML = `<button type="button">${'<span>' + ICON + '</span>'}Switched off. Touch to wake the room.</button>`; document.body.append(veil);
+    let btn = null;
+    if (bar) { btn = document.createElement('button'); btn.type = 'button'; btn.className = 'vs-pow'; btn.innerHTML = '<i aria-hidden="true"></i>Power'; btn.title = 'Switch this room off and on'; btn.setAttribute('aria-pressed', 'true');
+      const v = bar.querySelector('.vs-vol'); v ? v.before(btn) : bar.append(btn); }
+    let paused = [];
+    const set = on => {
+      if (on === !document.body.classList.contains('vs-off')) return;
+      document.body.classList.toggle('vs-off', !on); if (btn) { btn.setAttribute('aria-pressed', String(on)); btn.title = on ? 'Switch this room off' : 'Switch this room on'; }
+      dispatchEvent(new CustomEvent('vs-power', { detail: { on } }));
+      if (!on) {
+        window.VS_FADE_OUT(260);
+        setTimeout(() => { if (document.body.classList.contains('vs-off')) { for (const s of window.__vsBuses) try { s.ctx.suspend(); } catch (e) {} paused = [...document.querySelectorAll('video')].filter(m => !m.paused); paused.forEach(m => m.pause()); } }, 300);
+      } else {
+        for (const s of window.__vsBuses) try { s.ctx.resume().then(() => s.up(.6)); } catch (e) {}
+        paused.forEach(m => { if (m.__vsPre != null) { m.volume = m.__vsPre; m.__vsPre = null; } m.play().catch(() => {}); }); paused = [];
+      }
+    };
+    window.VS_POWER = set;
+    btn && btn.addEventListener('click', () => set(document.body.classList.contains('vs-off')));
+    veil.querySelector('button').addEventListener('click', () => set(true));
+  }
+
+  /* ---------- step outside: real help, outside the game ---------- */
+  function outside() {
+    if (document.querySelector('.vs-out')) return;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'vs-out'; b.title = 'Real-world help, outside the game';
+    b.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2h7v12H3zM10 8h4M12 6l2 2-2 2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Step outside';
+    const p = document.createElement('div'); p.className = 'vs-outp'; p.hidden = true;
+    p.setAttribute('role', 'dialog'); p.setAttribute('aria-modal', 'true'); p.setAttribute('aria-labelledby', 'vs-out-h');
+    p.innerHTML = `<div class="vs-ob">
+      <h2 id="vs-out-h">Outside the game</h2>
+      <p>This is real-world help. The room's sound is switched off while you're here.</p>
+      <p class="vs-oe"><b>In danger, or might hurt yourself?</b> Call your local emergency number now: 911 (US, Canada), 999 (UK), 112 (EU and many countries), 000 (Australia).</p>
+      <h3>Talk to someone now</h3>
+      <ul>
+        <li><a href="tel:988">988 Suicide &amp; Crisis Lifeline<small>US · call or text 988, any time</small></a></li>
+        <li><a href="tel:116123">Samaritans · 116 123<small>UK and Ireland · free, any time</small></a></li>
+        <li><a href="https://findahelpline.com" target="_blank" rel="noopener">Find A Helpline<small>Free, confidential helplines in your country</small></a></li>
+      </ul>
+      <h3>Hearing voices, or seeing things others don't?</h3>
+      <ul>
+        <li><a href="https://www.hearing-voices.org" target="_blank" rel="noopener">Hearing Voices Network<small>Peer support groups</small></a></li>
+        <li><a href="https://www.intervoiceonline.org" target="_blank" rel="noopener">Intervoice<small>The international hearing voices network</small></a></li>
+      </ul>
+      <h3>Right now</h3>
+      <p>Feet on the floor. Name five things you can see, four you can touch, three you can hear, two you can smell, one you can taste. Breathe out slower than you breathe in.</p>
+      <div class="vs-of"><span>Nothing here is sent anywhere.</span><button type="button">Close</button></div></div>`;
+    // the floating corner button is off for now (the owner found it intrusive); the panel stays, opened by window.VS_OUTSIDE
+    // (the Compendium's rotary phone). To bring the button back, set SHOW_BUTTON to true.
+    const SHOW_BUTTON = false;
+    document.body.append(...(SHOW_BUTTON ? [b, p] : [p]));
+    let back = null;
+    const open = () => { back = document.activeElement; p.hidden = false; try { window.VS_POWER && window.VS_POWER(false); } catch (e) {} p.querySelector('.vs-ob').scrollTop = 0; p.querySelector('.vs-of button').focus({ preventScroll: true }); };
+    const close = () => { p.hidden = true; try { back && back.focus && back.focus(); } catch (e) {} };
+    b.addEventListener('click', open);
+    p.querySelector('.vs-of button').addEventListener('click', close);
+    p.addEventListener('click', e => { if (e.target === p) close(); });
+    addEventListener('keydown', e => {
+      if (p.hidden) return;
+      if (e.key === 'Escape') { e.stopImmediatePropagation(); e.preventDefault(); close(); return; }
+      if (e.key === 'Tab') { const f = [...p.querySelectorAll('a, button')], i = f.indexOf(document.activeElement); if (e.shiftKey ? i <= 0 : i === f.length - 1) { e.preventDefault(); f[e.shiftKey ? f.length - 1 : 0].focus(); } }
+      e.stopImmediatePropagation();   // the room's own keys (notes, Esc to end a sitting) stay quiet while this is open
+    }, true);
+    window.VS_OUTSIDE = open;
+    // a room with its own bar along the bottom (the Turntable's transport) gets the button lifted just above it
+    const place = () => {
+      b.style.bottom = ''; const o = b.getBoundingClientRect(); let lift = 0;
+      for (const e of document.querySelectorAll('body > *, body > * > *')) {
+        if (e === b || e === p || e.classList.contains('vs-film')) continue;
+        const cs = getComputedStyle(e); if (cs.position !== 'fixed' && cs.position !== 'absolute' || cs.display === 'none' || cs.visibility === 'hidden') continue;
+        const r = e.getBoundingClientRect(); if (r.height > innerHeight * .4 || r.bottom < innerHeight - 4 || r.left > o.right || r.right < o.left || r.top > o.bottom) continue;
+        lift = Math.max(lift, innerHeight - r.top + 8);
+      }
+      if (lift) b.style.bottom = lift + 'px';
+    };
+    if (SHOW_BUTTON) { place(); addEventListener('resize', place); setTimeout(place, 1500); setTimeout(place, 5000); }
+  }
+
+  /* ---------- the phone menu ---------- */
+  function menu(bar) {
+    const cur = ROOMS.find(([h]) => h === here) || ROOMS[0];
+    const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'vs-menu'; btn.setAttribute('aria-haspopup', 'dialog'); btn.setAttribute('aria-expanded', 'false');
+    btn.innerHTML = `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Rooms<span class="vs-n" aria-hidden="true">${ROOMS.length}</span><span class="vs-here"><i aria-hidden="true">${cur[2]}</i><span>${cur[1]}</span></span>`;
+    btn.title = 'All the rooms'; btn.setAttribute('aria-label', `Rooms (${ROOMS.length}). You are in ${cur[1]}`);
+    bar.prepend(btn);
+    const sh = document.createElement('div'); sh.className = 'vs-sheet'; sh.hidden = true; sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.setAttribute('aria-label', 'Rooms');
+    sh.innerHTML = `<div class="vs-sh-top"><h2>Rooms</h2><button type="button" class="vs-x" aria-label="Close">✕</button></div><nav class="vs-sh-rooms" aria-label="Rooms">${ROOMS.map(([h, n, g, d]) => `<a class="vs-room" href="${h}"${h === here ? ' aria-current="page"' : ''}><i aria-hidden="true">${g}</i><span>${n}<small>${d}</small></span></a>`).join('')}</nav><h2 class="vs-sh-th">This room</h2><div class="vs-sh-tools"></div>`;
+    document.body.append(sh);
+    const tools = sh.querySelector('.vs-sh-tools');
+    // the tools heading hides itself when the room has no buttons of its own
+    const syncHead = () => { sh.querySelector('.vs-sh-th').hidden = !tools.children.length; };
+    const phone = matchMedia('(max-width: 760px)');
+    const open = () => { if (sh.classList.contains('on')) return close(); hint.done();
+      // a computer gets a dropdown hanging from the button; a phone gets the whole screen
+      const drop = !phone.matches; sh.classList.toggle('drop', drop);
+      if (drop) { const b = btn.getBoundingClientRect(), r = bar.getBoundingClientRect(); sh.style.setProperty('--vs-bar-b', r.bottom + 'px'); sh.style.setProperty('--vs-drop-x', Math.max(10, b.left) + 'px'); }
+      sh.hidden = false; requestAnimationFrame(() => sh.classList.add('on')); btn.setAttribute('aria-expanded', 'true'); (sh.querySelector('.vs-sh-rooms a[aria-current]') || sh.querySelector('.vs-x')).focus({ preventScroll: true }); };
+    const close = () => { sh.classList.remove('on'); btn.setAttribute('aria-expanded', 'false'); setTimeout(() => { if (!sh.classList.contains('on')) sh.hidden = true; }, 250); };
+    btn.addEventListener('click', open); sh.querySelector('.vs-x').addEventListener('click', close);
+    sh.addEventListener('click', e => { if (e.target === sh) close(); });
+    document.addEventListener('pointerdown', e => { if (!sh.hidden && sh.classList.contains('drop') && !sh.contains(e.target) && !btn.contains(e.target)) close(); }, true);
+    tools.addEventListener('click', () => setTimeout(close, 0));   // a tool does its job, then the sheet gets out of the way
+    addEventListener('keydown', e => { if (e.key === 'Escape' && !sh.hidden) { close(); btn.focus({ preventScroll: true }); } });
+    // on a phone the page's own bar buttons live in the sheet; on a wider screen they go back where they came from
+    const pick = el => el.matches('button, a, .motion-btn') && !el.matches('.vs-menu, .vs-room, .unzoom');
+    let moving = false;
+    const place = () => { moving = true;
+      if (phone.matches) { [...bar.children].filter(pick).forEach(el => { if (!el.__vsHome) { el.__vsHome = document.createComment('vs'); el.before(el.__vsHome); } tools.append(el); }); }
+      else [...tools.children].forEach(el => { if (el.__vsHome && el.__vsHome.parentNode) el.__vsHome.replaceWith(el); else bar.append(el); el.__vsHome = null; });
+      syncHead(); moving = false; };
+    // the room names show in the bar when they all fit; when they don't, the ROOMS button takes their place
+    const nav = bar.querySelector('.vs-rooms');
+    const fit = () => { if (phone.matches || !nav) { bar.classList.add('vs-tight'); return; } bar.classList.remove('vs-tight'); if (nav.scrollWidth > nav.clientWidth + 2) bar.classList.add('vs-tight'); };
+    let fq = 0; const fitSoon = () => { cancelAnimationFrame(fq); fq = requestAnimationFrame(fit); };
+    place(); fit(); phone.addEventListener('change', () => { place(); fit(); }); addEventListener('resize', fitSoon);
+    try { document.fonts.ready.then(fitSoon); } catch (e) {}
+    new MutationObserver(() => { if (!moving && phone.matches) place(); fitSoon(); }).observe(bar, { childList: true });
+    // first visit to the house: the rooms announce themselves once, so nobody thinks this is the only one
+    const hint = { el: null, t: 0, done() { clearTimeout(this.t); try { localStorage.setItem('vs-rooms-hint', '1'); } catch (e) {} btn.classList.remove('vs-call'); if (this.el) { const el = this.el; this.el = null; el.classList.remove('on'); setTimeout(() => el.remove(), 600); } } };
+    let seen = true; try { seen = !!localStorage.getItem('vs-rooms-hint'); } catch (e) {}
+    if (!seen) hint.t = setTimeout(() => {
+      const tight = bar.classList.contains('vs-tight'), a = (tight ? btn : nav).getBoundingClientRect(); if (!a.width) return;
+      const el = hint.el = document.createElement('div'); el.className = 'vs-hint'; el.setAttribute('role', 'status');
+      el.innerHTML = `<b>${ROOMS.length} rooms</b>${tight ? 'There’s more than this one. Open the menu.' : 'This is one of them. The rest are up here.'}`;
+      document.body.append(el); el.style.left = Math.max(10, a.left) + 'px'; el.style.top = (a.bottom + 10) + 'px'; el.style.setProperty('--ax', Math.min(a.width / 2, 40) + 'px');
+      if (tight) btn.classList.add('vs-call'); requestAnimationFrame(() => el.classList.add('on'));
+      try { localStorage.setItem('vs-rooms-hint', '1'); } catch (e) {}
+      hint.t = setTimeout(() => hint.done(), 9000);
+    }, 2400);
+    nav && nav.addEventListener('click', () => hint.done());
+  }
+
+  /* ---------- sparks ---------- */
+  let cv, g, P = [], running = false, last = null;
+  function sparks() {
+    if (calm) return;
+    cv = document.createElement('canvas'); cv.id = 'vs-sparks'; document.body.append(cv); g = cv.getContext('2d');
+    const size = () => { cv.width = innerWidth; cv.height = innerHeight; }; size(); addEventListener('resize', size);
+    addEventListener('pointermove', e => { if (e.pointerType === 'touch') return; const d = last ? Math.hypot(e.clientX - last[0], e.clientY - last[1]) : 99; if (d < 26) return; last = [e.clientX, e.clientY]; add(e.clientX, e.clientY, 1, .22); });
+    addEventListener('pointerdown', e => burst(e.clientX, e.clientY, 9), true);
+  }
+  function add(x, y, n, spd) { for (let i = 0; i < n; i++) { const a = Math.random() * 6.28, v = spd * (.4 + Math.random()); P.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - .25, life: 1, d: .012 + Math.random() * .014, r: 1 + Math.random() * 2.2, hue: Math.random() < .2 ? 1 : 0 }); } if (P.length > 260) P.splice(0, P.length - 260); if (!running) { running = true; requestAnimationFrame(tick); } }
+  function burst(x, y, n) { if (calm || !cv) return; add(x, y, n, 2.6); P.push({ ring: true, x, y, life: 1, d: .045 }); }
+  function tick() {
+    g.clearRect(0, 0, cv.width, cv.height); g.globalCompositeOperation = 'lighter';
+    for (let i = P.length - 1; i >= 0; i--) { const p = P[i]; p.life -= p.d; if (p.life <= 0) { P.splice(i, 1); continue; }
+      if (p.ring) { g.strokeStyle = `rgba(255,214,140,${p.life * .7})`; g.lineWidth = 1.5; g.beginPath(); g.arc(p.x, p.y, (1 - p.life) * 46, 0, 7); g.stroke(); continue; }
+      p.x += p.vx; p.y += p.vy; p.vy -= .012; p.vx *= .985; const a = p.life, r = p.r * (.5 + a * .7);
+      g.fillStyle = p.hue ? `rgba(200,225,255,${a * .9})` : `rgba(255,${200 + 40 * a | 0},${120 + 60 * a | 0},${a * .9})`; g.beginPath(); g.arc(p.x, p.y, r, 0, 7); g.fill();
+      g.fillStyle = `rgba(255,200,120,${a * .12})`; g.beginPath(); g.arc(p.x, p.y, r * 4, 0, 7); g.fill(); }
+    g.globalCompositeOperation = 'source-over';
+    if (P.length) requestAnimationFrame(tick); else { running = false; g.clearRect(0, 0, cv.width, cv.height); }
+  }
+  window.VS_BURST = (x, y, n = 20) => burst(x, y, n);
+
+  if (document.readyState === 'loading') addEventListener('DOMContentLoaded', build); else build();
+})();
+
+</script>
+</body>
+</html>

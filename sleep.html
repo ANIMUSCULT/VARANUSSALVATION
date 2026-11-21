@@ -1,0 +1,1679 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, noai, noimageai">
+<script>try{if(!localStorage.getItem('vs-motion-demo')){localStorage.setItem('vs-motion-demo','1');localStorage.setItem('vs-motion','full')}}catch(e){}</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050407">
+<title>The Sleep Machine · Ouija Cat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>/* motion: macOS can ask for less; this site lets you opt back in (stored per browser, all pages) */
+{ let m = null; try { m = localStorage.getItem('vs-motion'); } catch (e) {} if (m !== 'calm') document.documentElement.classList.add('motion-full'); }   // full motion by default (the films and animations are the point); Calm motion is the opt-out
+addEventListener('DOMContentLoaded', () => { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) return; const full = document.documentElement.classList.contains('motion-full');
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'motion-btn'; b.textContent = full ? 'Calm motion' : 'Full motion'; b.title = full ? 'Your Mac asks for reduced motion: calm every animation on this site' : 'Show every animation again';
+  b.onclick = () => { try { full ? localStorage.setItem('vs-motion', 'calm') : localStorage.removeItem('vs-motion'); } catch (e) {} location.reload(); };
+  const bar = document.querySelector('.bar'); if (bar) { const h = bar.querySelector('h1'); h ? h.after(b) : bar.append(b); } });
+</script>
+<style>
+.motion-btn { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #f0d68f; background: rgba(214,164,67,.12); border: 1px solid rgba(214,164,67,.6); padding: 5px 9px; cursor: pointer; white-space: nowrap; }
+:root { --gold: #d6a443; --gold-pale: #f0d68f; --cream: #eee4cb; --muted: #9ea4c2; --moon: #9fb6e8; --amber: #ffb34d; --bar: 42px;
+  --display: "IM Fell English SC", Georgia, serif; --serif: "IM Fell English", Georgia, serif; --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; height: 100%; background: #050407; color: var(--cream); font-family: var(--serif); overflow: hidden; }
+button { font: inherit; color: inherit; }
+.bar { position: fixed; top: 0; left: 0; right: 0; height: var(--bar); z-index: 20; display: flex; align-items: center; gap: 8px; padding: 0 12px; background: linear-gradient(rgba(0,0,0,.92), rgba(0,0,0,.5)); }
+.bar a, .bar button { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--cream); background: transparent; border: 1px solid rgba(214,164,67,.5); padding: 5px 9px; text-decoration: none; cursor: pointer; white-space: nowrap; }
+.bar a:hover, .bar button:hover, .bar button[aria-pressed="true"] { border-color: var(--gold-pale); color: var(--gold-pale); }
+.bar h1 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 18px; letter-spacing: .1em; color: var(--gold-pale); white-space: nowrap; flex: 1; }
+
+/* the room: the device on the left, the controls on the right; on a phone, one column */
+.main { position: fixed; top: var(--bar); left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: minmax(0, 1fr) 360px; }
+.dev { overflow-y: auto; padding: 18px clamp(12px, 3vw, 34px) 60px; background: radial-gradient(120% 80% at 50% 0%, #15121f 0%, #07060b 60%, #050407 100%); }
+.side { overflow-y: auto; padding: 16px 18px 60px; background: rgba(6,5,9,.9); border-left: 1px solid rgba(214,164,67,.22); }
+@media (max-width: 900px) {
+  html, body { overflow: hidden; }
+  .main { display: flex; flex-direction: column; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: 86px; }
+  .dev, .side { display: contents; }
+  #cabinet, #libBox, .side > section { min-width: 0; flex: none; }
+  .main #cabinet { margin: 0; } .main #libBox { margin: 0 10px !important; } .main #stage { border-radius: 0; max-height: none; } .main .led, .main .keys, .main .cap { margin-left: 10px; margin-right: 10px; } .main .keys-h { margin: 14px 10px 8px; }
+  .main .keys { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; } .main .key { font-size: 13px; min-height: 40px; padding: 6px 7px; } .main .key small { display: none; }
+  #cabinet { order: 1; margin: 12px 12px 0; } #mixBox { order: 2; } #timeBox { order: 3; } #libBox { order: 4; margin: 0 12px; } #screenBox { order: 5; } .side .notes { order: 6; }
+  .side > section { padding: 0 16px; }
+  .transport { position: fixed; left: 0; right: 0; bottom: 0; z-index: 22; margin: 0; padding: 10px 14px calc(10px + env(safe-area-inset-bottom)); background: rgba(5,4,8,.96); border-top: 1px solid rgba(214,164,67,.3); }
+}
+
+/* the device: the owner's film of the console (1920 x 1080, camera locked off). The awake still sits underneath; when the sound
+   starts he falls asleep (sleep-fall, once) and stays asleep (sleep-loop); when it stops he wakes with a slow crossfade.
+   Everything clickable is placed in film pixels inside #board, scaled to fit the stage; the map is M in the script (Shift+H) */
+#cabinet { max-width: 1240px; margin: 0 auto; }
+#stage { position: relative; width: 100%; aspect-ratio: 1920 / 1080; max-height: 74vh; overflow: hidden; border-radius: 14px; background: #000; box-shadow: 0 24px 70px rgba(0,0,0,.6); touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+#board { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+#devImg, .film { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; display: block; pointer-events: none; }
+.film { opacity: 0; transition: opacity 1.8s ease; }
+.film.on { opacity: 1; }
+.film.cut { transition: none; }
+.film.quick { transition: opacity .5s ease; }
+.film.slow { transition: opacity 2.6s ease; }
+#volRing { position: absolute; left: 160px; top: 736px; width: 180px; height: 180px; border-radius: 50%; pointer-events: none; mix-blend-mode: screen; opacity: .5; transition: opacity .6s ease;
+  background: conic-gradient(from 225deg, rgba(255,220,160,.85) 0 calc(var(--v, .8) * 270deg), rgba(255,220,160,.12) 0 270deg, transparent 0);
+  -webkit-mask: radial-gradient(circle, transparent 0 78px, #000 80px 88px, transparent 90px); mask: radial-gradient(circle, transparent 0 78px, #000 80px 88px, transparent 90px); }
+#volRing.on { opacity: 1; }
+.hs { position: absolute; border: 0; padding: 0; background: transparent; border-radius: 50%; cursor: pointer; transition: box-shadow .45s ease, background .45s ease; -webkit-tap-highlight-color: transparent; }
+.hs:hover, .hs:focus-visible { box-shadow: 0 0 0 3px rgba(255,226,170,.55), 0 0 26px rgba(255,200,120,.55); outline: none; }
+.hs:active { background: rgba(255,226,170,.16); }
+.hs.lit::after { content: ""; position: absolute; left: 50%; top: 50%; width: 46%; height: 46%; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle, rgba(190,240,255,.95), rgba(120,210,255,.35) 55%, transparent 72%); }
+.hs.sun.lit::after { width: 70%; height: 70%; background: radial-gradient(circle, rgba(255,236,190,.75), rgba(255,200,120,.25) 55%, transparent 72%); }
+.hs.glass:hover, .hs.glass:focus-visible { box-shadow: 0 0 0 4px rgba(255,226,170,.3), 0 0 70px rgba(255,200,120,.3); }
+.hs.rect { border-radius: 14px; }
+#stage.outline .hs { box-shadow: 0 0 0 2px rgba(80,255,180,.9) !important; }
+.cap { min-height: 18px; margin: 8px 4px 0; font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); text-align: center; transition: color .4s; }
+.cap b { color: var(--gold-pale); font-weight: 400; }
+/* the readout under the device (the device's own screens are small on a phone) */
+.led { position: relative; margin-top: 10px; border-radius: 10px; padding: 10px 14px 11px; background: #120a03; box-shadow: inset 0 0 0 1px rgba(255,179,77,.18), inset 0 0 30px rgba(0,0,0,.9); font-family: var(--mono); color: var(--amber); text-shadow: 0 0 6px rgba(255,150,40,.55); overflow: hidden; }
+.led::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle, transparent 0 1px, rgba(0,0,0,.42) 1.3px) 0 0 / 3px 3px; }
+.led .l1 { font-size: 15px; letter-spacing: .08em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.led .l2 { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; opacity: .75; margin-top: 3px; display: flex; gap: 14px; flex-wrap: wrap; }
+.led .l2 span:last-child { margin-left: auto; }
+.led .l3 { font-size: 13px; margin-top: 6px; min-height: 1.3em; color: #ffd08a; transition: opacity .9s ease; }
+.led .l3.off { opacity: 0; }
+.dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; background: #4a2a10; }
+.dot.on { background: var(--amber); box-shadow: 0 0 8px var(--amber); }
+.dot.wind { background: var(--amber); animation: breathe 2.4s ease-in-out infinite; }
+@keyframes breathe { 50% { opacity: .25; } }
+/* preset keys */
+.keys-h { display: flex; align-items: baseline; justify-content: space-between; margin: 16px 4px 8px; font-family: var(--mono); font-size: 9.5px; letter-spacing: .24em; text-transform: uppercase; color: var(--gold); }
+.keys { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 7px; }
+.key { position: relative; text-align: left; min-height: 46px; padding: 8px 10px 7px 12px; border-radius: 7px; cursor: pointer; border: 0; font-family: var(--serif); font-size: 14px; line-height: 1.12; color: #2a2116;
+  background: linear-gradient(#efe4c6, #d9cba5); box-shadow: inset 0 -3px 0 rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.6), 0 2px 0 #6b5a3a, 0 3px 8px rgba(0,0,0,.5); transition: transform .12s, box-shadow .12s, background .6s; }
+.key:hover { background: linear-gradient(#f6ecd2, #e3d5b0); }
+.key:active { transform: translateY(2px); box-shadow: inset 0 -1px 0 rgba(0,0,0,.18), 0 0 0 #6b5a3a, 0 1px 4px rgba(0,0,0,.5); }
+.key[aria-pressed="true"] { background: linear-gradient(#ffd99a, #f1b864); box-shadow: inset 0 -3px 0 rgba(0,0,0,.18), 0 2px 0 #7a4f12, 0 0 18px rgba(255,179,77,.45); }
+.key small { display: block; font-family: var(--mono); font-size: 8.5px; letter-spacing: .1em; text-transform: uppercase; color: rgba(42,33,22,.55); margin-top: 3px; }
+.key .x { position: absolute; top: 3px; right: 5px; font: 11px var(--mono); color: rgba(42,33,22,.5); padding: 2px 4px; }
+.key.mine { background: linear-gradient(#d6def0, #b9c4dd); box-shadow: inset 0 -3px 0 rgba(0,0,0,.18), 0 2px 0 #3d4a68, 0 3px 8px rgba(0,0,0,.5); }
+/* the library */
+.lib-top { display: flex; gap: 10px; align-items: center; margin: 20px 4px 4px; }
+.lib-top h2 { margin: 0; font-family: var(--mono); font-weight: 400; font-size: 9.5px; letter-spacing: .24em; text-transform: uppercase; color: var(--gold); flex: 1; }
+.lib-top input { width: min(220px, 46vw); background: rgba(0,0,0,.45); color: var(--cream); border: 1px solid rgba(214,164,67,.35); border-radius: 6px; font: 15px var(--serif); padding: 6px 10px; }
+.cat { margin-top: 12px; }
+.cat h3 { margin: 0 4px 6px; font-family: var(--display); font-weight: 400; font-size: 15px; letter-spacing: .08em; color: var(--gold-pale); }
+.cat h3 small { font-family: var(--mono); font-size: 9px; letter-spacing: .14em; color: var(--muted); margin-left: 6px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 5px; }
+.snd { display: flex; align-items: center; gap: 7px; min-height: 36px; padding: 5px 8px; text-align: left; cursor: pointer; border-radius: 18px; font-family: var(--serif); font-size: 13.5px; line-height: 1.1; color: var(--cream);
+  background: linear-gradient(#211d2d, #16131f); border: 1px solid rgba(214,164,67,.18); box-shadow: inset 0 1px 0 rgba(255,255,255,.05); transition: border-color .4s, background .6s, color .4s; }
+.snd:hover { border-color: rgba(240,214,143,.55); }
+.snd i { flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--c, #6c5a3a); opacity: .35; box-shadow: none; transition: opacity .6s, box-shadow .6s; }
+.snd[aria-pressed="true"] { border-color: var(--c, var(--gold)); background: linear-gradient(#2c2538, #1b1726); color: #fff3d6; }
+.snd[aria-pressed="true"] i { opacity: 1; box-shadow: 0 0 9px var(--c, var(--gold)); }
+
+/* the side */
+.side h2 { margin: 0 0 2px; font-family: var(--display); font-weight: 400; font-size: 21px; color: var(--gold-pale); }
+.side .sub { font-family: var(--mono); font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+.side label.h { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin: 18px 0 7px; }
+.transport { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 4px 0 6px; }
+.big { min-height: 48px; border-radius: 10px; cursor: pointer; font-family: var(--mono); font-size: 11.5px; letter-spacing: .16em; text-transform: uppercase; border: 1px solid rgba(214,164,67,.6); background: rgba(214,164,67,.08); color: var(--gold-pale); }
+.big:hover { background: rgba(214,164,67,.16); }
+.big.sleep { background: linear-gradient(#26304c, #151b2e); border-color: rgba(159,182,232,.6); color: #dfe8ff; }
+.big b { display: block; font-family: var(--display); font-weight: 400; font-size: 17px; letter-spacing: .08em; text-transform: none; }
+.chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.chips button { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; padding: 7px 10px; border-radius: 15px; cursor: pointer; background: rgba(0,0,0,.35); border: 1px solid rgba(214,164,67,.3); color: var(--cream); }
+.chips button[aria-pressed="true"] { border-color: var(--gold-pale); color: #1a140a; background: var(--gold-pale); }
+.mix { display: flex; flex-direction: column; gap: 6px; }
+.mixrow { display: grid; grid-template-columns: 1fr 112px 24px; align-items: center; gap: 8px; font-size: 14.5px; }
+.mixrow span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mixrow button { background: none; border: 0; color: var(--muted); cursor: pointer; font: 14px var(--mono); padding: 4px; }
+.mixrow button:hover { color: var(--gold-pale); }
+input[type=range] { accent-color: var(--gold); width: 100%; }
+.empty { font-style: italic; color: var(--muted); font-size: 14px; margin: 2px 0; }
+.row { display: flex; gap: 6px; align-items: center; margin-top: 8px; }
+.row input[type=text] { flex: 1; min-width: 0; background: rgba(0,0,0,.45); color: var(--cream); border: 1px solid rgba(214,164,67,.35); border-radius: 6px; font: 15px var(--serif); padding: 6px 9px; }
+.small { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; padding: 7px 10px; border-radius: 6px; cursor: pointer; background: transparent; border: 1px solid rgba(214,164,67,.4); color: var(--cream); white-space: nowrap; }
+.small:hover { border-color: var(--gold-pale); color: var(--gold-pale); }
+.toggle { display: flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 14.5px; cursor: pointer; }
+.toggle input { accent-color: var(--gold); width: 18px; height: 18px; }
+.hint { font-family: var(--mono); font-size: 10px; line-height: 1.55; color: var(--muted); margin: 7px 0 0; }
+.notes { margin-top: 18px; padding-top: 12px; border-top: 1px solid rgba(214,164,67,.18); }
+
+/* the night: the screen while you sleep */
+#night { position: fixed; inset: 0; z-index: 100; background: #000; cursor: none; touch-action: manipulation; }
+#night.ui { cursor: auto; }
+#night img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 4s ease, transform 20s linear; will-change: opacity, transform; }
+#night img.on { opacity: 1; }
+#night video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; transition: opacity 3s ease; }
+#night video.on { opacity: 1; }
+#night #catFilm { object-fit: cover; object-position: 44% 50%; }   /* a tall phone crops to his head */
+#dim { position: absolute; inset: 0; background: #000; transition: opacity 1.2s ease; pointer-events: none; }
+#sink { position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; transition: opacity 600s linear; }
+#sink.on { opacity: .35; }
+.ntime { position: absolute; left: 0; right: 0; bottom: calc(22px + env(safe-area-inset-bottom)); text-align: center; font-family: var(--mono); font-size: 12px; letter-spacing: .2em; color: #8a7a5a; opacity: .5; pointer-events: none; transition: opacity 1s; }
+.ntime b { display: block; font-family: var(--display); font-weight: 400; font-size: 34px; letter-spacing: .1em; color: #9c8a62; }
+.nctl { position: absolute; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom)); transform: translateX(-50%); width: min(420px, calc(100vw - 32px)); padding: 16px; border-radius: 14px; background: rgba(10,9,14,.9); border: 1px solid rgba(214,164,67,.3); opacity: 0; pointer-events: none; transition: opacity .8s; }
+#night.ui .nctl { opacity: 1; pointer-events: auto; }
+.nctl .transport { position: static; padding: 0; border: 0; background: none; }
+.nctl label { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin: 12px 0 6px; }
+.nhint { position: absolute; top: calc(20px + env(safe-area-inset-top)); left: 0; right: 0; text-align: center; font-family: var(--mono); font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: #6d6450; opacity: 0; transition: opacity 1.5s; pointer-events: none; }
+#night.ui .nhint { opacity: .8; }
+
+/* the drawer */
+.drawer { position: fixed; top: var(--bar); right: 0; bottom: 0; width: min(440px, 100vw); z-index: 30; overflow-y: auto; padding: 22px 24px 40px; background: rgba(8,7,12,.97); border-left: 1px solid rgba(214,164,67,.3); transform: translateX(105%); transition: transform .45s ease; }
+.drawer.on { transform: none; }
+.drawer h2 { font-family: var(--display); font-weight: 400; color: var(--gold-pale); font-size: 22px; margin: 0 0 10px; }
+.drawer h3 { font-family: var(--mono); font-weight: 400; font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); margin: 20px 0 6px; }
+.drawer p { font-size: 15.5px; line-height: 1.5; margin: 0 0 8px; }
+.drawer .x { position: absolute; top: 12px; right: 14px; background: none; border: 0; color: var(--muted); font: 16px var(--mono); cursor: pointer; }
+.foot { position: fixed; left: 12px; bottom: 8px; z-index: 15; font-family: var(--mono); font-size: 11.5px; color: rgba(158,164,194,.6); pointer-events: none; }
+@media (max-width: 900px) { .foot { display: none; } }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+html:not(.motion-full) .dot.wind { animation: none; }
+@media (prefers-reduced-motion: reduce) { html:not(.motion-full) #night img { transition: opacity 4s ease; transform: none !important; } }
+</style>
+</head>
+<body>
+<header class="bar">
+  <h1>The Sleep Machine</h1>
+  <button type="button" id="howBtn" aria-pressed="false">How it works</button>
+</header>
+
+<div class="main">
+  <div class="dev">
+    <div id="cabinet">
+      <div id="stage">
+        <div id="board">
+          <img id="devImg" src="sleep-console.webp" alt="The Sleep Machine: Ouija Cat built into a gold console, OUIJA CAT V1" draggable="false">
+          <img id="devAsleep" class="film" alt="" aria-hidden="true" draggable="false">
+          <video id="vAwake" class="film" muted playsinline loop preload="auto" aria-hidden="true"></video>
+          <video id="vFall" class="film" muted playsinline preload="auto" aria-hidden="true"></video>
+          <video id="vYawn" class="film" muted playsinline preload="auto" aria-hidden="true"></video>
+          <video id="vLoop" class="film" muted playsinline loop preload="auto" aria-hidden="true"></video>
+          <div id="volRing" aria-hidden="true"></div>
+          <div id="hs"></div>
+        </div>
+      </div>
+      <div class="cap" id="cap" aria-hidden="true"></div>
+      <div class="led" id="led" aria-live="off">
+        <div class="l1" id="led1">Nothing on.</div>
+        <div class="l2"><span id="led2"><i class="dot"></i>Off</span><span id="led2b"></span><span id="countN"></span></div>
+        <div class="l3" id="led3"></div>
+      </div>
+      <div class="keys-h"><span>Mixes</span><span id="mineN"></span></div>
+      <div class="keys" id="keys"></div>
+    </div>
+    <div id="libBox" style="max-width:1100px;margin:0 auto">
+      <div class="lib-top"><h2>Every sound <span id="libN"></span></h2><input type="search" id="find" placeholder="Find a sound" autocomplete="off" aria-label="Find a sound"></div>
+      <div id="lib"></div>
+    </div>
+  </div>
+
+  <aside class="side" id="side">
+    <section id="mixBox">
+      <div class="transport" id="transport">
+        <button type="button" class="big" id="playBtn"><b>Play</b>your mix</button>
+        <button type="button" class="big sleep" id="sleepBtn"><b>Sleep</b>screen down</button>
+      </div>
+      <label class="h">Your mix</label>
+      <div class="mix" id="mix"></div>
+      <div class="row"><input type="text" id="saveName" maxlength="24" placeholder="Name it" autocomplete="off" aria-label="Name for this mix"><button type="button" class="small" id="saveBtn">Save mix</button><button type="button" class="small" id="clearBtn">Clear</button></div>
+    </section>
+    <section id="timeBox">
+      <label class="h">Sleep timer</label>
+      <div class="chips" id="timers"></div>
+      <p class="hint" id="timerHint">Fades out slowly at the end, then stops.</p>
+    </section>
+    <section id="screenBox">
+      <label class="h">While you sleep, the screen shows</label>
+      <div class="chips" id="screens"></div>
+      <label class="h" for="dimR">Dimmer <output id="dimV"></output></label>
+      <input type="range" id="dimR" min="0" max="95" value="55">
+      <label class="toggle" id="keepRow"><input type="checkbox" id="keepOn"> Keep the screen on</label>
+      <p class="hint" id="keepHint">Off is better: lock the phone and the sound keeps going, with controls on the lock screen.</p>
+    </section>
+    <section class="notes">
+      <p class="hint">Brainwave tones need headphones. Every sound is made on this device as it plays; nothing is downloaded, nothing is recorded. Sound and light, not medicine.</p>
+    </section>
+  </aside>
+</div>
+
+<div id="night" hidden>
+  <img id="phA" alt=""><img id="phB" alt="">
+  <video id="catFilm" muted loop playsinline preload="none"></video>
+  <div id="dim"></div><div id="sink"></div>
+  <div class="nhint">Touch again to hide. Escape wakes the room.</div>
+  <div class="ntime" id="ntime"><b id="nclock"></b><span id="nleft"></span></div>
+  <div class="nctl" id="nctl">
+    <div class="transport">
+      <button type="button" class="big" id="nStop"><b>Stop</b>the sound</button>
+      <button type="button" class="big sleep" id="nWake"><b>Wake</b>the room</button>
+    </div>
+    <label for="nDim">Dimmer</label>
+    <input type="range" id="nDim" min="0" max="95">
+    <label>Show</label>
+    <div class="chips" id="nScreens"></div>
+  </div>
+</div>
+
+<aside class="drawer" id="drawer" aria-label="How the Sleep Machine works">
+  <button type="button" class="x" id="drawerX" aria-label="Close">✕</button>
+  <h2>How it works</h2>
+  <p>Press any sound and it plays. Stack up to eight. The mixes up top are ready-made; save your own and they sit there too.</p>
+  <h3>The screen can go off</h3>
+  <p>A couple of seconds after you stop fiddling, the machine winds your mix into one long track with the timer’s fade built in. From then on the phone plays it like music: lock the screen, turn it face down, it keeps going. The track and its controls show on the lock screen.</p>
+  <p>Change anything and it winds again. Until the light on the screen goes steady, keep the screen on.</p>
+  <p>On an iPhone, leave Safari as the last thing you used before you lock it. Swiping Safari away stops the sound, like any music.</p>
+  <h3>The timer</h3>
+  <p>The last couple of minutes fade out slowly to nothing, then it stops. All night runs nine hours.</p>
+  <h3>The sleep screen</h3>
+  <p>Photos (shuffled), Ouija Cat asleep, or plain dark. The dimmer works on all three, and the screen sinks a little darker over the first ten minutes. Nothing flickers or flashes: every change takes seconds.</p>
+  <h3>Brainwave tones</h3>
+  <p>Binaural tones need headphones: one ear gets one note, the other a slightly different one. Isochronic and monaural tones work on a speaker. Keep them quiet under other sounds.</p>
+  <p>Sound and light, not medicine. Not while driving.</p>
+</aside>
+<div class="foot">Nothing leaves this device. Sound and light, not medicine.</div>
+<div class="sr" id="sr" aria-live="polite"></div>
+<audio id="aA" preload="none"></audio><audio id="aB" preload="none"></audio>
+
+<script id="vs-sleep">
+/* The Sleep Machine's sound engine (web/home/sleep.html). Every sound is generated, nothing is downloaded:
+   coloured noise, filters and slow envelopes run in Web Audio; events (drops, crackles, heartbeats, strikes, chirps)
+   are written in plain JS into loop buffers.
+
+   The one rule everything obeys: it all repeats exactly every LOOP (96) seconds. Noise buffers are 12 s, event
+   textures 24/48/96 s, envelopes 96 s, and every oscillator and LFO frequency is rounded to a whole number of cycles
+   per loop (qf). So a mix rendered offline for 96 s (after WARM seconds of warm-up) loops with no seam, and
+   session() can chain that one loop into a WAV of up to 9 hours, with a fade-in and a fade-out baked in, as a Blob
+   made of references to the same bytes (8 hours costs the 12 MB of one loop). An <audio> element plays it, which is
+   what keeps the sound going on a phone with the screen off. Plain per-sample code on purpose: it ports to a native
+   engine later. */
+(function () {
+'use strict';
+const LOOP = 96, TSR = 32000, CSR = 8000, BSR = 32000, WARM = 4, MAXS = 9 * 3600, TAU = Math.PI * 2;
+const RAW_CONNECT = window.AudioNode ? AudioNode.prototype.connect : null;   // saved before chrome.js adds its safety stage: offline renders skip it
+const qf = f => Math.max(1 / LOOP, Math.round(f * LOOP) / LOOP);
+function rng(seed) { let a = seed >>> 0; return () => { a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function hash(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619); return h >>> 0; }
+const lerp = (a, b, x) => a + (b - a) * x, rr = (R, a, b) => a + (b - a) * R();
+
+/* ---------- buffers and the cache ---------- */
+const CACHE = new Map(); let cacheBytes = 0;
+function mkBuf(ch, n, sr) {
+  try { return new AudioBuffer({ numberOfChannels: ch, length: n, sampleRate: sr }); }
+  catch (e) { return new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(1, 1, sr).createBuffer(ch, n, sr); }
+}
+function toBuf(D, sr) { const b = mkBuf(D.length, D[0].length, sr); D.forEach((d, c) => b.getChannelData(c).set(d)); return b; }
+function cached(key, make) {
+  let e = CACHE.get(key); if (e) { e.at = performance.now(); return e.v; }
+  const v = make(); const bytes = v.length * v.numberOfChannels * 4; CACHE.set(key, { v, at: performance.now(), bytes }); cacheBytes += bytes;
+  if (cacheBytes > 220e6) { const old = [...CACHE.entries()].sort((a, b) => a[1].at - b[1].at); for (const [k, x] of old) { if (cacheBytes < 160e6) break; if (k === key) continue; CACHE.delete(k); cacheBytes -= x.bytes; } }
+  return v;
+}
+
+/* ---------- noise colours: 12 s, stereo, seamless ---------- */
+function seamless(a, n, F) { const o = a.subarray(0, n).slice(); for (let i = 0; i < F; i++) { const x = (i + .5) / F; o[i] = a[i] * Math.sin(x * Math.PI / 2) + a[n + i] * Math.cos(x * Math.PI / 2); } return o; }
+function rmsNorm(d, to) { let s = 0; for (let i = 0; i < d.length; i++) s += d[i] * d[i]; const r = Math.sqrt(s / d.length) || 1; for (let i = 0; i < d.length; i++) d[i] *= to / r; return d; }
+const COLOURS = {
+  white: R => () => R() * 2 - 1,
+  pink: R => { let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0; return () => { const w = R() * 2 - 1; b0 = .99886 * b0 + w * .0555179; b1 = .99332 * b1 + w * .0750759; b2 = .969 * b2 + w * .153852; b3 = .8665 * b3 + w * .3104856; b4 = .55 * b4 + w * .5329522; b5 = -.7616 * b5 - w * .016898; const o = b0 + b1 + b2 + b3 + b4 + b5 + b6 + w * .5362; b6 = w * .115926; return o; }; },
+  brown: R => { let b = 0; return () => { b = (b + .02 * (R() * 2 - 1)) / 1.02; return b; }; },
+  deep: R => { let b = 0, l = 0; return () => { b = (b + .02 * (R() * 2 - 1)) / 1.02; l += .08 * (b - l); return l; }; },
+  blue: R => { const p = COLOURS.pink(R); let last = 0; return () => { const v = p(); const o = v - last; last = v; return o; }; },
+  velvet: R => () => { const x = R(); return x < .06 ? (R() < .5 ? -1 : 1) : 0; },
+};
+function noise(col) {
+  return cached('n|' + col, () => { const n = 12 * TSR, F = TSR / 2, D = [];
+    for (let c = 0; c < 2; c++) { const R = rng(hash(col + c)), g = COLOURS[col](R), a = new Float32Array(n + F); for (let i = 0; i < 4000; i++) g(); for (let i = 0; i < n + F; i++) a[i] = g(); D.push(rmsNorm(seamless(a, n, F), .2)); }
+    return toBuf(D, TSR); });
+}
+
+/* ---------- JS synthesis primitives for events (short arrays, added into loop buffers modulo their length) ---------- */
+function ping(sr, dur, f0, f1, tau, att = .001, R = null, noiseAmt = 0) {   // a decaying sine gliding f0 -> f1
+  dur = Math.min(dur, tau * 8 + att); const N = Math.max(1, Math.ceil(dur * sr)), o = new Float32Array(N), fk = Math.pow(f1 / f0, 1 / N), d = Math.exp(-1 / (tau * sr)), an = Math.max(1, att * sr);
+  let ph = R ? R() * TAU : 0, w = TAU * f0 / sr, e = 1;
+  for (let i = 0; i < N; i++) { ph += w; w *= fk; o[i] = (Math.sin(ph) + (noiseAmt ? noiseAmt * (R() * 2 - 1) : 0)) * e * (i < an ? i / an : 1); e *= d; }
+  return o;
+}
+function hit(sr, dur, tau, R, lp = 1, att = 0) {   // a noise burst: one-pole low-pass (lp = 0..1), exp decay
+  dur = Math.min(dur, tau * 8 + att); const N = Math.max(1, Math.ceil(dur * sr)), o = new Float32Array(N), d = Math.exp(-1 / (tau * sr)), an = att * sr; let y = 0, e = 1;
+  for (let i = 0; i < N; i++) { y += lp * ((R() * 2 - 1) - y); o[i] = y * e * (an && i < an ? i / an : 1); e *= d; }
+  return o;
+}
+function biq(o, sr, type, f, Q = .707) {   // RBJ biquad, in place
+  const w = TAU * Math.min(f, sr * .45) / sr, cs = Math.cos(w), al = Math.sin(w) / (2 * Q); let b0, b1, b2, a1, a2; const a0 = 1 + al;
+  if (type === 'lp') { b0 = (1 - cs) / 2; b1 = 1 - cs; b2 = b0; } else if (type === 'hp') { b0 = (1 + cs) / 2; b1 = -(1 + cs); b2 = b0; } else { b0 = al; b1 = 0; b2 = -al; }
+  a1 = -2 * cs; a2 = 1 - al; b0 /= a0; b1 /= a0; b2 /= a0; a1 /= a0; a2 /= a0;
+  let x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+  for (let i = 0; i < o.length; i++) { const x = o[i], y = b0 * x + b1 * x1 + b2 * x2 - a1 * y1 - a2 * y2; x2 = x1; x1 = x; y2 = y1; y1 = y; o[i] = y; }
+  return o;
+}
+function modes(sr, dur, f, ratios, amps, taus, { att = .003, beat = 0, bloom = null, R = null } = {}) {   // a struck or rubbed body: decaying partials (recurrence oscillators), each optionally doubled a hair apart so it beats
+  const N = Math.ceil(dur * sr), o = new Float32Array(N);
+  ratios.forEach((r, k) => { for (const split of beat ? [1 - beat / 2, 1 + beat / 2] : [1]) {
+    const w = TAU * f * r * split / sr; if (w >= Math.PI * .9) return; const c2 = 2 * Math.cos(w), ph = R ? R() * TAU : 0; let y1 = Math.sin(ph - w), y2 = Math.sin(ph - 2 * w);
+    const d = Math.exp(-1 / (taus[k] * sr)), A = amps[k] / (beat ? 2 : 1), at = bloom ? bloom[k] : att; let env = A;
+    for (let i = 0; i < N; i++) { const y = c2 * y1 - y2; y2 = y1; y1 = y; const t = i / sr; o[i] += y * env * (t < at ? (bloom ? 1 - Math.exp(-t / (at / 3)) : t / at) : 1); env *= d; }
+  } });
+  return o;
+}
+function ks(sr, dur, f, R, { damp = .996, bright = .5, buzz = 0 } = {}) {   // a plucked string (Karplus-Strong, fractional delay)
+  const N = Math.ceil(dur * sr), o = new Float32Array(N), P = sr / f, L = Math.ceil(P) + 2, line = new Float32Array(L); let y = 0;
+  for (let i = 0; i < L; i++) { y += bright * ((R() * 2 - 1) - y); line[i] = y; }
+  let w = 0;
+  for (let i = 0; i < N; i++) { const rp = (w - P + L * 4) % L, i0 = Math.floor(rp), fr = rp - i0, a = line[i0 % L], b = line[(i0 + 1) % L], c = line[(i0 + 2) % L];
+    let v = damp * (a * (1 - fr) + b * fr + (b * (1 - fr) + c * fr)) / 2; if (buzz) v += buzz * (Math.tanh(v * 6) / 6 - v * .9) * .3; line[w] = v; o[i] = v; w = (w + 1) % L; }
+  return o;
+}
+function sinWin(o) { const N = o.length; for (let i = 0; i < N; i++) o[i] *= Math.sin(Math.PI * i / N); return o; }
+function scale(o, k) { for (let i = 0; i < o.length; i++) o[i] *= k; return o; }
+function addv(D, n, i0, ev, pan = 0, k = 1) {
+  const gl = Math.cos((pan + 1) * Math.PI / 4) * k, gr = Math.sin((pan + 1) * Math.PI / 4) * k; i0 = ((i0 % n) + n) % n;
+  if (D.length === 1) { const d = D[0]; for (let j = 0; j < ev.length; j++) d[(i0 + j) % n] += ev[j] * k; return; }
+  const a = D[0], b = D[1]; for (let j = 0; j < ev.length; j++) { const p = (i0 + j) % n; a[p] += ev[j] * gl; b[p] += ev[j] * gr; }
+}
+const at = (t, n, sr) => Math.floor(((t * sr) % n + n) % n);
+const evenly = (len, per) => { const k = Math.max(1, Math.round(len / per)); return [k, len / k]; };   // periodic textures: a whole number of periods per buffer
+// note names
+const NT = { 'F#1': 46.25, 'C#2': 69.3, 'F#2': 92.5, 'A2': 110, 'B2': 123.47, 'C#3': 138.59, 'D3': 146.83, 'E3': 164.81, 'F#3': 185, 'G#3': 207.65, 'A3': 220, 'B3': 246.94, 'C#4': 277.18, 'D4': 293.66, 'E4': 329.63, 'F#4': 369.99, 'G#4': 415.3, 'A4': 440, 'B4': 493.88, 'C#5': 554.37, 'D5': 587.33, 'E5': 659.26, 'F#5': 739.99, 'G#5': 830.61, 'A5': 880, 'B5': 987.77, 'C#6': 1108.73, 'E6': 1318.51, 'F#6': 1479.98 };
+const CHORDS = [['F#', 'A', 'C#'], ['D', 'F#', 'A'], ['A', 'C#', 'E'], ['E', 'G#', 'B']];   // i, VI, III, VII in F# minor
+const note = (pc, oct) => NT[pc + oct] || NT[pc + (oct + 1)] / 2 || NT[pc + (oct - 1)] * 2;
+
+/* ---------- event textures ---------- */
+const TX = {
+  rain(D, n, sr, R, a) {   // drops: a click and a tiny rising plink
+    const N = Math.round(a.rate * n / sr);
+    for (let i = 0; i < N; i++) { const f = a.f0 * Math.pow(2, R() * (a.fr || 1.5)), e = ping(sr, .05, f, f * rr(R, 1.15, 1.7), (a.tau || .007) * rr(R, .4, 1.4), .0004);
+      const c = hit(sr, .004, .0008, R, .9); for (let j = 0; j < c.length; j++) e[j] += c[j] * .4; addv(D, n, Math.floor(R() * n), e, rr(R, -.9, .9), Math.pow(R(), a.p || 3)); }
+  },
+  taps(D, n, sr, R, a) {   // generic patter: noise taps through a resonance (roofs, tents, glass, leaves, tiles)
+    const N = Math.round(a.rate * n / sr);
+    for (let i = 0; i < N; i++) { const tau = rr(R, a.tau[0], a.tau[1]), e = hit(sr, tau * 6 + .002, tau, R, a.lp || .5); if (a.bp) biq(e, sr, 'bp', rr(R, a.bp[0], a.bp[1]), a.Q || 2);
+      addv(D, n, Math.floor(R() * n), e, rr(R, -.9, .9), Math.pow(R(), a.p || 2.5)); }
+  },
+  bubbles(D, n, sr, R, a) {   // a bubble: a sine that rises as it rings
+    const N = Math.round(a.rate * n / sr);
+    for (let i = 0; i < N; i++) { const f = rr(R, a.f[0], a.f[1]), tau = rr(R, a.tau[0], a.tau[1]), e = ping(sr, tau * 5, f, f * rr(R, a.up[0], a.up[1]), tau, .002, R);
+      addv(D, n, Math.floor(R() * n), e, rr(R, -.8, .8), Math.pow(R(), a.p || 1.6)); }
+  },
+  drips(D, n, sr, R, a) {
+    const N = Math.round(a.rate * n / sr);
+    for (let i = 0; i < N; i++) { const f = rr(R, 900, 2600), t = R() * n / sr, pan = rr(R, -.7, .7), k = Math.pow(R(), 1.3);
+      addv(D, n, at(t, n, sr), ping(sr, .35, f, f * rr(R, 1.08, 1.3), rr(R, .03, .07), .001, R), pan, k);
+      if (R() < .4) addv(D, n, at(t + rr(R, .08, .3), n, sr), ping(sr, .2, f * 1.6, f * 1.9, .02, .001, R), pan, k * .35); }
+  },
+  fire(D, n, sr, R, a) {   // crackle clusters, pops and the odd snap of sap
+    const C = Math.round(a.rate * n / sr);
+    for (let i = 0; i < C; i++) { const t = R() * n / sr, k = Math.round(rr(R, a.k[0], a.k[1])), pan = rr(R, -.7, .7), big = Math.pow(R(), 2.2);
+      for (let j = 0; j < k; j++) { const tau = rr(R, .0004, .0025), e = hit(sr, tau * 6 + .001, tau, R, a.lp || .85); if (R() < .5) biq(e, sr, 'hp', 1500); addv(D, n, at(t + R() * .06 * k, n, sr), e, pan + rr(R, -.1, .1), big * Math.pow(R(), 1.5)); } }
+    const S = Math.round((a.snap || 0) * n / sr);
+    for (let i = 0; i < S; i++) { const e = hit(sr, .06, rr(R, .006, .02), R, .7); biq(e, sr, 'bp', rr(R, 900, 2800), 3); addv(D, n, Math.floor(R() * n), e, rr(R, -.6, .6), rr(R, .5, 1.4)); }
+  },
+  pebbles(D, n, sr, R) { const N = Math.round(150 * n / sr); for (let i = 0; i < N; i++) { const e = hit(sr, .008, rr(R, .0006, .002), R, .9); biq(e, sr, 'bp', rr(R, 2000, 6000), 1); addv(D, n, Math.floor(R() * n), e, rr(R, -.9, .9), Math.pow(R(), 3)); } },
+  lap(D, n, sr, R) {   // small water against a hull or a jetty
+    const N = Math.round(1.3 * n / sr);
+    for (let i = 0; i < N; i++) { const e = hit(sr, .5, rr(R, .05, .14), R, .35, rr(R, .01, .04)); biq(e, sr, 'bp', rr(R, 450, 1100), .9); const t = R() * n / sr, pan = rr(R, -.6, .6);
+      addv(D, n, at(t, n, sr), e, pan, Math.pow(R(), 1.5)); if (R() < .25) addv(D, n, at(t + .05, n, sr), ping(sr, .15, rr(R, 220, 380), rr(R, 300, 520), .03, .003, R), pan, .3); }
+  },
+  heart(D, n, sr, R, a) {
+    const [k, per] = evenly(n / sr, 60 / a.bpm);
+    const lub = () => { const e = ping(sr, .25, 62, 36, .05, .006, R); const h = hit(sr, .08, .02, R, .05); for (let j = 0; j < h.length; j++) e[j] += h[j] * .5; return e; };
+    const dub = () => ping(sr, .2, 78, 46, .036, .005, R);
+    for (let b = 0; b < k; b++) { const t = b * per + rr(R, -.006, .006); addv(D, n, at(t, n, sr), lub(), 0, rr(R, .9, 1)); addv(D, n, at(t + per * .32, n, sr), dub(), 0, rr(R, .6, .7)); }
+  },
+  purr(D, n, sr, R) {   // his purr: a buzz at ~25 pulses a second, stronger on the out-breath
+    const [k, per] = evenly(n / sr, 4);
+    for (let b = 0; b < k; b++) { const t0 = b * per, rate = rr(R, 23.5, 27), out = per * .56, inn = per * .34;
+      for (let t = 0; t < out + inn; t += 1 / (rate * (t < out ? 1 : 1.06))) {
+        const ex = t < out, x = ex ? t / out : (t - out) / inn, env = Math.pow(Math.sin(Math.PI * x), .6) * (ex ? 1 : .55);
+        const g = ping(sr, .05, ex ? 120 : 150, ex ? 100 : 130, .011, .002, R, .5); biq(g, sr, 'lp', 700, .8);
+        addv(D, n, at(t0 + t, n, sr), g, 0, env * rr(R, .8, 1)); } }
+  },
+  crickets(D, n, sr, R, a) {
+    for (let c = 0; c < a.n; c++) { const f = rr(R, 3800, 5200), per = rr(R, .5, 1), pulses = 3 + Math.floor(R() * 2), pan = rr(R, -.9, .9), k = rr(R, .3, 1) * (a.far ? .5 : 1), [cnt, p] = evenly(n / sr, per), ph = R() * p;
+      for (let i = 0; i < cnt; i++) { if (R() < .08) continue; for (let j = 0; j < pulses; j++) addv(D, n, at(ph + i * p + rr(R, -.01, .01) + j * .03, n, sr), sinWin(ping(sr, .014, f, f * .98, 1, .001, R)), pan, k); } }
+  },
+  cicadas(D, n, sr, R, a) {
+    for (let c = 0; c < a.n * 2; c++) { const dur = rr(R, 3, 7), N = Math.ceil(dur * sr), e = new Float32Array(N), fm = rr(R, 170, 240);
+      for (let i = 0; i < N; i++) e[i] = R() * 2 - 1; biq(e, sr, 'bp', rr(R, 4500, 6500), 5); biq(e, sr, 'bp', rr(R, 4500, 6500), 2);
+      for (let i = 0; i < N; i++) { const t = i / sr, s = .5 + .5 * Math.sin(TAU * fm * t); e[i] *= s * s * Math.pow(Math.sin(Math.PI * t / dur), .5) * Math.min(1, t / 1.2); }
+      addv(D, n, Math.floor(R() * n), e, rr(R, -.9, .9), rr(R, .3, 1)); }
+  },
+  frogs(D, n, sr, R, a) {
+    for (let c = 0; c < a.n; c++) { const f = rr(R, 280, 650), pr = rr(R, 30, 50), pan = rr(R, -.9, .9), k = rr(R, .3, 1), calls = Math.round((n / sr) / rr(R, 2.5, 6));
+      for (let i = 0; i < calls; i++) { const t0 = R() * n / sr;
+        for (const off of R() < .6 ? [0, rr(R, .18, .26)] : [0]) { const d = rr(R, .14, .3); for (let t = 0; t < d; t += 1 / pr) addv(D, n, at(t0 + off + t, n, sr), ping(sr, .03, f, f * .97, .005, .001, R, .2), pan, k * Math.sin(Math.PI * t / d)); } } }
+  },
+  peepers(D, n, sr, R, a) {
+    for (let c = 0; c < a.n; c++) { const f = rr(R, 2500, 3000), pan = rr(R, -.9, .9), k = rr(R, .2, 1), [cnt, p] = evenly(n / sr, rr(R, .8, 1.4)), ph = R() * p;
+      for (let i = 0; i < cnt; i++) if (R() > .15) addv(D, n, at(ph + i * p + rr(R, -.03, .03), n, sr), sinWin(ping(sr, .13, f, f * 1.2, 1, .002, R)), pan, k); }
+  },
+  owl(D, n, sr, R, a) {
+    const calls = a.sparse ? 1 : 2;
+    for (let c = 0; c < calls; c++) { const t0 = (c + R() * .5) * n / sr / calls, f = rr(R, 360, 420), pan = rr(R, -.5, .5);
+      for (const [o, d] of [[0, .45], [1.1, .2], [1.42, .38], [2.5, .55]]) { const e = ping(sr, d, f * 1.03, f * .94, 10, .001, R, .04); sinWin(e); addv(D, n, at(t0 + o, n, sr), e, pan, .8); } }
+  },
+  birds(D, n, sr, R, a) {
+    const N = Math.round(a.n * .35 * n / sr);
+    for (let i = 0; i < N; i++) { const t = R() * n / sr, pan = rr(R, -.9, .9), k = rr(R, .2, 1), sp = Math.floor(R() * 3);
+      if (sp === 0) { const m = 3 + Math.floor(R() * 4), f = rr(R, 4000, 6000); for (let j = 0; j < m; j++) addv(D, n, at(t + j * .07, n, sr), sinWin(ping(sr, .04, f, f * .6, 1, .001, R)), pan, k); }
+      else if (sp === 1) { const f = rr(R, 2200, 3000); addv(D, n, at(t, n, sr), sinWin(ping(sr, .3, f, f * 1.3, 1, .01, R)), pan, k); addv(D, n, at(t + .38, n, sr), sinWin(ping(sr, .22, f * 1.25, f * .95, 1, .01, R)), pan, k * .8); }
+      else { const f = rr(R, 3500, 4500), m = 8 + Math.floor(R() * 10); for (let j = 0; j < m; j++) addv(D, n, at(t + j * .035, n, sr), sinWin(ping(sr, .03, f * 1.1, f * .9, 1, .001, R)), pan, k * .6); } }
+  },
+  chimes(D, n, sr, R) {
+    const notes = ['F#5', 'A5', 'B5', 'C#6', 'E6', 'F#6'].map(x => NT[x]), cl = Math.round(n / sr / 4.5);
+    for (let i = 0; i < cl; i++) { const t = R() * n / sr, m = 1 + Math.floor(R() * 5);
+      for (let j = 0; j < m; j++) addv(D, n, at(t + R() * 1.4, n, sr), modes(sr, 4.5, notes[Math.floor(R() * notes.length)], [1, 2.756, 5.404, 8.933], [1, .45, .2, .08], [4, 1.6, .7, .35], { R }), rr(R, -.8, .8), rr(R, .2, .8)); }
+  },
+  bowls(D, n, sr, R, a) {   // a large singing bowl struck every so often, partials beating
+    const B = [[NT['F#3'], -.4], [NT['C#4'], .4], [NT['A3'], 0]], k = a.sparse ? 2 : 4;
+    for (let i = 0; i < k; i++) { const [f, pan] = B[i % 3], e = modes(sr, n / sr, f * rr(R, .995, 1.005), [1, 2.71, 5.03, 7.9], [1, .55, .3, .12], [16, 9, 5, 2.5], { beat: .0035, att: .004, R });
+      const th = hit(sr, .1, .02, R, .1); for (let j = 0; j < th.length; j++) e[j] += th[j] * .3; addv(D, n, at(i * n / sr / k + rr(R, -1, 1), n, sr), e, pan, rr(R, .7, 1)); }
+  },
+  crystal(D, n, sr, R) {
+    const notes = [['F#4', -.3], ['C#5', .3], ['A4', 0]];
+    notes.forEach(([x, pan], i) => addv(D, n, at(i * n / sr / 3 + rr(R, -1, 1), n, sr), modes(sr, n / sr, NT[x], [1, 2.005, 3.01], [1, .12, .05], [30, 10, 5], { att: 1.2, beat: .0016, R }), pan, .9));
+  },
+  gong(D, n, sr, R) {
+    for (let s = 0; s < 2; s++) { const P = 22, rat = [], am = [], ta = [], bl = []; for (let i = 0; i < P; i++) { const r = i === 0 ? 1 : Math.exp(rr(R, 0, Math.log(24))); rat.push(r); am.push(1 / (1 + i * .35)); ta.push(r > 6 ? rr(R, 2, 5) : rr(R, 6, 14)); bl.push(r > 3 ? rr(R, .4, 2.2) : .01); }
+      const e = modes(sr, n / sr, rr(R, 64, 74), rat, am, ta, { bloom: bl, R }); const th = hit(sr, .2, .05, R, .08); for (let j = 0; j < th.length; j++) e[j] += th[j] * .5; addv(D, n, at(s * n / sr / 2 + rr(R, -2, 2), n, sr), e, s ? .2 : -.2, 1); }
+  },
+  bells(D, n, sr, R) {
+    const fs = [NT['C#5'], NT['F#5'], NT['A4']], [k, per] = evenly(n / sr, 16);
+    for (let i = 0; i < k; i++) addv(D, n, at(i * per + rr(R, -.5, .5), n, sr), modes(sr, 16, fs[i % 3], [.5, 1, 1.183, 1.506, 2, 2.514, 2.662, 3.011], [.6, 1, .7, .4, .5, .25, .2, .15], [12, 8, 6, 5, 4, 3, 2.5, 2], { R }), rr(R, -.4, .4), 1);
+  },
+  musicbox(D, n, sr, R) {   // an F# minor lullaby, made up fresh: four chords, two bars each, in 3/4 at one beat a second
+    const tine = f => { const e = modes(sr, 2.4, f, [1, 2, 4.9], [1, .08, .1], [1.8, .5, .2], { R }); const c = hit(sr, .005, .001, R, .9); for (let j = 0; j < c.length; j++) e[j] += c[j] * .15; return e; };
+    const beats = Math.round(n / sr); let mel = 2;
+    for (let b = 0; b < beats; b += 6) { const ch = CHORDS[(b / 6) % 4];
+      for (let m = 0; m < 2; m++) { const t = b + m * 3; mel = Math.max(0, Math.min(5, mel + Math.floor(rr(R, -1.5, 2.5)))); const pc = ch[mel % 3], oct = 5 + Math.floor(mel / 3);
+        addv(D, n, at(t, n, sr), tine(note(pc, oct)), .15, .9); [1, 1.5, 2, 2.5].forEach((o, j) => addv(D, n, at(t + o, n, sr), tine(note(ch[(j + 1) % 3], 4 + (j > 1))), -.2, .45)); } }
+  },
+  harp(D, n, sr, R) {
+    const beats = Math.round(n / sr);
+    for (let b = 0; b < beats; b += 6) { const ch = CHORDS[(b / 6) % 4]; for (let j = 0; j < 9; j++) { const f = note(ch[j % 3], 2 + Math.floor(j / 3)), t = b + j * .28 + (j > 6 ? .8 : 0);
+      addv(D, n, at(t, n, sr), ks(sr, 4.5, f, R, { damp: .998, bright: .45 }), -.6 + j * .15, .7 - j * .03); } }
+  },
+  tanpura(D, n, sr, R) {
+    const strings = [NT['C#3'], NT['F#3'], NT['F#3'], NT['F#2']], [k, per] = evenly(n / sr, 1.25);
+    for (let i = 0; i < k; i++) { const f = strings[i % 4]; addv(D, n, at(i * per + rr(R, -.02, .02), n, sr), ks(sr, 6, f, R, { damp: .9993, bright: .8, buzz: 1 }), [-.3, .1, .2, -.1][i % 4], i % 4 === 3 ? 1 : .8); }
+  },
+  clock(D, n, sr, R, a) {
+    const [k, per] = evenly(n / sr, a.per);
+    for (let i = 0; i < k; i++) { const f = i % 2 ? a.f2 : a.f1, e = hit(sr, .04, .0025, R, .9); biq(e, sr, 'bp', f, 5);
+      const r = ping(sr, .06, f * 1.5, f * 1.48, .008, .0005, R); for (let j = 0; j < r.length; j++) e[j] += r[j] * .2;
+      if (a.wood) { const w = ping(sr, .3, 420, 405, .06, .002, R); for (let j = 0; j < Math.min(e.length, w.length); j++) w[j] += e[j]; addv(D, n, at(i * per, n, sr), w, 0, 1); }
+      else addv(D, n, at(i * per, n, sr), e, 0, i % 2 ? .8 : 1); }
+  },
+  train(D, n, sr, R, a) {   // da-dum ... da-dum: two wheel sets per rail joint
+    const [k, per] = evenly(n / sr, a.per);
+    const clack = () => { const e = hit(sr, .12, .015, R, .5); const r = ping(sr, .12, rr(R, 650, 780), 640, .03, .001, R); const th = ping(sr, .15, 95, 60, .05, .002, R); for (let j = 0; j < e.length; j++) e[j] = e[j] + r[j] * .3 + th[j] * .8; return e; };
+    for (let i = 0; i < k; i++) for (const o of [0, .12, per * .5, per * .5 + .12]) addv(D, n, at(i * per + o + rr(R, -.004, .004), n, sr), clack(), rr(R, -.2, .2), rr(R, .6, 1) * (o < per * .4 ? 1 : .75));
+  },
+  wipers(D, n, sr, R, a) {
+    const [k, per] = evenly(n / sr, a.per);
+    for (let i = 0; i < k; i++) { const e = hit(sr, .45, 10, R, .6); biq(e, sr, 'bp', 1600, 1.2); sinWin(e); addv(D, n, at(i * per, n, sr), e, i % 2 ? .3 : -.3, .6); addv(D, n, at(i * per + .45, n, sr), ping(sr, .1, 140, 100, .025, .002, R), 0, .4); }
+  },
+  tumble(D, n, sr, R, a) {
+    const [k, per] = evenly(n / sr, a.per);
+    for (let i = 0; i < k; i++) { const t = i * per + rr(R, .2, .5); addv(D, n, at(t, n, sr), ping(sr, .2, 80, 55, .05, .004, R, .3), 0, rr(R, .5, 1));
+      if (R() < .25) addv(D, n, at(t + .03, n, sr), ping(sr, .1, rr(R, 2800, 3600), 3400, .015, .001, R), rr(R, -.3, .3), .25); }
+  },
+  vinyl(D, n, sr, R, a) {
+    if (a.per) { const [k, per] = evenly(n / sr, a.per); for (let i = 0; i < k; i++) addv(D, n, at(i * per, n, sr), biq(hit(sr, .006, .0012, R, .9), sr, 'hp', 1200), 0, .5); }
+    const N = Math.round(a.crackle * n / sr); for (let i = 0; i < N; i++) addv(D, n, Math.floor(R() * n), biq(hit(sr, .004, rr(R, .0003, .0009), R, .95), sr, 'hp', 2000), rr(R, -.5, .5), Math.pow(R(), 3.5));
+    const P = Math.round(.25 * n / sr); for (let i = 0; i < P; i++) addv(D, n, Math.floor(R() * n), hit(sr, .02, .003, R, .4), rr(R, -.3, .3), rr(R, .5, 1));
+  },
+};
+function texture(name, a = {}) {
+  const key = 't|' + name + '|' + JSON.stringify(a);
+  return cached(key, () => { const len = a.len || 24, ch = a.mono ? 1 : 2, n = Math.round(len * TSR), D = []; for (let c = 0; c < ch; c++) D.push(new Float32Array(n));
+    TX[name](D, n, TSR, rng(hash(key)), a);
+    if (a.rv) wetten(D, TSR, a.rv);
+    let pk = 0; for (const d of D) for (let i = 0; i < n; i++) pk = Math.max(pk, Math.abs(d[i])); if (pk) for (const d of D) scale(d, .9 / pk);
+    return toBuf(D, TSR); });
+}
+
+/* ---------- slow envelopes (control signals at 8 kHz, one loop long; they drive gains and filter frequencies) ---------- */
+function smoothLoop(o, k) { for (let pass = 0; pass < 2; pass++) { let y = o[o.length - 1]; for (let i = 0; i < o.length; i++) { y += k * (o[i] - y); o[i] = y; } } return o; }
+function mapLo(o, lo, hi) { let a = Infinity, b = -Infinity; for (const v of o) { if (v < a) a = v; if (v > b) b = v; } const r = b - a || 1; for (let i = 0; i < o.length; i++) o[i] = lo + (hi - lo) * (o[i] - a) / r; return o; }
+const ENV = {
+  lfo(o, sr, R, rate, lo, hi) { const f = qf(rate); for (let i = 0; i < o.length; i++) o[i] = lo + (hi - lo) * (.5 + .5 * Math.sin(TAU * f * i / sr)); },
+  swell(o, sr, R, per, lo, hi) { const f = qf(1 / per); for (let i = 0; i < o.length; i++) { const x = (f * i / sr) % 1; o[i] = lo + (hi - lo) * Math.pow(Math.sin(Math.PI * x), 2); } },
+  breath(o, sr, R, per, lo, hi) { const f = qf(1 / per); for (let i = 0; i < o.length; i++) { const x = (f * i / sr) % 1, v = x < .4 ? Math.pow(Math.sin(x / .4 * Math.PI / 2), 2) : Math.pow(Math.cos((x - .4) / .6 * Math.PI / 2), 2); o[i] = lo + (hi - lo) * v; } },
+  pulse(o, sr, R, rate, lo, hi) { const f = qf(rate); for (let i = 0; i < o.length; i++) { const s = Math.max(-1, Math.min(1, Math.sin(TAU * f * i / sr) * 2.2)); o[i] = lo + (hi - lo) * (.5 + .5 * s); } },
+  beat(o, sr, R, bpm, lo, hi) { const f = qf(bpm / 60); for (let i = 0; i < o.length; i++) { const x = (f * i / sr) % 1, v = x < .35 ? Math.pow(Math.sin(Math.PI * x / .35), 2) : 0; o[i] = lo + (hi - lo) * v; } smoothLoop(o, .004); },
+  gusts(o, sr, R, lo, hi, seed = 0, fast = 1) {   // slow random weather: sines with whole cycles per loop, worked out at 100 Hz and stretched
+    const T = o.length / sr, K = [], cr = 100, M = Math.round(T * cr), c = new Float32Array(M + 1); for (let k = 2; k <= 22; k++) K.push([k * fast, Math.pow(k, -.8) * rr(R, .3, 1), R() * TAU]);
+    for (let i = 0; i <= M; i++) { let v = 0; const t = i / cr; for (const [k, a, p] of K) v += a * Math.sin(TAU * k * t / T + p); c[i] = v; }
+    mapLo(c, 0, 1); const st = cr / sr; for (let i = 0; i < o.length; i++) { const x = i * st, j = Math.floor(x), v = c[j] + (c[Math.min(M, j + 1)] - c[j]) * (x - j); o[i] = lo + (hi - lo) * Math.pow(v, 1.4); } },
+  waves(o, sr, R, lo, hi, pmin = 7, pmax = 12, seed = 0) {   // a train of waves that fits the loop exactly: slow rise, crest, crash, long wash
+    const T = o.length / sr, P = []; let t = 0; while (t < T) { const p = rr(R, pmin, pmax); P.push(p); t += p; } const k = T / t; t = 0;
+    for (const p0 of P) { const p = p0 * k, A = rr(R, .55, 1), i0 = Math.round(t * sr), m = Math.round(p * sr);
+      for (let j = 0; j < m; j++) { const x = j / m; const v = x < .5 ? Math.pow(Math.sin(x / .5 * Math.PI / 2), 2) : x < .58 ? 1 : Math.pow(1 - (x - .58) / .42, 2.2); o[(i0 + j) % o.length] = Math.max(o[(i0 + j) % o.length], A * v); } t += p; }
+    smoothLoop(o, 6 / sr); for (let i = 0; i < o.length; i++) o[i] = lo + (hi - lo) * o[i]; },
+  thunder(o, sr, R, lo, hi, count = 3, seed = 0) {
+    for (let c = 0; c < count; c++) { const t0 = (c + rr(R, .1, .7)) * (o.length / sr) / count, B = 3 + Math.floor(R() * 4), A = rr(R, .5, 1);
+      for (let b = 0; b < B; b++) { const d = rr(R, 0, 3.5), dec = rr(R, 1, 4.5), a = A * rr(R, .4, 1) / (1 + b * .3), att = rr(R, .05, .35);
+        for (let j = 0; j < (dec * 5 + att) * sr; j++) { const t = j / sr, v = a * (t < att ? t / att : Math.exp(-(t - att) / dec)) * (.7 + .3 * Math.sin(TAU * 1.7 * t + b)), p = Math.floor((t0 + d) * sr + j) % o.length; o[p] += v; } } }
+    smoothLoop(o, 40 / sr); mapLo(o, 0, 1); for (let i = 0; i < o.length; i++) o[i] = lo + (hi - lo) * o[i]; },
+};
+function envelope(spec) {
+  const key = 'e|' + JSON.stringify(spec);
+  return cached(key, () => { const o = new Float32Array(LOOP * CSR); ENV[spec[0]](o, CSR, rng(hash(key)), ...spec.slice(1)); return toBuf([o], CSR); });
+}
+
+/* ---------- the room: a plain-JS reverb (eight damped combs, four allpasses per ear) baked into the event textures that ask
+   for it. Run over the buffer's last 4 s first, so the tail wraps round into the start and the loop stays seamless.
+   (A ConvolverNode or delay-feedback loop in the graph made every offline bake 5 to 10 times slower.) ---------- */
+function wetten(D, sr, wet) {
+  const k = sr / 44100, C = [1116, 1188, 1277, 1356, 1422, 1491, 1557, 1617], A = [556, 441, 341, 225], n = D[0].length, pre = Math.min(n, Math.round(4 * sr));
+  D.forEach((d, ch) => {
+    const sp = ch ? 23 : 0, combs = C.map(c => ({ b: new Float32Array(Math.round((c + sp) * k)), i: 0, f: 0 })), aps = A.map(c => ({ b: new Float32Array(Math.round((c + sp) * k)), i: 0 }));
+    const fb = .86, damp = .35, out = new Float32Array(n);
+    const step = x => { let y = 0; const inp = x * .015;
+      for (const c of combs) { const o = c.b[c.i]; c.f = o * (1 - damp) + c.f * damp; c.b[c.i] = inp + c.f * fb; c.i = (c.i + 1) % c.b.length; y += o; }
+      for (const a of aps) { const o = a.b[a.i]; a.b[a.i] = y + o * .5; a.i = (a.i + 1) % a.b.length; y = o - y; }
+      return y; };
+    for (let i = n - pre; i < n; i++) step(d[i]);
+    for (let i = 0; i < n; i++) out[i] = step(d[i]);
+    for (let i = 0; i < n; i++) d[i] += out[i] * wet * 3;
+  });
+}
+
+/* ---------- the library ---------- */
+// layer helpers: N noise, X event texture, O oscillator, B binaural pair. f = filters [type, Hz, Q or dB, Q]; e = gain envelope; ef = first filter's frequency envelope (Hz)
+const N = (n, g, f = [], o = {}) => ({ n, g, f, ...o }), X = (t, a, g, f = [], o = {}) => ({ t, a, g, f, ...o }), O = (o, hz, g, x = {}) => ({ o, hz, g, ...x, f: x.f || [] }), B = (hz, b, g) => ({ o: 'sine', hz, b, g, f: [] });
+const SOUNDS = [], CATS = [['noise', 'Noise'], ['rain', 'Rain'], ['water', 'Water'], ['wind', 'Wind'], ['fire', 'Fire'], ['night', 'Night'], ['machines', 'Machines'], ['home', 'Home'], ['body', 'Body'], ['tones', 'Bowls & tones'], ['drones', 'Drones'], ['waves', 'Brainwaves'], ['solf', 'Solfeggio'], ['spirit', 'The other side']];
+const S = (id, name, cat, L, hint = '') => SOUNDS.push({ id, name, cat, L, hint });
+const W = (lo, hi, a = 7, b = 11, s = 1) => ['waves', lo, hi, a, b, s], G = (lo, hi, s, fast = 1) => ['gusts', lo, hi, s, fast];
+// noise
+S('white', 'White noise', 'noise', [N('white', 1, [['lp', 14000]])], 'Every frequency at once. The bright one.');
+S('pink', 'Pink noise', 'noise', [N('pink', 1)], 'Softer on top. Like steady rain on a far roof.');
+S('brown', 'Brown noise', 'noise', [N('brown', 1)], 'Deep and soft. The one everyone ends up on.');
+S('deep', 'Deep brown', 'noise', [N('deep', 1)], 'Brown noise with the top taken off.');
+S('grey', 'Grey noise', 'noise', [N('pink', 1, [['ls', 200, 6], ['pk', 3000, -6, .7], ['hs', 9000, 3]])], 'Shaped to sound even to human ears.');
+S('blue', 'Blue noise', 'noise', [N('blue', .6, [['lp', 12000], ['hp', 400]])], 'Hiss. Bright. Mix it low.');
+S('green', 'Green noise', 'noise', [N('pink', 1, [['bp', 500, .6]])], 'The middle of the spectrum. A field, a far waterfall.');
+S('velvet', 'Velvet noise', 'noise', [N('velvet', 1, [['lp', 6000]])], 'Sparse grains. Smoother than white.');
+S('dark', 'Dark noise', 'noise', [N('pink', 1, [['lp', 900, .5]])], 'Pink with the lights off.');
+S('softwhite', 'Soft white', 'noise', [N('white', 1, [['lp', 5000, .5], ['hp', 80]])], 'White noise without the sting.');
+// rain
+const drops = (rate, f0 = 2000, tau = .007) => X('rain', { rate, f0, fr: 1.5, tau, p: 3 }, .6);
+S('drizzle', 'Drizzle', 'rain', [N('pink', .25, [['hp', 2500], ['lp', 9000]]), X('rain', { rate: 25, f0: 2500, fr: 1.2, tau: .006, p: 3 }, .5)]);
+S('lightrain', 'Light rain', 'rain', [N('pink', .5, [['bp', 3000, .5]]), drops(60)]);
+S('rain', 'Steady rain', 'rain', [N('pink', 1, [['bp', 2500, .4]]), N('brown', .3, [['lp', 500]]), drops(160)]);
+S('heavyrain', 'Heavy rain', 'rain', [N('pink', 1, [['hp', 300], ['lp', 7000]]), N('white', .4, [['hp', 4000]]), N('brown', .5, [['lp', 300]]), drops(400, 1800)]);
+S('downpour', 'Downpour', 'rain', [N('pink', 1.2, [['hp', 200], ['lp', 8000]], { e: G(.6, 1, 1) }), N('white', .6, [['hp', 3000]], { e: G(.3, 1, 1) }), N('brown', .8, [['lp', 300]]), drops(700, 1600)]);
+S('roof', 'Rain on the roof', 'rain', [N('pink', .6, [['bp', 1500, .5]]), X('taps', { rate: 120, tau: [.004, .012], lp: .3, bp: [300, 1200], Q: 3, p: 2.5 }, 1), drops(40), N('brown', .4, [['lp', 200]])]);
+S('window', 'Rain on the window', 'rain', [N('pink', .4, [['hp', 1500]]), X('taps', { rate: 60, tau: [.001, .003], lp: .95, bp: [2500, 6000], Q: 2, p: 3 }, 1), X('rain', { rate: 15, f0: 3000, fr: 1, tau: .005, p: 3 }, .4), N('brown', .15, [['lp', 250]])]);
+S('tent', 'Rain on a tent', 'rain', [X('taps', { rate: 90, tau: [.008, .02], lp: .2, bp: [250, 600], Q: 4, p: 2 }, 1), N('brown', .35, [['lp', 400]]), N('pink', .2, [['bp', 2000, .6]])]);
+S('leaves', 'Rain on leaves', 'rain', [X('taps', { rate: 250, tau: [.002, .006], lp: .6, bp: [1500, 4500], Q: 1.5, p: 2.5 }, 1), N('pink', .5, [['bp', 3500, .6]], { e: G(.5, 1, 2) }), N('pink', .2, [['bp', 600, .7]])]);
+S('carrain', 'Rain in the car', 'rain', [drops(80, 2500), X('taps', { rate: 70, tau: [.003, .01], lp: .5, bp: [1200, 3500], Q: 6, p: 2.5 }, .8), X('wipers', { per: 1.6 }, .5), N('brown', .6, [['lp', 180]]), O('sawtooth', 30, .03, { f: [['lp', 120]] })]);
+S('storm', 'Thunderstorm', 'rain', [N('pink', 1, [['hp', 300], ['lp', 7000]]), N('brown', .5, [['lp', 300]]), drops(350, 1800), N('brown', 2.2, [['lp', 160]], { e: ['thunder', 0, 1, 3, 1] }), N('pink', .5, [['lp', 700]], { e: ['thunder', 0, 1, 3, 1] })]);
+S('farthunder', 'Distant thunder', 'rain', [N('brown', 1.6, [['lp', 110]], { e: ['thunder', .02, 1, 2, 2] }), N('pink', .08, [['lp', 2000]])], 'Rumbles a long way off. Nothing hits.');
+// water
+S('waves', 'Gentle waves', 'water', [N('pink', 1, [['lp', 0, .5]], { ef: W(300, 1600), e: W(.12, 1) }), N('brown', .4, [['lp', 300]], { e: W(.3, 1) })]);
+S('surf', 'Ocean surf', 'water', [N('pink', 1, [['lp', 0, .6]], { ef: W(400, 3000, 8, 13, 2), e: W(.1, 1, 8, 13, 2) }), N('white', .5, [['hp', 2500]], { e: W(0, 1, 8, 13, 2), eo: 1.2 }), N('brown', .7, [['lp', 200]], { e: W(.2, 1, 8, 13, 2) })]);
+S('bigwaves', 'Big waves', 'water', [N('pink', 1, [['lp', 0, .6]], { ef: W(300, 2600, 11, 16, 3), e: W(.08, 1, 11, 16, 3) }), N('brown', 1.2, [['lp', 180]], { e: W(.15, 1, 11, 16, 3) }), N('white', .4, [['hp', 2000]], { e: W(0, 1, 11, 16, 3), eo: 1.6 })]);
+S('pebbles', 'Pebble shore', 'water', [N('pink', .8, [['lp', 0, .5]], { ef: W(300, 1400, 7, 11, 4), e: W(.1, 1, 7, 11, 4) }), X('pebbles', {}, .6, [], { e: W(0, 1, 7, 11, 4), eo: 2.2 })]);
+S('stream', 'Stream', 'water', [N('pink', .6, [['bp', 1200, .6]], { e: G(.7, 1, 3) }), X('bubbles', { rate: 30, f: [500, 1800], up: [1.3, 2], tau: [.01, .04] }, .8)]);
+S('brook', 'Brook', 'water', [X('bubbles', { rate: 60, f: [900, 3000], up: [1.2, 1.8], tau: [.008, .025] }, .9), N('pink', .4, [['bp', 2500, .8]])]);
+S('river', 'River', 'water', [N('brown', 1, [['lp', 800]]), N('pink', .6, [['bp', 700, .5]], { e: G(.6, 1, 4) }), X('bubbles', { rate: 15, f: [300, 900], up: [1.3, 1.8], tau: [.02, .05] }, .4)]);
+S('waterfall', 'Waterfall', 'water', [N('white', .7, [['lp', 9000], ['hp', 200]]), N('pink', 1), N('brown', 1, [['lp', 250]])]);
+S('cave', 'Cave drips', 'water', [X('drips', { rate: .9, len: 48 }, 1, [], { r: .7 }), N('brown', .15, [['lp', 150]], { r: .3 })]);
+S('underwater', 'Underwater', 'water', [N('brown', 1, [['lp', 350]], { e: G(.6, 1, 5) }), X('bubbles', { rate: 4, f: [150, 500], up: [1.5, 2.5], tau: [.04, .12] }, .6, [['lp', 1200]]), O('sine', 48, .08, { v: [.1, 30] })]);
+S('lake', 'Lake lapping', 'water', [X('lap', { len: 48 }, 1), N('pink', .15, [['lp', 600]])]);
+S('spring', 'Bubbling spring', 'water', [X('bubbles', { rate: 12, f: [400, 1400], up: [1.4, 2.2], tau: [.02, .06] }, 1), N('pink', .15, [['bp', 1500, .7]])]);
+// wind
+S('breeze', 'Breeze', 'wind', [N('pink', 1, [['bp', 0, .8]], { ef: G(350, 900, 1), e: G(.25, 1, 1) })]);
+S('pines', 'Wind in the pines', 'wind', [N('pink', 1, [['hp', 600], ['lp', 0, .5]], { ef: G(2000, 5000, 2), e: G(.15, 1, 2) }), N('brown', .3, [['lp', 250]], { e: G(.3, 1, 2) })]);
+S('howl', 'Howling wind', 'wind', [N('pink', 1, [['bp', 0, 9]], { ef: G(380, 950, 3), e: G(.2, 1, 3) }), N('pink', .6, [['bp', 0, 12]], { ef: G(650, 1300, 4), e: G(.1, 1, 4) }), N('brown', .6, [['lp', 300]], { e: G(.4, 1, 3) })]);
+S('mountain', 'Mountain wind', 'wind', [N('brown', 1, [['lp', 500]], { e: G(.3, 1, 5) }), N('pink', .7, [['bp', 0, .7]], { ef: G(600, 1800, 5), e: G(.1, 1, 5) })]);
+S('desert', 'Desert wind', 'wind', [N('white', .5, [['hp', 2500]], { e: G(.1, 1, 6) }), N('pink', .8, [['lp', 350]], { e: G(.3, 1, 6) })]);
+S('blizzard', 'Blizzard', 'wind', [N('white', .6, [['hp', 3000]], { e: G(.3, 1, 7) }), N('pink', 1, [['bp', 0, 4]], { ef: G(500, 1400, 7), e: G(.3, 1, 7) }), N('brown', .8, [['lp', 250]])]);
+S('chimes', 'Wind chimes', 'wind', [X('chimes', { len: 48 }, 1, [], { r: .35 }), N('pink', .3, [['bp', 0, .8]], { ef: G(350, 900, 8), e: G(.2, 1, 8) })]);
+S('keyhole', 'Wind at the keyhole', 'wind', [N('pink', 1, [['bp', 0, 40]], { ef: G(1100, 1500, 9), e: G(0, 1, 9) }), N('pink', .3, [['bp', 500, .8]], { e: G(.2, 1, 9) })]);
+// fire
+S('campfire', 'Campfire', 'fire', [X('fire', { rate: 4, k: [1, 6], snap: .6 }, 1), N('brown', .8, [['lp', 200]], { e: G(.6, 1, 12) }), N('pink', .15, [['hp', 3000]], { e: G(.3, 1, 13) })]);
+S('fireplace', 'Fireplace', 'fire', [X('fire', { rate: 2.5, k: [1, 4], snap: .3, lp: .6 }, 1), N('brown', .7, [['lp', 160]]), N('pink', .1, [['bp', 1200, .5]])]);
+S('embers', 'Embers', 'fire', [X('fire', { rate: .8, k: [1, 2], snap: .05, lp: .4 }, 1), N('brown', .4, [['lp', 120]])]);
+S('candle', 'Candle', 'fire', [X('fire', { rate: .25, k: [1, 1], snap: 0, lp: .3 }, .5), N('brown', .6, [['lp', 90]], { e: G(.3, 1, 14) })]);
+S('bonfire', 'Bonfire', 'fire', [X('fire', { rate: 7, k: [2, 9], snap: 1.2 }, 1), N('brown', 1.2, [['lp', 250]], { e: G(.5, 1, 15) }), N('pink', .4, [['bp', 600, .5]], { e: G(.4, 1, 15) })]);
+// night
+S('crickets', 'Crickets', 'night', [X('crickets', { n: 6 }, 1), N('pink', .05, [['lp', 800]])]);
+S('farcrickets', 'Distant crickets', 'night', [X('crickets', { n: 10, far: 1 }, 1, [['lp', 3500], ['hp', 1500]], { r: .4 })]);
+S('cicadas', 'Cicadas', 'night', [X('cicadas', { n: 5 }, 1)]);
+S('frogs', 'Frogs', 'night', [X('frogs', { n: 7 }, 1, [], { r: .2 })]);
+S('peepers', 'Spring peepers', 'night', [X('peepers', { n: 9 }, 1, [], { r: .2 })]);
+S('owl', 'Owl', 'night', [X('owl', { len: 48 }, 1, [], { r: .5 }), N('pink', .06, [['bp', 700, .7]], { e: G(.3, 1, 16) })]);
+S('birds', 'Dawn birds', 'night', [X('birds', { n: 5, len: 48 }, 1, [], { r: .25 }), N('pink', .05, [['lp', 1500]])], 'For naps. Or for pretending it’s morning.');
+S('forest', 'Night forest', 'night', [X('crickets', { n: 4, far: 1 }, .6, [['lp', 4000]]), X('owl', { sparse: 1, len: 96 }, .4, [], { r: .5 }), N('pink', .5, [['hp', 600], ['lp', 0, .5]], { ef: G(1500, 3500, 17), e: G(.1, .6, 17) })]);
+S('marsh', 'Marsh', 'night', [X('frogs', { n: 5 }, .7), X('peepers', { n: 4 }, .5), X('lap', { len: 48 }, .3), N('pink', .1, [['lp', 700]])]);
+// machines
+S('boxfan', 'Box fan', 'machines', [N('pink', 1, [['lp', 3000], ['hp', 60]], { e: ['lfo', 22, .92, 1] }), N('brown', .6, [['lp', 300]]), O('sine', 60, .012)]);
+S('ceilingfan', 'Ceiling fan', 'machines', [N('pink', 1, [['bp', 700, .5]], { e: ['lfo', 2.5, .65, 1] }), N('brown', .5, [['lp', 200]]), O('sine', 50, .008)]);
+S('deskfan', 'Desk fan', 'machines', [N('white', .6, [['lp', 4500], ['hp', 300]]), N('pink', .6, [['bp', 900, .6]], { e: ['lfo', 40, .9, 1] }), O('triangle', 100, .01)]);
+S('aircon', 'Air conditioner', 'machines', [N('brown', 1, [['lp', 400]]), N('pink', .5, [['lp', 1500], ['hp', 200]]), O('sine', 120, .015), O('sine', 240, .006), N('pink', .2, [['bp', 180, 4]], { e: G(.6, 1, 18) })]);
+S('hairdryer', 'Hair dryer', 'machines', [N('pink', 1, [['hp', 250], ['lp', 7000]]), O('sawtooth', 715, .012, { f: [['lp', 2500]] }), O('sine', 1430, .004)]);
+S('vacuum', 'Vacuum', 'machines', [N('pink', 1, [['pk', 1100, 8, .8], ['lp', 8000]]), O('sawtooth', 260, .01, { f: [['lp', 1500]] }), O('sine', 2100, .004), N('brown', .6, [['lp', 300]])]);
+S('dryer', 'Clothes dryer', 'machines', [N('brown', 1, [['lp', 300]]), X('tumble', { per: 1.2 }, .8), O('sine', 60, .01), N('pink', .3, [['lp', 1200]])]);
+S('washer', 'Washing machine', 'machines', [N('pink', 1, [['bp', 450, .6]], { e: ['swell', 2.4, .3, 1] }), N('brown', .6, [['lp', 200]]), O('sine', 100, .008)]);
+S('fridge', 'Fridge hum', 'machines', [O('sine', 120, .04), O('sine', 240, .015), O('sine', 360, .006), N('brown', .4, [['lp', 150]]), N('pink', .05, [['bp', 2500, 2]])]);
+S('server', 'Server room', 'machines', [N('pink', 1, [['lp', 6000], ['hp', 120]]), O('sine', 4200, .0015), O('sine', 50, .01), N('pink', .3, [['bp', 300, 1]])]);
+S('plane', 'Airplane cabin', 'machines', [N('brown', 1, [['lp', 500]]), N('pink', .8, [['pk', 400, 6, .7], ['lp', 3000]]), O('sine', 86, .012, { v: [.07, 8] }), N('white', .1, [['hp', 6000]])]);
+S('highway', 'Night drive', 'machines', [N('brown', 1, [['lp', 600]]), N('pink', .7, [['bp', 0, .6]], { ef: G(600, 1400, 19), e: G(.5, 1, 19) }), O('sawtooth', 38, .03, { f: [['lp', 150]] })]);
+S('train', 'Sleeper train', 'machines', [N('brown', 1, [['lp', 250]], { e: ['swell', 6, .8, 1] }), X('train', { per: 1.5 }, .8), N('pink', .3, [['bp', 1200, .6]])]);
+S('ship', 'Ship’s engine', 'machines', [N('brown', 1, [['lp', 200]], { e: ['pulse', 5, .6, 1] }), O('sine', 50, .03), O('sine', 25, .03), N('pink', .4, [['lp', 700]], { e: W(.3, 1, 6, 10, 5) })]);
+S('spaceship', 'Spaceship', 'machines', [O('sawtooth', 40, .05, { f: [['lp', 160]], d: 7 }), O('sine', 60, .03, { v: [.05, 15] }), N('brown', .8, [['lp', 0, .6]], { ef: G(150, 450, 20) }), N('pink', .08, [['hp', 2500]])]);
+S('radio', 'Old radio static', 'machines', [N('white', .6, [['bp', 1600, .6]], { e: G(.4, 1, 21) }), X('vinyl', { per: 0, crackle: 15 }, .5), O('sine', 60, .006)]);
+// home
+S('clock', 'Clock', 'home', [X('clock', { per: 1, f1: 3200, f2: 2500 }, 1, [], { r: .25 }), N('brown', .05, [['lp', 200]])]);
+S('grandfather', 'Grandfather clock', 'home', [X('clock', { per: 1.2, f1: 1100, f2: 850, wood: 1 }, 1, [], { r: .4 }), N('brown', .05, [['lp', 200]])]);
+S('vinyl', 'Vinyl crackle', 'home', [X('vinyl', { per: 1.3333, crackle: 6 }, 1), N('pink', .06, [['bp', 1000, .5]]), N('brown', .2, [['lp', 60]])], 'A 45 going round on nothing.');
+S('shower', 'Shower', 'home', [N('white', .6, [['hp', 600], ['lp', 10000]]), N('pink', .6, [['bp', 2500, .5]]), X('taps', { rate: 300, tau: [.001, .004], lp: .9, bp: [3000, 7000], Q: 1, p: 3 }, .5), N('brown', .3, [['lp', 250]])]);
+S('roomtone', 'Room tone', 'home', [N('brown', 1, [['lp', 250]]), N('pink', .1, [['lp', 2000]]), O('sine', 60, .004)], 'An empty room at night. Almost nothing.');
+// body
+S('heart', 'Heartbeat', 'body', [X('heart', { bpm: 60 }, 1, [['lp', 200]])], 'Sixty a minute.');
+S('mother', 'Mother’s heartbeat', 'body', [X('heart', { bpm: 70, len: 48 }, 1, [['lp', 140]]), N('brown', .8, [['lp', 300]], { e: ['beat', 70, .4, 1] })]);
+S('womb', 'Womb', 'body', [N('brown', 1, [['lp', 400]], { e: ['beat', 70, .3, 1] }), N('pink', .3, [['lp', 800]], { e: ['beat', 70, .2, 1] }), X('heart', { bpm: 70, len: 48 }, .3, [['lp', 100]])]);
+S('breath', 'Slow breathing', 'body', [N('pink', 1, [['bp', 0, 1.2]], { ef: ['breath', 12, 500, 1100], e: ['breath', 12, 0, 1] })], 'Five breaths a minute. Breathe with it if you like.');
+S('purr', 'Ouija Cat’s purr', 'body', [X('purr', { mono: 1, len: 48 }, 1)], 'His. Don’t get used to it.');
+// tones
+S('bowls', 'Singing bowls', 'tones', [X('bowls', { len: 48 }, 1, [], { r: .3 })]);
+S('crystalbowls', 'Crystal bowls', 'tones', [X('crystal', { len: 96 }, 1, [], { r: .35 })]);
+S('gong', 'Gong', 'tones', [X('gong', { len: 96 }, 1, [], { r: .4 })]);
+S('bells', 'Temple bells', 'tones', [X('bells', { len: 48 }, 1, [], { r: .45 })]);
+S('musicbox', 'Music box', 'tones', [X('musicbox', { len: 96 }, 1, [], { r: .3 })], 'A lullaby in F sharp minor. Nobody else has it.');
+S('harp', 'Harp', 'tones', [X('harp', { len: 96 }, 1, [], { r: .35 })]);
+S('tanpura', 'Tanpura', 'tones', [X('tanpura', { len: 24 }, 1, [], { r: .2 })]);
+const pad = (notes, type, g, f, x = {}) => notes.map(nm => O(type, NT[nm], g, { f, d: x.d || 0, v: x.v, e: x.e }));
+S('shruti', 'Shruti box', 'tones', pad(['F#2', 'C#3', 'F#3'], 'sawtooth', .08, [['lp', 1100]], { d: 4, e: ['breath', 8, .5, 1] }));
+S('organ', 'Organ drone', 'tones', [O('sine', NT['F#2'], .3, { e: ['lfo', .05, .85, 1] }), O('sine', NT['F#3'], .15), O('sine', NT['C#4'], .08), O('sine', NT['F#4'], .06)]);
+S('choir', 'Choir', 'tones', pad(['F#3', 'A3', 'C#4'], 'sawtooth', .06, [['pk', 700, 12, 3], ['pk', 1150, 9, 4], ['lp', 2500]], { d: 6, v: [5, 10] }).concat([N('pink', .02, [['bp', 1000, 1]])]));
+S('warmpad', 'Warm pad', 'tones', pad(['F#2', 'C#3', 'A3', 'E4'], 'sawtooth', .05, [['lp', 0, .8]], { d: 8, e: ['lfo', .08, .7, 1] }).map(l => ({ ...l, ef: ['lfo', .04, 500, 1100] })));
+S('celestial', 'Celestial pad', 'tones', pad(['F#5', 'A5', 'C#6'], 'sine', .1, [], { d: 3, e: ['lfo', .1, .5, 1] }), 'High and slow.');
+S('glass', 'Glass harmonica', 'tones', pad(['F#4', 'A4', 'C#5'], 'sine', .1, [], { e: ['swell', 10, .2, 1] }).concat(pad(['F#5', 'A5'], 'sine', .02, [], { e: ['swell', 10, .2, 1] })));
+S('darkpad', 'Dark pad', 'tones', pad(['F#1', 'C#2', 'F#2'], 'sawtooth', .08, [['lp', 300]], { d: 10 }));
+// drones
+const drone = (hz, x = {}) => [O('sawtooth', hz, .2, { f: [['lp', x.lp || 600]], d: 4, e: ['lfo', .06, .7, 1] }), O('sine', hz / 2, .3), O('sine', hz * 2, .05), O('sine', hz * 1.5, .04)];
+S('om', 'Om · 136.1 Hz', 'drones', drone(136.1), 'The year of the Earth as a note.');
+S('a432', 'A = 432', 'drones', drone(108));
+S('fsharp', 'F♯ drone', 'drones', drone(92.5, { lp: 400 }), 'His key. Hers too.');
+S('earth', 'Earth day · 194.18', 'drones', drone(194.18));
+S('moon', 'Moon · 210.42', 'drones', drone(210.42));
+S('sun', 'Sun · 126.22', 'drones', drone(126.22));
+S('low55', 'Low 55', 'drones', [O('sine', 55, .5), O('sawtooth', 55, .1, { f: [['lp', 150]] }), O('sine', 110, .05)]);
+S('space', 'Deep space · 40', 'drones', [O('sine', 40, .5), O('sine', 40.5, .4), N('brown', .3, [['lp', 80]])]);
+// brainwaves (headphones)
+S('d15', 'Delta 1.5 Hz', 'waves', [B(120, 1.5, .5)], 'Binaural. Headphones, or it does nothing.');
+S('d25', 'Delta 2.5 Hz', 'waves', [B(130, 2.5, .5)], 'Binaural. Headphones.');
+S('d35', 'Delta 3.5 Hz', 'waves', [B(140, 3.5, .5)], 'Binaural. Headphones.');
+S('t4', 'Theta 4 Hz', 'waves', [B(150, 4, .5)], 'Binaural. Headphones.');
+S('t6', 'Theta 6 Hz', 'waves', [B(160, 6, .5)], 'Binaural. Headphones.');
+S('t7', 'Theta 7 Hz', 'waves', [B(170, 7, .5)], 'Binaural. Headphones.');
+S('schumann', 'Schumann 7.83', 'waves', [B(180, 7.8125, .5)], 'The Earth’s own hum, as a beat. Headphones.');
+S('a10', 'Alpha 10 Hz', 'waves', [B(200, 10, .5)], 'Binaural. For winding down, not for going under.');
+S('iso3', 'Isochronic 3 Hz', 'waves', [O('sine', 220, .5, { e: ['pulse', 3, 0, 1] })], 'Pulsed tone. Works on a speaker.');
+S('iso6', 'Isochronic 6 Hz', 'waves', [O('sine', 220, .5, { e: ['pulse', 6, 0, 1] })], 'Pulsed tone. Works on a speaker.');
+S('mono4', 'Monaural 4 Hz', 'waves', [O('sine', 150, .35), O('sine', 154, .35)], 'Two tones beating in the air. No headphones needed.');
+// solfeggio
+for (const f of [174, 285, 396, 417, 528, 639, 741, 852, 963]) S('s' + f, f + ' Hz', 'solf', [O('sine', f, 1, { e: ['lfo', .05, .8, 1] }), O('sine', f * 2, .04)]);
+// the other side
+S('crystalhum', 'Crystal hum', 'spirit', [O('sine', 55, .5), O('sine', 55.5, .4), O('sawtooth', 110, .02, { f: [['lp', 400]] }), N('pink', .1, [['bp', 3000, .5]])], 'The glass, humming to itself.');
+S('seance', 'Séance', 'spirit', [X('fire', { rate: .25, k: [1, 1], snap: 0, lp: .3 }, .3), N('brown', .5, [['lp', 120]]), X('heart', { bpm: 60 }, .25, [['lp', 120]]), N('pink', .05, [['lp', 1500]], { r: .6 })]);
+S('static', 'Spirit static', 'spirit', [N('white', .4, [['bp', 2000, .5]], { e: G(.2, 1, 22) }), X('vinyl', { per: 0, crackle: 10 }, .4), O('sine', 1200, .01, { v: [.1, 300] })], 'Between stations. Someone’s always there.');
+S('temple', 'Temple', 'spirit', [O('sawtooth', 136.1, .15, { f: [['lp', 500]] }), X('bowls', { sparse: 1, len: 48 }, .6, [], { r: .6 }), N('brown', .2, [['lp', 150]], { r: .5 })]);
+S('cathedral', 'Cathedral air', 'spirit', [N('pink', .6, [['lp', 400]], { r: .9 })].concat(pad(['F#3', 'C#4'], 'sawtooth', .015, [['pk', 700, 12, 3], ['lp', 1800]], { d: 6, v: [5, 8] }).map(l => ({ ...l, r: .9 }))));
+S('tub', 'The tub', 'spirit', pad(['C#4', 'F#4', 'G#4'], 'sine', .08, [], { e: ['swell', 14, .15, 1] }).concat([N('brown', .2, [['lp', 200]])]), 'Wet glass, the way the old trance rooms rang.');
+S('abyss', 'Abyss', 'spirit', [N('brown', 1, [['lp', 120]], { e: G(.5, 1, 23) }), O('sine', 36, .3, { v: [.03, 20] }), X('bubbles', { rate: 1.5, f: [120, 300], up: [1.5, 2], tau: [.06, .15] }, .4, [], { r: .5 })]);
+const BYID = Object.fromEntries(SOUNDS.map(s => [s.id, s]));
+
+// ready-made mixes for the device's buttons: [id, name, [[sound, volume]...], his line]
+const PRESETS = [
+  ['attic', 'Storm in the attic', [['roof', .8], ['farthunder', .7], ['brown', .4]]],
+  ['cabin', 'Cabin fire', [['fireplace', .8], ['window', .6], ['pines', .4]]],
+  ['seacave', 'Sea cave', [['waves', .8], ['cave', .5], ['deep', .3]]],
+  ['womb', 'Back in the womb', [['womb', .8], ['mother', .5], ['brown', .3]]],
+  ['purring', 'On his chest', [['purr', .9], ['fireplace', .4], ['dark', .3]]],
+  ['nighttrain', 'Night train', [['train', .8], ['window', .5], ['roomtone', .3]]],
+  ['temple', 'Temple at night', [['bowls', .6], ['om', .4], ['d25', .3]]],
+  ['deepspace', 'Deep space', [['spaceship', .7], ['space', .5], ['d15', .3]]],
+  ['summer', 'Summer night', [['crickets', .7], ['frogs', .4], ['breeze', .4], ['farthunder', .3]]],
+  ['tent', 'Tent in the rain', [['tent', .8], ['farcrickets', .4], ['embers', .4]]],
+  ['fanbrown', 'Fan and brown', [['boxfan', .7], ['brown', .6]]],
+  ['seance', 'Séance', [['seance', .7], ['candle', .5], ['static', .3], ['t6', .25]]],
+  ['lullaby', 'Lullaby', [['musicbox', .6], ['heart', .4], ['pink', .3]]],
+  ['oceandelta', 'Ocean, delta', [['surf', .8], ['d25', .3], ['brown', .3]]],
+  ['snowed', 'Snowed in', [['blizzard', .6], ['fireplace', .6], ['grandfather', .3]]],
+  ['tub', 'The magnetic tub', [['tub', .6], ['t4', .3], ['crystalhum', .4]]],
+  ['carnap', 'Car nap', [['carrain', .8], ['highway', .5]]],
+  ['monk', 'The monk’s cell', [['tanpura', .6], ['shruti', .4], ['crystalbowls', .4]]],
+  ['dawnnap', 'Afternoon nap', [['birds', .5], ['stream', .6], ['breeze', .4]]],
+  ['flight', 'Red-eye flight', [['plane', .8], ['softwhite', .3]]],
+  ['lighthouse', 'Lighthouse', [['bigwaves', .8], ['howl', .5], ['owl', .3]]],
+  ['nan', 'Nan’s house', [['grandfather', .5], ['vinyl', .4], ['fireplace', .5], ['rain', .4]]],
+  ['abyss', 'The abyss', [['underwater', .7], ['abyss', .6], ['d15', .25]]],
+  ['crystal', 'Inside the crystal', [['crystalbowls', .6], ['celestial', .4], ['s528', .25], ['cave', .3]]],
+];
+
+/* ---------- building a sound in any context (live AudioContext or OfflineAudioContext) ---------- */
+function mixer(ctx, out, raw) {
+  const conn = raw && RAW_CONNECT ? (a, b) => RAW_CONNECT.call(a, b) : (a, b) => a.connect(b);
+  // one gentle limiter. Web Audio's compressor adds its own make-up gain (about +4 dB with these settings), mostly taken back by trim,
+  // so a sound alone still sits near -22 dBFS and only a stack of loud ones is held down
+  const bus = ctx.createGain(), lim = ctx.createDynamicsCompressor(), trim = ctx.createGain(), master = ctx.createGain();
+  lim.threshold.value = -8; lim.knee.value = 6; lim.ratio.value = 8; lim.attack.value = .005; lim.release.value = .3; trim.gain.value = .75;
+  bus.connect(lim); lim.connect(trim); trim.connect(master); conn(master, out);
+  
+  return { ctx, bus, master };
+}
+function voice(m, id, t0 = 0) {
+  const ctx = m.ctx, snd = BYID[id], out = ctx.createGain(); out.gain.value = 0; out.connect(m.bus);
+  const srcs = [];
+  const go = (node, off = 0) => { srcs.push(node); node.start(t0, off); };
+  snd.L.forEach((l, li) => {
+    const seed = hash(id + ':' + li);
+    let head, tail;
+    if (l.o && l.b) {   // binaural: one ear the carrier, the other carrier + beat
+      const L = ctx.createOscillator(), Rt = ctx.createOscillator(), mg = ctx.createChannelMerger(2); L.frequency.value = qf(l.hz); Rt.frequency.value = qf(l.hz + l.b);
+      L.connect(mg, 0, 0); Rt.connect(mg, 0, 1); go(L); go(Rt); head = tail = mg;
+    } else if (l.o) {   // vibrato is in Hz, not cents: symmetric, so the pitch averages out and the loop still closes
+      const mk = hz => { const o = ctx.createOscillator(); o.type = l.o; o.frequency.value = qf(hz); if (l.v) { const lf = ctx.createOscillator(), lg = ctx.createGain(); lf.frequency.value = qf(l.v[0]); lg.gain.value = o.frequency.value * (Math.pow(2, l.v[1] / 1200) - 1); lf.connect(lg); lg.connect(o.frequency); go(lf); } go(o); return o; };
+      const g = ctx.createGain(); g.gain.value = l.d ? .6 : 1; mk(l.hz).connect(g); if (l.d) mk(l.hz * Math.pow(2, l.d / 1200)).connect(g); head = tail = g;
+    } else {
+      const s = ctx.createBufferSource(); s.loop = true; s.buffer = l.n ? noise(l.n) : texture(l.t, l.r ? { ...l.a, rv: l.r } : l.a); go(s, l.n ? (seed % 997) / 997 * 12 : 0); head = tail = s;
+    }
+    l.f.forEach((f, fi) => { const b = ctx.createBiquadFilter(); b.type = { lp: 'lowpass', hp: 'highpass', bp: 'bandpass', pk: 'peaking', ls: 'lowshelf', hs: 'highshelf', no: 'notch' }[f[0]];
+      b.frequency.value = f[1];
+      if (f[0] === 'pk') { b.gain.value = f[2]; b.Q.value = f[3] || 1; } else if (f[0] === 'ls' || f[0] === 'hs') b.gain.value = f[2]; else if (f[2] != null) b.Q.value = f[2];
+      if (fi === 0 && l.ef) { b.frequency.value = 0; const e = ctx.createBufferSource(); e.buffer = envelope(l.ef); e.loop = true; e.connect(b.frequency); go(e, l.eo || 0); }
+      tail.connect(b); tail = b; });
+    if (l.e) { const eg = ctx.createGain(); eg.gain.value = 0; const e = ctx.createBufferSource(); e.buffer = envelope(l.e); e.loop = true; e.connect(eg.gain); go(e, l.eo || 0); tail.connect(eg); tail = eg; }
+    const g = ctx.createGain(); g.gain.value = l.g; tail.connect(g); g.connect(out);
+  });
+  return { out, stop(when = 0) { for (const s of srcs) try { s.stop(when); } catch (e) {} setTimeout(() => { try { out.disconnect(); } catch (e) {} }, Math.max(0, (when - ctx.currentTime) * 1000) + 200); } };
+}
+// per-sound loudness trims: measured by calibrate() (2026-11-19, 48 s each), then pure tones -6 dB, drones -3 dB and the
+// brightest noises a little lower, because a steady tone or hiss at the same RMS sounds louder than rain. Re-run after changing a recipe.
+const CAL = {"white":0.334,"pink":0.411,"brown":0.401,"deep":0.4,"grey":0.259,"blue":0.503,"green":0.929,"velvet":0.489,"dark":0.456,"softwhite":0.503,"drizzle":1.121,"lightrain":0.835,"rain":0.695,"heavyrain":0.43,"downpour":0.354,"roof":0.537,"window":0.594,"tent":0.514,"leaves":0.6,"carrain":0.582,"storm":0.254,"farthunder":0.528,"waves":0.672,"surf":0.545,"bigwaves":0.509,"pebbles":0.824,"stream":0.732,"brook":0.607,"river":0.384,"waterfall":0.269,"cave":0.528,"underwater":0.471,"lake":0.551,"spring":0.558,"breeze":1.827,"pines":2.025,"howl":0.923,"mountain":0.622,"desert":0.811,"blizzard":0.479,"chimes":0.46,"keyhole":2.273,"campfire":0.605,"fireplace":0.49,"embers":0.548,"candle":0.96,"bonfire":0.485,"crickets":0.462,"farcrickets":0.683,"cicadas":0.389,"frogs":0.557,"peepers":0.447,"owl":0.537,"birds":0.444,"forest":0.657,"marsh":0.695,"boxfan":0.426,"ceilingfan":0.654,"deskfan":0.851,"aircon":0.383,"hairdryer":0.461,"vacuum":0.251,"dryer":0.38,"washer":0.618,"fridge":1.004,"server":0.451,"plane":0.294,"highway":0.386,"train":0.432,"ship":0.487,"spaceship":0.503,"radio":1.543,"clock":0.61,"grandfather":0.558,"vinyl":0.64,"shower":0.618,"roomtone":0.408,"heart":0.535,"mother":0.462,"womb":0.758,"breath":1.948,"purr":0.556,"bowls":0.558,"crystalbowls":0.392,"gong":0.542,"bells":0.544,"musicbox":0.366,"harp":0.554,"tanpura":0.487,"shruti":1.832,"organ":0.341,"choir":1.254,"warmpad":2.227,"celestial":1,"glass":0.972,"darkpad":1.416,"om":0.246,"a432":0.248,"fsharp":0.248,"earth":0.243,"moon":0.243,"sun":0.248,"low55":0.142,"space":0.123,"d15":0.113,"d25":0.113,"d35":0.113,"t4":0.113,"t6":0.113,"t7":0.113,"schumann":0.113,"a10":0.113,"iso3":0.169,"iso6":0.169,"mono4":0.115,"s174":0.063,"s285":0.063,"s396":0.063,"s417":0.063,"s528":0.063,"s639":0.063,"s741":0.063,"s852":0.063,"s963":0.063,"crystalhum":0.177,"seance":0.839,"static":1.367,"temple":0.693,"cathedral":0.738,"tub":1.04,"abyss":0.317};
+const level = id => CAL[id] || 1;
+
+/* ---------- live mixing (while the screen is on: every change is heard at once) ---------- */
+function live(ctx, out) {
+  const xf = ctx.createGain(); xf.connect(out || ctx.destination);   // xf: the hand-over to and from the <audio> element; master: the volume
+  const m = mixer(ctx, xf), V = new Map();
+  return {
+    ctx, m,
+    set(mix, fade = 1) {   // mix: [[id, vol]...]
+      const t = ctx.currentTime, want = new Map(mix);
+      for (const [id, v] of V) if (!want.has(id)) { v.out.gain.cancelScheduledValues(t); v.out.gain.setValueAtTime(v.out.gain.value, t); v.out.gain.linearRampToValueAtTime(0, t + fade); v.stop(t + fade + .05); V.delete(id); }
+      for (const [id, vol] of want) { if (!BYID[id]) continue; let v = V.get(id); if (!v) { v = voice(m, id, t); V.set(id, v); }
+        v.out.gain.cancelScheduledValues(t); v.out.gain.setValueAtTime(v.out.gain.value, t); v.out.gain.linearRampToValueAtTime(vol * level(id), t + Math.max(.03, fade)); }
+    },
+    fade(to, secs) { const g = xf.gain, t = ctx.currentTime, from = g.value, N = 64, c = new Float32Array(N); for (let i = 0; i < N; i++) { const x = i / (N - 1); c[i] = to > from ? from + (to - from) * Math.sin(x * Math.PI / 2) : to + (from - to) * Math.cos(x * Math.PI / 2); } g.cancelScheduledValues(t); g.setValueCurveAtTime(c, t, Math.max(.02, secs)); },
+    level(v) { const g = m.master.gain; g.cancelScheduledValues(ctx.currentTime); g.setTargetAtTime(v, ctx.currentTime, .05); },
+    ids: () => [...V.keys()],
+  };
+}
+
+/* ---------- baking: one perfect 96-second loop of the whole mix ---------- */
+async function bake(mix, gain = 1) {
+  const sr = BSR, total = (LOOP + WARM) * sr, OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+  const oc = new OAC(2, total, sr), m = mixer(oc, oc.destination, true);
+  for (const [id, vol] of mix) { if (!BYID[id]) continue; const v = voice(m, id, 0); v.out.gain.value = vol * level(id); }
+  m.master.gain.value = gain;
+  const r = await oc.startRendering(), a = r.getChannelData(0), b = r.getChannelData(1), FL = LOOP * sr, o = WARM * sr, pcm = new Int16Array(FL * 2);
+  // the mix repeats every LOOP to within a hair (oscillators drift a little in float); the last 50 ms bend into the frames just
+  // before the loop's start, so the end always runs straight into the beginning
+  const X = Math.round(.05 * sr), cl = v => Math.max(-1, Math.min(1, v)) * 32767;
+  for (let i = 0; i < FL; i++) { let l = a[o + i], r = b[o + i]; const k = i - (FL - X); if (k >= 0) { const w = Math.sin((k + 1) / X * Math.PI / 2) ** 2; l = l * (1 - w) + a[o - X + k] * w; r = r * (1 - w) + b[o - X + k] * w; } pcm[2 * i] = cl(l); pcm[2 * i + 1] = cl(r); }
+  return { pcm, sr, frames: FL, blob: new Blob([pcm]) };
+}
+function wavHeader(frames, sr) { const v = new DataView(new ArrayBuffer(44)), bytes = frames * 4, w = (p, s) => { for (let i = 0; i < 4; i++) v.setUint8(p + i, s.charCodeAt(i)); };
+  w(0, 'RIFF'); v.setUint32(4, 36 + bytes, true); w(8, 'WAVE'); w(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 2, true); v.setUint32(24, sr, true); v.setUint32(28, sr * 4, true); v.setUint16(32, 4, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, bytes, true); return v.buffer; }
+function shaped(b, from, frames, gainAt) {   // a copy of `frames` frames starting at loop phase `from`, each scaled by gainAt(x in 0..1)
+  const o = new Int16Array(frames * 2), FL = b.frames, p = b.pcm;
+  for (let i = 0; i < frames; i++) { const k = (from + i) % FL, g = gainAt(i / frames); o[2 * i] = p[2 * k] * g; o[2 * i + 1] = p[2 * k + 1] * g; }
+  return o;
+}
+// a whole night from one loop: fade in (equal-power, 4 s), the loop over and over, then a long fade out (even in dB, to silence)
+function session(b, secs, { fadeIn = 4, fadeOut = 120 } = {}) {
+  const sr = b.sr, FL = b.frames, T = Math.max(sr, Math.round(Math.min(secs, MAXS) * sr)), F = Math.min(Math.round(fadeOut * sr), Math.floor(T * .5)), I = Math.min(Math.round(fadeIn * sr), T - F);
+  const parts = [wavHeader(T, sr), shaped(b, 0, I, x => Math.sin(x * Math.PI / 2))]; let pos = I; const end = T - F;
+  while (pos < end) { const ph = pos % FL, take = Math.min(FL - ph, end - pos); parts.push(b.blob.slice(ph * 4, (ph + take) * 4)); pos += take; }
+  const floor = Math.pow(10, -2.5); parts.push(shaped(b, pos % FL, T - pos, x => Math.max(0, (Math.pow(10, -2.5 * x) - floor) / (1 - floor))));
+  return new Blob(parts, { type: 'audio/wav' });
+}
+
+/* ---------- loudness: each sound alone at volume 1 sits near -22 dBFS RMS, peaks under -6 dB ---------- */
+async function calibrate(ids = SOUNDS.map(s => s.id), secs = 48) {
+  const out = {}, OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+  for (const id of ids) { const sr = 24000, oc = new OAC(2, (secs + 4) * sr, sr), m = mixer(oc, oc.destination, true); m.bus.disconnect(); const tap = oc.createGain(); m.bus.connect(tap); RAW_CONNECT.call(tap, oc.destination);
+    const v = voice(m, id, 0); v.out.gain.value = 1; const r = await oc.startRendering(); let s = 0, pk = 0, n = 0;
+    for (let c = 0; c < 2; c++) { const d = r.getChannelData(c); for (let i = 4 * sr; i < d.length; i++) { s += d[i] * d[i]; pk = Math.max(pk, Math.abs(d[i])); n++; } }
+    const rms = Math.sqrt(s / n) || 1e-9; out[id] = +Math.min(.08 / rms, .5 / (pk || 1e-9), 40).toFixed(3); }
+  return out;
+}
+
+window.SLEEP = { LOOP, BSR, MAXS, SOUNDS, CATS, PRESETS, BYID, CAL, live, bake, session, calibrate, voice, mixer, texture, noise, envelope };
+})();
+
+</script>
+<script>
+(function () {
+'use strict';
+const $ = id => document.getElementById(id), E = window.SLEEP;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const DEBUG = /[?&]debug\b/.test(location.search);
+const MAXMIX = 8;
+const CATCOL = { noise: '#c9c2b0', rain: '#7fa7d8', water: '#5fc0c8', wind: '#b8c6d6', fire: '#ff8a3d', night: '#8fcf7a', machines: '#a8a08a', home: '#d8b07a', body: '#e07a8a', tones: '#e8c86a', drones: '#c49cff', waves: '#9fb6e8', solf: '#f0d68f', spirit: '#b07ae0' };
+const TIMERS = [[15, '15 min'], [30, '30 min'], [45, '45 min'], [60, '1 hour'], [90, '1½ hours'], [120, '2 hours'], [240, '4 hours'], [480, '8 hours'], [0, 'All night']];
+const SCREENS = [['photos', 'Photos'], ['cat', 'Ouija Cat asleep'], ['dark', 'Dark']];
+
+/* ---------- his lines (shown, never spoken) ---------- */
+const L = {
+  hello: 'Pick your noises. I’ll judge them quietly.',
+  first: { noise: 'Noise. Bold of you to call that a choice.', rain: 'Rain. You and everyone else with a phone.', water: 'Water. I’d never, but go on.', wind: 'Wind. Shut a window, it’s not a film.', fire: 'Fire. Finally, something I approve of.', night: 'Bugs. You want bugs. Fine.', machines: 'A machine. You sleep like a fridge.', home: 'Home noises. Your nan would be proud.', body: 'A heartbeat. Clingy.', tones: 'Bowls. Very spiritual. Very you.', drones: 'One note all night. Like your ex.', waves: 'Headphones on, or it’s two hums arguing.', solf: 'A frequency. Pick one and stop shopping.', spirit: 'The other side. They don’t sleep either.' },
+  purr: 'Me. Good taste, for once.',
+  many: 'Eight is the limit. It’s a bedroom, not a landfill.',
+  preset: ['My mix. You’re welcome.', 'Good. Less work for you.', 'I made that one. Obviously it’s good.'],
+  allNight: 'All night. I don’t sleep anyway.',
+  fadesBy: t => `Fades out by ${t}. Be gone by then.`,
+  sleep: ['Phone face down. Yes, now.', 'Lights off. I’m not reading you a story.', 'Stop looking at the screen. That’s the whole trick.'],
+  stop: ['Fine. Stay up. Text someone you shouldn’t.', 'Off. The silence is all yours.'],
+  ended: 'Timer’s done. If you can read this, you’re still up.',
+  saved: n => `Saved as ${n}. Your own little ritual.`,
+  ready: 'Wound up. Lock the phone whenever.',
+  blocked: 'Your browser wants a tap first. Press Play.',
+  empty: 'Pick a sound first. I’m not humming for you.',
+  screen: { photos: 'A slideshow. Don’t watch it, that’s not the point.', cat: 'You want to watch me sleep. Normal.', dark: 'Dark. Correct answer.' },
+  dim: 'Darker. Your face was lighting up the room.',
+  keepOn: 'Screen stays on. Your battery will hate you.',
+  iosVol: 'Wound up already: on this phone the side buttons do the volume.',
+};
+let sayT = 0;
+function say(t) { const e = $('led3'); clearTimeout(sayT); e.classList.add('off'); sayT = setTimeout(() => { e.textContent = t; e.classList.remove('off'); $('sr').textContent = t; }, 450); }
+
+/* ---------- what the sleeper chose (remembered on this device) ---------- */
+const ST = { mix: [], timer: 60, screen: 'photos', dim: 55, keepOn: false, mine: [] };
+try { Object.assign(ST, JSON.parse(localStorage.getItem('vs-sleep') || '{}')); } catch (e) {}
+ST.mix = (ST.mix || []).filter(([id]) => E.BYID[id]).slice(0, MAXMIX);
+const save = () => { try { localStorage.setItem('vs-sleep', JSON.stringify(ST)); } catch (e) {} };
+const seen = new Set(ST.mix.map(([id]) => E.BYID[id].cat));
+
+/* ---------- sound: live Web Audio while you fiddle, a baked track in an <audio> element once you stop ----------
+   Web Audio is suspended when a phone locks; an <audio> element playing a file is not. So every change is heard at
+   once through the live graph, and 1.5 s after the last change the mix is rendered (96 s, a perfect loop) and chained
+   into one WAV for the rest of the timer, fade included (SLEEP.session). The element fades itself in over 4 s while
+   the live graph fades out over the same 4 s. Change something while the track plays and the live graph takes over
+   again (on an iPhone the element's volume can't be faded, so it's cut while the live mix comes in at once). */
+const vol = () => (window.VS_VOLUME ?? .8);
+const FIXEDVOL = (() => { try { const a = document.createElement('audio'); a.volume = .5; return Math.abs(a.volume - .5) > .01; } catch (e) { return true; } })();
+const EL = [$('aA'), $('aB')];
+let AC = null, LV = null, cur = null, mode = 'off', want = false, endAt = 0, bakeT = 0, bakeTok = 0, baking = false, pendingBake = false, liveOff = 0, unlocked = false;
+const SILENT = (() => { const sr = 8000, n = 800, b = new DataView(new ArrayBuffer(44 + n * 2)), w = (p, s) => { for (let i = 0; i < 4; i++) b.setUint8(p + i, s.charCodeAt(i)); };
+  w(0, 'RIFF'); b.setUint32(4, 36 + n * 2, true); w(8, 'WAVE'); w(12, 'fmt '); b.setUint32(16, 16, true); b.setUint16(20, 1, true); b.setUint16(22, 1, true); b.setUint32(24, sr, true); b.setUint32(28, sr * 2, true); b.setUint16(32, 2, true); b.setUint16(34, 16, true); w(36, 'data'); b.setUint32(40, n * 2, true);
+  return URL.createObjectURL(new Blob([b.buffer], { type: 'audio/wav' })); })();
+function unlock() {   // inside a tap: make the audio context, and play both elements once so they may play later without a tap
+  if (!AC) { AC = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'playback' }); try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {} LV = E.live(AC); LV.level(vol()); }
+  if (AC.state !== 'running') AC.resume().catch(() => {});
+  if (!unlocked) { unlocked = true; for (const el of EL) { el.src = SILENT; el.dataset.vsBase = '1'; const p = el.play(); if (p) p.then(() => { if (el !== cur) el.pause(); }).catch(() => {}); } }
+}
+let capS = E.MAXS;   // the longest track this browser has accepted; drops to 1 h, then 15 min, if a phone refuses a huge file
+const remaining = () => Math.min(capS, endAt ? Math.max(0, (endAt - Date.now()) / 1000) : E.MAXS);
+const fadeFor = s => Math.max(30, Math.min(180, s * .1));
+function setEnd() { endAt = ST.timer ? Date.now() + ST.timer * 60000 : 0; }
+function fadeEl(el, ms, then) { if (!el) return; if (FIXEDVOL || el.paused) { el.pause(); then && then(); return; } const v0 = el.volume, t0 = performance.now();
+  const step = () => { const k = Math.min(1, (performance.now() - t0) / ms); el.volume = v0 * Math.cos(k * Math.PI / 2); if (k < 1) requestAnimationFrame(step); else { el.pause(); then && then(); } }; step(); }
+function retire(el) { const u = el.src; setTimeout(() => { if (el !== cur && u.startsWith('blob:') && u !== SILENT) { if (el.src === u) { el.removeAttribute('src'); el.load(); } URL.revokeObjectURL(u); } }, 6000); }
+
+function sound() {   // make what you hear match the mix, now; then wind it up
+  if (document.body.classList.contains('vs-off')) return;
+  unlock(); clearTimeout(liveOff);
+  if (!endAt) setEnd();
+  if (mode === 'file') { const old = cur; cur = null; const quick = FIXEDVOL; LV.fade(1, quick ? .03 : .7); LV.set(ST.mix, quick ? .03 : .7); fadeEl(old, quick ? 0 : 700, () => retire(old)); }
+  else if (mode === 'off') { LV.fade(1, .05); LV.set(ST.mix, 1.5); }
+  else LV.set(ST.mix, .9);
+  mode = 'live'; scheduleBake(); status();
+}
+function scheduleBake(ms = 1500) { clearTimeout(bakeT); bakeTok++; bakeT = setTimeout(bakeNow, ms); }
+async function bakeNow() {
+  if (!want || !ST.mix.length || mode !== 'live') return;
+  if (document.hidden || document.body.classList.contains('vs-off')) { pendingBake = true; return; }
+  pendingBake = false; const tok = ++bakeTok; baking = true; status();
+  const t0 = performance.now(); let b;
+  try { b = await E.bake(ST.mix.slice(), FIXEDVOL ? vol() : 1); } catch (e) { console.warn('bake failed', e); baking = false; status(); return; }
+  if (tok !== bakeTok || !want || mode !== 'live') { baking = false; return; }
+  const secs = remaining(); if (secs < 3) { finish(); return; }
+  const blob = E.session(b, secs, { fadeIn: 4, fadeOut: fadeFor(secs) }), el = EL[cur === EL[0] ? 1 : 0], url = URL.createObjectURL(blob);
+  el.src = url; el.dataset.vsBase = '1'; el.volume = FIXEDVOL ? 1 : vol();
+  try { await el.play(); } catch (e) { console.warn('play refused', e); URL.revokeObjectURL(url); baking = false; say(L.blocked); status(); return; }
+  if (tok !== bakeTok || mode !== 'live') { el.pause(); retire(el); baking = false; return; }
+  cur = el; mode = 'file'; baking = false;
+  LV.fade(0, 4); liveOff = setTimeout(() => { if (mode === 'file') { LV.set([], .05); AC.suspend().catch(() => {}); } }, 4400);
+  media(); status();
+  if (DEBUG) console.log('[sleep] wound', ST.mix.map(m => m[0]).join('+'), Math.round(performance.now() - t0) + ' ms', (secs / 3600).toFixed(2) + ' h', (blob.size / 1e9).toFixed(2) + ' GB (virtual)');
+  if (!sleepSaidReady) { sleepSaidReady = true; say(L.ready); }
+}
+let sleepSaidReady = false;
+function stopAll(line = true) {
+  want = false; bakeTok++; clearTimeout(bakeT); clearTimeout(liveOff); pendingBake = false; baking = false;
+  if (cur) { const old = cur; fadeEl(old, 600, () => retire(old)); cur = null; }
+  if (LV) { LV.fade(0, .6); liveOff = setTimeout(() => { if (!want) { LV.set([], .05); AC.suspend().catch(() => {}); } }, 800); }
+  mode = 'off'; endAt = 0; media(); status(); lockSync(); if (line) say(pick(L.stop));
+}
+function finish() {   // the timer ran out (the track ended on its own)
+  want = false; mode = 'off'; cur = null; endAt = 0; if (LV) { LV.set([], .3); AC && AC.suspend().catch(() => {}); }
+  media(); status(); lockSync(); say(L.ended);
+}
+EL.forEach(el => {
+  el.addEventListener('ended', () => { if (el === cur) finish(); });
+  el.addEventListener('pause', () => { if (el === cur) status(); });
+  el.addEventListener('play', () => { if (el === cur) status(); });
+  el.addEventListener('error', () => { if (el !== cur || !want) return;   // the browser refused the track: back to live, and try a shorter one
+    console.warn('the track failed', el.error && el.error.message, 'cap', capS); cur = null; mode = 'live'; AC.resume().catch(() => {}); LV.fade(1, .05); LV.set(ST.mix, .05);
+    if (capS > 900) { capS = capS > 3600 ? 3600 : 900; scheduleBake(300); } status(); });
+});
+function play() {   // the Play button: start, resume a paused track, or stop
+  if (!ST.mix.length) { say(L.empty); return; }
+  if (mode === 'file' && cur && cur.paused) { cur.play().catch(() => say(L.blocked)); return; }
+  if (want) { stopAll(); return; }
+  want = true; setEnd(); sound();
+}
+
+/* ---------- the lock screen ---------- */
+const MS = 'mediaSession' in navigator ? navigator.mediaSession : null;
+if (MS) {
+  const h = (a, f) => { try { MS.setActionHandler(a, f); } catch (e) {} };
+  h('play', () => { if (cur) cur.play(); else play(); }); h('pause', () => { if (cur) cur.pause(); }); h('stop', () => stopAll(false));
+  h('seekto', null); h('seekbackward', null); h('seekforward', null); h('previoustrack', null); h('nexttrack', null);
+}
+function media() {
+  if (!MS) return;
+  if (mode === 'off' && !cur) { MS.playbackState = 'none'; return; }
+  try { MS.metadata = new MediaMetadata({ title: mixName(), artist: 'Ouija Cat', album: 'The Sleep Machine', artwork: [{ src: new URL('sleep-art.webp', location.href).href, sizes: '512x512', type: 'image/webp' }] }); } catch (e) {}
+  MS.playbackState = cur && !cur.paused ? 'playing' : want ? 'playing' : 'paused'; pos();
+}
+function pos() { if (!MS || !MS.setPositionState || !cur || !isFinite(cur.duration)) return; try { MS.setPositionState({ duration: cur.duration, playbackRate: 1, position: Math.min(cur.duration, cur.currentTime) }); } catch (e) {} }
+
+/* ---------- wake lock: only when asked for ---------- */
+let WL = null;
+async function lockSync() {
+  const need = ST.keepOn && !document.hidden && (want || nightOn) && 'wakeLock' in navigator;
+  if (need && !WL) { try { WL = await navigator.wakeLock.request('screen'); WL.addEventListener('release', () => { WL = null; }); } catch (e) { WL = null; } }
+  else if (!need && WL) { try { await WL.release(); } catch (e) {} WL = null; }
+}
+document.addEventListener('visibilitychange', () => { if (!document.hidden) { if (pendingBake) bakeNow(); status(); } lockSync(); });
+addEventListener('vs-volume', () => { if (LV) LV.level(vol()); if (FIXEDVOL && mode === 'file') say(L.iosVol); });
+let powerPaused = null;
+addEventListener('vs-power', e => {
+  if (!e.detail.on) { if (cur && !cur.paused) { powerPaused = cur; cur.pause(); } }
+  else { if (powerPaused) { powerPaused.play().catch(() => {}); powerPaused = null; } else if (want && mode === 'live') scheduleBake(400); }
+});
+addEventListener('pagehide', () => { /* chrome.js fades media on the way out; a phone locking never fires this */ });
+
+/* ---------- names and the screen ---------- */
+const sameMix = (a, b) => a.length === b.length && a.every(([id]) => b.some(([j]) => j === id));
+function mixName() {
+  const p = E.PRESETS.find(p => sameMix(p[2], ST.mix)) || ST.mine.find(p => p && sameMix(p.mix, ST.mix));
+  if (p) return Array.isArray(p) ? p[1] : p.name;
+  if (!ST.mix.length) return 'Nothing on';
+  const n = ST.mix.map(([id]) => E.BYID[id].name); return n.length > 3 ? n.slice(0, 2).join(' + ') + ` + ${n.length - 2} more` : n.join(' + ');
+}
+const hhmm = ms => new Date(ms).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+const left = s => { s = Math.max(0, Math.round(s)); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60; return h ? `${h}:${String(m).padStart(2, '0')}:${String(x).padStart(2, '0')}` : `${m}:${String(x).padStart(2, '0')}`; };
+function trackLeft() { return cur && isFinite(cur.duration) ? cur.duration - cur.currentTime : remaining(); }
+function status() {
+  $('led1').textContent = ST.mix.length ? mixName() : 'Nothing on. Pick a sound.';
+  const paused = mode === 'file' && cur && cur.paused;
+  const st = mode === 'off' ? '<i class="dot"></i>Off' : paused ? '<i class="dot"></i>Paused' : mode === 'file' ? '<i class="dot on"></i>Screen can go off' : '<i class="dot wind"></i>' + (baking ? 'Winding it up' : 'Live, winding soon');
+  $('led2').innerHTML = st;
+  $('led2b').textContent = mode === 'off' ? (ST.timer ? 'Timer ' + TIMERS.find(t => t[0] === ST.timer)[1] : 'All night') : (ST.timer ? left(trackLeft()) + ' left' : 'All night');
+  $('playBtn').innerHTML = want && !paused ? '<b>Stop</b>the sound' : paused ? '<b>Play</b>carry on' : '<b>Play</b>your mix';
+  $('countN').textContent = `${ST.mix.length} of ${MAXMIX}`;
+  device(paused);
+  if (nightOn) { $('nclock').textContent = hhmm(Date.now()); $('nleft').textContent = mode === 'off' ? 'Sound off' : ST.timer ? left(trackLeft()) + ' left' : 'All night'; }
+}
+setInterval(() => { status(); pos(); if (mode === 'live' && endAt && Date.now() > endAt) stopAll(false); }, 1000);
+
+/* ---------- the device ---------- */
+function renderKeys() {
+  const k = $('keys');
+  k.innerHTML = E.PRESETS.map(([id, name, mix]) => `<button type="button" class="key" data-p="${id}" aria-pressed="${sameMix(mix, ST.mix)}" title="${esc(mix.map(m => E.BYID[m[0]].name).join(' · '))}">${esc(name)}<small>${mix.length} sounds</small></button>`).join('')
+    + ST.mine.map((m, i) => !m ? '' : `<button type="button" class="key mine" data-m="${i}" aria-pressed="${sameMix(m.mix, ST.mix)}" title="${esc(m.mix.map(x => E.BYID[x[0]].name).join(' · '))}">${esc(m.name)}<small>yours</small><span class="x" data-del="${i}" title="Forget this mix" aria-label="Forget ${esc(m.name)}">✕</span></button>`).join('');
+  { const n = ST.mine.filter(Boolean).length; $('mineN').textContent = n ? `${n} of yours` : ''; }
+}
+function renderLib() {
+  const q = $('find').value.trim().toLowerCase(), on = new Set(ST.mix.map(m => m[0]));
+  let shown = 0;
+  $('lib').innerHTML = E.CATS.map(([c, cn]) => { const ss = E.SOUNDS.filter(s => s.cat === c && (!q || (s.name + ' ' + cn + ' ' + s.hint).toLowerCase().includes(q))); shown += ss.length; if (!ss.length) return '';
+    return `<div class="cat"><h3>${esc(cn)}<small>${ss.length}</small></h3><div class="grid">${ss.map(s => `<button type="button" class="snd" data-id="${s.id}" style="--c:${CATCOL[c]}" aria-pressed="${on.has(s.id)}" title="${esc(s.hint || s.name)}"><i></i><span>${esc(s.name)}</span></button>`).join('')}</div></div>`; }).join('');
+  $('libN').textContent = `· ${q ? shown + ' of ' : ''}${E.SOUNDS.length}`;
+}
+function renderMix() {
+  $('mix').innerHTML = ST.mix.length ? ST.mix.map(([id, v]) => `<div class="mixrow"><span title="${esc(E.BYID[id].hint)}">${esc(E.BYID[id].name)}</span><input type="range" min="0" max="100" value="${Math.round(v * 100)}" data-v="${id}" aria-label="${esc(E.BYID[id].name)} volume"><button type="button" data-rm="${id}" aria-label="Take out ${esc(E.BYID[id].name)}">✕</button></div>`).join('')
+    : '<p class="empty">Empty. Press a mix on the machine, or any sound.</p>';
+}
+function chips(el, items, cur, onPick) { el.innerHTML = items.map(([v, n]) => `<button type="button" data-v="${v}" aria-pressed="${String(v) === String(cur)}">${esc(n)}</button>`).join(''); el.onclick = e => { const b = e.target.closest('button'); if (b) onPick(b.dataset.v); }; }
+function renderSide() {
+  chips($('timers'), TIMERS, ST.timer, v => { ST.timer = +v; save(); renderSide(); say(ST.timer ? L.fadesBy(hhmm(Date.now() + ST.timer * 60000)) : L.allNight); if (want) { setEnd(); sound(); } status(); });
+  const pickScreen = v => { ST.screen = v; save(); renderSide(); status(); say(L.screen[v]); if (nightOn) screenOn(); };
+  chips($('screens'), SCREENS, ST.screen, pickScreen); chips($('nScreens'), SCREENS, ST.screen, v => { pickScreen(v); uiShow(); });
+  $('dimR').value = $('nDim').value = ST.dim; $('dimV').textContent = ST.dim + '%'; $('dim').style.opacity = ST.dim / 100;
+  $('keepOn').checked = !!ST.keepOn;
+  if (!('wakeLock' in navigator)) { $('keepOn').disabled = true; $('keepHint').textContent = 'This browser can’t hold the screen on. Lock it and the sound keeps going, with controls on the lock screen.'; }
+}
+const all = () => { renderKeys(); renderLib(); renderMix(); renderSide(); status(); };
+
+function setMix(mix) { ST.mix = mix.slice(0, MAXMIX).map(([id, v]) => [id, v]); save(); renderKeys(); renderLib(); renderMix(); want = true; sound(); }
+function toggle(id) {
+  const i = ST.mix.findIndex(m => m[0] === id);
+  if (i >= 0) { ST.mix.splice(i, 1); }
+  else { if (ST.mix.length >= MAXMIX) { say(L.many); return; } ST.mix.push([id, .7]); const c = E.BYID[id].cat; if (id === 'purr') say(L.purr); else if (!seen.has(c)) { seen.add(c); say(L.first[c]); } }
+  save(); renderKeys(); renderLib(); renderMix();
+  if (!ST.mix.length) { stopAll(false); return; }
+  want = true; sound();
+}
+$('lib').addEventListener('click', e => { const b = e.target.closest('.snd'); if (b) { unlock(); toggle(b.dataset.id); } });
+$('keys').addEventListener('click', e => {
+  const del = e.target.closest('[data-del]'); if (del) { e.stopPropagation(); ST.mine[+del.dataset.del] = null; save(); renderKeys(); return; }
+  const b = e.target.closest('.key'); if (!b) return; unlock();
+  if (b.dataset.p) { const p = E.PRESETS.find(x => x[0] === b.dataset.p); setMix(p[2]); seen.clear(); p[2].forEach(([id]) => seen.add(E.BYID[id].cat)); say(pick(L.preset)); }
+  else { const m = ST.mine[+b.dataset.m]; setMix(m.mix); say(m.name + '. Again.'); }
+});
+$('mix').addEventListener('input', e => { const r = e.target.closest('[data-v]'); if (!r) return; const m = ST.mix.find(x => x[0] === r.dataset.v); if (!m) return; m[1] = r.value / 100; save(); if (want) { unlock(); sound(); } });
+$('mix').addEventListener('click', e => { const b = e.target.closest('[data-rm]'); if (b) toggle(b.dataset.rm); });
+$('find').addEventListener('input', renderLib);
+$('playBtn').addEventListener('click', () => { unlock(); play(); });
+$('clearBtn').addEventListener('click', () => { if (!ST.mix.length) return; ST.mix = []; save(); stopAll(false); renderKeys(); renderLib(); renderMix(); say('Cleared. Start again.'); });
+$('saveBtn').addEventListener('click', () => { if (!ST.mix.length) { say(L.empty); return; }   // slots 0-4 are also the device's memory buttons
+  const name = ($('saveName').value.trim() || 'Mine ' + (ST.mine.filter(Boolean).length + 1)).slice(0, 24); let i = ST.mine.findIndex(m => m && m.name === name);
+  if (i < 0) { i = [0, 1, 2, 3, 4, 5, 6, 7].find(k => !ST.mine[k]); if (i == null) i = 7; }
+  ST.mine[i] = { name, mix: ST.mix.map(m => m.slice()) }; ST.mine = Array.from({ length: Math.max(...ST.mine.map((m, k) => m ? k + 1 : 0), 0) }, (_, k) => ST.mine[k] || null);
+  $('saveName').value = ''; save(); renderKeys(); status(); say(L.saved(name)); });
+$('saveName').addEventListener('keydown', e => { if (e.key === 'Enter') $('saveBtn').click(); });
+const onDim = v => { ST.dim = +v; save(); $('dimR').value = $('nDim').value = v; $('dimV').textContent = v + '%'; $('dim').style.opacity = v / 100; };
+$('dimR').addEventListener('input', e => onDim(e.target.value)); $('nDim').addEventListener('input', e => { onDim(e.target.value); uiShow(); });
+$('dimR').addEventListener('change', () => { if (ST.dim >= 80) say(L.dim); });
+$('keepOn').addEventListener('change', e => { ST.keepOn = e.target.checked; save(); lockSync(); if (ST.keepOn) say(L.keepOn); });
+
+/* ---------- the device: the owner's film of the console, its controls mapped in film pixels (1920 x 1080) ---------- */
+const W = 1920, H = 1080;
+const M = {
+  head: { x: 840, y: 425, rx: 255, ry: 225, name: 'His head', tip: 'Touch it to sleep: the screen goes down', act: 'sleep', cls: 'glass' },
+  medal: { x: 755, y: 840, r: 150, name: 'The medallion', tip: 'Play or stop', act: 'play' },
+  sun: { x: 893, y: 112, r: 58, name: 'The sun', tip: 'Keep the screen on', act: 'keep', cls: 'sun' },
+  orb: { x: 1086, y: 823, r: 80, name: 'The crystal', tip: 'Surprise me: a random mix', act: 'random' },
+  pawL: { x: 318, y: 560, r: 80, name: 'Left paw', tip: 'Previous ready-made mix', act: 'prev' },
+  pawR: { x: 1314, y: 594, r: 80, name: 'Right paw', tip: 'Next ready-made mix', act: 'next' },
+  vol: { x: 250, y: 826, r: 72, name: 'Big brass knob', tip: 'Volume: drag up and down (or scroll)', act: 'vol' },
+  timer: { x: 385, y: 911, r: 22, name: 'Small brass knob', tip: 'Sleep timer: the next length', act: 'timer' },
+  screen: { x: 1250, y: 719, w: 380, h: 180, name: 'The big screen', tip: 'Sleep timer: the next length', act: 'timer', cls: 'rect' },
+  q1: { x: 396, y: 751, r: 24, name: 'Red button', tip: 'Brown noise, on or off', act: 'snd:brown' },
+  q2: { x: 457, y: 751, r: 24, name: 'White button', tip: 'Steady rain, on or off', act: 'snd:rain' },
+  q3: { x: 514, y: 751, r: 24, name: 'Black button', tip: 'His purr, on or off', act: 'snd:purr' },
+  save: { x: 389, y: 830, r: 24, name: 'White button', tip: 'Save this mix to the next free memory', act: 'save' },
+  clear: { x: 444, y: 830, r: 24, name: 'White button', tip: 'Clear the mix', act: 'clear' },
+  how: { x: 501, y: 830, r: 24, name: 'White button', tip: 'How it works', act: 'how' },
+  dimDn: { x: 1086, y: 666, r: 25, name: 'Blue button', tip: 'Dimmer: lighter', act: 'dim-' },
+  dimUp: { x: 1179, y: 666, r: 24, name: 'Red button', tip: 'Dimmer: darker', act: 'dim+' },
+  sPhotos: { x: 1457, y: 680, r: 21, name: 'Button', tip: 'Sleep screen: photos', act: 'screen:photos' },
+  sCat: { x: 1509, y: 680, r: 21, name: 'Button', tip: 'Sleep screen: Ouija Cat asleep', act: 'screen:cat' },
+  sDark: { x: 1561, y: 680, r: 21, name: 'Button', tip: 'Sleep screen: dark', act: 'screen:dark' },
+  volDn: { x: 1532, y: 967, r: 22, name: 'Button', tip: 'Quieter', act: 'vol-' },
+  volUp: { x: 1586, y: 967, r: 22, name: 'Button', tip: 'Louder', act: 'vol+' },
+};
+[1268, 1320, 1371, 1425, 1478].forEach((x, i) => { M['m' + i] = { x, y: 967, r: 22, name: 'Memory ' + (i + 1), tip: 'Tap: play it (or store this mix if empty). Hold: store this mix', act: 'mem:' + i }; });
+function buildDevice() {
+  const hs = $('hs');
+  hs.innerHTML = Object.entries(M).map(([id, c]) => { const st = c.w ? `left:${c.x}px;top:${c.y}px;width:${c.w}px;height:${c.h}px` : c.rx ? `left:${c.x - c.rx}px;top:${c.y - c.ry}px;width:${c.rx * 2}px;height:${c.ry * 2}px` : `left:${c.x - c.r}px;top:${c.y - c.r}px;width:${c.r * 2}px;height:${c.r * 2}px`;
+    return `<button type="button" class="hs ${c.cls || ''}${c.rx ? ' ell' : ''}" data-id="${id}" style="${st}" aria-label="${esc(c.name + ': ' + c.tip)}"></button>`; }).join('');
+  fitBoard(); new ResizeObserver(fitBoard).observe($('stage'));
+  hs.addEventListener('pointerover', e => { const b = e.target.closest('.hs'); if (b) { const c = M[b.dataset.id]; $('cap').innerHTML = `<b>${esc(c.name)}</b> · ${esc(c.tip)}`; } });
+  hs.addEventListener('pointerout', e => { if (e.target.closest('.hs')) capIdle(); });
+  hs.addEventListener('click', e => { const b = e.target.closest('.hs'); if (b && !held) { unlock(); act(M[b.dataset.id].act, b); } held = false; });
+  // memories: hold to store
+  let hT = 0, held = false;
+  hs.addEventListener('pointerdown', e => { const b = e.target.closest('.hs'); held = false; if (!b || !M[b.dataset.id].act.startsWith('mem:')) return; hT = setTimeout(() => { held = true; storeMem(+M[b.dataset.id].act.slice(4)); }, 650); });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => hs.addEventListener(ev, () => clearTimeout(hT)));
+  // the big brass knob: drag up and down (or scroll) for volume; the ring round it shows the level
+  const knob = hs.querySelector('[data-id="vol"]'), ring = $('volRing'); let y0 = 0, v0 = 0;
+  knob.addEventListener('pointerdown', e => { knob.setPointerCapture(e.pointerId); y0 = e.clientY; v0 = vol(); ring.classList.add('on');
+    knob.onpointermove = ev => setVolume(Math.max(0, Math.min(1, v0 + (y0 - ev.clientY) / 160))); });
+  ['pointerup', 'pointercancel'].forEach(ev => knob.addEventListener(ev, () => { knob.onpointermove = null; ring.classList.remove('on'); }));
+  knob.addEventListener('wheel', e => { e.preventDefault(); setVolume(Math.max(0, Math.min(1, vol() - Math.sign(e.deltaY) * .05))); }, { passive: false });
+  addEventListener('keydown', e => { if (e.key === 'H' && e.shiftKey && !e.target.closest('input')) $('stage').classList.toggle('outline'); });
+  capIdle(); volPaint();
+}
+function fitBoard() { const r = $('stage').getBoundingClientRect(), k = Math.min(r.width / W, r.height / H); $('board').style.transform = `translate(${(r.width - W * k) / 2}px, ${(r.height - H * k) / 2}px) scale(${k})`; }
+function capIdle() { $('cap').innerHTML = 'Touch his head to sleep · the medallion plays' + (matchMedia('(pointer: fine)').matches ? ' · Shift+H shows every control' : ''); }
+function setVolume(v) { const inp = document.querySelector('.vs-vol input'); if (inp) { inp.value = Math.round(v * 100); inp.dispatchEvent(new Event('input', { bubbles: true })); } else { window.VS_VOLUME = v; dispatchEvent(new CustomEvent('vs-volume', { detail: v })); } }
+function volPaint() { $('volRing').style.setProperty('--v', vol().toFixed(3)); }
+addEventListener('vs-volume', volPaint);
+function storeMem(i) { if (!ST.mix.length) { say(L.empty); return; } ST.mine[i] = { name: 'Memory ' + (i + 1), mix: ST.mix.map(m => m.slice()) }; ST.mine = Array.from({ length: Math.max(ST.mine.length, i + 1) }, (_, k) => ST.mine[k] || null); save(); renderKeys(); status(); say(`Stored in memory ${i + 1}. Look at you, organised.`); }
+function act(a, btn) {
+  const P = E.PRESETS, at = P.findIndex(p => sameMix(p[2], ST.mix));
+  if (a === 'sleep') return $('sleepBtn').click();
+  if (a === 'play') return play();
+  if (a === 'timer') { const i = TIMERS.findIndex(t => t[0] === ST.timer); $('timers').querySelectorAll('button')[(i + 1) % TIMERS.length].click(); return; }
+  if (a === 'clear') return $('clearBtn').click();
+  if (a === 'prev' || a === 'next') { const j = ((at < 0 ? (a === 'next' ? -1 : 0) : at) + (a === 'next' ? 1 : -1) + P.length) % P.length; $('keys').querySelector(`[data-p="${P[j][0]}"]`).click(); return; }
+  if (a === 'random') { const ids = E.SOUNDS.filter(s => s.cat !== 'waves' && s.cat !== 'solf').map(s => s.id), mix = []; while (mix.length < 3) { const id = pick(ids); if (!mix.some(m => m[0] === id)) mix.push([id, +(.4 + Math.random() * .4).toFixed(2)]); } setMix(mix); say('Random. Don’t blame me.'); return; }
+  if (a === 'save') { const i = [0, 1, 2, 3, 4].find(i => !ST.mine[i]); storeMem(i == null ? 4 : i); return; }
+  if (a === 'dim-' || a === 'dim+') { onDim(Math.max(0, Math.min(95, ST.dim + (a === 'dim+' ? 10 : -10)))); say('Dimmer ' + ST.dim + '%.'); return; }
+  if (a === 'how') return $('howBtn').click();
+  if (a === 'vol-' || a === 'vol+') return setVolume(Math.max(0, Math.min(1, vol() + (a === 'vol+' ? .1 : -.1))));
+  if (a === 'keep') { $('keepOn').checked = !$('keepOn').checked; $('keepOn').dispatchEvent(new Event('change')); if (!ST.keepOn) say('Screen can sleep again.'); status(); return; }
+  if (a.startsWith('screen:')) return $('screens').querySelector(`[data-v="${a.slice(7)}"]`).click();
+  if (a.startsWith('snd:')) return toggle(a.slice(4));
+  if (a.startsWith('mem:')) { const m = ST.mine[+a.slice(4)]; if (m) { setMix(m.mix); say(m.name + '. Again.'); } else storeMem(+a.slice(4)); }
+}
+function device(paused) {
+  const playing = want && !paused; document.body.classList.toggle('playing', playing);
+  const lit = { sPhotos: ST.screen === 'photos', sCat: ST.screen === 'cat', sDark: ST.screen === 'dark', sun: !!ST.keepOn, q1: ST.mix.some(m => m[0] === 'brown'), q2: ST.mix.some(m => m[0] === 'rain'), q3: ST.mix.some(m => m[0] === 'purr') };
+  for (let i = 0; i < 5; i++) lit['m' + i] = !!ST.mine[i];
+  document.querySelectorAll('#hs .hs').forEach(b => b.classList.toggle('lit', !!lit[b.dataset.id]));
+  film(playing);
+}
+
+/* ---------- the film: awake and looking about; falls asleep when the sound starts; wakes when it stops ---------- */
+// Layers, bottom to top: the awake still, the asleep still, vAwake (his opening second, looped forward and back), vFall and
+// vYawn (two ways of falling asleep, taken in turn), vLoop (asleep, forward and back, no seam). vFall hands over to vLoop on
+// the same frame; the yawn take ends differently, so it fades into vLoop over 2.6 s. Waking starts vAwake underneath and
+// fades everything above it away. Calm motion, or a browser that won't play video (iOS Low Power Mode), gets the two stills.
+let fState = 'awake', fTok = 0, fSize = '', fTurn = Math.random() < .5 ? 0 : 1;
+const FILMS = ['devAsleep', 'vAwake', 'vFall', 'vYawn', 'vLoop'];
+const calmMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches && !document.documentElement.classList.contains('motion-full');
+const fShow = (id, how) => { const e = $(id); e.classList.remove('cut', 'quick', 'slow'); if (how) e.classList.add(how); e.classList.add('on'); };
+const fHide = (id, how) => { const e = $(id); e.classList.remove('cut', 'quick', 'slow'); if (how) e.classList.add(how); e.classList.remove('on'); };
+function filmLoad() {
+  if ($('vLoop').src) return;
+  fSize = $('stage').clientWidth * (devicePixelRatio || 1) > 1300 ? '' : '-sd';   // phones get the 960 px films
+  $('devAsleep').src = 'sleep-console-asleep.webp';
+  for (const [id, n] of [['vAwake', 'awake'], ['vFall', 'fall'], ['vYawn', 'yawn'], ['vLoop', 'loop']]) $(id).src = `sleep-${n}${fSize}.mp4`;
+  $('vYawn').onerror = () => { $('vYawn').dataset.bad = '1'; };
+  awakeOn();
+}
+function awakeOn() {   // him awake, looking about (while nothing plays)
+  if (calmMotion() || fState !== 'awake') return;
+  const a = $('vAwake'), tok = fTok;
+  a.play().then(() => { if (tok === fTok && fState === 'awake') fShow('vAwake', 'quick'); }).catch(() => {});
+}
+function filmStill(tok) { if (tok !== fTok) return; fShow('devAsleep'); fState = 'asleep'; }
+function film(on) {
+  if (on && fState === 'awake') {
+    const tok = ++fTok, l = $('vLoop'); fState = 'falling'; filmLoad();
+    if (calmMotion()) return filmStill(tok);
+    const yawn = (fTurn++ % 2 === 1) && !$('vYawn').dataset.bad, id = yawn ? 'vYawn' : 'vFall', f = $(id);
+    try { f.currentTime = 0; } catch (e) {}
+    f.play().then(() => { if (tok !== fTok) return f.pause(); fShow(id, 'quick'); setTimeout(() => { if (tok === fTok) { $('vAwake').pause(); fHide('vAwake', 'cut'); } }, 600); }).catch(() => filmStill(tok));
+    f.onended = () => { if (tok !== fTok) return; try { l.currentTime = 0; } catch (e) {}
+      l.play().then(() => { if (tok !== fTok) return l.pause(); fShow('vLoop', yawn ? 'slow' : 'cut'); fState = 'asleep';
+        setTimeout(() => { if (tok === fTok) { fHide(id, 'cut'); f.pause(); } }, yawn ? 2800 : 100); }).catch(() => filmStill(tok)); };
+  } else if (!on && fState !== 'awake') {
+    const tok = ++fTok; fState = 'awake';
+    const a = $('vAwake'); try { a.currentTime = 0; } catch (e) {}
+    const reveal = () => { if (tok !== fTok) return; FILMS.filter(id => id !== 'vAwake').forEach(id => fHide(id)); setTimeout(() => { if (tok === fTok) ['vFall', 'vYawn', 'vLoop'].forEach(id => $(id).pause()); }, 2000); };
+    if (calmMotion()) return reveal();
+    a.play().then(() => { if (tok === fTok) fShow('vAwake', 'cut'); reveal(); }).catch(reveal);
+  }
+}
+document.addEventListener('visibilitychange', () => {   // a hidden page pauses muted video; pick up where he was
+  if (document.hidden) return;
+  for (const id of ['vAwake', 'vFall', 'vYawn', 'vLoop']) { const e = $(id); if (e.classList.contains('on') && e.paused && !e.ended) e.play().catch(() => {}); }
+  for (const id of ['vFall', 'vYawn']) { const e = $(id); if (fState === 'falling' && e.classList.contains('on') && e.ended && e.onended) e.onended(); }
+});
+addEventListener('load', () => setTimeout(filmLoad, 300));
+
+/* ---------- the night screen ---------- */
+let nightOn = false, uiT = 0, phT = 0, photoList = null, recent = [];
+const STILLS = ['console.webp', 'crystal-eye.webp', 'radio-board.webp', 'mirror-device.webp', 'parlour-console.webp', 'crystal-ball.webp', 'deck-console.webp', 'palm-board.webp'];   // the owner's room art, until her own photos arrive
+let MAN = null;   // sleep-photos/manifest.json, written by tools/sleep-photos.py: { photos: [{f, w, h}], film: bool }
+async function manifest() { if (MAN) return MAN; try { const r = await fetch('sleep-photos/manifest.json', { cache: 'no-cache' }); MAN = r.ok ? await r.json() : {}; } catch (e) { MAN = {}; } if (Array.isArray(MAN)) MAN = { photos: MAN }; return MAN; }
+async function photos() {
+  if (photoList) return photoList;
+  const m = await manifest(); if (m.photos && m.photos.length) photoList = m.photos.map(x => 'sleep-photos/' + x.f);
+  return photoList || (photoList = STILLS.slice());
+}
+async function nextPhoto(first) {
+  clearTimeout(phT); if (!nightOn || ST.screen !== 'photos') return;
+  const list = await photos(), pool = list.filter(p => !recent.includes(p)), src = pick(pool.length ? pool : list);
+  recent.push(src); if (recent.length > Math.min(12, Math.floor(list.length / 2))) recent.shift();
+  const a = $('phA'), b = $('phB'), show = a.classList.contains('on') ? b : a, hide = show === a ? b : a;
+  show.onload = () => { if (!nightOn || ST.screen !== 'photos') return; const x = (Math.random() * 2 - 1) * 2, y = (Math.random() * 2 - 1) * 2;
+    show.style.transition = 'none'; show.style.transform = `scale(1.0) translate(${-x}%, ${-y}%)`; void show.offsetWidth; show.style.transition = '';
+    show.classList.add('on'); hide.classList.remove('on'); requestAnimationFrame(() => { show.style.transform = `scale(1.07) translate(${x}%, ${y}%)`; }); };
+  show.onerror = () => { photoList = photoList && photoList.filter(p => p !== src); phT = setTimeout(nextPhoto, 500); };
+  show.src = src; phT = setTimeout(nextPhoto, first ? 16000 : 15000);
+}
+async function screenOn() {
+  const v = $('catFilm'); clearTimeout(phT);
+  $('phA').classList.remove('on'); $('phB').classList.remove('on'); v.classList.remove('on');
+  if (ST.screen === 'photos') { v.pause(); nextPhoto(true); }
+  else if (ST.screen === 'cat') {
+    if (!v.dataset.src) { const src = 'sleep-loop.mp4'; v.dataset.src = src; v.src = src; }   // him asleep in the machine, the same loop as on the device
+    v.play().then(() => v.classList.add('on')).catch(() => v.classList.add('on'));
+  } else v.pause();
+}
+function night(on) {
+  nightOn = on; $('night').hidden = !on; document.body.classList.toggle('sitting', on);
+  if (on) { $('sink').classList.remove('on'); requestAnimationFrame(() => requestAnimationFrame(() => $('sink').classList.add('on'))); screenOn(); uiHide(); try { document.documentElement.requestFullscreen && !document.fullscreenElement && document.documentElement.requestFullscreen({ navigationUI: 'hide' }).catch(() => {}); } catch (e) {} }
+  else { clearTimeout(phT); $('catFilm').pause(); $('sink').classList.remove('on'); try { document.fullscreenElement && document.exitFullscreen(); } catch (e) {} }
+  status(); lockSync();
+}
+function uiShow() { $('night').classList.add('ui'); clearTimeout(uiT); uiT = setTimeout(uiHide, 12000); }
+function uiHide() { $('night').classList.remove('ui'); clearTimeout(uiT); }
+$('night').addEventListener('click', e => { if (e.target.closest('.nctl')) { uiShow(); return; } $('night').classList.contains('ui') ? uiHide() : uiShow(); });
+$('nWake').addEventListener('click', e => { e.stopPropagation(); night(false); });
+$('nStop').addEventListener('click', e => { e.stopPropagation(); stopAll(); uiShow(); });
+$('sleepBtn').addEventListener('click', () => { unlock(); if (!ST.mix.length) { say(L.empty); return; } if (!want) { want = true; setEnd(); sound(); } say(pick(L.sleep)); night(true); });
+addEventListener('keydown', e => { if (e.key === 'Escape') { if (nightOn) night(false); else closeDrawer(); } });
+
+/* ---------- drawer ---------- */
+function closeDrawer() { $('drawer').classList.remove('on'); $('howBtn').setAttribute('aria-pressed', 'false'); }
+$('howBtn').addEventListener('click', () => { const on = !$('drawer').classList.contains('on'); $('drawer').classList.toggle('on', on); $('howBtn').setAttribute('aria-pressed', String(on)); });
+$('drawerX').addEventListener('click', closeDrawer);
+
+buildDevice(); all();
+setTimeout(() => say(ST.mix.length ? 'Your last mix. Press Play.' : L.hello), 700);
+if (DEBUG) window.__sleep = { get mode() { return mode; }, get cur() { return cur; }, get want() { return want; }, get endAt() { return endAt; }, ST, bakeNow, play, stopAll, night, FIXEDVOL, get LV() { return LV; }, get AC() { return AC; } };
+})();
+</script>
+<script id="vs-chrome">
+/* The shared frame for every page: the rooms as bold tabs (current room lit), a volume slider that every page's
+   sound obeys (window.VS_VOLUME, event 'vs-volume', remembered), gold sparks that follow the cursor and burst on a
+   click, and a dissolve between rooms. Costs nothing when idle: the spark canvas only draws while sparks are alive. */
+(function () {
+  /* ---------- the safety stage: every page's sound passes through it on the way to the speakers ----------
+     It fades in when a room's sound starts or wakes (no click on the first note), takes out sub-bass thumps and DC
+     (the usual cause of pops when things start and stop), catches anything that would clip (crackle), and fades out
+     when you leave a room, so nothing is cut off mid-wave. The Turntable gets no limiter: her masters stay as they are. */
+  (function safeAudio() {
+    if (!window.AudioNode || AudioNode.prototype.__vsSafe) return;
+    const P = AudioNode.prototype, orig = P.connect, bus = new WeakMap(), limit = !/deck\.html$/.test(location.pathname);
+    P.__vsSafe = true; window.__vsBuses = [];
+    function stage(ctx) {
+      let s = bus.get(ctx); if (s) return s;
+      const g = ctx.createGain(); g.gain.value = 0;
+      const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 16; hp.Q.value = .5; orig.call(g, hp); let last = hp;
+      if (limit) { const l = ctx.createDynamicsCompressor(); l.threshold.value = -1; l.knee.value = 0; l.ratio.value = 20; l.attack.value = .002; l.release.value = .12; orig.call(last, l); last = l; }
+      orig.call(last, ctx.destination);
+      const ramp = (to, d) => { const t = ctx.currentTime; g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(g.gain.value, t); g.gain.linearRampToValueAtTime(to, t + d); };
+      s = { g, ctx, up: (d = .45) => ramp(1, d), down: (d = .18) => ramp(0, d) };
+      if (ctx.state === 'running') s.up(.6);
+      ctx.addEventListener('statechange', () => { if (ctx.state === 'running') s.up(.35); });
+      bus.set(ctx, s); window.__vsBuses.push(s); return s;
+    }
+    P.connect = function (dest, out, inp) {
+      if (dest instanceof AudioDestinationNode) { const s = stage(dest.context); if (out == null) orig.call(this, s.g); else orig.call(this, s.g, out); return dest; }
+      return out == null ? orig.call(this, dest) : inp == null ? orig.call(this, dest, out) : orig.call(this, dest, out, inp);
+    };
+    // leaving: every sound on the page fades out (the stage for Web Audio, a quick ramp for films playing on their own)
+    window.VS_FADE_OUT = (ms = 200) => {
+      for (const s of window.__vsBuses) try { s.down(ms / 1000); } catch (e) {}
+      document.querySelectorAll('video, audio').forEach(m => { if (m.muted || m.paused || !m.volume) return; const v0 = m.__vsPre = m.volume, t0 = performance.now(); const step = () => { const k = Math.min(1, (performance.now() - t0) / ms); m.volume = v0 * (1 - k); if (k < 1) requestAnimationFrame(step); }; step(); });
+    };
+    addEventListener('pagehide', () => window.VS_FADE_OUT(60));
+  })();
+
+  /* ---------- films stay in the page: a phone never lifts one out ----------
+     iPhones play a video full-screen, offer picture-in-picture, or pop it into a floating preview on a long press, unless
+     told not to. Every film here is part of the room's background, so each one is pinned: inline, no picture-in-picture,
+     no AirPlay, no controls, and touches pass through it to the room. Films made later (by a room's own code) get the same
+     the moment they're added or played. */
+  (function pinFilms() {
+    const pin = v => { if (!v || v.__vsPinned || v.tagName !== 'VIDEO') return; v.__vsPinned = true;
+      v.playsInline = true; v.setAttribute('playsinline', ''); v.setAttribute('webkit-playsinline', ''); v.setAttribute('x-webkit-airplay', 'deny');
+      v.controls = false; v.removeAttribute('controls'); try { v.disablePictureInPicture = true; v.setAttribute('disablepictureinpicture', ''); } catch (e) {}
+      try { v.disableRemotePlayback = true; v.setAttribute('disableremoteplayback', ''); } catch (e) {}
+      v.addEventListener('webkitbeginfullscreen', () => { try { v.webkitExitFullscreen(); } catch (e) {} });
+      v.addEventListener('enterpictureinpicture', () => { try { document.exitPictureInPicture(); } catch (e) {} }); };
+    const all = () => document.querySelectorAll('video').forEach(pin); all();
+    const play = HTMLMediaElement.prototype.play; HTMLMediaElement.prototype.play = function () { pin(this); return play.apply(this, arguments); };
+    new MutationObserver(ms => { for (const m of ms) for (const n of m.addedNodes) { if (n.tagName === 'VIDEO') pin(n); else if (n.querySelectorAll) n.querySelectorAll('video').forEach(pin); } }).observe(document.documentElement, { childList: true, subtree: true });
+    const st = document.createElement('style'); st.textContent = 'video { pointer-events: none; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; } video::-webkit-media-controls, video::-webkit-media-controls-start-playback-button, video::-webkit-media-controls-overlay-play-button { display: none !important; -webkit-appearance: none; }';
+    (document.head || document.documentElement).append(st);
+  })();
+
+  const ROOMS = [['./', 'Templum', '☥', 'The board. Ask him.'], ['parlour.html', 'Parlour', '♄', 'His console. Every key plays.'], ['deck.html', 'Turntable', '◉', 'ANIMUSCULT on his decks.'], ['palm.html', 'Palm', '✶', 'Your hand, read.'], ['crystal.html', 'Crystal', '◎', 'The seer’s sitting.'], ['mirror.html', 'Mirror', '◐', 'Two mirrors, facing.'], ['mesmer.html', 'Trance', '❂', 'The magnetic tub. Go under.'], ['sleep.html', 'Sleep', '☾', 'Sleep sounds. The screen can go off.'], ['geometry.html', 'Geometry', '❋', 'Sacred geometry and mandalas.'], ['forge.html', 'Forge', '✧', 'Sigils from your words.'], ['engine.html', 'Engine', '⚙︎', 'The dome machine. Scry with him.'], ['radio.html', 'Radio', '⌁', 'Live voices from everywhere.'], ['compendium.html', 'Compendium', '☘', 'The library of plant medicine, A to Z.']];
+  window.VS_ROOMS = ROOMS;   // the Templum's floating doors read this, so a new room shows up there too
+  const here = (location.pathname.split('/').pop() || 'index.html').replace('index.html', '') || './';
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches && !document.documentElement.classList.contains('motion-full');
+
+  /* ---------- volume ---------- */
+  let vol = .8; try { const v = parseFloat(localStorage.getItem('vs-volume')); if (v >= 0 && v <= 1) vol = v; } catch (e) {}
+  window.VS_VOLUME = vol;
+  const setVol = v => { vol = window.VS_VOLUME = Math.max(0, Math.min(1, v)); try { localStorage.setItem('vs-volume', String(vol)); } catch (e) {} dispatchEvent(new CustomEvent('vs-volume', { detail: vol })); document.querySelectorAll('.vs-vol input').forEach(i => { i.value = Math.round(vol * 100); }); document.querySelectorAll('.vs-vol').forEach(l => l.classList.toggle('mute', vol === 0)); };
+  // media elements on the page follow it too (films, his recorded voice)
+  const mediaVol = () => document.querySelectorAll('video, audio').forEach(m => { if (m.dataset.vsBase == null) m.dataset.vsBase = m.volume; m.volume = Math.min(1, +m.dataset.vsBase * vol); });
+  addEventListener('vs-volume', () => { if (!document.body?.dataset.novol) mediaVol(); });
+
+  /* ---------- styles (added last, so they win) ---------- */
+  const css = `
+.bar { gap: 7px !important; }
+.bar h1 { display: none !important; }
+.bar .vs-rooms { display: flex; gap: 6px; align-items: center; overflow-x: auto; scrollbar-width: none; flex: 1 1 auto; min-width: 0; }
+.bar .vs-rooms::-webkit-scrollbar { display: none; }
+.bar a.vs-room { position: relative; display: inline-flex !important; align-items: center; gap: 7px; font-family: "IBM Plex Mono", ui-monospace, monospace !important; font-size: 11px !important; font-weight: 400; letter-spacing: .16em !important; text-transform: uppercase; color: rgba(243,230,196,.62) !important; text-decoration: none; padding: 7px 10px 7px 8px !important; border: 0 !important; border-radius: 0; background: none !important; box-shadow: none; transition: color .5s ease, text-shadow .5s ease; white-space: nowrap; }
+.bar a.vs-room i { font-style: normal; font-size: 14px; color: rgba(240,199,106,.7); transition: color .5s, text-shadow .5s; }
+.bar a.vs-room::after { content: ""; position: absolute; left: 10px; right: 10px; bottom: 2px; height: 1px; background: linear-gradient(90deg, transparent, rgba(240,214,143,.85), transparent); opacity: 0; transform: scaleX(.4); transition: opacity .5s ease, transform .5s ease; }
+.bar a.vs-room:hover { color: #fbefcf !important; text-shadow: 0 0 14px rgba(255,210,130,.45); }
+.bar a.vs-room:hover i { color: #f6d27e; text-shadow: 0 0 10px rgba(240,190,90,.7); }
+.bar a.vs-room:hover::after { opacity: .5; transform: none; }
+.bar a.vs-room[aria-current="page"] { color: #fff3d2 !important; text-shadow: 0 0 16px rgba(255,205,120,.55); }
+.bar a.vs-room[aria-current="page"] i { color: #ffd77e; text-shadow: 0 0 12px rgba(255,200,100,.9); }
+.bar a.vs-room[aria-current="page"]::after { opacity: 1; transform: none; }
+.bar > button:not(.unzoom):not(.vs-menu), .bar > a:not(.vs-room), .bar .motion-btn { background: none !important; border: 0 !important; border-bottom: 1px solid transparent !important; border-radius: 0 !important; box-shadow: none !important; color: rgba(238,228,203,.66) !important; transition: color .5s, border-color .5s !important; }
+.bar > button:not(.unzoom):not(.vs-menu):hover, .bar > a:not(.vs-room):hover, .bar .motion-btn:hover, .bar > button[aria-pressed="true"], .bar > button.on { color: #f0d68f !important; border-bottom-color: rgba(240,214,143,.55) !important; }
+.vs-vol { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border: 0; border-radius: 3px; color: rgba(240,199,106,.8); background: none; }
+/* the room breathes out when nobody is touching anything: the frame steps back and leaves the room */
+.bar, .foot, .vs-vol.float { transition: opacity 1.8s ease; }
+body.vs-quiet .bar, body.vs-quiet .foot, body.vs-quiet .vs-vol.float { opacity: 0; }
+body.sitting .bar { opacity: 0 !important; }   /* a sitting hides the frame completely: no half-dimmed grey bar */
+body.sitting .bar:hover, body.sitting .bar:focus-within { opacity: 1 !important; }
+body.vs-quiet .bar:hover, body.vs-quiet .bar:focus-within, body.vs-quiet .vs-vol.float:hover { opacity: 1; transition-duration: .4s; }
+/* one film over every room: a soft vignette and a fine grain, so the rooms read as one place */
+.vs-film { position: fixed; inset: 0; z-index: 19; pointer-events: none; background: radial-gradient(ellipse 75% 70% at 50% 54%, rgba(0,0,0,0) 55%, rgba(0,0,0,.34) 100%); }
+.vs-film::after { content: ""; position: absolute; inset: 0; opacity: .05; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -.35'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.foot { font-size: 11.5px !important; letter-spacing: .04em !important; color: rgba(238,228,203,.5) !important; bottom: 6px !important; }
+/* phones: the rooms fold into one menu button; the page's own buttons move into the same sheet */
+.bar .vs-menu { display: none; align-items: center; gap: 9px; flex: none; font: 500 11.5px/1 "IBM Plex Mono", ui-monospace, monospace; letter-spacing: .16em; text-transform: uppercase; color: #fff3d2; background: linear-gradient(rgba(214,164,67,.16), rgba(214,164,67,.06)); border: 1px solid rgba(240,214,143,.5); border-radius: 3px; padding: 0 12px 0 10px; height: 32px; cursor: pointer; box-shadow: 0 0 0 rgba(240,199,106,0), inset 0 0 12px rgba(214,164,67,.08); transition: border-color .3s, box-shadow .3s, background .3s; }
+.bar .vs-menu:hover, .bar .vs-menu[aria-expanded="true"] { border-color: #f0d68f; background: linear-gradient(rgba(214,164,67,.28), rgba(214,164,67,.1)); box-shadow: 0 0 18px rgba(240,199,106,.28), inset 0 0 12px rgba(214,164,67,.12); }
+.bar .vs-menu svg { width: 15px; height: 15px; flex: none; color: #ffd77e; }
+.bar .vs-menu .vs-n { font-weight: 400; font-size: 10px; letter-spacing: 0; color: #120a04; background: #e9c46e; border-radius: 8px; padding: 2px 5px 1px; }
+.bar .vs-menu .vs-here { display: inline-flex; align-items: center; gap: 6px; padding-left: 9px; border-left: 1px solid rgba(240,214,143,.3); color: rgba(243,230,196,.75); letter-spacing: .12em; }
+.bar .vs-menu .vs-here i { font-style: normal; font-size: 13px; color: #ffd77e; }
+.bar .vs-menu.vs-call { animation: vsCall 1.6s ease-in-out 4; }
+@keyframes vsCall { 50% { border-color: #ffe7a8; box-shadow: 0 0 26px rgba(255,205,110,.55), inset 0 0 14px rgba(255,205,110,.2); } }
+.bar.vs-tight .vs-rooms { display: none !important; }
+.bar.vs-tight .vs-menu { display: inline-flex; }
+.bar > button, .bar > a:not(.vs-room), .bar .motion-btn, .bar > label { white-space: nowrap; flex: none; }
+/* a room's opening screen sits under the bar, so the way to the other rooms is there from the first second */
+body:has(.gate:not([hidden])) .bar { z-index: 9 !important; opacity: 1 !important; }
+/* the first visit: one quiet word under the rooms, once */
+.vs-hint { position: fixed; z-index: 9991; max-width: 270px; padding: 11px 14px 12px; font: italic 400 15px/1.35 "IM Fell English", Georgia, serif; color: #f3e6c4; background: rgba(8,6,12,.94); border: 1px solid rgba(240,214,143,.45); box-shadow: 0 10px 40px rgba(0,0,0,.6), 0 0 22px rgba(214,164,67,.15); opacity: 0; transform: translateY(-4px); transition: opacity .5s ease, transform .5s ease; pointer-events: none; }
+.vs-hint.on { opacity: 1; transform: none; }
+.vs-hint::before { content: ""; position: absolute; top: -6px; left: var(--ax, 22px); width: 10px; height: 10px; background: inherit; border-left: 1px solid rgba(240,214,143,.45); border-top: 1px solid rgba(240,214,143,.45); transform: rotate(45deg); }
+.vs-hint b { display: block; margin-bottom: 3px; font: 500 10px/1 "IBM Plex Mono", ui-monospace, monospace; font-style: normal; letter-spacing: .2em; text-transform: uppercase; color: #f0c76a; }
+.vs-sheet { position: fixed; inset: 0; z-index: 9990; overflow-y: auto; background: rgba(5,4,10,.97); color: #efe4c8; padding: calc(14px + env(safe-area-inset-top, 0px)) max(18px, env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px)); display: grid; align-content: start; gap: 14px; opacity: 0; transition: opacity .25s ease; }
+.vs-sheet.on { opacity: 1; }
+.vs-sheet .vs-sh-top { display: flex; align-items: center; justify-content: space-between; }
+.vs-sheet h2 { margin: 0; font: 500 11px/1 "IBM Plex Mono", ui-monospace, monospace; letter-spacing: .22em; text-transform: uppercase; color: rgba(240,199,106,.85); }
+.vs-sheet .vs-x { width: 44px; height: 44px; border: 0; background: none; color: #efe4c8; font-size: 22px; cursor: pointer; }
+.vs-sheet .vs-sh-rooms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.vs-sheet .vs-sh-rooms a { display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 10px 14px; border: 1px solid rgba(214,164,67,.28); color: #f3e6c4; text-decoration: none; font: 400 19px/1.1 "IM Fell English SC", "IM Fell English", Georgia, serif; }
+.vs-sheet .vs-sh-rooms a i { font-style: normal; font-size: 22px; color: #f0c76a; width: 26px; text-align: center; }
+.vs-sheet .vs-sh-rooms a span { display: grid; gap: 4px; }
+.vs-sheet .vs-sh-rooms a small { font: italic 400 12.5px/1.25 "IM Fell English", Georgia, serif; color: rgba(239,228,200,.6); }
+.vs-sheet.drop { inset: auto; top: calc(var(--vs-bar-b, 46px) + 6px); left: var(--vs-drop-x, 10px); width: min(360px, calc(100vw - 20px)); max-height: calc(100vh - var(--vs-bar-b, 46px) - 20px); padding: 14px; gap: 10px; background: rgba(8,6,12,.96); border: 1px solid rgba(240,214,143,.4); box-shadow: 0 18px 60px rgba(0,0,0,.7), 0 0 30px rgba(214,164,67,.12); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); transform: translateY(-6px); transition: opacity .2s ease, transform .2s ease; }
+.vs-sheet.drop.on { transform: none; }
+.vs-sheet.drop .vs-x { width: 32px; height: 32px; font-size: 16px; }
+.vs-sheet.drop .vs-sh-rooms { grid-template-columns: 1fr; gap: 2px; }
+.vs-sheet.drop .vs-sh-rooms a { min-height: 50px; border-color: transparent; font-size: 18px; transition: background .2s, border-color .2s; }
+.vs-sheet.drop .vs-sh-rooms a:hover { background: rgba(214,164,67,.1); border-color: rgba(214,164,67,.3); }
+.vs-sheet .vs-sh-rooms a[aria-current="page"] { border-color: #f0d68f; background: rgba(214,164,67,.14); box-shadow: 0 0 22px rgba(214,164,67,.18); }
+.vs-sheet .vs-sh-tools { display: grid; gap: 0; border-top: 1px solid rgba(214,164,67,.2); }
+.vs-sheet .vs-sh-tools > * { display: flex !important; align-items: center; width: 100%; min-height: 48px; margin: 0 !important; padding: 0 4px !important; text-align: left; font: 500 12.5px/1.2 "IBM Plex Mono", ui-monospace, monospace !important; letter-spacing: .12em !important; text-transform: uppercase; color: #efe4c8 !important; background: none !important; border: 0 !important; border-bottom: 1px solid rgba(214,164,67,.14) !important; border-radius: 0 !important; box-shadow: none !important; position: static !important; opacity: 1 !important; text-decoration: none; cursor: pointer; }
+.vs-sheet .vs-sh-tools:empty { display: none; }
+@media (max-width: 760px) { .bar .vs-rooms { display: none !important; } .bar .vs-menu { display: inline-flex; } .bar .vs-menu .vs-here span { display: none; } .bar .vs-vol { margin-left: auto; } }
+/* power: every room switches off and on from the bar */
+.bar .vs-pow { display: inline-flex !important; align-items: center; gap: 7px; flex: none; font: 500 10.5px/1 "IBM Plex Mono", ui-monospace, monospace !important; letter-spacing: .16em !important; text-transform: uppercase; color: rgba(238,228,203,.7) !important; background: none !important; border: 0 !important; padding: 6px 6px !important; cursor: pointer; white-space: nowrap; }
+.bar .vs-pow i { width: 7px; height: 7px; border-radius: 50%; background: #7dffb0; box-shadow: 0 0 8px #3dff8a, 0 0 2px #fff inset; transition: background .4s, box-shadow .4s; }
+.bar .vs-pow svg { width: 14px; height: 14px; }
+.bar .vs-pow:hover { color: #f0d68f !important; }
+body.vs-off .bar .vs-pow i { background: #4a1712; box-shadow: none; }
+body.vs-off .bar { z-index: 9990 !important; opacity: 1 !important; }
+.vs-offveil { position: fixed; inset: 0; z-index: 9989; display: grid; place-items: center; background: #030206; opacity: 0; pointer-events: none; transition: opacity .45s ease .25s; }
+.vs-offveil::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px; background: linear-gradient(90deg, transparent, rgba(255,236,190,.9), transparent); box-shadow: 0 0 24px rgba(255,214,140,.8); transform: scaleX(0); opacity: 0; }
+body.vs-off .vs-offveil { opacity: 1; pointer-events: auto; }
+body.vs-off .vs-offveil::before { animation: vsCrt .6s ease-out; }
+@keyframes vsCrt { 0% { transform: scaleX(1) scaleY(30); opacity: .0; } 30% { transform: scaleX(1) scaleY(1); opacity: 1; } 100% { transform: scaleX(0); opacity: 0; } }
+.vs-offveil button { display: grid; justify-items: center; gap: 14px; background: none; border: 0; color: rgba(243,230,196,.7); font: italic 400 17px/1.3 "IM Fell English", Georgia, serif; cursor: pointer; opacity: 0; transition: opacity .6s ease .45s, color .3s; }
+body.vs-off .vs-offveil button { opacity: 1; }
+.vs-offveil button:hover { color: #fff3d2; }
+.vs-offveil button span { display: grid; place-items: center; width: 74px; height: 74px; border-radius: 50%; border: 1px solid rgba(240,214,143,.45); color: #f0c76a; box-shadow: 0 0 30px rgba(214,164,67,.15), inset 0 0 20px rgba(214,164,67,.08); transition: box-shadow .4s, border-color .4s; }
+.vs-offveil button:hover span { border-color: #f0d68f; box-shadow: 0 0 40px rgba(240,199,106,.35), inset 0 0 20px rgba(214,164,67,.15); }
+.vs-offveil button svg { width: 30px; height: 30px; }
+.vs-vol svg { width: 16px; height: 16px; flex: none; cursor: pointer; }
+.vs-vol.mute svg .w { display: none; }
+.vs-vol input { -webkit-appearance: none; appearance: none; width: 84px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, #f0c76a var(--p, 80%), rgba(214,164,67,.25) var(--p, 80%)); outline: none; cursor: pointer; }
+.vs-vol input::-webkit-slider-thumb { -webkit-appearance: none; width: 13px; height: 13px; border-radius: 50%; background: radial-gradient(#fff6d8, #d6a443); box-shadow: 0 0 8px rgba(240,200,120,.8); border: 0; }
+.vs-vol input::-moz-range-thumb { width: 13px; height: 13px; border-radius: 50%; background: #e8c070; border: 0; }
+.vs-vol.float { position: fixed; right: 14px; bottom: 14px; z-index: 40; background: rgba(6,5,10,.85); }
+.vs-fade { position: fixed; inset: 0; z-index: 9998; pointer-events: none; background: radial-gradient(ellipse at 50% 50%, rgba(255,214,140,.0), #030206 70%); opacity: 0; transition: opacity .32s ease; }
+.vs-fade.arrive { transition: opacity .9s cubic-bezier(.3,.1,.3,1); }
+.vs-fade.on { opacity: 1; background: radial-gradient(ellipse at 50% 50%, rgba(255,214,140,.25), #030206 60%); }
+#vs-sparks { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 9997; pointer-events: none; }
+@media (max-width: 1100px) { .bar a.vs-room { font-size: 10.5px !important; padding: 6px 9px 6px 8px !important; letter-spacing: .1em !important; } }
+@media (max-width: 760px) { .vs-vol input { width: 56px; } }
+/* step outside: real-world help, plain on purpose (outside the room's look and not in his voice); never fades, never hidden */
+.vs-out { position: fixed; left: max(10px, env(safe-area-inset-left, 0px)); bottom: max(10px, env(safe-area-inset-bottom, 0px)); z-index: 9995; display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; font: 500 11px/1 system-ui, -apple-system, "Segoe UI", sans-serif; letter-spacing: .02em; color: rgba(255,255,255,.62); background: rgba(20,20,24,.72); border: 1px solid rgba(255,255,255,.18); border-radius: 999px; cursor: pointer; opacity: .7; transition: opacity .3s, color .3s, border-color .3s; }
+.vs-out:hover, .vs-out:focus-visible { opacity: 1; color: #fff; border-color: rgba(255,255,255,.5); }
+.vs-out svg { width: 12px; height: 12px; }
+.vs-outp { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; padding: 16px; background: rgba(0,0,0,.6); }
+.vs-outp[hidden] { display: none; }
+.vs-outp .vs-ob { width: min(520px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; padding: 22px 22px 18px; background: #f6f6f4; color: #1d1d1f; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.5); font: 400 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+.vs-outp h2 { margin: 0 0 8px; font: 600 19px/1.25 system-ui, -apple-system, "Segoe UI", sans-serif; letter-spacing: 0; text-transform: none; color: #1d1d1f; }
+.vs-outp h3 { margin: 16px 0 6px; font: 600 13px/1.3 system-ui, -apple-system, "Segoe UI", sans-serif; color: #444; }
+.vs-outp p { margin: 0 0 8px; }
+.vs-outp ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.vs-outp li a { display: block; padding: 9px 12px; border-radius: 8px; background: #fff; border: 1px solid #ddd; color: #0b57d0; text-decoration: none; }
+.vs-outp li a:hover { border-color: #0b57d0; }
+.vs-outp li a small { display: block; color: #555; font-size: 13px; }
+.vs-outp .vs-oe { padding: 10px 12px; border-radius: 8px; background: #fff1f0; border: 1px solid #f3c2bd; }
+.vs-outp .vs-of { margin-top: 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; color: #666; font-size: 12.5px; }
+.vs-outp .vs-of button { padding: 8px 16px; border-radius: 8px; border: 1px solid #bbb; background: #fff; color: #1d1d1f; font: 500 14px system-ui, -apple-system, sans-serif; cursor: pointer; }
+@media print { .vs-out { display: none; } }
+`;
+  const st = document.createElement('style'); st.textContent = css;
+
+  function build() {
+    document.head.appendChild(st);
+    // the rooms
+    const bar = document.querySelector('header.bar, .bar');
+    if (bar) {
+      bar.querySelectorAll(':scope > a').forEach(a => { const h = a.getAttribute('href') || ''; if (ROOMS.some(([r]) => r === h || (r === './' && (h === './' || h === 'index.html')))) a.remove(); });
+      const nav = document.createElement('nav'); nav.className = 'vs-rooms'; nav.setAttribute('aria-label', 'Rooms');
+      for (const [href, name, glyph] of ROOMS) { const a = document.createElement('a'); a.className = 'vs-room'; a.href = href; a.innerHTML = `<i aria-hidden="true">${glyph}</i><span>${name}</span>`; a.title = name; if (href === here) a.setAttribute('aria-current', 'page'); nav.append(a); }
+      bar.prepend(nav);
+    }
+    // volume (the Turntable has its own big volume in the transport, so it gets none here)
+    if (!document.body.dataset.novol) {
+      const l = document.createElement('label'); l.className = 'vs-vol' + (bar ? '' : ' float'); l.title = 'Volume (every room)';
+      l.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path class="w" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><input type="range" min="0" max="100" step="1" aria-label="Volume">`;
+      const inp = l.querySelector('input'), paint = () => inp.style.setProperty('--p', inp.value + '%');
+      inp.value = Math.round(vol * 100); paint(); l.classList.toggle('mute', vol === 0);
+      inp.addEventListener('input', () => { setVol(inp.value / 100); paint(); });
+      let before = vol; l.querySelector('svg').addEventListener('click', e => { e.preventDefault(); if (vol > 0) { before = vol; setVol(0); } else setVol(before || .8); paint(); });
+      if (bar) { const last = bar.querySelector('#txBtn, #fsBtn, #listBtn'); last ? last.before(l) : bar.append(l); } else document.body.append(l);
+    }
+    power(bar);
+    outside();
+    if (bar) menu(bar);   // after the volume is placed, so the volume stays in the bar on a phone
+    if (!document.body.dataset.novol) mediaVol();
+    const fs = document.getElementById('fsBtn'); if (fs && innerWidth < 1180) { fs.textContent = '⤢'; fs.title = 'Full screen'; fs.setAttribute('aria-label', 'Full screen'); }
+    // the dissolve between rooms
+    const fade = document.createElement('div'); fade.className = 'vs-fade'; document.body.append(fade);
+    try { if (sessionStorage.getItem('vs-arrive')) { sessionStorage.removeItem('vs-arrive'); fade.style.transition = 'none'; fade.classList.add('on'); requestAnimationFrame(() => requestAnimationFrame(() => { fade.style.transition = ''; if (!calm) fade.classList.add('arrive'); fade.classList.remove('on'); setTimeout(() => fade.classList.remove('arrive'), 1000); })); } } catch (e) {}
+    // the film (pages that draw their own, like the radio, opt out with data-nofilm)
+    if (!document.body.dataset.nofilm) { const film = document.createElement('div'); film.className = 'vs-film'; film.setAttribute('aria-hidden', 'true'); document.body.append(film); }
+    // quiet: after a while with no hand on anything, the frame fades back. Never while typing or with a menu open
+    let qt = 0; const busy = () => { const a = document.activeElement; return a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable) || document.querySelector('.drawer.on, dialog[open], [aria-modal="true"]:not([hidden])'); };
+    const wake = () => { document.body.classList.remove('vs-quiet'); clearTimeout(qt); qt = setTimeout(function q() { if (busy()) { qt = setTimeout(q, 3000); return; } document.body.classList.add('vs-quiet'); }, 11000); };
+    ['pointermove', 'pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(ev => addEventListener(ev, wake, { passive: true })); wake();
+    document.addEventListener('click', e => {
+      const a = e.target.closest('a.vs-room, a.play-link'); if (!a || e.metaKey || e.ctrlKey || a.target === '_blank') return;
+      e.preventDefault(); burst(e.clientX, e.clientY, 26); fade.classList.add('on'); try { window.VS_FADE_OUT(calm ? 60 : 220); } catch (er) {} try { sessionStorage.setItem('vs-arrive', '1'); } catch (er) {}
+      setTimeout(() => { location.href = a.href; }, calm ? 60 : 240);
+    });
+    // instant rooms: when the pointer rests on a room tab, the browser builds that page in the background, so the click
+    // just swaps it in (Chrome's speculation rules; other browsers ignore this and load normally)
+    try { if (HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules')) { const sr = document.createElement('script'); sr.type = 'speculationrules';
+      sr.textContent = JSON.stringify({ prerender: [{ where: { and: [{ href_matches: '/*.html' }, { selector_matches: 'a.vs-room, a.play-link' }] }, eagerness: 'moderate' }] }); document.head.append(sr); } } catch (e) {}
+    sparks();
+  }
+
+  /* ---------- power: the room switches off (sound fades and stops, films pause, the screen closes like an old set) ---------- */
+  function power(bar) {
+    const ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v8M7.05 6.05a7.5 7.5 0 1 0 9.9 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+    const veil = document.createElement('div'); veil.className = 'vs-offveil'; veil.innerHTML = `<button type="button">${'<span>' + ICON + '</span>'}Switched off. Touch to wake the room.</button>`; document.body.append(veil);
+    let btn = null;
+    if (bar) { btn = document.createElement('button'); btn.type = 'button'; btn.className = 'vs-pow'; btn.innerHTML = '<i aria-hidden="true"></i>Power'; btn.title = 'Switch this room off and on'; btn.setAttribute('aria-pressed', 'true');
+      const v = bar.querySelector('.vs-vol'); v ? v.before(btn) : bar.append(btn); }
+    let paused = [];
+    const set = on => {
+      if (on === !document.body.classList.contains('vs-off')) return;
+      document.body.classList.toggle('vs-off', !on); if (btn) { btn.setAttribute('aria-pressed', String(on)); btn.title = on ? 'Switch this room off' : 'Switch this room on'; }
+      dispatchEvent(new CustomEvent('vs-power', { detail: { on } }));
+      if (!on) {
+        window.VS_FADE_OUT(260);
+        setTimeout(() => { if (document.body.classList.contains('vs-off')) { for (const s of window.__vsBuses) try { s.ctx.suspend(); } catch (e) {} paused = [...document.querySelectorAll('video')].filter(m => !m.paused); paused.forEach(m => m.pause()); } }, 300);
+      } else {
+        for (const s of window.__vsBuses) try { s.ctx.resume().then(() => s.up(.6)); } catch (e) {}
+        paused.forEach(m => { if (m.__vsPre != null) { m.volume = m.__vsPre; m.__vsPre = null; } m.play().catch(() => {}); }); paused = [];
+      }
+    };
+    window.VS_POWER = set;
+    btn && btn.addEventListener('click', () => set(document.body.classList.contains('vs-off')));
+    veil.querySelector('button').addEventListener('click', () => set(true));
+  }
+
+  /* ---------- step outside: real help, outside the game ---------- */
+  function outside() {
+    if (document.querySelector('.vs-out')) return;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'vs-out'; b.title = 'Real-world help, outside the game';
+    b.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2h7v12H3zM10 8h4M12 6l2 2-2 2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Step outside';
+    const p = document.createElement('div'); p.className = 'vs-outp'; p.hidden = true;
+    p.setAttribute('role', 'dialog'); p.setAttribute('aria-modal', 'true'); p.setAttribute('aria-labelledby', 'vs-out-h');
+    p.innerHTML = `<div class="vs-ob">
+      <h2 id="vs-out-h">Outside the game</h2>
+      <p>This is real-world help. The room's sound is switched off while you're here.</p>
+      <p class="vs-oe"><b>In danger, or might hurt yourself?</b> Call your local emergency number now: 911 (US, Canada), 999 (UK), 112 (EU and many countries), 000 (Australia).</p>
+      <h3>Talk to someone now</h3>
+      <ul>
+        <li><a href="tel:988">988 Suicide &amp; Crisis Lifeline<small>US · call or text 988, any time</small></a></li>
+        <li><a href="tel:116123">Samaritans · 116 123<small>UK and Ireland · free, any time</small></a></li>
+        <li><a href="https://findahelpline.com" target="_blank" rel="noopener">Find A Helpline<small>Free, confidential helplines in your country</small></a></li>
+      </ul>
+      <h3>Hearing voices, or seeing things others don't?</h3>
+      <ul>
+        <li><a href="https://www.hearing-voices.org" target="_blank" rel="noopener">Hearing Voices Network<small>Peer support groups</small></a></li>
+        <li><a href="https://www.intervoiceonline.org" target="_blank" rel="noopener">Intervoice<small>The international hearing voices network</small></a></li>
+      </ul>
+      <h3>Right now</h3>
+      <p>Feet on the floor. Name five things you can see, four you can touch, three you can hear, two you can smell, one you can taste. Breathe out slower than you breathe in.</p>
+      <div class="vs-of"><span>Nothing here is sent anywhere.</span><button type="button">Close</button></div></div>`;
+    // the floating corner button is off for now (the owner found it intrusive); the panel stays, opened by window.VS_OUTSIDE
+    // (the Compendium's rotary phone). To bring the button back, set SHOW_BUTTON to true.
+    const SHOW_BUTTON = false;
+    document.body.append(...(SHOW_BUTTON ? [b, p] : [p]));
+    let back = null;
+    const open = () => { back = document.activeElement; p.hidden = false; try { window.VS_POWER && window.VS_POWER(false); } catch (e) {} p.querySelector('.vs-ob').scrollTop = 0; p.querySelector('.vs-of button').focus({ preventScroll: true }); };
+    const close = () => { p.hidden = true; try { back && back.focus && back.focus(); } catch (e) {} };
+    b.addEventListener('click', open);
+    p.querySelector('.vs-of button').addEventListener('click', close);
+    p.addEventListener('click', e => { if (e.target === p) close(); });
+    addEventListener('keydown', e => {
+      if (p.hidden) return;
+      if (e.key === 'Escape') { e.stopImmediatePropagation(); e.preventDefault(); close(); return; }
+      if (e.key === 'Tab') { const f = [...p.querySelectorAll('a, button')], i = f.indexOf(document.activeElement); if (e.shiftKey ? i <= 0 : i === f.length - 1) { e.preventDefault(); f[e.shiftKey ? f.length - 1 : 0].focus(); } }
+      e.stopImmediatePropagation();   // the room's own keys (notes, Esc to end a sitting) stay quiet while this is open
+    }, true);
+    window.VS_OUTSIDE = open;
+    // a room with its own bar along the bottom (the Turntable's transport) gets the button lifted just above it
+    const place = () => {
+      b.style.bottom = ''; const o = b.getBoundingClientRect(); let lift = 0;
+      for (const e of document.querySelectorAll('body > *, body > * > *')) {
+        if (e === b || e === p || e.classList.contains('vs-film')) continue;
+        const cs = getComputedStyle(e); if (cs.position !== 'fixed' && cs.position !== 'absolute' || cs.display === 'none' || cs.visibility === 'hidden') continue;
+        const r = e.getBoundingClientRect(); if (r.height > innerHeight * .4 || r.bottom < innerHeight - 4 || r.left > o.right || r.right < o.left || r.top > o.bottom) continue;
+        lift = Math.max(lift, innerHeight - r.top + 8);
+      }
+      if (lift) b.style.bottom = lift + 'px';
+    };
+    if (SHOW_BUTTON) { place(); addEventListener('resize', place); setTimeout(place, 1500); setTimeout(place, 5000); }
+  }
+
+  /* ---------- the phone menu ---------- */
+  function menu(bar) {
+    const cur = ROOMS.find(([h]) => h === here) || ROOMS[0];
+    const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'vs-menu'; btn.setAttribute('aria-haspopup', 'dialog'); btn.setAttribute('aria-expanded', 'false');
+    btn.innerHTML = `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Rooms<span class="vs-n" aria-hidden="true">${ROOMS.length}</span><span class="vs-here"><i aria-hidden="true">${cur[2]}</i><span>${cur[1]}</span></span>`;
+    btn.title = 'All the rooms'; btn.setAttribute('aria-label', `Rooms (${ROOMS.length}). You are in ${cur[1]}`);
+    bar.prepend(btn);
+    const sh = document.createElement('div'); sh.className = 'vs-sheet'; sh.hidden = true; sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.setAttribute('aria-label', 'Rooms');
+    sh.innerHTML = `<div class="vs-sh-top"><h2>Rooms</h2><button type="button" class="vs-x" aria-label="Close">✕</button></div><nav class="vs-sh-rooms" aria-label="Rooms">${ROOMS.map(([h, n, g, d]) => `<a class="vs-room" href="${h}"${h === here ? ' aria-current="page"' : ''}><i aria-hidden="true">${g}</i><span>${n}<small>${d}</small></span></a>`).join('')}</nav><h2 class="vs-sh-th">This room</h2><div class="vs-sh-tools"></div>`;
+    document.body.append(sh);
+    const tools = sh.querySelector('.vs-sh-tools');
+    // the tools heading hides itself when the room has no buttons of its own
+    const syncHead = () => { sh.querySelector('.vs-sh-th').hidden = !tools.children.length; };
+    const phone = matchMedia('(max-width: 760px)');
+    const open = () => { if (sh.classList.contains('on')) return close(); hint.done();
+      // a computer gets a dropdown hanging from the button; a phone gets the whole screen
+      const drop = !phone.matches; sh.classList.toggle('drop', drop);
+      if (drop) { const b = btn.getBoundingClientRect(), r = bar.getBoundingClientRect(); sh.style.setProperty('--vs-bar-b', r.bottom + 'px'); sh.style.setProperty('--vs-drop-x', Math.max(10, b.left) + 'px'); }
+      sh.hidden = false; requestAnimationFrame(() => sh.classList.add('on')); btn.setAttribute('aria-expanded', 'true'); (sh.querySelector('.vs-sh-rooms a[aria-current]') || sh.querySelector('.vs-x')).focus({ preventScroll: true }); };
+    const close = () => { sh.classList.remove('on'); btn.setAttribute('aria-expanded', 'false'); setTimeout(() => { if (!sh.classList.contains('on')) sh.hidden = true; }, 250); };
+    btn.addEventListener('click', open); sh.querySelector('.vs-x').addEventListener('click', close);
+    sh.addEventListener('click', e => { if (e.target === sh) close(); });
+    document.addEventListener('pointerdown', e => { if (!sh.hidden && sh.classList.contains('drop') && !sh.contains(e.target) && !btn.contains(e.target)) close(); }, true);
+    tools.addEventListener('click', () => setTimeout(close, 0));   // a tool does its job, then the sheet gets out of the way
+    addEventListener('keydown', e => { if (e.key === 'Escape' && !sh.hidden) { close(); btn.focus({ preventScroll: true }); } });
+    // on a phone the page's own bar buttons live in the sheet; on a wider screen they go back where they came from
+    const pick = el => el.matches('button, a, .motion-btn') && !el.matches('.vs-menu, .vs-room, .unzoom');
+    let moving = false;
+    const place = () => { moving = true;
+      if (phone.matches) { [...bar.children].filter(pick).forEach(el => { if (!el.__vsHome) { el.__vsHome = document.createComment('vs'); el.before(el.__vsHome); } tools.append(el); }); }
+      else [...tools.children].forEach(el => { if (el.__vsHome && el.__vsHome.parentNode) el.__vsHome.replaceWith(el); else bar.append(el); el.__vsHome = null; });
+      syncHead(); moving = false; };
+    // the room names show in the bar when they all fit; when they don't, the ROOMS button takes their place
+    const nav = bar.querySelector('.vs-rooms');
+    const fit = () => { if (phone.matches || !nav) { bar.classList.add('vs-tight'); return; } bar.classList.remove('vs-tight'); if (nav.scrollWidth > nav.clientWidth + 2) bar.classList.add('vs-tight'); };
+    let fq = 0; const fitSoon = () => { cancelAnimationFrame(fq); fq = requestAnimationFrame(fit); };
+    place(); fit(); phone.addEventListener('change', () => { place(); fit(); }); addEventListener('resize', fitSoon);
+    try { document.fonts.ready.then(fitSoon); } catch (e) {}
+    new MutationObserver(() => { if (!moving && phone.matches) place(); fitSoon(); }).observe(bar, { childList: true });
+    // first visit to the house: the rooms announce themselves once, so nobody thinks this is the only one
+    const hint = { el: null, t: 0, done() { clearTimeout(this.t); try { localStorage.setItem('vs-rooms-hint', '1'); } catch (e) {} btn.classList.remove('vs-call'); if (this.el) { const el = this.el; this.el = null; el.classList.remove('on'); setTimeout(() => el.remove(), 600); } } };
+    let seen = true; try { seen = !!localStorage.getItem('vs-rooms-hint'); } catch (e) {}
+    if (!seen) hint.t = setTimeout(() => {
+      const tight = bar.classList.contains('vs-tight'), a = (tight ? btn : nav).getBoundingClientRect(); if (!a.width) return;
+      const el = hint.el = document.createElement('div'); el.className = 'vs-hint'; el.setAttribute('role', 'status');
+      el.innerHTML = `<b>${ROOMS.length} rooms</b>${tight ? 'There’s more than this one. Open the menu.' : 'This is one of them. The rest are up here.'}`;
+      document.body.append(el); el.style.left = Math.max(10, a.left) + 'px'; el.style.top = (a.bottom + 10) + 'px'; el.style.setProperty('--ax', Math.min(a.width / 2, 40) + 'px');
+      if (tight) btn.classList.add('vs-call'); requestAnimationFrame(() => el.classList.add('on'));
+      try { localStorage.setItem('vs-rooms-hint', '1'); } catch (e) {}
+      hint.t = setTimeout(() => hint.done(), 9000);
+    }, 2400);
+    nav && nav.addEventListener('click', () => hint.done());
+  }
+
+  /* ---------- sparks ---------- */
+  let cv, g, P = [], running = false, last = null;
+  function sparks() {
+    if (calm) return;
+    cv = document.createElement('canvas'); cv.id = 'vs-sparks'; document.body.append(cv); g = cv.getContext('2d');
+    const size = () => { cv.width = innerWidth; cv.height = innerHeight; }; size(); addEventListener('resize', size);
+    addEventListener('pointermove', e => { if (e.pointerType === 'touch') return; const d = last ? Math.hypot(e.clientX - last[0], e.clientY - last[1]) : 99; if (d < 26) return; last = [e.clientX, e.clientY]; add(e.clientX, e.clientY, 1, .22); });
+    addEventListener('pointerdown', e => burst(e.clientX, e.clientY, 9), true);
+  }
+  function add(x, y, n, spd) { for (let i = 0; i < n; i++) { const a = Math.random() * 6.28, v = spd * (.4 + Math.random()); P.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - .25, life: 1, d: .012 + Math.random() * .014, r: 1 + Math.random() * 2.2, hue: Math.random() < .2 ? 1 : 0 }); } if (P.length > 260) P.splice(0, P.length - 260); if (!running) { running = true; requestAnimationFrame(tick); } }
+  function burst(x, y, n) { if (calm || !cv) return; add(x, y, n, 2.6); P.push({ ring: true, x, y, life: 1, d: .045 }); }
+  function tick() {
+    g.clearRect(0, 0, cv.width, cv.height); g.globalCompositeOperation = 'lighter';
+    for (let i = P.length - 1; i >= 0; i--) { const p = P[i]; p.life -= p.d; if (p.life <= 0) { P.splice(i, 1); continue; }
+      if (p.ring) { g.strokeStyle = `rgba(255,214,140,${p.life * .7})`; g.lineWidth = 1.5; g.beginPath(); g.arc(p.x, p.y, (1 - p.life) * 46, 0, 7); g.stroke(); continue; }
+      p.x += p.vx; p.y += p.vy; p.vy -= .012; p.vx *= .985; const a = p.life, r = p.r * (.5 + a * .7);
+      g.fillStyle = p.hue ? `rgba(200,225,255,${a * .9})` : `rgba(255,${200 + 40 * a | 0},${120 + 60 * a | 0},${a * .9})`; g.beginPath(); g.arc(p.x, p.y, r, 0, 7); g.fill();
+      g.fillStyle = `rgba(255,200,120,${a * .12})`; g.beginPath(); g.arc(p.x, p.y, r * 4, 0, 7); g.fill(); }
+    g.globalCompositeOperation = 'source-over';
+    if (P.length) requestAnimationFrame(tick); else { running = false; g.clearRect(0, 0, cv.width, cv.height); }
+  }
+  window.VS_BURST = (x, y, n = 20) => burst(x, y, n);
+
+  if (document.readyState === 'loading') addEventListener('DOMContentLoaded', build); else build();
+})();
+
+</script>
+</body>
+</html>
