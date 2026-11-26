@@ -1,0 +1,14 @@
+Cat recordings from Wikimedia Commons. All public domain or CC0; credited anyway.
+
+meow-1.flac: "2015-11-24.νιαούρισμα.Νιάου.noise reduced.flac", CC0, https://commons.wikimedia.org/wiki/File:2015-11-24.νιαούρισμα.Νιάου.noise_reduced.flac
+meow-2.ogg: "GettingOutImpatient.ogg", Public domain, https://commons.wikimedia.org/wiki/File:GettingOutImpatient.ogg
+meow-3.ogg: "Maullido de gata hembra joven.ogg", CC0, https://commons.wikimedia.org/wiki/File:Maullido_de_gata_hembra_joven.ogg
+meow-4.oga: "Meow of a pleading cat.oga", Public domain, https://commons.wikimedia.org/wiki/File:Meow_of_a_pleading_cat.oga
+meow-5.wav: "Meow of a Siamese cat - freemaster2.wav", CC0, https://commons.wikimedia.org/wiki/File:Meow_of_a_Siamese_cat_-_freemaster2.wav
+meow-6.ogg: "NoTrip.ogg", Public domain, https://commons.wikimedia.org/wiki/File:NoTrip.ogg
+purr-1.ogg: "Purring cat bertie.ogg", Public domain, https://commons.wikimedia.org/wiki/File:Purring_cat_bertie.ogg
+purr-2.oga: "Purring cat.oga", Public domain, https://commons.wikimedia.org/wiki/File:Purring_cat.oga
+purr-3.ogg: "Schnurren einer Hauskatze (schnell).ogg", Public domain, https://commons.wikimedia.org/wiki/File:Schnurren_einer_Hauskatze_(schnell).ogg
+purr-4.ogg: "Whiskers' purr edit.ogg", Public domain, https://commons.wikimedia.org/wiki/File:Whiskers'_purr_edit.ogg
+purr-5.ogg: "Whiskers' purr.ogg", Public domain, https://commons.wikimedia.org/wiki/File:Whiskers'_purr.ogg
+hiss-1.wav: "Cat hissing - Zabuhailo.wav", CC0, https://commons.wikimedia.org/wiki/File:Cat_hissing_-_Zabuhailo.wav

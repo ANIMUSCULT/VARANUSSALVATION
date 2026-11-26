@@ -1,0 +1,179 @@
+{
+ "_how": "Her songs through the official players, so plays count. SoundCloud (no ads; Artist Pro plays earn): paste each track's full soundcloud.com link. Spotify: the track id (after /track/). YouTube (shows ads unless monetisation is off on the video): the video id (after v=). Leave blank to hide a song in that mode. offset: seconds to shift the visuals if a platform's version starts earlier (+) or later (-) than the file on this Mac.",
+ "artist": "ANIMUSCULT",
+ "youtube": {
+  "channel": ""
+ },
+ "spotify": {
+  "artist": ""
+ },
+ "tracks": {
+  "hey-god": {
+   "title": "HEY GOD (GET HIGH WITH ME)",
+   "soundcloud": "",
+   "spotify": "",
+   "youtube": "",
+   "offset": 0
+  },
+  "insanity": {
+   "title": "INSANITY (INSTRUMENTAL)",
+   "soundcloud": "",
+   "spotify": "",
+   "youtube": "",
+   "offset": 0
+  },
+  "not-my-god": {
+   "title": "NOT MY GOD (OI QI)",
+   "soundcloud": "https://soundcloud.com/animuscult/not-my-god",
+   "spotify": "",
+   "youtube": "",
+   "offset": 0
+  },
+  "lie-to-me": {
+   "title": "LIE TO ME (WITH MOONWORLD)",
+   "soundcloud": "",
+   "spotify": "",
+   "youtube": "",
+   "offset": 0
+  },
+  "his-crown": {
+   "title": "HIS CROWN (REMIX)",
+   "soundcloud": "",
+   "spotify": "",
+   "youtube": "",
+   "offset": 0
+  },
+  "parasite": {
+   "title": "MIND GRINDER AKA PARASITE",
+   "soundcloud": "",
+   "spotify": "",
+   "youtube": "",
+   "offset": 0
+  },
+  "midnight-in-babylon": {
+   "title": "MIDNIGHT IN BABYLON (808 REMIX)",
+   "soundcloud": "",
+   "spotify": "",
+   "youtube": "",
+   "offset": 0
+  },
+  "bleed-between-the-lines": {
+   "title": "BLEED BETWEEN THE LINES (SO TOXIC)",
+   "soundcloud": "https://soundcloud.com/animuscult/so-toxic",
+   "spotify": "",
+   "youtube": "",
+   "offset": 0
+  },
+  "freak": {
+   "title": "FREAK",
+   "soundcloud": "",
+   "spotify": "",
+   "youtube": "",
+   "offset": 0
+  },
+  "big-worm": {
+   "title": "BIG WORM",
+   "soundcloud": "",
+   "spotify": "",
+   "youtube": "",
+   "offset": 0
+  },
+  "running-with-my-wolves": {
+   "title": "RUNNING WITH MY WOLVES",
+   "soundcloud": "",
+   "spotify": "",
+   "youtube": "",
+   "offset": 0
+  },
+  "fill-your-cup-king": {
+   "title": "FILL YOUR CUP KING",
+   "soundcloud": "",
+   "spotify": "",
+   "youtube": "",
+   "offset": 0
+  },
+  "phi": {
+   "title": "PHI",
+   "soundcloud": "",
+   "spotify": "",
+   "youtube": "",
+   "offset": 0
+  },
+  "i-know-you": {
+   "title": "I KNOW YOU (WITH MOONWORLD)",
+   "soundcloud": "",
+   "spotify": "",
+   "youtube": "",
+   "offset": 0
+  },
+  "hey-moon-slow-dance": {
+   "title": "HEY MOON (SLOW DANCE)",
+   "soundcloud": "",
+   "spotify": "",
+   "youtube": "",
+   "offset": 0
+  },
+  "hey-moon-dnb": {
+   "title": "HEY MOON (D&B REMIX)",
+   "soundcloud": "",
+   "spotify": "",
+   "youtube": "",
+   "offset": 0
+  },
+  "wiggle-squshy": {
+   "title": "WIGGLE SQUSHY (REMIX)",
+   "soundcloud": "",
+   "spotify": "",
+   "youtube": "",
+   "offset": 0
+  }
+ },
+ "soundcloud": {
+  "profile": "https://soundcloud.com/animuscult"
+ },
+ "_extra": "Songs that are on a platform but not on this Mac (or a different version): they play, and the deck moves to a gentle procedural pulse instead of a map. Drop the matching file on the Turntable to get a map (then node tools/music-maps.mjs).",
+ "extra": [
+  {
+   "file": "sc-heygod-slowdance",
+   "title": "HEY GOD (GET HIGH WITH ME) (SLOWDANCE)",
+   "soundcloud": "https://soundcloud.com/animuscult/heygod-slowdance",
+   "secs": 156
+  },
+  {
+   "file": "sc-freak-v1",
+   "title": "FREAK (VERSION 1)",
+   "soundcloud": "https://soundcloud.com/animuscult/freak-v1",
+   "secs": 129
+  },
+  {
+   "file": "sc-run-with-wolves-slow",
+   "title": "RUN WITH MY WOLVES (SLOWDANCE)",
+   "soundcloud": "https://soundcloud.com/animuscult/run-with-wolves-slow",
+   "secs": 154
+  },
+  {
+   "file": "sc-doctor-doom-slowdance",
+   "title": "DOCTOR DOOM (SLOWDANCE)",
+   "soundcloud": "https://soundcloud.com/animuscult/doctor-doom-slowdance",
+   "secs": 223
+  },
+  {
+   "file": "sc-his-ocean",
+   "title": "HIS OCEAN",
+   "soundcloud": "https://soundcloud.com/animuscult/his-ocean",
+   "secs": 162
+  },
+  {
+   "file": "sc-obsession-magic",
+   "title": "OBSESSION MAGIC (DEMO)",
+   "soundcloud": "https://soundcloud.com/animuscult/obsession-magic",
+   "secs": 154
+  },
+  {
+   "file": "sc-omg-rmx",
+   "title": "OMG. IM SO OBSESSED (REMIX)",
+   "soundcloud": "https://soundcloud.com/animuscult/omg-rmx",
+   "secs": 110
+  }
+ ]
+}

@@ -1,0 +1,138 @@
+[
+ {
+  "file": "hey-god",
+  "title": "HEY GOD (GET HIGH WITH ME)",
+  "bpm": 86.1,
+  "key": "F#",
+  "mode": "minor",
+  "secs": 108
+ },
+ {
+  "file": "insanity",
+  "title": "INSANITY (INSTRUMENTAL)",
+  "bpm": 86.1,
+  "key": "F#",
+  "mode": "minor",
+  "secs": 130
+ },
+ {
+  "file": "not-my-god",
+  "title": "NOT MY GOD (OI QI)",
+  "bpm": 129.2,
+  "key": "C",
+  "mode": "minor",
+  "secs": 127
+ },
+ {
+  "file": "lie-to-me",
+  "title": "LIE TO ME (WITH MOONWORLD)",
+  "bpm": 80.7,
+  "key": "B",
+  "mode": "minor",
+  "secs": 99
+ },
+ {
+  "file": "his-crown",
+  "title": "HIS CROWN (REMIX)",
+  "bpm": 161.5,
+  "key": "A",
+  "mode": "minor",
+  "secs": 147
+ },
+ {
+  "file": "parasite",
+  "title": "MIND GRINDER AKA PARASITE",
+  "bpm": 92.3,
+  "key": "E",
+  "mode": "major",
+  "secs": 175
+ },
+ {
+  "file": "midnight-in-babylon",
+  "title": "MIDNIGHT IN BABYLON (808 REMIX)",
+  "bpm": 92.3,
+  "key": "F",
+  "mode": "major",
+  "secs": 123
+ },
+ {
+  "file": "bleed-between-the-lines",
+  "title": "BLEED BETWEEN THE LINES (SO TOXIC)",
+  "bpm": 129.2,
+  "key": "A#",
+  "mode": "major",
+  "secs": 206
+ },
+ {
+  "file": "freak",
+  "title": "FREAK",
+  "bpm": 86.1,
+  "key": "F",
+  "mode": "major",
+  "secs": 121
+ },
+ {
+  "file": "big-worm",
+  "title": "BIG WORM",
+  "bpm": 117.5,
+  "key": "F",
+  "mode": "major",
+  "secs": 124
+ },
+ {
+  "file": "running-with-my-wolves",
+  "title": "RUNNING WITH MY WOLVES",
+  "bpm": 117.5,
+  "key": "A",
+  "mode": "minor",
+  "secs": 203
+ },
+ {
+  "file": "fill-your-cup-king",
+  "title": "FILL YOUR CUP KING",
+  "bpm": 143.6,
+  "key": "F",
+  "mode": "major",
+  "secs": 94
+ },
+ {
+  "file": "phi",
+  "title": "PHI",
+  "bpm": 99.4,
+  "key": "B",
+  "mode": "minor",
+  "secs": 160
+ },
+ {
+  "file": "i-know-you",
+  "title": "I KNOW YOU (WITH MOONWORLD)",
+  "bpm": 76.0,
+  "key": "F",
+  "mode": "major",
+  "secs": 120
+ },
+ {
+  "file": "hey-moon-slow-dance",
+  "title": "HEY MOON (SLOW DANCE)",
+  "bpm": 129.2,
+  "key": "C",
+  "mode": "major",
+  "secs": 140
+ },
+ {
+  "file": "hey-moon-dnb",
+  "title": "HEY MOON (D&B REMIX)",
+  "bpm": 117.5,
+  "key": "C",
+  "mode": "major",
+  "secs": 141
+ },
+ {
+  "file": "wiggle-squshy",
+  "title": "WIGGLE SQUSHY (REMIX)",
+  "bpm": 129.2,
+  "key": "F",
+  "mode": "major",
+  "secs": 62
+ }
+]

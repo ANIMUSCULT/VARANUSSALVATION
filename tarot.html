@@ -1,0 +1,1588 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'inline-speculation-rules' blob: 'sha256-3kfbd9Y351VhySyHiVVG3Z9DM/pm3YjgELI9nmSVqTw=' 'sha256-5nOeQLWQtHRtFf4+hRaVpXHGCm8Q3r2d9uRyB7shWEw=' 'sha256-FrcOrQPkc7xY/6fC+qA7+xmcO7m7nFwWIsrH1aKzpVQ=' 'sha256-dNLY1j80dHb8/KHdkMR8Njki4cgpbBP2o685DizVylE=' 'sha256-pMsfsRAeeNMGiYqQ6YNFfqBBXxHNJLJlzfWQEbwdQ00=' 'sha256-pPcAOZqLtLCJJpmMVCeRX7X8rk4Jl60vB4QsCrUDH8k=' 'sha256-bkf1c667gZswxxbrezgeczhhW6moNmUbiEXYRZve1T0='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' blob: data: https:; connect-src 'self' https://de1.api.radio-browser.info https://fi1.api.radio-browser.info https://at1.api.radio-browser.info https://storage.googleapis.com wss:; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, noai, noimageai">
+<script>try{var u=new URL(location.href),p=u.searchParams,c=0;['debug','fakecam','model','fast','test'].forEach(function(k){if(p.has(k)){p.delete(k);c=1}});if(c)history.replaceState(null,'',u.pathname+(p.toString()?'?'+p:'')+u.hash)}catch(e){}</script>
+<script>try{if(!localStorage.getItem('vs-motion-demo')){localStorage.setItem('vs-motion-demo','1');localStorage.setItem('vs-motion','full')}}catch(e){}</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tarot · Ouija Cat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=IM+Fell+English:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="tarot-desk.webp">
+<script>/* motion: macOS can ask for less; this site lets you opt back in (stored per browser, all pages) */
+{ let m = null; try { m = localStorage.getItem('vs-motion'); } catch (e) {} if (m !== 'calm') document.documentElement.classList.add('motion-full'); }   // full motion by default (the films and animations are the point); Calm motion is the opt-out
+addEventListener('DOMContentLoaded', () => { if (!matchMedia('(prefers-reduced-motion: reduce)').matches) return; const full = document.documentElement.classList.contains('motion-full');
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'motion-btn'; b.textContent = full ? 'Calm motion' : 'Full motion'; b.title = full ? 'Your Mac asks for reduced motion: calm every animation on this site' : 'Show every animation again';
+  b.onclick = () => { try { full ? localStorage.setItem('vs-motion', 'calm') : localStorage.removeItem('vs-motion'); } catch (e) {} location.reload(); };
+  const bar = document.querySelector('.bar'); if (bar) { const h = bar.querySelector('h1'); h ? h.after(b) : bar.append(b); } });
+</script>
+<style>
+.motion-btn { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #f0d68f; background: rgba(214,164,67,.12); border: 1px solid rgba(214,164,67,.6); padding: 5px 9px; cursor: pointer; white-space: nowrap; }
+:root { --gold: #e2b65a; --gold-pale: #f7e3a8; --ember: #ffcf7a; --cream: #efe6d0; --muted: #a9abc9; --night: #05060f; --neon: #ff6a3d; --bar: 42px; --side: 380px;
+  --display: "IM Fell English SC", Georgia, serif; --serif: "IM Fell English", Georgia, serif; --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; height: 100%; background: var(--night); color: var(--cream); font-family: var(--serif); overflow: hidden; }
+.bar { position: fixed; top: 0; left: 0; right: 0; height: var(--bar); z-index: 20; display: flex; align-items: center; gap: 8px; padding: 0 12px; background: linear-gradient(rgba(0,0,0,.9), rgba(0,0,0,.45)); }
+.bar a, .bar button { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--cream); background: transparent; border: 1px solid rgba(226,182,90,.5); padding: 5px 9px; text-decoration: none; cursor: pointer; white-space: nowrap; }
+.bar a:hover, .bar button:hover, .bar button[aria-pressed="true"] { border-color: var(--gold-pale); color: var(--gold-pale); }
+.bar h1 { margin: 0; font-family: var(--display); font-weight: 400; font-size: 18px; letter-spacing: .1em; color: var(--gold-pale); white-space: nowrap; flex: 1; }
+
+.main { position: fixed; top: var(--bar); left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: minmax(0, 1fr) var(--side); }
+@media (max-width: 900px) { .main { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) auto; } .side { max-height: 46vh; border-left: 0 !important; border-top: 1px solid rgba(226,182,90,.25); } }
+
+/* ---------- the stage: the owner's desk (2000x1120), everything mapped in image pixels inside #board ---------- */
+.stage { position: relative; overflow: hidden; overflow: clip; isolation: isolate; background: var(--night); }
+.stage .back { position: absolute; inset: -40px; width: calc(100% + 80px); height: calc(100% + 80px); object-fit: cover; filter: blur(28px) brightness(.3) saturate(1.2); pointer-events: none; }
+.board { position: absolute; left: 0; top: 0; width: 2000px; height: 1120px; transform-origin: 0 0; }
+.board > img.art { position: absolute; inset: 0; width: 100%; height: 100%; display: block; user-select: none; -webkit-user-drag: none; }
+.board .flat { position: absolute; left: 0; top: 0; transform-origin: 0 0; pointer-events: none; }   /* flat canvases and cards laid onto the picture by a perspective map */
+.board .held { position: absolute; left: 0; top: 0; width: 100px; height: 172px; transform-origin: 0 0; pointer-events: none; overflow: hidden; border-radius: 4px; transition: opacity .6s; }
+.board .held img { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(.9) contrast(1.06) saturate(1.05); }
+.board .held::after { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, rgba(255,240,210,.22), rgba(0,0,0,0) 40%, rgba(0,0,0,.28)); }
+.board .held.swap { opacity: 0; }
+.board img.front { position: absolute; left: 640px; top: 190px; width: 760px; height: 340px; pointer-events: none; }
+.glow { position: absolute; border-radius: 50%; pointer-events: none; mix-blend-mode: screen; }
+.candle { width: 120px; height: 150px; margin: -95px 0 0 -60px; background: radial-gradient(ellipse at 50% 60%, rgba(255,200,110,.55), rgba(255,140,40,.18) 40%, rgba(0,0,0,0) 70%); animation: flick 3.1s infinite; }
+.candle.b { animation-duration: 2.3s; animation-delay: -.9s; }
+.candle.out { opacity: 0 !important; animation: none; transition: opacity .3s; }
+@keyframes flick { 0%, 100% { opacity: .85; transform: scale(1); } 17% { opacity: 1; transform: scale(1.04, .98); } 33% { opacity: .78; } 48% { opacity: .95; transform: scale(.97, 1.03); } 63% { opacity: .82; } 80% { opacity: 1; transform: scale(1.02); } }
+html:not(.motion-full) .candle { animation: none; }
+@media (prefers-reduced-motion: reduce) { html:not(.motion-full) .candle { animation: none; } }
+.lamp { left: 610px; top: 260px; width: 900px; height: 700px; margin: -350px 0 0 -450px; background: radial-gradient(ellipse at 50% 30%, rgba(255,214,150,.28), rgba(0,0,0,0) 60%); opacity: 0; transition: opacity 1.2s; }
+.lamp.on { opacity: 1; }
+.eye3 { left: 994px; top: 396px; width: 90px; height: 70px; margin: -35px 0 0 -45px; background: radial-gradient(ellipse, rgba(140,200,255,.9), rgba(60,120,255,.3) 45%, rgba(0,0,0,0) 70%); opacity: 0; transition: opacity .5s; }
+.eye3.on { opacity: 1; animation: pulse3 1.4s ease-in-out infinite; }
+@keyframes pulse3 { 50% { transform: scale(1.25); } }
+.keyglow { width: 46px; height: 30px; margin: -15px 0 0 -23px; background: radial-gradient(ellipse, rgba(255,150,90,.95), rgba(255,90,40,.35) 50%, rgba(0,0,0,0) 72%); animation: kfade .7s ease-out forwards; }
+@keyframes kfade { from { opacity: 1; } to { opacity: 0; transform: scale(1.4); } }
+
+/* hotspots */
+.hs { position: absolute; padding: 0; margin: 0; border: 0; background: transparent; cursor: pointer; border-radius: 50%; transition: box-shadow .25s, background .25s; }
+.hs.rect { border-radius: 10px; }
+.hs:hover, .hs:focus-visible { box-shadow: 0 0 0 3px rgba(255,214,140,.55), 0 0 30px 6px rgba(255,190,100,.35); background: rgba(255,214,140,.08); outline: none; }
+.hs.pulse { animation: hsp 2.4s ease-in-out infinite; }
+@keyframes hsp { 50% { box-shadow: 0 0 0 3px rgba(255,214,140,.5), 0 0 34px 8px rgba(255,190,100,.4); } }
+.board.map .hs { box-shadow: 0 0 0 2px #0ff; }
+.board.map .hs::after { content: attr(data-k); position: absolute; left: 50%; top: 100%; transform: translateX(-50%); font: 14px var(--mono); color: #0ff; white-space: nowrap; }
+.say { position: absolute; left: 50%; top: 14px; transform: translateX(-50%); max-width: min(560px, 88%); z-index: 6; padding: 10px 16px; background: rgba(8,7,18,.9); border: 1px solid rgba(226,182,90,.45); font: italic 17px/1.35 var(--serif); color: var(--cream); text-align: center; opacity: 0; transition: opacity .5s; pointer-events: none; }
+.say.on { opacity: 1; }
+.say b { font: 9.5px var(--mono); letter-spacing: .2em; text-transform: uppercase; color: var(--gold); display: block; font-style: normal; margin-bottom: 3px; }
+
+/* ---------- the table: the spread rises over the desk ---------- */
+.table { position: absolute; inset: 0; z-index: 4; opacity: 0; pointer-events: none; transition: opacity .7s; background: radial-gradient(ellipse at 50% 55%, rgba(16,12,30,.78), rgba(4,3,10,.93) 75%); }
+.table.on { opacity: 1; pointer-events: auto; }
+.table .head { position: absolute; left: 0; right: 0; top: 0; display: flex; gap: 8px; align-items: center; padding: 10px 14px; z-index: 3; }
+.table .head .t { flex: 1; min-width: 0; font: 9.5px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.table .head .t b { color: var(--gold-pale); font-weight: 500; }
+@media (max-width: 600px) { .table .head { padding: 6px 8px; gap: 5px; flex-wrap: wrap; } .table .head .tb { flex: 1 1 auto; } .table .head .t { display: none; } .table button.tb { padding: 6px 7px; font-size: 9px; letter-spacing: .06em; } .cap { font-size: 14px; bottom: 4px; } }
+.table button.tb { font: 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--cream); background: rgba(226,182,90,.1); border: 1px solid rgba(226,182,90,.55); padding: 7px 10px; cursor: pointer; white-space: nowrap; }
+.table button.tb:hover, .table button.tb:focus-visible { color: var(--gold-pale); border-color: var(--gold-pale); outline: none; }
+.table button.tb:disabled { opacity: .35; cursor: default; }
+.cap { position: absolute; left: 0; right: 0; bottom: 10px; text-align: center; font: italic 16px var(--serif); color: var(--gold-pale); pointer-events: none; padding: 0 12px; text-shadow: 0 1px 6px #000; }
+.cap small { display: block; font: 9.5px var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--muted); font-style: normal; }
+.tc { position: absolute; left: 0; top: 0; perspective: 1400px; border: 0; padding: 0; background: none; cursor: pointer; transition: transform .75s cubic-bezier(.2,.8,.2,1), opacity .5s; }
+.tc .in { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .7s cubic-bezier(.3,.7,.2,1); }
+.tc.up .in { transform: rotateY(180deg); }
+.tc .fc, .tc .bk { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 7px; overflow: hidden; box-shadow: 0 6px 18px rgba(0,0,0,.6); }
+.tc .bk { background-size: cover; background-position: center; }
+.tc .fc { transform: rotateY(180deg); background: #e9dfc6; }
+.tc .fc img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.tc.rev .fc img { transform: rotate(180deg); }
+.tc .num { position: absolute; left: -9px; top: -9px; width: 22px; height: 22px; border-radius: 50%; background: #120e1c; border: 1px solid var(--gold); color: var(--gold-pale); font: 11px/20px var(--mono); text-align: center; z-index: 2; }
+.tc:hover .fc, .tc:hover .bk, .tc:focus-visible .fc, .tc:focus-visible .bk { box-shadow: 0 0 0 2px rgba(247,227,168,.7), 0 8px 24px rgba(0,0,0,.7); }
+.tc:focus-visible { outline: none; }
+.tc.focus .fc { box-shadow: 0 0 0 3px var(--gold-pale), 0 0 34px 6px rgba(255,200,110,.45); }
+.tc.dim { opacity: .55; }
+html:not(.motion-full) .tc, html:not(.motion-full) .tc .in { transition: none; }
+
+/* ---------- the side: the reading ---------- */
+.side { overflow-y: auto; padding: 18px 20px 48px; background: linear-gradient(rgba(10,9,24,.95), rgba(6,5,14,.98)); border-left: 1px solid rgba(226,182,90,.22); }
+.kicker { font-family: var(--mono); font-size: 9.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); margin: 0; }
+.side h2 { margin: 2px 0 2px; font-family: var(--display); font-weight: 400; font-size: 30px; letter-spacing: .04em; color: var(--gold-pale); }
+.side h3 { margin: 16px 0 4px; font-family: var(--display); font-weight: 400; font-size: 20px; color: var(--gold-pale); }
+.side .sub { font-family: var(--mono); font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; }
+.side label { display: block; font: 9.5px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--gold); margin: 12px 0 0; }
+.side input[type=text], .side select, .drawer input[type=search] { width: 100%; margin-top: 6px; background: rgba(0,0,0,.45); color: var(--cream); border: 1px solid rgba(226,182,90,.4); font: italic 17px var(--serif); padding: 8px 10px; }
+.side select { font: 15px var(--serif); font-style: normal; }
+.side input:focus, .side select:focus, .drawer input:focus { outline: none; border-color: var(--gold-pale); }
+.side p, .drawer p { margin: 0 0 8px; font-size: 15.5px; line-height: 1.42; color: #ddd3bc; }
+.fine, .side .fine, .drawer .fine { font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; color: var(--muted); margin: 6px 0 0 !important; line-height: 1.5 !important; }
+.acts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.acts button { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--cream); background: rgba(226,182,90,.1); border: 1px solid rgba(226,182,90,.55); padding: 9px 12px; cursor: pointer; }
+.acts button.main-act { background: rgba(226,182,90,.24); color: var(--gold-pale); border-color: var(--gold-pale); padding: 10px 18px; }
+.acts button:hover, .acts button:focus-visible { color: var(--gold-pale); border-color: var(--gold-pale); outline: none; }
+.spinfo { margin-top: 8px; padding: 9px 11px; border-left: 2px solid rgba(226,182,90,.4); background: rgba(226,182,90,.05); }
+.spinfo p { font-size: 14.5px; margin: 0 0 4px; }
+.reading { margin-top: 18px; padding-top: 12px; border-top: 1px solid rgba(226,182,90,.2); }
+.pos { font: 9.5px var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--gold); margin: 0; }
+.posm { font-style: italic; color: #c9bfa6 !important; }
+.cname { font-family: var(--display); font-size: 25px; color: var(--gold-pale); margin: 6px 0 2px; }
+.tag { display: inline-block; font: 9px var(--mono); letter-spacing: .14em; text-transform: uppercase; padding: 2px 6px; border: 1px solid rgba(226,182,90,.5); color: var(--gold); margin: 0 4px 4px 0; vertical-align: middle; }
+.tag.rv { color: #ff9c7a; border-color: rgba(255,140,110,.6); }
+.kw { font: 11.5px var(--mono); color: var(--muted); margin: 0 0 8px !important; }
+.areas { margin: 8px 0; }
+.areas p { font-size: 14.5px; margin: 0 0 4px; }
+.areas b, .dg b { font: 9.5px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--gold); font-weight: 400; margin-right: 4px; }
+.dg { margin: 10px 0; padding: 8px 10px; background: rgba(255,255,255,.03); border: 1px solid rgba(226,182,90,.15); }
+.dg p { font-size: 14.5px; margin: 0 0 3px; }
+.cat { margin: 12px 0 6px; padding: 10px 12px; border-left: 2px solid var(--neon); background: rgba(255,106,61,.06); font-style: italic; }
+.cat b { display: block; font: 9px var(--mono); letter-spacing: .2em; text-transform: uppercase; color: var(--neon); font-style: normal; margin-bottom: 3px; }
+.linkish { background: none; border: 0; padding: 0; color: var(--gold); font: 10.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.whole li { margin: 0 0 6px; font-size: 15px; line-height: 1.4; color: #ddd3bc; }
+.whole { padding-left: 18px; margin: 6px 0; }
+
+/* ---------- drawers ---------- */
+.drawer { position: fixed; top: var(--bar); right: 0; bottom: 0; width: min(560px, 100vw); z-index: 25; background: rgba(7,6,18,.97); border-left: 1px solid rgba(226,182,90,.3); overflow-y: auto; padding: 20px 24px 48px; transform: translateX(100%); transition: transform .35s ease; }
+.drawer.on { transform: none; }
+.drawer h2 { font-family: var(--display); font-weight: 400; color: var(--gold-pale); margin: 0 0 4px; font-size: 28px; }
+.drawer h3 { font-family: var(--display); font-weight: 400; color: var(--gold); margin: 18px 0 4px; font-size: 19px; }
+.drawer .x { position: absolute; top: 12px; right: 14px; background: none; border: 0; color: var(--cream); font-size: 18px; cursor: pointer; }
+.drawer .sub { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+.chips { display: flex; flex-wrap: wrap; gap: 5px; margin: 10px 0; }
+.chips button { font: 10px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--cream); background: none; border: 1px solid rgba(226,182,90,.4); padding: 5px 8px; cursor: pointer; }
+.chips button[aria-pressed="true"] { color: var(--gold-pale); border-color: var(--gold-pale); background: rgba(226,182,90,.14); }
+.grid78 { display: grid; grid-template-columns: repeat(auto-fill, minmax(74px, 1fr)); gap: 9px; }
+.grid78 button { padding: 0; border: 0; background: none; cursor: pointer; text-align: center; color: var(--muted); font: 9.5px/1.25 var(--mono); }
+.grid78 img { width: 100%; aspect-ratio: 7 / 12; object-fit: cover; display: block; border-radius: 4px; margin-bottom: 4px; box-shadow: 0 3px 10px rgba(0,0,0,.6); }
+.grid78 button:hover img, .grid78 button:focus-visible img { box-shadow: 0 0 0 2px var(--gold-pale); }
+.grid78 button:focus-visible { outline: none; }
+.page { display: grid; grid-template-columns: 170px 1fr; gap: 16px; }
+@media (max-width: 520px) { .page { grid-template-columns: 1fr; } .page img.big { max-width: 220px; } }
+.page img.big { width: 100%; border-radius: 6px; box-shadow: 0 6px 20px rgba(0,0,0,.7); }
+.page dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 3px 10px; font-size: 14px; }
+.page dt { font: 9.5px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--gold); padding-top: 3px; }
+.page dd { margin: 0; color: #ddd3bc; }
+.page ul { margin: 4px 0 8px; padding-left: 18px; }
+.page li { font-size: 14.5px; line-height: 1.4; color: #ddd3bc; margin-bottom: 3px; }
+.journal li { margin-bottom: 8px; font-size: 14.5px; color: #ddd3bc; }
+.journal small { font: 9.5px var(--mono); color: var(--muted); letter-spacing: .08em; }
+pre.txt { white-space: pre-wrap; font: 14px/1.45 var(--serif); color: #ddd3bc; }
+</style>
+</head>
+<body>
+<header class="bar">
+  <a href="./">← Templum</a>
+  <h1>Tarot</h1>
+  <button type="button" id="cardsBtn" aria-pressed="false" aria-controls="cards">Cards</button>
+  <a href="pairs.html" title="The Two Cards Machine: what any two cards mean together">Two cards</a>
+  <a href="count.html" title="The Counting Table: the line by neighbours, and the Opening of the Key">Counting</a>
+  <button type="button" id="readBtn" aria-pressed="false" aria-controls="journalD">Readings</button>
+  <button type="button" id="howBtn" aria-pressed="false" aria-controls="how">How to read</button>
+  <button type="button" id="revBtn" aria-pressed="true" title="Cards can come up reversed (upside down), read as the same force blocked, turned inward or in excess">Reversed: on</button>
+</header>
+
+<div class="main">
+  <div class="stage" id="stage">
+    <img class="back" src="tarot-desk.webp" alt="" aria-hidden="true">
+    <div class="board" id="board">
+      <img class="art" src="tarot-desk.webp" alt="Ouija Cat in a jewelled crown holds up four tarot cards behind his desk: a keyboard, a glowing screen, a moon in a gilt frame, a great eye on a stand, candles, a skull, a ghost in a bottle, cards on the fringed cloth">
+      <div class="glow lamp" id="lampGlow"></div>
+      <div class="glow candle" style="left:392px;top:668px"></div>
+      <div class="glow candle b" style="left:336px;top:752px"></div>
+      <canvas class="flat" id="cvStripR" width="720" height="72"></canvas>
+      <canvas class="flat" id="cvStripB" width="364" height="70"></canvas>
+      <canvas class="flat" id="cvMoonT" width="196" height="64"></canvas>
+      <canvas class="flat" id="cvMoonB" width="180" height="40"></canvas>
+      <canvas class="flat" id="cvScreen" width="1000" height="300"></canvas>
+      <canvas class="flat" id="cvDisplay" width="300" height="380"></canvas>
+      <canvas class="flat" id="cvDial" width="200" height="200"></canvas>
+      <div class="held" id="held0"><img alt=""></div>
+      <div class="held" id="held1"><img alt=""></div>
+      <div class="held" id="held2"><img alt=""></div>
+      <div class="held" id="held3"><img alt=""></div>
+      <img class="front" src="tarot-desk-front.webp" alt="" aria-hidden="true">
+      <div class="glow eye3" id="eye3"></div>
+      <div id="keys"></div>
+      <div id="hotspots"></div>
+    </div>
+    <div class="table" id="table" aria-hidden="true">
+      <div class="head">
+        <div class="t" id="tableT"></div>
+        <button type="button" class="tb" id="turnAll">Turn all</button>
+        <button type="button" class="tb" id="wholeBtn" disabled>The whole spread</button>
+        <button type="button" class="tb" id="closeTable">Back to the desk</button>
+      </div>
+      <div id="tcards"></div>
+      <div class="cap" id="cap"></div>
+    </div>
+    <div class="say" id="say" aria-live="polite"></div>
+  </div>
+
+  <aside class="side" id="side">
+    <p class="kicker">Tarot · the 1909 London deck</p>
+    <h2>The Desk</h2>
+    <p class="sub">Type your question on his keyboard, choose a spread, draw.</p>
+    <label for="q">Your question</label>
+    <input type="text" id="q" maxlength="160" autocomplete="off" placeholder="Or leave it empty for the day">
+    <label for="spread">The spread</label>
+    <select id="spread"></select>
+    <div class="spinfo" id="spinfo"></div>
+    <div class="acts">
+      <button type="button" class="main-act" id="drawBtn">Draw</button>
+      <button type="button" id="todayBtn">Today’s card</button>
+      <button type="button" id="ynBtn">Yes or no</button>
+    </div>
+    <p class="fine">Before a card is dealt, your question, the spread and this minute are sealed with SHA-256 and the shuffle is drawn from the seal (and from the room, when your Mac is listening). Ask the same way in the same minute and the same cards come. Nothing leaves this browser.</p>
+    <div class="reading" id="reading" hidden></div>
+  </aside>
+</div>
+
+<aside class="drawer" id="cards" aria-label="The cards">
+  <button type="button" class="x" aria-label="Close">✕</button>
+  <div id="cardsList">
+    <h2>The cards</h2>
+    <p class="sub">78 cards · the 1909 London deck</p>
+    <input type="search" id="cq" placeholder="Search: a word, a planet, a sign, an element" aria-label="Search the cards">
+    <div class="chips" id="chips"></div>
+    <div class="grid78" id="grid78"></div>
+  </div>
+  <div id="cardPage" hidden></div>
+</aside>
+
+<aside class="drawer" id="journalD" aria-label="Your readings">
+  <button type="button" class="x" aria-label="Close">✕</button>
+  <h2>Readings</h2>
+  <p class="sub">This one, and the ones you kept in this browser</p>
+  <div id="thisReading"></div>
+  <h3>Your readings</h3>
+  <ul class="journal" id="journal"></ul>
+  <div class="acts"><button type="button" id="forgetBtn">Forget them</button></div>
+</aside>
+
+<aside class="drawer" id="how" aria-label="How to read">
+  <button type="button" class="x" aria-label="Close">✕</button>
+  <h2>How to read</h2>
+  <p class="sub">The craft, in the order readers use it</p>
+  <h3>Look first</h3>
+  <p>Before any meaning, look at the picture: who is in it, where they face, what they hold, the weather. Say what you see out loud. The meaning grows out of the picture, not the other way round.</p>
+  <h3>The place it lands</h3>
+  <p>Every spread gives each place a job: the past, the challenge, the outcome. Read the card through its place. A gentle card in the place of the challenge is a challenge that comes softly.</p>
+  <h3>Reversed cards</h3>
+  <p>A card upside down is the same force blocked, turned inward, arriving late or in excess. Some readers leave reversals out and let the neighbours decide; switch them off in the bar if you read that way.</p>
+  <h3>Neighbours</h3>
+  <p>Each suit belongs to an element: Wands fire, Cups water, Swords air, Pentacles earth; every trump has one too. Fire and air feed each other, so do water and earth. Fire and water fight, so do air and earth. A card beside friends is strong; beside enemies it weakens. A card between two cards that fight each other stands on its own.</p>
+  <h3>The whole table</h3>
+  <p>Count before you read. Many trumps: forces bigger than the asker are moving. A suit in the majority tells you what the matter is really about; a missing suit is a message too. Three or four of one rank change the reading. Add every number on the table and reduce it to a trump: the quintessence, the hidden lesson.</p>
+  <h3>The seal</h3>
+  <p>This desk keeps an old rule of augury: the question is declared before the signs are watched. Your question, the spread and the minute are sealed first, and the cards follow from the seal. Same question, same minute, same cards. Ask better, not more.</p>
+  <h3>What the cards won’t do</h3>
+  <p>He doesn’t read bodies: no questions about illness, pregnancy or anyone’s death. Ask about the rest of your life.</p>
+</aside>
+
+<script id="vs-tarot">
+/* The tarot engine: seal, deal and read. Shared by every tarot page (inlined by tools/build-home.py as `vs-tarot`;
+   runs in Node too, for web/shared/test/tarot-engine.test.mjs). No pictures, no DOM: data in, readings out.
+
+   Augury rule: the question, the spread and the minute (and the live room, when there is one) are sealed with
+   SHA-256 before a card is dealt; the shuffle is drawn from the seal, so the same declaration deals the same cards. */
+(function () {
+  const T = {};
+  const enc = new TextEncoder();
+  const hex = b => [...b].map(x => x.toString(16).padStart(2, '0')).join('');
+
+  T.minute = (d = new Date()) => d.toISOString().slice(0, 16) + 'Z';
+
+  T.seal = async ({ spreadId, question = '', minute, room = '' }) => {
+    const text = ['VS-TAROT-1', spreadId, minute || T.minute(), String(question).trim(), room].join('|');
+    const bytes = new Uint8Array(await globalThis.crypto.subtle.digest('SHA-256', enc.encode(text)));
+    return { hex: hex(bytes), bytes, text };
+  };
+
+  // xoshiro128** seeded from the seal's 32 bytes (the second half folded into the first)
+  T.rng = bytes => {
+    const s = new Uint32Array(4);
+    for (let i = 0; i < 4; i++) s[i] = ((bytes[i * 4] << 24) | (bytes[i * 4 + 1] << 16) | (bytes[i * 4 + 2] << 8) | bytes[i * 4 + 3]) ^
+      ((bytes[16 + i * 4] << 24) | (bytes[17 + i * 4] << 16) | (bytes[18 + i * 4] << 8) | bytes[19 + i * 4]);
+    if (!(s[0] | s[1] | s[2] | s[3])) s[0] = 1;
+    const rotl = (x, k) => (x << k) | (x >>> (32 - k));
+    return () => {
+      const r = Math.imul(rotl(Math.imul(s[1], 5), 7), 9) >>> 0, t = s[1] << 9;
+      s[2] ^= s[0]; s[3] ^= s[1]; s[1] ^= s[2]; s[0] ^= s[3]; s[2] ^= t; s[3] = rotl(s[3], 11);
+      return r / 4294967296;
+    };
+  };
+
+  T.deal = (data, spread, bytes, { reversals = true } = {}) => {
+    const r = T.rng(bytes), deck = data.cards.slice();
+    for (let i = deck.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [deck[i], deck[j]] = [deck[j], deck[i]]; }
+    return spread.positions.slice(0, spread.cards).map((pos, i) => ({ n: pos.n || i + 1, pos, card: deck[i], reversed: !!reversals && r() < .5 }));
+  };
+
+  /* ---- elemental dignities ---- */
+  const HOSTILE = { Fire: 'Water', Water: 'Fire', Air: 'Earth', Earth: 'Air' }, FRIEND = { Fire: 'Air', Air: 'Fire', Water: 'Earth', Earth: 'Water' };
+  T.dignity = (a, b) => a === b ? 'same' : HOSTILE[a] === b ? 'hostile' : FRIEND[a] === b ? 'friendly' : 'neutral';
+
+  T.neighbours = spread => {
+    const out = {};
+    for (const p of spread.positions) out[p.n] = spread.positions.filter(q => q !== p && Math.hypot(q.x - p.x, q.y - p.y) <= 1.75).map(q => q.n);
+    return out;
+  };
+
+  // per card: its neighbours and how each meets it; `between` = two of its neighbours are hostile to each other,
+  // so (the old rule) neither touches it much
+  T.dignities = (spread, drawn) => {
+    const nb = T.neighbours(spread), by = Object.fromEntries(drawn.map(d => [d.n, d])), out = {};
+    for (const d of drawn) {
+      const near = (nb[d.n] || []).map(n => by[n]).filter(Boolean);
+      const w = near.map(o => ({ n: o.n, kind: T.dignity(d.card.element, o.card.element) }));
+      const between = near.some((a, i) => near.some((b, j) => j > i && T.dignity(a.card.element, b.card.element) === 'hostile'));
+      const good = w.some(x => x.kind === 'same' || x.kind === 'friendly'), bad = w.some(x => x.kind === 'hostile');
+      out[d.n] = { with: w, between, net: between ? 'calm' : good && bad ? 'mixed' : good ? 'strong' : bad ? 'weak' : 'calm' };
+    }
+    return out;
+  };
+
+  /* ---- the spread as a whole ---- */
+  const SUITS = ['Wands', 'Cups', 'Swords', 'Pentacles'], COURT = ['Page', 'Knight', 'Queen', 'King'];
+  T.patterns = (data, drawn) => {
+    const n = drawn.length, suits = Object.fromEntries(SUITS.map(s => [s, 0])), ranks = {};
+    let majors = 0, courts = 0, sum = 0;
+    for (const { card: c } of drawn) {
+      if (c.arcana === 'major') { majors++; sum += c.number; continue; }
+      suits[c.suit]++; ranks[c.rank] = (ranks[c.rank] || 0) + 1;
+      if (COURT.includes(c.rank)) courts++; else sum += c.number;
+    }
+    const majority = n >= 5 ? [['Majors', majors], ...SUITS.map(s => [s, suits[s]]), ['Courts', courts]].filter(([, k]) => k * 2 >= n).map(([g]) => g) : [];
+    const missing = n >= 7 ? SUITS.filter(s => !suits[s]) : [];
+    const rk = Object.entries(ranks).filter(([, k]) => k >= 3).map(([rank, k]) => ({ rank, count: Math.min(4, k), text: data.patterns.book_t[rank]?.[String(Math.min(4, k))] || '' }));
+    let q = sum;
+    while (q > 22) q = String(q).split('').reduce((a, b) => a + +b, 0);
+    const quint = { sum, card: data.cards.find(c => c.arcana === 'major' && c.number === (q === 22 ? 0 : q)) };
+    return { n, majors, suits, courts, majority, missing, ranks: rk, quint };
+  };
+
+  /* ---- questions the cards won't take (house rule: no health, death or pregnancy readings) ---- */
+  const CRISIS = /\b(kill(ing)? (myself|me)|suicid\w*|end (it all|my life)|want(ed)? to die|don'?t want to (live|be here|exist)|self[- ]?harm|hurt(ing)? myself|cut(ting)? myself)\b/i;
+  const BODY = /\b(pregnan\w*|miscarr\w*|fertil\w*|ivf|conceiv\w*|sick(ness)?|ill|illness|disease|diagnos\w*|surgery|tumou?rs?|symptoms?|health|hospital|doctor|die|dies|dying|died|terminal|live long|how long (will|do) (i|they|he|she) live)\b/i;
+  T.screenQuestion = q => { q = String(q || ''); return CRISIS.test(q) ? 'crisis' : BODY.test(q) || /\b(death|cancer)\b/.test(q) ? 'body' : 'ok'; };
+
+  T.today = async (data, date = new Date(), { reversals = true } = {}) => {
+    const day = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    const bytes = new Uint8Array(await globalThis.crypto.subtle.digest('SHA-256', enc.encode('VS-TAROT-DAY-1|' + day)));
+    const r = T.rng(bytes), card = data.cards[Math.floor(r() * data.cards.length)];
+    return { day, card, reversed: !!reversals && r() < .5 };
+  };
+
+  /* ---- Ouija Cat reads (free, deterministic: picked by the cards themselves) ---- */
+  const OPEN = {
+    Majors: ["Big cards. This isn't as up to you as you'd like.", 'All trumps. The furniture is moving and you want a say.'],
+    Wands: ['Fire everywhere. Try not to burn the house down.', 'All drive, no brakes. Very you.'],
+    Cups: ['All feelings, no plan. Classic.', 'Cups on cups. You came here to feel something, congratulations.'],
+    Swords: ["Blades everywhere. You've been thinking too hard again.", 'Swords. Your head is a knife drawer.'],
+    Pentacles: ['Money and dirt. Finally, something practical.', 'Coins and ground. Someone wants results.'],
+    Courts: ['Crowded table. Other people have their paws in this.', 'So many faces. Who invited all of them?'],
+  };
+  const LOVE = /\b(love|crush|partner|relationship|ex|date|dating|boyfriend|girlfriend|husband|wife|marry|marriage|heart)\b/i;
+  const CLOSE = ['Write it down. You will forget. You always forget.', "That's the spread. Do something with it.",
+    'The cards talked. Your move.', "I've said enough. You haven't done enough.", 'Sit with it. Not forever, you have things to do.',
+    'Same cards next minute if you ask the same way. Ask better.'];
+  const RANK = { Ace: 'Aces', Two: 'Twos', Three: 'Threes', Four: 'Fours', Five: 'Fives', Six: 'Sixes', Seven: 'Sevens', Eight: 'Eights', Nine: 'Nines', Ten: 'Tens', Page: 'Pages', Knight: 'Knights', Queen: 'Queens', King: 'Kings' };
+  const WORD = { 3: 'Three', 4: 'Four' };
+  T.catRead = (data, spread, drawn, pats, { question = '' } = {}) => {
+    let h = 2166136261; for (const d of drawn) for (const ch of d.card.id + d.reversed) h = Math.imul(h ^ ch.charCodeAt(0), 16777619) >>> 0;
+    const pick = (a, k = 0) => a[(h >>> k) % a.length];
+    const lines = [];
+    const g = pats.majority[0];
+    if (g && OPEN[g]) lines.push(pick(OPEN[g], 3));
+    else if (LOVE.test(question) && drawn.length >= 5 && !pats.suits.Cups) lines.push('No Cups at all. Bold, for a question about the heart.');
+    const key = drawn[drawn.length - 1];
+    if (key.card.cat) lines.push(key.card.cat);
+    const r = pats.ranks[0];
+    if (r && lines.length < 3) lines.push(`${WORD[r.count]} ${RANK[r.rank]}: ${r.text}. Don't let it go to your head.`);
+    lines.push(pick(CLOSE, 7));
+    while (lines.length < 2) lines.unshift(drawn[0].card.cat || 'Hm.');
+    return lines.slice(0, 4);
+  };
+
+  /* ---- two cards together (the Two Cards Machine): a hand-written reading when the pair has one, rules for all 3,003 ---- */
+  T.pairKey = (data, a, b) => { const i = data.cards.findIndex(c => c.id === a), j = data.cards.findIndex(c => c.id === b); return i <= j ? `${a}+${b}` : `${b}+${a}`; };
+  const ELW = { Fire: 'will and drive', Water: 'feeling', Air: 'thought', Earth: 'the practical, material world' };
+  const SUITW = { Wands: 'drive, desire and will', Cups: 'feeling and love', Swords: 'thought and the hard truths', Pentacles: 'money, work and the practical ground' };
+  const PLURAL = { Ace: 'Aces', Two: 'Twos', Three: 'Threes', Four: 'Fours', Five: 'Fives', Six: 'Sixes', Seven: 'Sevens', Eight: 'Eights', Nine: 'Nines', Ten: 'Tens', Page: 'Pages', Knight: 'Knights', Queen: 'Queens', King: 'Kings' };
+  const PCAT = {
+    same: ['Twins. Twice the trouble.', 'The same element twice. Subtle as a brick.'],
+    friendly: ['These two get along. Unlike you and your inbox.', 'A good match. Try not to ruin it.'],
+    neutral: ['They ignore each other. Very grown-up.', 'Polite strangers. Read them one at a time.'],
+    FireWater: ['Fire and water. Enjoy the steam.'], AirEarth: ['Air and earth. A dust storm. Bring a scarf.'],
+  };
+  const the = (c, cap) => /^The /.test(c.name) ? c.name : (cap ? 'The ' : 'the ') + c.name;   // 'the Four of Cups', 'The Sun'
+  const lean1 = (c, r) => { const v = c.yesno || 'maybe'; return !r ? v : v === 'yes' ? 'maybe' : 'no'; };
+  T.pair = (data, A, B) => {
+    const a = A.card, b = B.card, key = T.pairKey(data, a.id, b.id), famous = data.pairs?.[key] || null;
+    const rel = T.dignity(a.element, b.element), rules = [];
+    rules.push(rel === 'same' ? `Both ${a.element}: the same element twice, so ${ELW[a.element]} runs strong in this pair.`
+      : rel === 'friendly' ? `${a.element} and ${b.element} feed each other: these two cards help each other along.`
+      : rel === 'hostile' ? `${a.element} and ${b.element} fight: expect friction between what these two want; each weakens the other.`
+      : `${a.element} and ${b.element} neither help nor hinder: each card speaks for itself.`);
+    const maj = c => c.arcana === 'major', court = c => COURT.includes(c.rank);
+    if (maj(a) && maj(b)) rules.push('Two trumps: forces bigger than your own choices are at work here.');
+    else if (maj(a) || maj(b)) {
+      const M = maj(a) ? a : b, m = maj(a) ? b : a;
+      rules.push(`The trump explains the ${m.name}: ${M.name} is the bigger story, the ${m.name} is how it shows up day to day.`);
+      if (!court(m) && m.number === (M.number || 22) % 22) rules.push(`Same number: the ${m.name} is a small echo of ${M.name}.`);
+    } else {
+      if (a.suit === b.suit) {
+        rules.push(`Both ${a.suit}: the whole matter sits in ${SUITW[a.suit]}.`);
+        if (!court(a) && !court(b) && Math.abs(a.number - b.number) === 1) { const [lo, hi] = a.number < b.number ? [a, b] : [b, a]; rules.push(`One step apart in the same suit: the story moves from the ${lo.name} to the ${hi.name}.`); }
+      }
+      if (a.rank === b.rank) rules.push(court(a) ? `Two ${PLURAL[a.rank]}: two people of the same kind, meeting.` : `Two ${PLURAL[a.rank]}: ${data.numbers?.[a.number]?.theme || 'the same number'}, twice over.`);
+    }
+    if (court(a) !== court(b)) { const c = court(a) ? a : b, o = court(a) ? b : a; rules.push(`The ${c.name} is a person, or a way of acting, that touches ${the(o)}.`); }
+    else if (court(a) && court(b) && a.rank !== b.rank) rules.push(`Two people: the ${a.name} and the ${b.name}.`);
+    if (A.reversed && B.reversed) rules.push('Both reversed: on both sides the energy is blocked, late or turned inward. Slow down before acting.');
+    else if (A.reversed || B.reversed) rules.push(`${the(A.reversed ? a : b, true)} is reversed: it pulls against the other card, or its part of the story arrives late.`);
+    const kw = (c, r) => ((r ? c.keywords_reversed : c.keywords_upright) || [])[0];
+    const ka = kw(a, A.reversed), kb = kw(b, B.reversed);
+    if (ka && kb) rules.push(`Together: ${ka} meets ${kb}.`);
+    const la = lean1(a, A.reversed), lb = lean1(b, B.reversed);
+    const lean = la === 'yes' && lb === 'yes' ? 'yes' : (la === 'no' || lb === 'no') && la !== 'yes' && lb !== 'yes' ? 'no' : 'mixed';
+    let h = 0; for (const ch of key + A.reversed + B.reversed) h = (Math.imul(h, 31) + ch.charCodeAt(0)) >>> 0;
+    const els = [a.element, b.element].sort().join('');
+    const pool = rel === 'hostile' ? (els === 'FireWater' ? PCAT.FireWater : PCAT.AirEarth) : PCAT[rel];
+    const cat = famous?.cat || (A.reversed && B.reversed ? 'Both upside down. Like your sleep schedule.' : pool[h % pool.length]);
+    return { key, famous, relation: rel, rules, lean, cat };
+  };
+
+  /* ---- counting (the Order's method): a card's count, the path from the significator, pairs, neighbours in a line ---- */
+  const PLANETS = ['Mercury', 'Moon', 'Venus', 'Jupiter', 'Mars', 'Sun', 'Saturn'], ELEMS = ['Air', 'Water', 'Fire', 'Earth'];
+  T.countValue = c => {
+    if (c.arcana === 'major') { const a = (c.astrology?.attribution || '').split(' ')[0]; return ELEMS.includes(a) ? 3 : PLANETS.includes(a) ? 9 : 12; }
+    return c.rank === 'Page' ? 7 : COURT.includes(c.rank) ? 4 : c.rank === 'Ace' ? 11 : c.number;
+  };
+  // count from `start` (the card you start on counts as one) round the line as a circle, landing again and again,
+  // until a card already read comes up; returns the landing indices in order
+  T.countPath = (line, start, dir = 1) => {
+    const n = line.length, seen = new Set([start]), path = []; let i = start;
+    for (let g = 0; g <= n; g++) { i = ((i + dir * (T.countValue(line[i]) - 1)) % n + n) % n; if (seen.has(i)) break; seen.add(i); path.push(i); }
+    return path;
+  };
+  T.pairsOf = (n, start) => {
+    const pairs = []; for (let k = 1; k * 2 < n; k++) pairs.push([(start - k + n) % n, (start + k) % n]);
+    return { pairs, single: n % 2 === 0 && n > 1 ? (start + n / 2) % n : null };
+  };
+  T.lineDignity = (line, i, circular = false) => {
+    const n = line.length, idx = [i - 1, i + 1].map(j => circular ? (j + n) % n : j).filter(j => j >= 0 && j < n && j !== i);
+    const near = [...new Set(idx)].map(j => ({ i: j, kind: T.dignity(line[i].element, line[j].element) }));
+    const between = near.length === 2 && T.dignity(line[near[0].i].element, line[near[1].i].element) === 'hostile';
+    const good = near.some(x => x.kind === 'same' || x.kind === 'friendly'), bad = near.some(x => x.kind === 'hostile');
+    return { with: near, between, net: between ? 'calm' : good && bad ? 'mixed' : good ? 'strong' : bad ? 'weak' : 'calm' };
+  };
+
+  /* ---- the Opening of the Key: five operations, each shuffled again from the seal ---- */
+  T.KEY = {
+    letters: [['Yod', 'Wands', 'work, business, ambition'], ['Heh', 'Cups', 'love, marriage, pleasure'], ['Vav', 'Swords', 'trouble, loss, quarrels'], ['Heh final', 'Pentacles', 'money, goods, material matters']],
+    houses: ['the self, how you meet the world', 'money and what you own', 'messages, siblings, short journeys', 'home, family, roots', 'pleasure, creativity, romance, children', 'daily work, service, routines', 'partners, marriage, open rivals', 'shared money, inheritance, deep change', 'long journeys, learning, belief', 'career and standing', 'friends, hopes, groups', 'what is hidden, retreat, undoing'],
+    signs: ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'],
+    house: [10, 7, 12, 2], sephirah: [4, 7, 5, 10], cardinal: ['Aries', 'Cancer', 'Libra', 'Capricorn'],
+  };
+  const keyDeck = (data, bytes, op) => {
+    const b = Uint8Array.from(bytes); b[0] ^= op * 73; b[9] ^= op * 29; b[17] ^= op * 151; b[30] ^= op;
+    const r = T.rng(b), deck = data.cards.slice();
+    for (let i = deck.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [deck[i], deck[j]] = [deck[j], deck[i]]; }
+    return { deck, r };
+  };
+  // op 1: four piles by cutting; 2 and 3: twelve piles dealt round; 4: the 36 after the significator, in a ring;
+  // 5: ten piles dealt round. `choice` is the pile the reader opens (ops 2, 3, 5); `dir` the way the significator faces.
+  T.keyOp = (data, bytes, op, sigId, choice = 0, dir = 1) => {
+    const { deck, r } = keyDeck(data, bytes, op);
+    let piles;
+    if (op === 1) { const half = 39 + Math.round((r() - .5) * 12), q1 = Math.round(half / 2 + (r() - .5) * 8), q3 = Math.round(half + (78 - half) / 2 + (r() - .5) * 8); piles = [deck.slice(0, q1), deck.slice(q1, half), deck.slice(half, q3), deck.slice(q3)]; }
+    else if (op === 4) { const at = deck.findIndex(c => c.id === sigId); piles = [Array.from({ length: 36 }, (_, k) => deck[(at + 1 + k) % 78])]; }
+    else { const k = op === 5 ? 10 : 12; piles = Array.from({ length: k }, () => []); deck.forEach((c, i) => piles[i % k].push(c)); }
+    const pile = op === 1 ? piles.findIndex(p => p.some(c => c.id === sigId)) : op === 4 ? 0 : choice;
+    const line = piles[pile], sig = op === 4 ? -1 : line.findIndex(c => c.id === sigId), found = op === 4 || sig >= 0;
+    let path = [], pairs = [], single = null;
+    if (op === 4) {
+      const sc = data.cards.find(c => c.id === sigId), v = T.countValue(sc), first = dir > 0 ? (v - 1) % 36 : ((36 - v) % 36 + 36) % 36;   // the significator's count onto the ring: rightward from the first card, leftward from the last, which counts one
+      path = [first, ...T.countPath(line, first, dir)].filter((v, i, a) => a.indexOf(v) === i);
+      pairs = Array.from({ length: 18 }, (_, k) => [k, 35 - k]);
+    } else if (found) { path = T.countPath(line, sig, dir); ({ pairs, single } = T.pairsOf(line.length, sig)); }
+    return { op, piles: piles.map(p => p.map(c => c.id)), pile, line, sig, found, path, pairs, single };
+  };
+
+  /* ---- the sun's place (low precision, a day either way) for the decan wheel and a court card by birthday ---- */
+  T.sunLongitude = date => { const d = (date - Date.UTC(2000, 0, 1, 12)) / 864e5, rad = Math.PI / 180, L = 280.46 + .9856474 * d, g = (357.528 + .9856003 * d) * rad; return ((L + 1.915 * Math.sin(g) + .02 * Math.sin(2 * g)) % 360 + 360) % 360; };
+  const DECAN_SUIT = ['Wands', 'Pentacles', 'Swords', 'Cups'];   // Aries, Taurus, Gemini, Cancer, then round again
+  const NUM = ['', 'Ace', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'];
+  T.decanOf = date => {
+    const lon = T.sunLongitude(date), sign = Math.floor(lon / 30), dec = Math.floor((lon % 30) / 10);
+    const pip = 2 + (Math.floor(sign / 4) % 3) * 3 + dec;   // cardinal signs 2-4, fixed 5-7, mutable 8-10
+    const suit = DECAN_SUIT[sign % 4], card = `${suit.toLowerCase()}-${String(pip).padStart(2, '0')}`;
+    return { lon, sign: T.KEY.signs[sign], decan: dec + 1, card, name: `${NUM[pip]} of ${suit}` };
+  };
+  // the Knight, Queen or King whose thirty degrees hold the sun on that date (from the court 'rules' spans)
+  T.courtFor = (data, date) => {
+    const lon = T.sunLongitude(date), at = s => { const m = s.match(/(\d+)° (\w+)/); return m ? T.KEY.signs.indexOf(m[2]) * 30 + +m[1] - 1 : NaN; };
+    for (const c of data.cards) {
+      const r = c.court?.rules; if (!r || !/ to /.test(r)) continue;
+      const [a, b] = r.split(' to ').map(at), span = ((b - a) % 360 + 360) % 360 + 1, off = ((lon - a) % 360 + 360) % 360;
+      if (off < span) return c.id;
+    }
+    return null;
+  };
+
+  globalThis.TAROT = T;
+})();
+
+</script>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const calm = matchMedia('(prefers-reduced-motion: reduce)').matches && !document.documentElement.classList.contains('motion-full');
+const DECK = 'tarot/rws-1910/';
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII'];
+
+/* ================= THE MAP: the owner's desk, 2000x1120 image pixels (Shift+H outlines every control) ================= */
+const Q = {   // quads [TL, TR, BR, BL] for everything laid onto the picture in perspective
+  screen: [[580, 614], [1233, 650], [1203, 798], [520, 751]],
+  display: [[1343, 558], [1446, 563], [1321, 776], [1216, 771]],
+  stripR: [[556, 905], [916, 944.5], [916, 981], [556, 941]],
+  stripB: [[928, 951], [1110, 971], [1110, 1006], [928, 986]],
+  moonT: [[372, 189], [466, 189], [466, 215], [372, 215]],
+  moonB: [[378, 506], [467, 506], [467, 525], [378, 525]],
+  keys: [[595, 775], [1042, 822], [992, 915], [512, 860]],
+  held: [
+    [[714, 204], [780, 226], [748, 348], [668, 326]],
+    [[658, 395], [706, 364], [778, 480], [730, 511]],
+    [[1238, 209], [1310, 191], [1340, 325], [1268, 343]],
+    [[1320, 365], [1388, 407], [1336, 513], [1254, 471]],
+  ],
+};
+const DIAL = { x: 1112, y: 875, rx: 50, ry: 30, rot: -8 };
+Q.dial = (() => { const a = DIAL.rot * Math.PI / 180, c = Math.cos(a), s = Math.sin(a), P = (u, v) => [DIAL.x + u * DIAL.rx * c - v * DIAL.ry * s, DIAL.y + u * DIAL.rx * s + v * DIAL.ry * c]; return [P(-1, -1), P(1, -1), P(1, 1), P(-1, 1)]; })();
+const HS = [   // [key, x, y, w, h, round?, title, action]
+  ['screen', 560, 618, 640, 150, 0, 'His screen: type your question', () => focusQ()],
+  ['keyboard', 520, 780, 500, 120, 0, 'His keyboard: type your question', () => focusQ()],
+  ['display', 1230, 560, 200, 205, 0, 'The spread: touch to choose the next', () => stepSpread(1)],
+  ['prev', 1188, 776, 26, 26, 1, 'Previous spread', () => stepSpread(-1)],
+  ['draw', 1225, 779, 28, 28, 1, 'Draw', () => draw()],
+  ['next', 1267, 784, 26, 26, 1, 'Next spread', () => stepSpread(1)],
+  ['dial', 1062, 845, 100, 62, 1, 'Reversed cards on or off', () => setRev(!S.rev)],
+  ['moon', 290, 220, 240, 240, 1, 'Today’s card', () => todayCard()],
+  ['eye', 1400, 80, 200, 180, 1, 'His read of the table', () => hisRead()],
+  ['crystal', 1678, 902, 86, 86, 1, 'Yes or no', () => yesNo()],
+  ['mouse', 470, 950, 210, 95, 0, 'The cards: all 78', () => openDrawer('cards')],
+  ['bottle', 160, 540, 140, 330, 0, 'How to read', () => openDrawer('how')],
+  ['lamp', 490, 40, 240, 110, 0, 'The lamp', () => { $('lampGlow').classList.toggle('on'); snd('click'); }],
+  ['candles', 300, 630, 130, 260, 0, 'The candles', () => candles()],
+  ['cat', 900, 430, 190, 150, 1, 'Ouija Cat', () => catLine()],
+  ['held0', 668, 204, 112, 144, 0, 'The card in his hand', () => openHeld(0)],
+  ['held1', 658, 364, 120, 147, 0, 'The card in his hand', () => openHeld(1)],
+  ['held2', 1238, 191, 102, 152, 0, 'The card in his hand', () => openHeld(2)],
+  ['held3', 1254, 365, 134, 148, 0, 'The card in his hand', () => openHeld(3)],
+];
+
+/* ---- perspective: a flat w x h element onto a quad (Heckbert's square-to-quad, as a CSS matrix3d) ---- */
+function onQuad(el, q, w = el.width || el.offsetWidth, h = el.height || el.offsetHeight) {
+  const [[x0, y0], [x1, y1], [x2, y2], [x3, y3]] = q;
+  const dx1 = x1 - x2, dx2 = x3 - x2, dx3 = x0 - x1 + x2 - x3, dy1 = y1 - y2, dy2 = y3 - y2, dy3 = y0 - y1 + y2 - y3;
+  let a, b, c, d, e, f, g = 0, k = 0;
+  if (Math.abs(dx3) < 1e-9 && Math.abs(dy3) < 1e-9) { a = x1 - x0; b = x3 - x0; c = x0; d = y1 - y0; e = y3 - y0; f = y0; }
+  else { const den = dx1 * dy2 - dx2 * dy1; g = (dx3 * dy2 - dx2 * dy3) / den; k = (dx1 * dy3 - dx3 * dy1) / den; a = x1 - x0 + g * x1; b = x3 - x0 + k * x3; c = x0; d = y1 - y0 + g * y1; e = y3 - y0 + k * y3; f = y0; }
+  el.style.width = w + 'px'; el.style.height = h + 'px';
+  el.style.transform = `matrix3d(${a / w},${d / w},0,${g / w},${b / h},${e / h},0,${k / h},0,0,1,0,${c},${f},0,1)`;
+}
+
+/* ================= STATE ================= */
+let DATA = null, MAN = { cards: {} };
+const S = { rev: true, spread: 'three-card', phase: 'idle', seal: null, drawn: [], turned: new Set(), focus: 0, pats: null, dig: null, q: '', title: '', hands: [] };
+try { const st = JSON.parse(localStorage.getItem('vs-tarot') || '{}'); if (typeof st.rev === 'boolean') S.rev = st.rev; if (st.spread) S.spread = st.spread; } catch (e) {}
+const save = () => { try { localStorage.setItem('vs-tarot', JSON.stringify({ rev: S.rev, spread: S.spread })); } catch (e) {} };
+const card = id => DATA.cards.find(c => c.id === id);
+const img = (id, size = 'sm') => MAN.cards[id] ? `${DECK}${id}${size === 'sm' ? '-sm' : ''}.webp` : BACK;
+const spreadOf = id => DATA.spreads.find(s => s.id === id) || DATA.spreads[0];
+
+/* ================= THE CARD BACK (rotationally symmetric, so a reversed card never shows) ================= */
+const BACK = (() => {
+  const c = document.createElement('canvas'); c.width = 280; c.height = 480; const x = c.getContext('2d');
+  const g = x.createLinearGradient(0, 0, 280, 480); g.addColorStop(0, '#0d1a5c'); g.addColorStop(.5, '#1b2f8f'); g.addColorStop(1, '#0d1a5c');
+  x.fillStyle = g; x.fillRect(0, 0, 280, 480);
+  x.strokeStyle = '#d9ad52'; x.lineWidth = 6; x.strokeRect(10, 10, 260, 460); x.lineWidth = 1.5; x.strokeRect(20, 20, 240, 440);
+  x.translate(140, 240);
+  for (let half = 0; half < 2; half++) {   // draw one half, turn 180, draw again
+    x.save(); x.rotate(half * Math.PI);
+    x.strokeStyle = 'rgba(232,190,100,.75)'; x.lineWidth = 1.2;
+    for (let i = 0; i < 9; i++) { const a = -Math.PI / 2 + (i - 4) * .16; x.beginPath(); x.moveTo(Math.cos(a) * 62, Math.sin(a) * 62); x.lineTo(Math.cos(a) * 196, Math.sin(a) * 196); x.stroke(); }
+    x.fillStyle = '#c8342c'; x.beginPath(); x.arc(0, -150, 9, 0, 7); x.fill(); x.strokeStyle = '#e8c26a'; x.lineWidth = 2; x.stroke();
+    x.beginPath(); x.moveTo(-70, -205); x.quadraticCurveTo(0, -170, 70, -205); x.stroke();
+    x.restore();
+  }
+  x.strokeStyle = '#e8c26a'; x.lineWidth = 3; x.beginPath(); x.arc(0, 0, 56, 0, 7); x.stroke();
+  x.lineWidth = 2.5; x.beginPath(); x.moveTo(-44, 0); x.quadraticCurveTo(0, -30, 44, 0); x.quadraticCurveTo(0, 30, -44, 0); x.stroke();
+  const ig = x.createRadialGradient(0, 0, 2, 0, 0, 16); ig.addColorStop(0, '#111'); ig.addColorStop(.35, '#1b1b1b'); ig.addColorStop(.4, '#4aa0ff'); ig.addColorStop(1, '#173a9a');
+  x.fillStyle = ig; x.beginPath(); x.arc(0, 0, 16, 0, 7); x.fill();
+  return c.toDataURL('image/png');
+})();
+
+/* ================= ENGRAVINGS: real words where the picture had garbled ones ================= */
+function engrave() {
+  let x = $('cvStripR').getContext('2d'); x.clearRect(0, 0, 720, 72);
+  x.font = '44px "IM Fell English SC", Georgia, serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
+  x.fillStyle = 'rgba(60,8,4,.55)'; x.fillText('TAROT  ·  OUIJA CAT V1', 362, 40); x.fillStyle = '#f3e6c3'; x.fillText('TAROT  ·  OUIJA CAT V1', 360, 38);
+  onQuad($('cvStripR'), Q.stripR);
+  x = $('cvStripB').getContext('2d'); x.clearRect(0, 0, 364, 70);
+  x.font = '34px Georgia, "Segoe UI Symbol", serif'; x.textAlign = 'center'; x.textBaseline = 'middle';
+  ['☉', '☽', '☿', '♀', '♂', '♃', '♄'].map(g => g + '\uFE0E').forEach((p, i) => { const cx = 30 + i * 50.5; x.fillStyle = 'rgba(0,0,30,.5)'; x.fillText(p, cx + 1.5, 37); x.fillStyle = '#e9c46c'; x.fillText(p, cx, 35); });
+  onQuad($('cvStripB'), Q.stripB);
+  x = $('cvMoonT').getContext('2d'); x.clearRect(0, 0, 196, 64);
+  x.font = '40px "IM Fell English SC", Georgia, serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = '#f6e7bf'; x.fillText('TODAY', 98, 34);
+  onQuad($('cvMoonT'), Q.moonT);
+  x = $('cvMoonB').getContext('2d'); x.clearRect(0, 0, 180, 40);
+  x.font = '23px "IM Fell English SC", Georgia, serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = '#f2d98e'; x.fillText(moonPhase().toUpperCase(), 90, 21);
+  onQuad($('cvMoonB'), Q.moonB);
+}
+function moonPhase(d = new Date()) {
+  const age = ((d - Date.UTC(2000, 0, 6, 18, 14)) / 864e5 % 29.530588853 + 29.530588853) % 29.530588853;
+  return age < 1.85 ? 'new moon' : age < 5.54 ? 'waxing' : age < 9.23 ? 'first quarter' : age < 12.92 ? 'waxing' : age < 16.61 ? 'full moon' : age < 20.3 ? 'waning' : age < 23.99 ? 'last quarter' : age < 27.68 ? 'waning' : 'new moon';
+}
+
+/* ================= HIS SCREEN: the question in red neon ================= */
+let blink = true;
+function screen() {
+  const cv = $('cvScreen'), x = cv.getContext('2d'), W = 1000, H = 300;
+  const bg = x.createLinearGradient(0, 0, W, H); bg.addColorStop(0, '#070b2a'); bg.addColorStop(1, '#0b1440');
+  x.fillStyle = bg; x.fillRect(0, 0, W, H);
+  x.fillStyle = 'rgba(80,120,255,.05)'; for (let y = 0; y < H; y += 4) x.fillRect(0, y, W, 1.4);   // scanlines
+  x.strokeStyle = 'rgba(120,160,255,.35)'; x.lineWidth = 3; x.strokeRect(10, 10, W - 20, H - 20);
+  const neon = (t, px, y, size, col = '#ff6a3d', font = '"IM Fell English SC", Georgia, serif') => {
+    x.font = `${size}px ${font}`; x.textAlign = 'center'; x.textBaseline = 'middle';
+    x.shadowColor = col; x.shadowBlur = size * .5; x.fillStyle = col; x.fillText(t, px, y); x.shadowBlur = 0; x.fillStyle = '#ffd7c4'; x.globalAlpha = .55; x.fillText(t, px, y); x.globalAlpha = 1;
+  };
+  let top, main, sub = '';
+  if (S.phase === 'idle') { top = S.title || 'ASK HIM'; main = S.q || ''; }
+  else { top = S.title; main = S.phase === 'sealing' ? 'SEALING' : focusName(); sub = S.seal ? 'SEAL ' + S.seal.hex.slice(0, 12).toUpperCase() : ''; }
+  neon(top, W / 2, 46, 26, '#7fb2ff', 'IBM Plex Mono, monospace');
+  if (main) {
+    const words = main.split(/\s+/), lines = [''];
+    x.font = '58px "IM Fell English SC", Georgia, serif';
+    for (const wd of words) { const t = (lines[lines.length - 1] + ' ' + wd).trim(); if (x.measureText(t).width > W - 120 && lines[lines.length - 1]) lines.push(wd); else lines[lines.length - 1] = t; }
+    const L = lines.slice(-2), size = L.length > 1 ? 52 : 62;
+    L.forEach((l, i) => neon(l + (S.phase === 'idle' && i === L.length - 1 && blink ? '_' : ''), W / 2, 150 + (i - (L.length - 1) / 2) * 64, size));
+  } else if (S.phase === 'idle') neon(blink ? 'TYPE YOUR QUESTION_' : 'TYPE YOUR QUESTION', W / 2, 150, 44, '#ff6a3d');
+  if (sub) neon(sub, W / 2, H - 42, 22, '#7fb2ff', 'IBM Plex Mono, monospace');
+  onQuad(cv, Q.screen);
+}
+const focusName = () => { if (S.phase === 'read' && !S.focus) return 'THE WHOLE SPREAD'; const d = S.drawn.find(d => d.n === S.focus); return d && S.turned.has(d.n) ? d.card.name.toUpperCase() + (d.reversed ? ' ⟲' : '') : S.turned.size ? `${S.turned.size} OF ${S.drawn.length} TURNED` : 'TURN THE CARDS'; };
+setInterval(() => { blink = !blink; if (S.phase === 'idle' && document.visibilityState === 'visible') screen(); }, 560);
+
+/* ================= THE SMALL DISPLAY: the chosen spread ================= */
+function display() {
+  const cv = $('cvDisplay'), x = cv.getContext('2d'), W = 300, H = 380, sp = spreadOf(S.spread);
+  x.fillStyle = '#081038'; x.fillRect(0, 0, W, H);
+  x.strokeStyle = 'rgba(233,196,108,.7)'; x.lineWidth = 3; x.strokeRect(8, 8, W - 16, H - 16);
+  x.textAlign = 'center'; x.fillStyle = '#f2d98e'; x.font = '26px "IM Fell English SC", Georgia, serif';
+  const nm = sp.name.length > 18 ? sp.name.slice(0, 17) + '…' : sp.name; x.fillText(nm, W / 2, 46);
+  x.font = '15px IBM Plex Mono, monospace'; x.fillStyle = '#9fb6ff'; x.fillText(`${sp.cards} CARD${sp.cards > 1 ? 'S' : ''} · ${sp.level.toUpperCase()}`, W / 2, H - 26);
+  const L = layout(sp, W - 40, H - 120), ox = 20, oy = 66;
+  for (const p of sp.positions) {
+    const c = L.at(p), on = S.phase !== 'idle' && S.focus === p.n, up = S.turned.has(p.n);
+    x.save(); x.translate(ox + c.x, oy + c.y); x.rotate((p.rotate || 0) * Math.PI / 180);
+    x.fillStyle = on ? '#ffcf7a' : up ? '#e9c46c' : 'rgba(233,196,108,.28)'; x.strokeStyle = '#e9c46c'; x.lineWidth = 1.5;
+    x.fillRect(-L.cw / 2, -L.ch / 2, L.cw, L.ch); x.strokeRect(-L.cw / 2, -L.ch / 2, L.cw, L.ch); x.restore();
+  }
+  onQuad(cv, Q.display);
+}
+
+/* ================= THE DIAL: reversed cards on or off ================= */
+function dial() {
+  const cv = $('cvDial'), x = cv.getContext('2d'); x.clearRect(0, 0, 200, 200);
+  const g = x.createRadialGradient(100, 100, 10, 100, 100, 96); g.addColorStop(0, '#1d3c9c'); g.addColorStop(1, '#0a1650');
+  x.fillStyle = g; x.beginPath(); x.arc(100, 100, 94, 0, 7); x.fill();
+  x.strokeStyle = '#e9c46c'; x.lineWidth = 3; x.stroke();
+  for (let i = 0; i < 22; i++) { const a = i / 22 * Math.PI * 2; x.lineWidth = i % 11 ? 1.5 : 3; x.beginPath(); x.moveTo(100 + Math.cos(a) * 80, 100 + Math.sin(a) * 80); x.lineTo(100 + Math.cos(a) * 90, 100 + Math.sin(a) * 90); x.stroke(); }
+  x.font = '22px IBM Plex Mono, monospace'; x.textAlign = 'center'; x.textBaseline = 'middle';
+  x.fillStyle = S.rev ? 'rgba(242,217,142,.45)' : '#ffcf7a'; x.fillText('UP', 100, 48);
+  x.fillStyle = S.rev ? '#ffcf7a' : 'rgba(242,217,142,.45)'; x.save(); x.translate(100, 152); x.rotate(Math.PI); x.fillText('UP', 0, 0); x.restore();
+  const a = S.rev ? Math.PI / 2 : -Math.PI / 2;
+  x.strokeStyle = '#ff6a3d'; x.shadowColor = '#ff6a3d'; x.shadowBlur = 10; x.lineWidth = 6; x.lineCap = 'round';
+  x.beginPath(); x.moveTo(100, 100); x.lineTo(100 + Math.cos(a) * 34, 100 + Math.sin(a) * 34); x.stroke(); x.shadowBlur = 0;
+  x.fillStyle = '#e9c46c'; x.beginPath(); x.arc(100, 100, 9, 0, 7); x.fill();
+  onQuad(cv, Q.dial);
+}
+
+/* ================= THE CARDS IN HIS HANDS: today's four at rest, your first four after a draw ================= */
+function hands(list) {
+  S.hands = list;
+  list.slice(0, 4).forEach((d, i) => {
+    const el = $('held' + i), im = el.firstElementChild, q = Q.held[i];
+    el.classList.add('swap');
+    setTimeout(() => { im.src = img(d.card.id, 'sm'); onQuad(el, d.reversed ? [q[2], q[3], q[0], q[1]] : q, 100, 172); el.classList.remove('swap'); }, calm ? 0 : 320 + i * 90);
+  });
+}
+const openHeld = i => { const d = S.hands[i]; if (d) openCard(d.card.id); };
+
+/* ================= LAYOUT: spread coordinates (card widths) to pixels ================= */
+function layout(sp, W, H, cap = 9e9) {
+  const P = sp.positions, xs = P.map(p => p.x), ys = P.map(p => p.y);
+  let fy = 1, fx = 1;
+  const pairs = P.flatMap(a => P.filter(b => b !== a && !(a.x === b.x && a.y === b.y)).map(b => [Math.abs(a.x - b.x), Math.abs(a.y - b.y)]));
+  for (const [dx, dy] of pairs) if (dx < .95 && dy > 0) fy = Math.max(fy, 1.7 / dy);
+  for (const [dx, dy] of pairs) if (dy * fy < 1.6 && dx > 0) fx = Math.max(fx, 1.08 / dx);
+  const spanX = (Math.max(...xs) - Math.min(...xs)) * fx + 1, spanY = (Math.max(...ys) - Math.min(...ys)) * fy + 1.62;
+  const u = Math.min(W / spanX, H / spanY, cap), cw = u * .92, ch = cw * 12 / 7;
+  const cx = (Math.max(...xs) + Math.min(...xs)) / 2, cy = (Math.max(...ys) + Math.min(...ys)) / 2;
+  return { u, cw, ch, at: p => ({ x: W / 2 + (p.x - cx) * fx * u, y: H / 2 + (p.y - cy) * fy * u }) };
+}
+
+/* ================= SOUND (synthesised; follows the house volume) ================= */
+let AC = null, OUT = null, QUIET = false;
+function audio() {
+  if (AC) return AC;
+  try { AC = new (window.AudioContext || window.webkitAudioContext)(); OUT = AC.createGain(); OUT.gain.value = .55 * (window.VS_VOLUME ?? .8); OUT.connect(AC.destination); } catch (e) { AC = null; }
+  return AC;
+}
+addEventListener('vs-volume', e => { if (OUT) OUT.gain.value = .55 * e.detail; });
+function noise(t, dur, f0, f1, q, g) {
+  const n = AC.sampleRate * dur | 0, b = AC.createBuffer(1, n, AC.sampleRate), d = b.getChannelData(0); for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+  const s = AC.createBufferSource(); s.buffer = b; const bp = AC.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = q; bp.frequency.setValueAtTime(f0, t); bp.frequency.exponentialRampToValueAtTime(f1, t + dur);
+  const v = AC.createGain(); v.gain.setValueAtTime(0, t); v.gain.linearRampToValueAtTime(g, t + dur * .15); v.gain.exponentialRampToValueAtTime(.0005, t + dur);
+  s.connect(bp).connect(v).connect(OUT); s.start(t); s.stop(t + dur + .02);
+}
+function bell(t, f, g = .12, dur = 2.4) {
+  for (const [m, a] of [[1, 1], [2.76, .4], [5.4, .18]]) { const o = AC.createOscillator(), v = AC.createGain(); o.frequency.value = f * m; v.gain.setValueAtTime(0, t); v.gain.linearRampToValueAtTime(g * a, t + .01); v.gain.exponentialRampToValueAtTime(.0004, t + dur / m ** .4); o.connect(v).connect(OUT); o.start(t); o.stop(t + dur); }
+}
+function snd(kind, arg) {
+  if (QUIET || !audio()) return; if (AC.state === 'suspended') AC.resume(); const t = AC.currentTime + .02;
+  if (kind === 'shuffle') for (let i = 0; i < 26; i++) noise(t + i * .034 + Math.random() * .01, .05, 2600, 1800, 1.4, .2);
+  else if (kind === 'deal') noise(t, .16, 900, 3200, .9, .16);
+  else if (kind === 'turn') { noise(t, .07, 3800, 2200, 2, .22); if (arg) bell(t + .03, arg, .07, 2); }
+  else if (kind === 'seal') { bell(t, 220, .1, 3.2); bell(t + .18, 330, .07, 3); noise(t, 1.2, 160, 90, .8, .05); }
+  else if (kind === 'key') noise(t, .03, 2400 + Math.random() * 900, 1500, 3, .08);
+  else if (kind === 'click') noise(t, .04, 1600, 900, 2, .12);
+  else if (kind === 'snuff') noise(t, .4, 700, 300, .7, .1);
+}
+const MAJ = [196, 220, 247, 262, 294, 330, 349, 392];   // a bell for each trump (G major, just enough)
+
+/* ================= THE FLOW: ask, seal, deal, turn, read ================= */
+function fillSpreads() {
+  const sel = $('spread'), groups = { first: 'For a start', practised: 'Practised', deep: 'Deep' };
+  sel.textContent = '';
+  for (const [lv, label] of Object.entries(groups)) { const og = document.createElement('optgroup'); og.label = label;
+    DATA.spreads.filter(s => s.level === lv).forEach(s => { const o = document.createElement('option'); o.value = s.id; o.textContent = `${s.name} · ${s.cards}`; og.append(o); }); sel.append(og); }
+  if (!DATA.spreads.some(s => s.id === S.spread)) S.spread = 'three-card';
+  sel.value = S.spread;
+}
+function showSpread() {
+  const sp = spreadOf(S.spread);
+  $('spinfo').innerHTML = `<p><b style="font:9.5px var(--mono);letter-spacing:.14em;color:var(--gold)">FOR</b> ${esc(sp.for)}</p><p class="fine">${esc(sp.tradition || '')}</p>`;
+  display();
+}
+function stepSpread(k) {
+  if (S.phase !== 'idle') closeTable();
+  const L = DATA.spreads, i = L.findIndex(s => s.id === S.spread);
+  S.spread = L[(i + k + L.length) % L.length].id; $('spread').value = S.spread; save(); showSpread(); snd('click');
+}
+function setRev(on, silent) { S.rev = on; save(); $('revBtn').setAttribute('aria-pressed', on); $('revBtn').textContent = 'Reversed: ' + (on ? 'on' : 'off'); if (DATA) dial(); if (!silent) snd('click'); }
+function focusQ() { $('q').focus({ preventScroll: true }); }
+
+let sayT = 0;
+function say(text, who = 'Ouija Cat') { const el = $('say'); el.innerHTML = `<b>${esc(who)}</b>${esc(text)}`; el.classList.add('on'); clearTimeout(sayT); sayT = setTimeout(() => el.classList.remove('on'), Math.max(3800, text.length * 70)); }
+
+async function roomHash() {   // the live room, when serve.py is running on this Mac: folded into the seal
+  if (!/^(127\.0\.0\.1|localhost)$/.test(location.hostname)) return '';
+  try { const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 700); const r = await fetch('/live/status', { signal: ctl.signal, cache: 'no-store' }); clearTimeout(t);
+    if (!r.ok) return ''; const j = await r.json(); if (!j.live) return '';
+    const h = new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(JSON.stringify(j.events || []))));
+    return [...h.slice(0, 8)].map(b => b.toString(16).padStart(2, '0')).join('');
+  } catch (e) { return ''; }
+}
+
+async function draw(opts = {}) {
+  if (!DATA || S.phase === 'sealing') return;
+  const q = opts.question ?? $('q').value.trim();
+  const chk = TAROT.screenQuestion(q);
+  if (chk === 'crisis') { if (window.VS_OUTSIDE) window.VS_OUTSIDE(); say('Put the cards down for a minute. Talk to someone first. I’ll be here after.'); return; }
+  if (chk === 'body') { say('Cards don’t do bodies. No illness, no pregnancy, nobody’s death. Ask me about the rest of your life.'); return; }
+  const sp = opts.spread || spreadOf(S.spread);
+  closeTable(true);
+  S.phase = 'sealing'; S.q = q; S.title = opts.title || sp.name.toUpperCase(); S.turned = new Set(); S.focus = 0; S.drawn = [];
+  $('eye3').classList.add('on'); screen(); snd('seal');
+  const room = opts.drawn ? '' : await roomHash();
+  S.seal = opts.seal || await TAROT.seal({ spreadId: opts.sealId || sp.id, question: q, minute: TAROT.minute(), room });
+  S.room = !!room;
+  S.drawn = opts.drawn || TAROT.deal(DATA, sp, S.seal.bytes, { reversals: S.rev });
+  S.sp = sp; S.pats = TAROT.patterns(DATA, S.drawn); S.dig = TAROT.dignities(sp, S.drawn);
+  screen();
+  if (!calm) snd('shuffle');
+  await new Promise(r => setTimeout(r, calm ? 200 : 900));
+  $('eye3').classList.remove('on'); S.phase = 'dealt'; deal(sp); hands(S.drawn.length >= 4 ? S.drawn : [...S.drawn, ...S.hands.slice(S.drawn.length)]); journal();
+}
+
+function deal(sp, instant) {
+  const tb = $('table'), box = $('tcards'), W = tb.clientWidth, H = tb.clientHeight, top = 52, bot = 46;
+  const L = layout(sp, W - 48, H - top - bot, sp.cards === 1 ? 210 : 9e9);
+  box.textContent = '';
+  $('tableT').innerHTML = `<b>${esc(sp.name)}</b>${S.q ? ' · “' + esc(S.q) + '”' : ''} · seal ${esc(S.seal.hex.slice(0, 8))}${S.room ? ' · with the room' : ''}`;
+  S.drawn.forEach((d, i) => {
+    const p = L.at(d.pos), b = document.createElement('button');
+    b.type = 'button'; b.className = 'tc' + (d.reversed ? ' rev' : ''); b.dataset.n = d.n;
+    b.style.width = L.cw + 'px'; b.style.height = L.ch + 'px';
+    const fin = `translate(${24 + p.x - L.cw / 2}px, ${top + p.y - L.ch / 2}px) rotate(${d.pos.rotate || 0}deg)`;
+    const now = calm || instant; b.style.transform = now ? fin : `translate(${W / 2 - L.cw / 2}px, ${-L.ch - 40}px) rotate(-12deg)`; b.style.opacity = now ? 1 : 0;
+    b.innerHTML = `<span class="in"><span class="bk" style="background-image:url(${BACK})"></span><span class="fc"><img alt="" draggable="false"></span></span><span class="num">${d.n}</span>`;
+    b.setAttribute('aria-label', `${ROMAN[d.n] || d.n}: ${d.pos.label}. Face down.`);
+    b.addEventListener('click', () => tap(d.n));
+    b.addEventListener('mouseenter', () => caption(d.n));
+    box.append(b);
+    if (!now) setTimeout(() => { b.style.opacity = 1; b.style.transform = fin; snd('deal'); }, 120 + i * 140);
+  });
+  tb.classList.add('on'); tb.setAttribute('aria-hidden', 'false');
+  $('wholeBtn').disabled = true;
+  caption(0); display(); renderReading();
+}
+function caption(n) {
+  const d = S.drawn.find(d => d.n === n);
+  $('cap').innerHTML = d ? `<small>${ROMAN[d.n] || d.n} · ${esc(d.pos.label)}</small>${S.turned.has(n) ? esc(d.card.name) + (d.reversed ? ', reversed' : '') : 'face down'}` : `<small>${S.drawn.length} card${S.drawn.length > 1 ? 's' : ''}</small>Touch a card to turn it`;
+}
+function tap(n, still) {
+  const d = S.drawn.find(d => d.n === n), el = document.querySelector(`.tc[data-n="${n}"]`); if (!d || !el) return;
+  if (!S.turned.has(n)) {
+    S.turned.add(n); el.querySelector('img').src = img(d.card.id, 'sm'); el.classList.add('up');
+    el.setAttribute('aria-label', `${ROMAN[d.n] || d.n}: ${d.pos.label}. ${d.card.name}${d.reversed ? ', reversed' : ''}.`);
+    snd('turn', d.card.arcana === 'major' ? MAJ[d.card.number % MAJ.length] : 0);
+    if (S.turned.size === S.drawn.length) { $('wholeBtn').disabled = false; S.phase = 'read'; }
+  }
+  S.focus = n; document.querySelectorAll('.tc').forEach(c => c.classList.toggle('focus', +c.dataset.n === n));
+  caption(n); screen(); display(); renderReading();
+  if (!still && innerWidth <= 900) $('reading').scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' });
+}
+function turnAll() { S.drawn.forEach((d, i) => setTimeout(() => { if (!S.turned.has(d.n)) tap(d.n); if (i === S.drawn.length - 1) whole(); }, calm ? 0 : i * 160)); }
+function closeTable(quiet) {
+  const tb = $('table'); tb.classList.remove('on'); tb.setAttribute('aria-hidden', 'true');
+  if (!quiet) { S.phase = 'idle'; S.title = ''; S.seal = null; screen(); display(); }
+}
+
+/* ================= THE READING (side panel) ================= */
+const DGW = { same: 'same element: it strengthens', friendly: 'friendly: it feeds it', neutral: 'neither friend nor foe', hostile: 'hostile: it weakens it' };
+const NET = { strong: 'Well dignified: its neighbours feed it. Read it at full strength.', weak: 'Ill dignified: its neighbours fight it. Read it weaker; a hard card softens, a good one sours.', mixed: 'Mixed company: one neighbour feeds it, another fights it.', calm: 'Its neighbours leave it much as it is.' };
+function cardReading(d, withPlace = true) {
+  const c = d.card, r = d.reversed, dg = S.dig?.[d.n];
+  const kws = (r ? c.keywords_reversed : c.keywords_upright) || [];
+  let h = '';
+  if (withPlace) h += `<p class="pos">${ROMAN[d.n] || d.n} · ${esc(d.pos.label)}</p>${d.pos.meaning ? `<p class="posm">${esc(d.pos.meaning)}</p>` : ''}`;
+  h += `<div class="cname">${esc(c.name)}</div><span class="tag">${c.arcana === 'major' ? 'Trump ' + (c.number === 0 ? '0' : ROMAN[c.number] || c.number) : esc(c.suit)}</span><span class="tag">${esc(c.element)}</span>${r ? '<span class="tag rv">Reversed</span>' : ''}`;
+  h += `<p class="kw">${esc(kws.join(' · '))}</p><p>${esc(r ? c.reversed : c.upright)}</p>`;
+  h += `<div class="areas">${c.love ? `<p><b>Love</b>${esc(c.love)}</p>` : ''}${c.work ? `<p><b>Work</b>${esc(c.work)}</p>` : ''}${c.spirit ? `<p><b>Spirit</b>${esc(c.spirit)}</p>` : ''}</div>`;
+  if (dg && dg.with.length) {
+    const byN = Object.fromEntries(S.drawn.map(x => [x.n, x]));
+    h += `<div class="dg">${dg.with.map(w => { const o = byN[w.n]; const seen = S.turned.has(w.n); return `<p><b>Beside ${ROMAN[w.n] || w.n}</b>${seen ? esc(o.card.name) + ' (' + esc(o.card.element) + '): ' + DGW[w.kind] : 'still face down'}</p>`; }).join('')}<p>${dg.with.some(w => !S.turned.has(w.n)) ? 'Turn its neighbours to see how they meet it.' : dg.between ? 'It sits between two cards that fight each other, so neither touches it much.' : NET[dg.net]}</p></div>`;
+  }
+  if (c.advice) h += `<p><b style="font:9.5px var(--mono);letter-spacing:.14em;color:var(--gold)">ADVICE</b> ${esc(c.advice)}</p>`;
+  if (c.cat) h += `<div class="cat"><b>Ouija Cat</b>${esc(c.cat)}</div>`;
+  h += `<button type="button" class="linkish" data-open="${c.id}">The whole card</button>`;
+  return h;
+}
+function renderReading() {
+  const el = $('reading'); el.hidden = S.phase === 'idle' || S.phase === 'sealing';
+  if (el.hidden) return;
+  const d = S.drawn.find(d => d.n === S.focus);
+  let h = `<p class="kicker">${esc(S.sp.name)} · ${S.turned.size} of ${S.drawn.length} turned</p>`;
+  if (d && S.turned.has(d.n)) h += cardReading(d);
+  else h += `<p>${esc(S.sp.how || '')}</p><p class="fine">Touch each card on the table to turn it. Turn them in order: the order is part of the sentence.</p>`;
+  if (S.phase === 'read') h += `<div class="acts"><button type="button" class="main-act" id="wholeSide">The whole spread</button></div>`;
+  el.innerHTML = h;
+  $('wholeSide')?.addEventListener('click', whole);
+}
+const SUITWORD = { Wands: 'drive, desire and will', Cups: 'feeling and love', Swords: 'thought and the hard truths', Pentacles: 'money, work and the practical ground' };
+function wholeText() {
+  const P = S.pats, M = DATA.majority, out = [];
+  if (P.majority.length) for (const g of P.majority) {
+    if (g === 'Majors') out.push(`Most of the cards are trumps: ${M.major}. Fate is moving more than you are.`);
+    else if (g === 'Courts') out.push(`Many court cards: ${M.court}. Other people have a hand in this.`);
+    else out.push(`${g} hold the table: ${M[g]}. The matter is really about ${SUITWORD[g]}.`);
+  } else if (S.drawn.length >= 5) out.push(P.majors ? `${P.majors} trump${P.majors > 1 ? 's' : ''} among ${S.drawn.length}: the matter is mostly in your hands.` : 'No trumps at all: this one is in your hands.');
+  for (const s of P.missing) out.push(`No ${s}: ${SUITWORD[s]} are missing from this, and that says something.`);
+  for (const r of P.ranks) out.push(`${r.count === 4 ? 'Four' : 'Three'} ${r.rank === 'Six' ? 'Sixes' : r.rank + 's'}: ${r.text}.`);
+  if (P.quint.card && S.drawn.length > 1) out.push(`The quintessence: the numbers add to ${P.quint.sum}, which comes to ${P.quint.card.name}. The hidden lesson: ${(P.quint.card.keywords_upright || []).slice(0, 3).join(', ')}.`);
+  const dg = Object.values(S.dig || {}), strong = dg.filter(x => x.net === 'strong').length, weak = dg.filter(x => x.net === 'weak').length;
+  if (strong + weak) out.push(`Neighbours: ${strong} card${strong === 1 ? '' : 's'} well dignified, ${weak} ill dignified.`);
+  return out;
+}
+function whole() {
+  if (S.phase !== 'read') return;
+  const lines = TAROT.catRead(DATA, S.sp, S.drawn, S.pats, { question: S.q });
+  let h = `<p class="kicker">${esc(S.sp.name)} · the whole spread</p><h3>The table as one sentence</h3><ul class="whole">${wholeText().map(l => `<li>${esc(l)}</li>`).join('')}</ul>`;
+  if (S.sp.read) h += `<p class="posm">${esc(S.sp.read)}</p>`;
+  h += `<h3>The cards in order</h3><ul class="whole">${S.drawn.map(d => `<li><b style="color:var(--gold-pale)">${ROMAN[d.n] || d.n}. ${esc(d.pos.label)}:</b> ${esc(d.card.name)}${d.reversed ? ' (reversed)' : ''}, ${esc(((d.reversed ? d.card.keywords_reversed : d.card.keywords_upright) || []).slice(0, 2).join(', '))}</li>`).join('')}</ul>`;
+  h += `<div class="cat"><b>Ouija Cat reads</b>${lines.map(esc).join(' ')}</div>`;
+  h += `<div class="acts"><button type="button" id="keepBtn">Keep</button><button type="button" id="againBtn">Back to the desk</button></div>`;
+  const el = $('reading'); el.hidden = false; el.innerHTML = h;
+  $('keepBtn').addEventListener('click', keep); $('againBtn').addEventListener('click', () => closeTable());
+  S.focus = 0; document.querySelectorAll('.tc').forEach(c => c.classList.remove('focus')); screen(); display();
+  if (innerWidth <= 900) el.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'start' });
+}
+function readingText() {
+  if (!S.drawn.length) return '';
+  const t = [`${S.sp.name}`, S.q ? `Question: ${S.q}` : 'For the day', `Sealed ${new Date().toLocaleString()} · ${S.seal.hex}`, ''];
+  for (const d of S.drawn) t.push(`${ROMAN[d.n] || d.n}. ${d.pos.label}: ${d.card.name}${d.reversed ? ' (reversed)' : ''}`, `   ${d.reversed ? d.card.reversed : d.card.upright}`, '');
+  if (S.drawn.length > 1) t.push(...wholeText(), '');
+  t.push('Ouija Cat: ' + TAROT.catRead(DATA, S.sp, S.drawn, S.pats, { question: S.q }).join(' '));
+  return t.join('\n');
+}
+function keep() {
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([readingText()], { type: 'text/plain' }));
+  a.download = `tarot-${S.sp.id}-${S.seal.hex.slice(0, 8)}.txt`; document.body.append(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+
+/* ================= TODAY, YES OR NO, HIS READ ================= */
+async function todayCard() {
+  if (!DATA) return;
+  const t = await TAROT.today(DATA, new Date(), { reversals: S.rev });
+  const sp = { id: 'today', name: 'Today’s card', cards: 1, level: 'first', how: 'One card for the day. Carry it; look at it again tonight.', read: 'Read the card whole: picture first, then meaning, then the question it raises.', positions: [{ n: 1, x: 0, y: 0, rotate: 0, label: 'Today', meaning: 'The weather of the day, the thing to notice.' }] };
+  const seal = await TAROT.seal({ spreadId: 'today', question: t.day, minute: t.day + 'T00:00Z' });
+  await draw({ spread: sp, drawn: [{ n: 1, pos: sp.positions[0], card: t.card, reversed: t.reversed }], seal, question: '', title: 'TODAY · ' + moonPhase().toUpperCase() });
+  setTimeout(() => tap(1), calm ? 50 : 450);
+}
+async function yesNo() {
+  const q = $('q').value.trim();
+  if (!q) { say('A yes or no needs a question. Type one. On the keyboard. The big thing in front of you.'); focusQ(); return; }
+  const sp = { id: 'yes-no', name: 'Yes or no', cards: 1, level: 'first', how: 'One card answers.', read: 'Upright leans yes, reversed leans no or not yet; the card says why.', positions: [{ n: 1, x: 0, y: 0, rotate: 0, label: 'The answer', meaning: 'Yes, no, or not like that.' }] };
+  await draw({ spread: sp, sealId: 'yes-no', title: 'YES OR NO' });
+  if (S.sp?.id !== 'yes-no') return;
+  setTimeout(() => { tap(1); const d = S.drawn[0]; if (!d) return; const a = d.card.yesno === 'yes' ? (d.reversed ? 'Not yet' : 'Yes') : d.card.yesno === 'no' ? 'No' : (d.reversed ? 'No' : 'Maybe'); say(`${a}. ${d.card.name}${d.reversed ? ', reversed' : ''}. Don’t ask again in the same minute, it won’t change.`); }, calm ? 50 : 450);
+}
+function hisRead() {
+  if (S.phase === 'read') { say(TAROT.catRead(DATA, S.sp, S.drawn, S.pats, { question: S.q }).join(' ')); return; }
+  if (S.phase === 'dealt') { say('Turn them all first. I don’t read half a sentence.'); return; }
+  say(['Ask something first. I don’t read empty tables.', 'The eye sees everything. Mostly you, hesitating.', 'Draw. I’m not getting any younger. Well, I am, but you’re not helping.'][Date.now() / 1000 % 3 | 0]);
+}
+function catLine() {
+  if (!DATA) return; const c = DATA.cards[(Date.now() / 7000 | 0) % 78];
+  say(S.phase === 'idle' ? (c.cat || 'Hm.') : 'Eyes on the table, not on me.');
+}
+function candles() { document.querySelectorAll('.candle').forEach(c => c.classList.add('out')); snd('snuff'); setTimeout(() => document.querySelectorAll('.candle').forEach(c => c.classList.remove('out')), 1600); }
+
+/* ================= THE CARDS DRAWER (all 78) ================= */
+const FILTERS = [['all', 'All'], ['major', 'Trumps'], ['Wands', 'Wands'], ['Cups', 'Cups'], ['Swords', 'Swords'], ['Pentacles', 'Pentacles'], ['court', 'Courts']];
+let filt = 'all';
+function grid() {
+  const q = $('cq').value.trim().toLowerCase(), g = $('grid78'); g.textContent = '';
+  const hit = c => !q || [c.name, c.element, c.astrology?.attribution, c.astrology?.modern, ...(c.keywords_upright || []), ...(c.keywords_reversed || []), c.names?.thoth, c.names?.marseille, c.hebrew?.letter].filter(Boolean).join(' ').toLowerCase().includes(q);
+  const pass = c => filt === 'all' || (filt === 'major' ? c.arcana === 'major' : filt === 'court' ? ['Page', 'Knight', 'Queen', 'King'].includes(c.rank) : c.suit === filt);
+  for (const c of DATA.cards) { if (!pass(c) || !hit(c)) continue;
+    const b = document.createElement('button'); b.type = 'button'; b.innerHTML = `<img loading="lazy" alt="" src="${img(c.id, 'sm')}">${esc(c.name)}`; b.addEventListener('click', () => openCard(c.id)); g.append(b); }
+  if (!g.children.length) g.innerHTML = '<p class="fine">Nothing by that name. Try a planet, a sign, an element or a feeling.</p>';
+}
+function openCard(id) {
+  const c = card(id); if (!c) return;
+  openDrawer('cards');
+  const pg = $('cardPage'); $('cardsList').hidden = true; pg.hidden = false;
+  const corr = [['Element', c.element], ['Astrology', [c.astrology?.attribution, c.astrology?.modern].filter(Boolean).join(', modern: ')], ['Letter', c.hebrew ? `${c.hebrew.glyph} ${c.hebrew.letter} (${c.hebrew.meaning})` : ''], ['Path', c.tree_of_life ? `${c.tree_of_life.path}: ${c.tree_of_life.from} to ${c.tree_of_life.to}` : ''], ['Thoth', c.names?.thoth], ['Marseille', c.names?.marseille], ['Yes or no', c.yesno]].filter(([, v]) => v);
+  pg.innerHTML = `<button type="button" class="linkish" id="backList">← All cards</button>
+    <div class="page" style="margin-top:12px"><img class="big" alt="${esc(c.name)}" src="${img(c.id, 'full')}"><div>
+    <h2>${esc(c.name)}</h2><p class="sub">${c.arcana === 'major' ? 'Trump ' + c.number : esc(c.suit)} · ${esc(c.element)}</p>
+    <dl>${corr.map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join('')}</dl></div></div>
+    <h3>Upright</h3><p class="kw">${esc((c.keywords_upright || []).join(' · '))}</p><p>${esc(c.upright)}</p>
+    <h3>Reversed</h3><p class="kw">${esc((c.keywords_reversed || []).join(' · '))}</p><p>${esc(c.reversed)}</p>
+    <div class="areas">${c.love ? `<p><b>Love</b>${esc(c.love)}</p>` : ''}${c.work ? `<p><b>Work</b>${esc(c.work)}</p>` : ''}${c.spirit ? `<p><b>Spirit</b>${esc(c.spirit)}</p>` : ''}</div>
+    ${c.person ? `<h3>As a person</h3><p>${esc(c.person)}</p>` : ''}
+    ${c.shadow ? `<h3>The shadow</h3><p>${esc(c.shadow)}</p>` : ''}
+    ${c.advice ? `<h3>Advice</h3><p>${esc(c.advice)}</p>` : ''}
+    <h3>The picture</h3><p>${esc(c.picture || '')}</p>${(c.symbols || []).length ? `<ul>${c.symbols.map(s => `<li>${esc(s)}</li>`).join('')}</ul>` : ''}
+    ${c.question ? `<h3>The question it asks</h3><p><em>${esc(c.question)}</em></p>` : ''}
+    ${c.cat ? `<div class="cat"><b>Ouija Cat</b>${esc(c.cat)}</div>` : ''}`;
+  $('backList').addEventListener('click', () => { pg.hidden = true; $('cardsList').hidden = false; });
+  $('cards').scrollTop = 0;
+}
+
+/* ================= DRAWERS, JOURNAL ================= */
+const DRAWERS = { cards: 'cardsBtn', journalD: 'readBtn', how: 'howBtn' };
+function openDrawer(id, on = true) {
+  for (const [d, b] of Object.entries(DRAWERS)) { const o = d === id && on; $(d).classList.toggle('on', o); $(b).setAttribute('aria-pressed', o); }
+  if (id === 'journalD' && on) showJournal();
+  if (id === 'cards' && on && !$('grid78').children.length) grid();   // the 78 thumbnails load the first time the drawer opens
+}
+function journal() {
+  if (!S.drawn.length || S.sp.id === 'today') return;
+  try { const j = JSON.parse(localStorage.getItem('vs-tarot-journal') || '[]'); j.unshift({ t: Date.now(), s: S.sp.name, q: S.q, h: S.seal.hex.slice(0, 12), c: S.drawn.map(d => d.card.id + (d.reversed ? 'r' : '')) }); localStorage.setItem('vs-tarot-journal', JSON.stringify(j.slice(0, 60))); } catch (e) {}
+}
+function showJournal() {
+  $('thisReading').innerHTML = S.drawn.length && S.seal ? `<pre class="txt">${esc(readingText())}</pre>` : '<p class="fine">No reading on the table yet.</p>';
+  let j = []; try { j = JSON.parse(localStorage.getItem('vs-tarot-journal') || '[]'); } catch (e) {}
+  $('journal').innerHTML = j.length ? j.map(r => `<li><small>${esc(new Date(r.t).toLocaleString())} · ${esc(r.s)} · seal ${esc(r.h)}</small><br>${r.q ? '“' + esc(r.q) + '”<br>' : ''}${r.c.map(x => { const c = card(x.replace(/r$/, '')); return c ? esc(c.name) + (x.endsWith('r') ? ' (rev.)' : '') : ''; }).join(' · ')}</li>`).join('') : '<li class="fine">Nothing kept yet. Readings stay in this browser only.</li>';
+}
+
+/* ================= KEYS: the question is typed on his keyboard ================= */
+const KROWS = ['1234567890', 'qwertyuiop', 'asdfghjkl', 'zxcvbnm'];
+function keyGlow(k) {
+  k = (k || '').toLowerCase(); let r = KROWS.findIndex(row => row.includes(k)), c;
+  if (k === ' ') { r = 4; c = .5; } else if (r < 0) return; else c = (KROWS[r].indexOf(k) + .5 + r * .25) / 11.5;
+  const v = (r + 1.1) / 5.6, [[x0, y0], [x1, y1], [x2, y2], [x3, y3]] = Q.keys;
+  const tx = x0 + (x1 - x0) * c, ty = y0 + (y1 - y0) * c, bx = x3 + (x2 - x3) * c, by = y3 + (y2 - y3) * c;
+  const g = document.createElement('div'); g.className = 'glow keyglow'; g.style.left = tx + (bx - tx) * v + 'px'; g.style.top = ty + (by - ty) * v + 'px';
+  if (k === ' ') g.style.width = '160px';
+  $('keys').append(g); setTimeout(() => g.remove(), 800);
+}
+$('q').addEventListener('input', () => { S.q = $('q').value; if (S.phase === 'idle') screen(); });
+$('q').addEventListener('keydown', e => { keyGlow(e.key); snd('key'); if (e.key === 'Enter') { e.preventDefault(); draw(); } });
+addEventListener('keydown', e => {
+  if (e.shiftKey && (e.key === 'H' || e.key === 'h') && !e.target.matches('input, textarea, select')) { e.preventDefault(); $('board').classList.toggle('map'); return; }
+  if (e.key === 'Escape') { if (document.querySelector('.drawer.on')) openDrawer('', false); else if ($('table').classList.contains('on')) closeTable(); return; }
+  if (e.target.matches('input, textarea, select') || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.target.matches('button') && (e.key === ' ' || e.key === 'Enter')) return;
+  if ($('table').classList.contains('on')) {   // on the table: arrows move between cards, Enter or space turns
+    const ns = S.drawn.map(d => d.n), i = ns.indexOf(S.focus);
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); tap(ns[Math.min(ns.length - 1, i + 1)] ?? ns[0]); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); tap(ns[Math.max(0, i - 1)] ?? ns[0]); }
+    return;
+  }
+  if (e.key.length === 1 && e.key !== ' ' && !document.querySelector('.drawer.on')) { focusQ(); }   // any letter goes to his keyboard
+});
+
+/* ================= THE BOARD: fit the render to the stage ================= */
+const stage = $('stage'), board = $('board');
+stage.addEventListener('scroll', () => { stage.scrollTop = 0; stage.scrollLeft = 0; });   // the blurred backdrop overhangs the stage; never let focus scroll it
+function fit() {
+  const w = stage.clientWidth, h = stage.clientHeight; let s, tx, ty;
+  if (w / h < 1.15) { s = Math.min(w / 1000, h / 1120); tx = (w - 1000 * s) / 2 - 500 * s; ty = (h - 1120 * s) / 2; }   // portrait: the middle, where he sits
+  else { s = Math.min(w / 2000, h / 1120); tx = (w - 2000 * s) / 2; ty = (h - 1120 * s) / 2; }
+  board.style.transform = `translate(${tx}px, ${ty}px) scale(${s})`;
+  if ($('table').classList.contains('on') && S.sp) { const keep = new Set(S.turned), f = S.focus, ph = S.phase; QUIET = true; S.turned = new Set(); deal(S.sp, true); keep.forEach(n => tap(n, true)); if (f) tap(f, true); if (ph === 'read' && !f) whole(); QUIET = false; }
+}
+let fitT = 0; addEventListener('resize', () => { clearTimeout(fitT); fitT = setTimeout(fit, 120); });
+
+function hotspots() {
+  const box = $('hotspots');
+  for (const [k, x, y, w, h, round, title, act] of HS) {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'hs' + (round ? '' : ' rect'); b.dataset.k = k; b.title = title; b.setAttribute('aria-label', title);
+    Object.assign(b.style, { left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px' }); b.addEventListener('click', act); box.append(b);
+  }
+}
+
+/* ================= WIRING ================= */
+$('drawBtn').addEventListener('click', () => draw());
+$('todayBtn').addEventListener('click', todayCard);
+$('ynBtn').addEventListener('click', yesNo);
+$('spread').addEventListener('change', e => { S.spread = e.target.value; save(); showSpread(); if (S.phase !== 'idle') closeTable(); });
+$('revBtn').addEventListener('click', () => setRev(!S.rev));
+$('turnAll').addEventListener('click', turnAll);
+$('wholeBtn').addEventListener('click', whole);
+$('closeTable').addEventListener('click', () => closeTable());
+for (const [d, b] of Object.entries(DRAWERS)) { $(b).addEventListener('click', () => openDrawer(d, !$(d).classList.contains('on'))); $(d).querySelector('.x').addEventListener('click', () => openDrawer(d, false)); }
+$('forgetBtn').addEventListener('click', () => { try { localStorage.removeItem('vs-tarot-journal'); } catch (e) {} showJournal(); });
+$('cq').addEventListener('input', grid);
+document.addEventListener('click', e => { const o = e.target.closest('[data-open]'); if (o) openCard(o.dataset.open); });
+
+(async function start() {
+  hotspots(); fit(); setRev(S.rev, true);
+  try {
+    const [d, m] = await Promise.all([fetch('tarot-data.json').then(r => r.json()), fetch(DECK + 'manifest.json').then(r => r.ok ? r.json() : { cards: {} }).catch(() => ({ cards: {} }))]);
+    DATA = d; MAN = m;
+  } catch (e) { say('The deck didn’t load. Reload the page.', 'The desk'); return; }
+  const chips = $('chips'); FILTERS.forEach(([k, l]) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = l; b.setAttribute('aria-pressed', k === filt); b.addEventListener('click', () => { filt = k; chips.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b)); grid(); }); chips.append(b); });
+  fillSpreads(); showSpread(); screen(); dial();
+  await document.fonts?.ready; engrave(); screen(); display(); dial();
+  // today's four in his hands
+  const day = await TAROT.seal({ spreadId: 'hands', question: new Date().toDateString(), minute: 'day' });
+  hands(TAROT.deal(DATA, { cards: 4, positions: [1, 2, 3, 4].map(n => ({ n, x: n, y: 0 })) }, day.bytes, { reversals: false }));
+  if (/[?&]debug\b/.test(location.search)) window.__tarot = { S, draw, tap, turnAll, whole, todayCard, yesNo, openCard, fit, Q, get DATA() { return DATA; } };
+})();
+</script>
+<script id="vs-chrome">
+/* The shared frame for every page: the rooms as bold tabs (current room lit), a volume slider that every page's
+   sound obeys (window.VS_VOLUME, event 'vs-volume', remembered), gold sparks that follow the cursor and burst on a
+   click, and a dissolve between rooms. Costs nothing when idle: the spark canvas only draws while sparks are alive. */
+(function () {
+  /* ---------- the safety stage: every page's sound passes through it on the way to the speakers ----------
+     It fades in when a room's sound starts or wakes (no click on the first note), takes out sub-bass thumps and DC
+     (the usual cause of pops when things start and stop), catches anything that would clip (crackle), and fades out
+     when you leave a room, so nothing is cut off mid-wave. The Turntable gets no limiter: her masters stay as they are. */
+  (function safeAudio() {
+    if (!window.AudioNode || AudioNode.prototype.__vsSafe) return;
+    const P = AudioNode.prototype, orig = P.connect, bus = new WeakMap(), limit = !/deck\.html$/.test(location.pathname);
+    P.__vsSafe = true; window.__vsBuses = [];
+    function stage(ctx) {
+      let s = bus.get(ctx); if (s) return s;
+      const g = ctx.createGain(); g.gain.value = 0;
+      const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 16; hp.Q.value = .5; orig.call(g, hp); let last = hp;
+      if (limit) { const l = ctx.createDynamicsCompressor(); l.threshold.value = -1; l.knee.value = 0; l.ratio.value = 20; l.attack.value = .002; l.release.value = .12; orig.call(last, l); last = l; }
+      orig.call(last, ctx.destination);
+      const ramp = (to, d) => { const t = ctx.currentTime; g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(g.gain.value, t); g.gain.linearRampToValueAtTime(to, t + d); };
+      s = { g, ctx, up: (d = .45) => ramp(1, d), down: (d = .18) => ramp(0, d) };
+      if (ctx.state === 'running') s.up(.6);
+      ctx.addEventListener('statechange', () => { if (ctx.state === 'running') s.up(.35); });
+      bus.set(ctx, s); window.__vsBuses.push(s); return s;
+    }
+    P.connect = function (dest, out, inp) {
+      if (dest instanceof AudioDestinationNode) { const s = stage(dest.context); if (out == null) orig.call(this, s.g); else orig.call(this, s.g, out); return dest; }
+      return out == null ? orig.call(this, dest) : inp == null ? orig.call(this, dest, out) : orig.call(this, dest, out, inp);
+    };
+    // leaving: every sound on the page fades out (the stage for Web Audio, a quick ramp for films playing on their own)
+    window.VS_FADE_OUT = (ms = 200) => {
+      for (const s of window.__vsBuses) try { s.down(ms / 1000); } catch (e) {}
+      document.querySelectorAll('video, audio').forEach(m => { if (m.muted || m.paused || !m.volume) return; const v0 = m.__vsPre = m.volume, t0 = performance.now(); const step = () => { const k = Math.min(1, (performance.now() - t0) / ms); m.volume = v0 * (1 - k); if (k < 1) requestAnimationFrame(step); }; step(); });
+    };
+    addEventListener('pagehide', () => window.VS_FADE_OUT(60));
+  })();
+
+  /* ---------- films stay in the page: a phone never lifts one out ----------
+     iPhones play a video full-screen, offer picture-in-picture, or pop it into a floating preview on a long press, unless
+     told not to. Every film here is part of the room's background, so each one is pinned: inline, no picture-in-picture,
+     no AirPlay, no controls, and touches pass through it to the room. Films made later (by a room's own code) get the same
+     the moment they're added or played. */
+  (function pinFilms() {
+    const pin = v => { if (!v || v.__vsPinned || v.tagName !== 'VIDEO') return; v.__vsPinned = true;
+      v.playsInline = true; v.setAttribute('playsinline', ''); v.setAttribute('webkit-playsinline', ''); v.setAttribute('x-webkit-airplay', 'deny');
+      v.controls = false; v.removeAttribute('controls'); try { v.disablePictureInPicture = true; v.setAttribute('disablepictureinpicture', ''); } catch (e) {}
+      try { v.disableRemotePlayback = true; v.setAttribute('disableremoteplayback', ''); } catch (e) {}
+      v.addEventListener('webkitbeginfullscreen', () => { try { v.webkitExitFullscreen(); } catch (e) {} });
+      v.addEventListener('enterpictureinpicture', () => { try { document.exitPictureInPicture(); } catch (e) {} }); };
+    const all = () => document.querySelectorAll('video').forEach(pin); all();
+    const play = HTMLMediaElement.prototype.play; HTMLMediaElement.prototype.play = function () { pin(this); return play.apply(this, arguments); };
+    new MutationObserver(ms => { for (const m of ms) for (const n of m.addedNodes) { if (n.tagName === 'VIDEO') pin(n); else if (n.querySelectorAll) n.querySelectorAll('video').forEach(pin); } }).observe(document.documentElement, { childList: true, subtree: true });
+    const st = document.createElement('style'); st.textContent = 'video { pointer-events: none; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; } video::-webkit-media-controls, video::-webkit-media-controls-start-playback-button, video::-webkit-media-controls-overlay-play-button { display: none !important; -webkit-appearance: none; }';
+    (document.head || document.documentElement).append(st);
+  })();
+
+  const ROOMS = [['./', 'Templum', '☥', 'The board. Ask him.'], ['parlour.html', 'Parlour', '♄', 'His console. Every key plays.'], ['deck.html', 'Turntable', '◉', 'ANIMUSCULT on his decks.'], ['palm.html', 'Palm', '✶', 'Your hand, read.'], ['tarot.html', 'Tarot', '☉', 'The cards. Ask, pull, read.'], ['crystal.html', 'Crystal', '◎', 'The seer’s sitting.'], ['mirror.html', 'Mirror', '◐', 'Two mirrors, facing.'], ['mesmer.html', 'Trance', '❂', 'The magnetic tub. Go under.'], ['sleep.html', 'Sleep', '☾', 'Sleep sounds. The screen can go off.'], ['geometry.html', 'Geometry', '❋', 'Sacred geometry and mandalas.'], ['forge.html', 'Forge', '✧', 'Sigils from your words.'], ['systems.html', 'Systems', '△', 'Spells, taught. Abracadabra first.'], ['engine.html', 'Engine', '⚙︎', 'The dome machine. Scry with him.'], ['radio.html', 'Radio', '⌁', 'Live voices from everywhere.'], ['compendium.html', 'Compendium', '☘', 'The library of plant medicine, A to Z.'], ['survival.html', 'Long Night', '♁', 'Survival rites for when the lights go out.']];
+  window.VS_ROOMS = ROOMS;   // the Templum's floating doors read this, so a new room shows up there too
+  const page = (location.pathname.split('/').pop() || 'index.html').replace('index.html', '') || './';
+  const here = ({ 'pairs.html': 'tarot.html', 'count.html': 'tarot.html' })[page] || page;   // a room's inner pages light their room's tab
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches && !document.documentElement.classList.contains('motion-full');
+
+  /* ---------- volume ---------- */
+  let vol = .8; try { const v = parseFloat(localStorage.getItem('vs-volume')); if (v >= 0 && v <= 1) vol = v; } catch (e) {}
+  window.VS_VOLUME = vol;
+  const setVol = v => { vol = window.VS_VOLUME = Math.max(0, Math.min(1, v)); try { localStorage.setItem('vs-volume', String(vol)); } catch (e) {} dispatchEvent(new CustomEvent('vs-volume', { detail: vol })); document.querySelectorAll('.vs-vol input').forEach(i => { i.value = Math.round(vol * 100); }); document.querySelectorAll('.vs-vol').forEach(l => l.classList.toggle('mute', vol === 0)); };
+  // media elements on the page follow it too (films, his recorded voice)
+  const mediaVol = () => document.querySelectorAll('video, audio').forEach(m => { if (m.dataset.vsBase == null) m.dataset.vsBase = m.volume; m.volume = Math.min(1, +m.dataset.vsBase * vol); });
+  addEventListener('vs-volume', () => { if (!document.body?.dataset.novol) mediaVol(); });
+
+  /* ---------- styles (added last, so they win) ---------- */
+  const css = `
+.bar { gap: 7px !important; }
+.bar h1 { display: none !important; }
+.bar .vs-rooms { display: flex; gap: 6px; align-items: center; overflow-x: auto; scrollbar-width: none; flex: 1 1 auto; min-width: 0; }
+.bar .vs-rooms::-webkit-scrollbar { display: none; }
+.bar a.vs-room { position: relative; display: inline-flex !important; align-items: center; gap: 7px; font-family: "IBM Plex Mono", ui-monospace, monospace !important; font-size: 11px !important; font-weight: 400; letter-spacing: .16em !important; text-transform: uppercase; color: rgba(243,230,196,.62) !important; text-decoration: none; padding: 7px 10px 7px 8px !important; border: 0 !important; border-radius: 0; background: none !important; box-shadow: none; transition: color .5s ease, text-shadow .5s ease; white-space: nowrap; }
+.bar a.vs-room i { font-style: normal; font-size: 14px; color: rgba(240,199,106,.7); transition: color .5s, text-shadow .5s; }
+.bar a.vs-room::after { content: ""; position: absolute; left: 10px; right: 10px; bottom: 2px; height: 1px; background: linear-gradient(90deg, transparent, rgba(240,214,143,.85), transparent); opacity: 0; transform: scaleX(.4); transition: opacity .5s ease, transform .5s ease; }
+.bar a.vs-room:hover { color: #fbefcf !important; text-shadow: 0 0 14px rgba(255,210,130,.45); }
+.bar a.vs-room:hover i { color: #f6d27e; text-shadow: 0 0 10px rgba(240,190,90,.7); }
+.bar a.vs-room:hover::after { opacity: .5; transform: none; }
+.bar a.vs-room[aria-current="page"] { color: #fff3d2 !important; text-shadow: 0 0 16px rgba(255,205,120,.55); }
+.bar a.vs-room[aria-current="page"] i { color: #ffd77e; text-shadow: 0 0 12px rgba(255,200,100,.9); }
+.bar a.vs-room[aria-current="page"]::after { opacity: 1; transform: none; }
+.bar > button:not(.unzoom):not(.vs-menu), .bar > a:not(.vs-room), .bar .motion-btn { background: none !important; border: 0 !important; border-bottom: 1px solid transparent !important; border-radius: 0 !important; box-shadow: none !important; color: rgba(238,228,203,.66) !important; transition: color .5s, border-color .5s !important; }
+.bar > button:not(.unzoom):not(.vs-menu):hover, .bar > a:not(.vs-room):hover, .bar .motion-btn:hover, .bar > button[aria-pressed="true"], .bar > button.on { color: #f0d68f !important; border-bottom-color: rgba(240,214,143,.55) !important; }
+.vs-vol { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border: 0; border-radius: 3px; color: rgba(240,199,106,.8); background: none; }
+/* the room breathes out when nobody is touching anything: the frame steps back and leaves the room */
+.bar, .foot, .vs-vol.float { transition: opacity 1.8s ease; }
+body.vs-quiet .bar, body.vs-quiet .foot, body.vs-quiet .vs-vol.float { opacity: 0; }
+body.sitting .bar { opacity: 0 !important; }   /* a sitting hides the frame completely: no half-dimmed grey bar */
+body.sitting .bar:hover, body.sitting .bar:focus-within { opacity: 1 !important; }
+body.vs-quiet .bar:hover, body.vs-quiet .bar:focus-within, body.vs-quiet .vs-vol.float:hover { opacity: 1; transition-duration: .4s; }
+/* one film over every room: a soft vignette and a fine grain, so the rooms read as one place */
+.vs-film { position: fixed; inset: 0; z-index: 19; pointer-events: none; background: radial-gradient(ellipse 78% 72% at 50% 52%, rgba(0,0,0,0) 52%, rgba(8,3,2,.22) 78%, rgba(4,2,1,.46) 100%); }
+/* the film stock over every room (like the ANIMUSCULT site): living grain on top of everything, a slow warm light leak,
+   the vignette underneath the frame. Nothing catches clicks, nothing flashes; calm motion freezes the grain */
+.vs-grain { position: fixed; z-index: 9996; pointer-events: none; left: -50%; top: -50%; width: 200%; height: 200%; background-size: 220px 220px; opacity: .14; mix-blend-mode: overlay; animation: vsGrain 1s steps(10) infinite; will-change: transform; }
+.vs-grain.lift { mix-blend-mode: screen; opacity: .05; animation-delay: -.45s; }   /* the blacks shimmer too, like a real print */
+@keyframes vsGrain { 0% { transform: translate(0, 0); } 10% { transform: translate(-5%, -8%); } 20% { transform: translate(-12%, 4%); } 30% { transform: translate(6%, -14%); } 40% { transform: translate(-4%, 18%); } 50% { transform: translate(-14%, 8%); } 60% { transform: translate(12%, 0); } 70% { transform: translate(0, 12%); } 80% { transform: translate(2%, 22%); } 90% { transform: translate(-8%, 8%); } 100% { transform: translate(0, 0); } }
+.vs-leak { position: fixed; inset: 0; z-index: 9995; pointer-events: none; mix-blend-mode: screen; opacity: 0; background: radial-gradient(38% 55% at 0% 28%, rgba(255,150,70,.55), rgba(255,120,60,0) 70%), radial-gradient(32% 46% at 100% 82%, rgba(255,96,128,.42), rgba(255,96,128,0) 70%); animation: vsLeak 23s ease-in-out infinite alternate; transition: opacity 1.5s; }
+@keyframes vsLeak { 0% { opacity: 0; transform: translate(-3%, 0) scale(1); } 35% { opacity: .07; } 60% { opacity: .025; transform: translate(2%, -2%) scale(1.08); } 100% { opacity: .09; transform: translate(4%, 2%) scale(1.04); } }
+body.sitting .vs-leak, body.duo-on .vs-leak, body.vs-off .vs-leak { animation: none; opacity: 0; }
+body.vs-off .vs-grain { opacity: .05; } body.vs-off .vs-grain.lift { opacity: .02; }
+html.vs-nofx .vs-grain, html.vs-nofx .vs-leak { display: none; }
+@media (prefers-reduced-motion: reduce) { html:not(.motion-full) .vs-grain { animation: none; } html:not(.motion-full) .vs-leak { animation: none; opacity: .04; } }
+.foot { font-size: 11.5px !important; letter-spacing: .04em !important; color: rgba(238,228,203,.5) !important; bottom: 6px !important; }
+/* phones: the rooms fold into one menu button; the page's own buttons move into the same sheet */
+.bar .vs-menu { display: none; align-items: center; gap: 9px; flex: none; font: 500 11.5px/1 "IBM Plex Mono", ui-monospace, monospace; letter-spacing: .16em; text-transform: uppercase; color: #fff3d2; background: linear-gradient(rgba(214,164,67,.16), rgba(214,164,67,.06)); border: 1px solid rgba(240,214,143,.5); border-radius: 3px; padding: 0 12px 0 10px; height: 32px; cursor: pointer; box-shadow: 0 0 0 rgba(240,199,106,0), inset 0 0 12px rgba(214,164,67,.08); transition: border-color .3s, box-shadow .3s, background .3s; }
+.bar .vs-menu:hover, .bar .vs-menu[aria-expanded="true"] { border-color: #f0d68f; background: linear-gradient(rgba(214,164,67,.28), rgba(214,164,67,.1)); box-shadow: 0 0 18px rgba(240,199,106,.28), inset 0 0 12px rgba(214,164,67,.12); }
+.bar .vs-menu svg { width: 15px; height: 15px; flex: none; color: #ffd77e; }
+.bar .vs-menu .vs-n { font-weight: 400; font-size: 10px; letter-spacing: 0; color: #120a04; background: #e9c46e; border-radius: 8px; padding: 2px 5px 1px; }
+.bar .vs-menu .vs-here { display: inline-flex; align-items: center; gap: 6px; padding-left: 9px; border-left: 1px solid rgba(240,214,143,.3); color: rgba(243,230,196,.75); letter-spacing: .12em; }
+.bar .vs-menu .vs-here i { font-style: normal; font-size: 13px; color: #ffd77e; }
+.bar .vs-menu.vs-call { animation: vsCall 1.6s ease-in-out 4; }
+@keyframes vsCall { 50% { border-color: #ffe7a8; box-shadow: 0 0 26px rgba(255,205,110,.55), inset 0 0 14px rgba(255,205,110,.2); } }
+.bar.vs-tight .vs-rooms { display: none !important; }
+.bar.vs-tight .vs-menu { display: inline-flex; }
+.bar > button, .bar > a:not(.vs-room), .bar .motion-btn, .bar > label { white-space: nowrap; flex: none; }
+/* a room's opening screen sits under the bar, so the way to the other rooms is there from the first second */
+body:has(.gate:not([hidden])) .bar { z-index: 9 !important; opacity: 1 !important; }
+/* the first visit: one quiet word under the rooms, once */
+.vs-hint { position: fixed; z-index: 9991; max-width: 270px; padding: 11px 14px 12px; font: italic 400 15px/1.35 "IM Fell English", Georgia, serif; color: #f3e6c4; background: rgba(8,6,12,.94); border: 1px solid rgba(240,214,143,.45); box-shadow: 0 10px 40px rgba(0,0,0,.6), 0 0 22px rgba(214,164,67,.15); opacity: 0; transform: translateY(-4px); transition: opacity .5s ease, transform .5s ease; pointer-events: none; }
+.vs-hint.on { opacity: 1; transform: none; }
+.vs-hint::before { content: ""; position: absolute; top: -6px; left: var(--ax, 22px); width: 10px; height: 10px; background: inherit; border-left: 1px solid rgba(240,214,143,.45); border-top: 1px solid rgba(240,214,143,.45); transform: rotate(45deg); }
+.vs-hint b { display: block; margin-bottom: 3px; font: 500 10px/1 "IBM Plex Mono", ui-monospace, monospace; font-style: normal; letter-spacing: .2em; text-transform: uppercase; color: #f0c76a; }
+/* the rooms: a full screen on a phone, a wide panel hanging from the button on a computer. The top row (with the close
+   button) never scrolls away, Back on a phone closes it, and a Close button waits at the end of the list too */
+.vs-sheet { position: fixed; inset: 0; z-index: 9995; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; background: #07060b; color: #efe4c8; padding: 0 max(16px, env(safe-area-inset-right, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); opacity: 0; transition: opacity .22s ease; }
+.vs-sheet.on { opacity: 1; }
+.vs-sheet .vs-sh-top { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; gap: 12px; margin: 0 -16px 6px; padding: calc(10px + env(safe-area-inset-top, 0px)) 16px 10px; background: linear-gradient(#07060b 82%, rgba(7,6,11,0)); }
+.vs-sheet .vs-sh-top h2 { flex: 1; min-width: 0; display: grid; gap: 4px; margin: 0; font: 500 11px/1 "IBM Plex Mono", ui-monospace, monospace; letter-spacing: .22em; text-transform: uppercase; color: rgba(240,199,106,.9); }
+.vs-sheet .vs-sh-top h2 small { font: italic 400 14px/1.2 "IM Fell English", Georgia, serif; letter-spacing: 0; text-transform: none; color: rgba(239,228,200,.62); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vs-sheet .vs-x { flex: none; display: grid; place-items: center; width: 46px; height: 46px; border: 1px solid rgba(240,214,143,.4) !important; border-radius: 50% !important; background: rgba(214,164,67,.08) !important; color: #fff3d2; font-size: 19px; line-height: 1; cursor: pointer; }
+.vs-sheet .vs-x:hover, .vs-sheet .vs-x:focus-visible { border-color: #f0d68f !important; background: rgba(214,164,67,.18) !important; }
+.vs-sheet h3 { margin: 18px 2px 8px; font: 500 10.5px/1 "IBM Plex Mono", ui-monospace, monospace; letter-spacing: .24em; text-transform: uppercase; color: rgba(240,199,106,.7); display: flex; align-items: center; gap: 10px; }
+.vs-sheet h3::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(214,164,67,.35), transparent); }
+.vs-sheet .vs-sh-rooms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.vs-sheet .vs-sh-rooms a { display: flex; align-items: center; gap: 11px; min-height: 58px; padding: 9px 12px; border: 1px solid rgba(214,164,67,.24); border-radius: 3px; color: #f3e6c4; text-decoration: none; font: 400 18px/1.1 "IM Fell English SC", "IM Fell English", Georgia, serif; background: rgba(255,240,210,.015); transition: background .2s, border-color .2s; -webkit-tap-highlight-color: rgba(214,164,67,.2); }
+.vs-sheet .vs-sh-rooms a:hover, .vs-sheet .vs-sh-rooms a:focus-visible { background: rgba(214,164,67,.1); border-color: rgba(240,214,143,.55); outline: none; }
+.vs-sheet .vs-sh-rooms a:active { background: rgba(214,164,67,.2); }
+.vs-sheet .vs-sh-rooms a i { flex: none; font-style: normal; font-size: 21px; color: #f0c76a; width: 24px; text-align: center; }
+.vs-sheet .vs-sh-rooms a span { display: grid; gap: 3px; min-width: 0; }
+.vs-sheet .vs-sh-rooms a small { font: italic 400 12.5px/1.25 "IM Fell English", Georgia, serif; color: rgba(239,228,200,.58); }
+.vs-sheet .vs-sh-rooms a[aria-current="page"] { border-color: #f0d68f; background: rgba(214,164,67,.15); box-shadow: 0 0 22px rgba(214,164,67,.16); }
+.vs-sheet .vs-sh-rooms a[aria-current="page"] small::after { content: " · you’re here"; font-style: normal; color: #f0c76a; }
+.vs-sheet .vs-sh-home { grid-template-columns: 1fr; }
+.vs-sheet .vs-sh-home a { min-height: 54px; }
+.vs-sheet .vs-sh-th { margin: 24px 2px 8px; font: 500 10.5px/1 "IBM Plex Mono", ui-monospace, monospace; letter-spacing: .24em; text-transform: uppercase; color: rgba(240,199,106,.7); }
+.vs-sheet .vs-sh-tools { display: grid; gap: 0; border-top: 1px solid rgba(214,164,67,.2); }
+.vs-sheet .vs-sh-tools > * { display: flex !important; align-items: center; width: 100%; min-height: 48px; margin: 0 !important; padding: 0 4px !important; text-align: left; font: 500 12.5px/1.2 "IBM Plex Mono", ui-monospace, monospace !important; letter-spacing: .12em !important; text-transform: uppercase; color: #efe4c8 !important; background: none !important; border: 0 !important; border-bottom: 1px solid rgba(214,164,67,.14) !important; border-radius: 0 !important; box-shadow: none !important; position: static !important; opacity: 1 !important; text-decoration: none; cursor: pointer; }
+.vs-sheet .vs-sh-tools:empty { display: none; }
+.vs-sheet .vs-sh-tools > [hidden] { display: none !important; }
+.vs-sheet .vs-sh-close { display: block; width: 100%; margin: 22px 0 4px; min-height: 50px; border: 1px solid rgba(240,214,143,.4); border-radius: 3px; background: rgba(214,164,67,.08); color: #fff3d2; font: 500 12px/1 "IBM Plex Mono", ui-monospace, monospace; letter-spacing: .2em; text-transform: uppercase; cursor: pointer; }
+/* a computer: one wide panel, the families side by side, no scrolling at a normal window size */
+.vs-sheet.vs-drop { inset: auto; top: calc(var(--vs-bar-b, 46px) + 6px); left: var(--vs-drop-x, 10px); width: min(780px, calc(100vw - 20px)); max-height: calc(100vh - var(--vs-bar-b, 46px) - 18px); padding: 0 16px 14px; background: rgba(8,6,12,.97); border: 1px solid rgba(240,214,143,.4); box-shadow: 0 18px 60px rgba(0,0,0,.7), 0 0 30px rgba(214,164,67,.12); transform: translateY(-6px); transition: opacity .18s ease, transform .18s ease; }
+.vs-sheet.vs-drop.on { transform: none; }
+.vs-sheet.vs-drop .vs-sh-top { padding: 12px 16px 8px; background: linear-gradient(rgba(8,6,12,.98) 80%, rgba(8,6,12,0)); }
+.vs-sheet.vs-drop .vs-x { width: 34px; height: 34px; font-size: 15px; }
+.vs-sheet.vs-drop .vs-sh-fams { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 14px; }
+.vs-sheet.vs-drop .vs-sh-rooms { grid-template-columns: 1fr; gap: 2px; }
+.vs-sheet.vs-drop .vs-sh-rooms a { min-height: 46px; padding: 6px 10px; border-color: transparent; background: none; font-size: 17px; }
+.vs-sheet.vs-drop .vs-sh-rooms a:hover, .vs-sheet.vs-drop .vs-sh-rooms a:focus-visible { background: rgba(214,164,67,.1); border-color: rgba(214,164,67,.3); }
+.vs-sheet.vs-drop .vs-sh-rooms a[aria-current="page"] { border-color: rgba(240,214,143,.7); background: rgba(214,164,67,.13); }
+.vs-sheet.vs-drop .vs-sh-home { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.vs-sheet.vs-drop .vs-sh-close, .vs-sheet.vs-drop .vs-sh-th, .vs-sheet.vs-drop .vs-sh-tools { display: none; }
+@media (max-width: 1000px) { .vs-sheet.vs-drop .vs-sh-fams { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* going to another room: the screen dims (not black), names where you're going, and never stays dim */
+.vs-going { position: fixed; left: 50%; top: 50%; z-index: 9999; transform: translate(-50%, -50%); display: grid; justify-items: center; gap: 10px; pointer-events: none; color: #f3e6c4; font: italic 400 18px/1.2 "IM Fell English", Georgia, serif; opacity: 0; transition: opacity .3s ease .15s; }
+.vs-going i { font-style: normal; font-size: 30px; color: #f0c76a; text-shadow: 0 0 18px rgba(240,190,90,.7); animation: vsGo 1.6s ease-in-out infinite; }
+.vs-going.on { opacity: 1; }
+@keyframes vsGo { 50% { opacity: .45; transform: scale(.92); } }
+@media (max-width: 760px) { .bar .vs-rooms { display: none !important; } .bar .vs-menu { display: inline-flex; } .bar .vs-menu .vs-here span { display: none; } .bar .vs-vol { margin-left: auto; } }
+/* power: every room switches off and on from the bar */
+.bar .vs-pow { display: inline-flex !important; align-items: center; gap: 7px; flex: none; font: 500 10.5px/1 "IBM Plex Mono", ui-monospace, monospace !important; letter-spacing: .16em !important; text-transform: uppercase; color: rgba(238,228,203,.7) !important; background: none !important; border: 0 !important; padding: 6px 6px !important; cursor: pointer; white-space: nowrap; }
+.bar .vs-pow i { width: 7px; height: 7px; border-radius: 50%; background: #7dffb0; box-shadow: 0 0 8px #3dff8a, 0 0 2px #fff inset; transition: background .4s, box-shadow .4s; }
+.bar .vs-pow svg { width: 14px; height: 14px; }
+.bar .vs-pow:hover { color: #f0d68f !important; }
+body.vs-off .bar .vs-pow i { background: #4a1712; box-shadow: none; }
+body.vs-off .bar { z-index: 9990 !important; opacity: 1 !important; }
+.vs-offveil { position: fixed; inset: 0; z-index: 9989; display: grid; place-items: center; background: #030206; opacity: 0; pointer-events: none; transition: opacity .45s ease .25s; }
+.vs-offveil::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px; background: linear-gradient(90deg, transparent, rgba(255,236,190,.9), transparent); box-shadow: 0 0 24px rgba(255,214,140,.8); transform: scaleX(0); opacity: 0; }
+body.vs-off .vs-offveil { opacity: 1; pointer-events: auto; }
+body.vs-off .vs-offveil::before { animation: vsCrt .6s ease-out; }
+@keyframes vsCrt { 0% { transform: scaleX(1) scaleY(30); opacity: .0; } 30% { transform: scaleX(1) scaleY(1); opacity: 1; } 100% { transform: scaleX(0); opacity: 0; } }
+.vs-offveil button { display: grid; justify-items: center; gap: 14px; background: none; border: 0; color: rgba(243,230,196,.7); font: italic 400 17px/1.3 "IM Fell English", Georgia, serif; cursor: pointer; opacity: 0; transition: opacity .6s ease .45s, color .3s; }
+body.vs-off .vs-offveil button { opacity: 1; }
+.vs-offveil button:hover { color: #fff3d2; }
+.vs-offveil button span { display: grid; place-items: center; width: 74px; height: 74px; border-radius: 50%; border: 1px solid rgba(240,214,143,.45); color: #f0c76a; box-shadow: 0 0 30px rgba(214,164,67,.15), inset 0 0 20px rgba(214,164,67,.08); transition: box-shadow .4s, border-color .4s; }
+.vs-offveil button:hover span { border-color: #f0d68f; box-shadow: 0 0 40px rgba(240,199,106,.35), inset 0 0 20px rgba(214,164,67,.15); }
+.vs-offveil button svg { width: 30px; height: 30px; }
+.vs-vol svg { width: 16px; height: 16px; flex: none; cursor: pointer; }
+.vs-vol.mute svg .w { display: none; }
+.vs-vol input { -webkit-appearance: none; appearance: none; width: 84px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, #f0c76a var(--p, 80%), rgba(214,164,67,.25) var(--p, 80%)); outline: none; cursor: pointer; }
+.vs-vol input::-webkit-slider-thumb { -webkit-appearance: none; width: 13px; height: 13px; border-radius: 50%; background: radial-gradient(#fff6d8, #d6a443); box-shadow: 0 0 8px rgba(240,200,120,.8); border: 0; }
+.vs-vol input::-moz-range-thumb { width: 13px; height: 13px; border-radius: 50%; background: #e8c070; border: 0; }
+.vs-vol.float { position: fixed; right: 14px; bottom: 14px; z-index: 40; background: rgba(6,5,10,.85); }
+.vs-fade { position: fixed; inset: 0; z-index: 9998; pointer-events: none; background: radial-gradient(ellipse at 50% 50%, rgba(255,214,140,.0), #030206 70%); opacity: 0; transition: opacity .32s ease; }
+.vs-fade.arrive { transition: opacity .9s cubic-bezier(.3,.1,.3,1); }
+.vs-fade.on { opacity: .9; background: radial-gradient(ellipse at 50% 50%, rgba(255,214,140,.18), #030206 70%); }
+#vs-sparks { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 9997; pointer-events: none; }
+@media (max-width: 1100px) { .bar a.vs-room { font-size: 10.5px !important; padding: 6px 9px 6px 8px !important; letter-spacing: .1em !important; } }
+@media (max-width: 760px) { .vs-vol input { width: 56px; } }
+/* step outside: real-world help, plain on purpose (outside the room's look and not in his voice); never fades, never hidden */
+.vs-out { position: fixed; left: max(10px, env(safe-area-inset-left, 0px)); bottom: max(10px, env(safe-area-inset-bottom, 0px)); z-index: 9995; display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; font: 500 11px/1 system-ui, -apple-system, "Segoe UI", sans-serif; letter-spacing: .02em; color: rgba(255,255,255,.62); background: rgba(20,20,24,.72); border: 1px solid rgba(255,255,255,.18); border-radius: 999px; cursor: pointer; opacity: .7; transition: opacity .3s, color .3s, border-color .3s; }
+.vs-out:hover, .vs-out:focus-visible { opacity: 1; color: #fff; border-color: rgba(255,255,255,.5); }
+.vs-out svg { width: 12px; height: 12px; }
+.vs-outp { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; padding: 16px; background: rgba(0,0,0,.6); }
+.vs-outp[hidden] { display: none; }
+.vs-outp .vs-ob { width: min(520px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; padding: 22px 22px 18px; background: #f6f6f4; color: #1d1d1f; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,.5); font: 400 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+.vs-outp h2 { margin: 0 0 8px; font: 600 19px/1.25 system-ui, -apple-system, "Segoe UI", sans-serif; letter-spacing: 0; text-transform: none; color: #1d1d1f; }
+.vs-outp h3 { margin: 16px 0 6px; font: 600 13px/1.3 system-ui, -apple-system, "Segoe UI", sans-serif; color: #444; }
+.vs-outp p { margin: 0 0 8px; }
+.vs-outp ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.vs-outp li a { display: block; padding: 9px 12px; border-radius: 8px; background: #fff; border: 1px solid #ddd; color: #0b57d0; text-decoration: none; }
+.vs-outp li a:hover { border-color: #0b57d0; }
+.vs-outp li a small { display: block; color: #555; font-size: 13px; }
+.vs-outp .vs-oe { padding: 10px 12px; border-radius: 8px; background: #fff1f0; border: 1px solid #f3c2bd; }
+.vs-outp .vs-of { margin-top: 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; color: #666; font-size: 12.5px; }
+.vs-outp .vs-of button { padding: 8px 16px; border-radius: 8px; border: 1px solid #bbb; background: #fff; color: #1d1d1f; font: 500 14px system-ui, -apple-system, sans-serif; cursor: pointer; }
+@media print { .vs-out { display: none; } }
+/* ---------- the house: one type and one panel for every room (2026-11-21). Rooms keep their own layout; this sets the
+   finish: warm black panels with an engraved double corner, a small rule under titles, the same close button and scrollbar ---------- */
+:root { --vs-display: "IM Fell English SC", Georgia, serif; --vs-serif: "IM Fell English", Georgia, serif; --vs-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace; --vs-led: "VT323", "IBM Plex Mono", monospace;
+  --vs-panel: linear-gradient(180deg, rgba(22,14,17,.975) 0%, rgba(10,7,11,.985) 34%, rgba(6,4,8,.99) 100%);
+  --vs-corners: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26'%3E%3Cg transform='rotate(0 13 13)' fill='none' stroke='%23d6a443'%3E%3Cpath d='M1.5 24V8.5Q1.5 1.5 8.5 1.5H24' stroke-opacity='.55'/%3E%3Cpath d='M5.5 20V10Q5.5 5.5 10 5.5H20' stroke-opacity='.22'/%3E%3Cpath d='M9 9l2 2-2 2-2-2z' fill='%23d6a443' fill-opacity='.6' stroke='none'/%3E%3C/g%3E%3C/svg%3E") left 9px top 9px / 26px no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26'%3E%3Cg transform='rotate(90 13 13)' fill='none' stroke='%23d6a443'%3E%3Cpath d='M1.5 24V8.5Q1.5 1.5 8.5 1.5H24' stroke-opacity='.55'/%3E%3Cpath d='M5.5 20V10Q5.5 5.5 10 5.5H20' stroke-opacity='.22'/%3E%3Cpath d='M9 9l2 2-2 2-2-2z' fill='%23d6a443' fill-opacity='.6' stroke='none'/%3E%3C/g%3E%3C/svg%3E") right 9px top 9px / 26px no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26'%3E%3Cg transform='rotate(270 13 13)' fill='none' stroke='%23d6a443'%3E%3Cpath d='M1.5 24V8.5Q1.5 1.5 8.5 1.5H24' stroke-opacity='.55'/%3E%3Cpath d='M5.5 20V10Q5.5 5.5 10 5.5H20' stroke-opacity='.22'/%3E%3Cpath d='M9 9l2 2-2 2-2-2z' fill='%23d6a443' fill-opacity='.6' stroke='none'/%3E%3C/g%3E%3C/svg%3E") left 9px bottom 9px / 26px no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26'%3E%3Cg transform='rotate(180 13 13)' fill='none' stroke='%23d6a443'%3E%3Cpath d='M1.5 24V8.5Q1.5 1.5 8.5 1.5H24' stroke-opacity='.55'/%3E%3Cpath d='M5.5 20V10Q5.5 5.5 10 5.5H20' stroke-opacity='.22'/%3E%3Cpath d='M9 9l2 2-2 2-2-2z' fill='%23d6a443' fill-opacity='.6' stroke='none'/%3E%3C/g%3E%3C/svg%3E") right 9px bottom 9px / 26px no-repeat; }
+body { text-rendering: optimizeLegibility; font-kerning: normal; -webkit-font-smoothing: antialiased; }
+.drawer, .tell, .vs-sheet.vs-drop, html:not([data-vs-room="palm"]):not([data-vs-room="deck"]) .tip { background: var(--vs-corners), var(--vs-panel) !important; }
+.drawer { border-left: 1px solid rgba(214,164,67,.3) !important; box-shadow: -24px 0 60px rgba(0,0,0,.55), inset 1px 0 0 rgba(255,222,160,.07) !important; padding-top: 26px !important; }
+.drawer, .side { scrollbar-width: thin; scrollbar-color: rgba(214,164,67,.35) transparent; }
+.drawer::-webkit-scrollbar, .side::-webkit-scrollbar { width: 7px; } .drawer::-webkit-scrollbar-thumb, .side::-webkit-scrollbar-thumb { background: rgba(214,164,67,.3); border-radius: 4px; }
+.side { background-image: linear-gradient(180deg, rgba(22,14,17,.5), rgba(0,0,0,0) 30%) !important; box-shadow: inset 1px 0 0 rgba(255,222,160,.06); }
+.tell, html:not([data-vs-room="palm"]):not([data-vs-room="deck"]) .tip { border: 1px solid rgba(214,164,67,.42) !important; box-shadow: 0 22px 60px rgba(0,0,0,.72), 0 0 0 1px rgba(0,0,0,.6), 0 0 36px rgba(214,164,67,.07) !important; }
+html:not([data-vs-room="palm"]):not([data-vs-room="deck"]) .tip { background-size: 18px 18px, 18px 18px, 18px 18px, 18px 18px, auto !important; background-position: left 5px top 5px, right 5px top 5px, left 5px bottom 5px, right 5px bottom 5px, 0 0 !important; padding: 12px 15px 13px !important; }
+.drawer h2, .tell h3, .vs-sheet.vs-drop h2 { letter-spacing: .03em; text-shadow: 0 0 22px rgba(214,164,67,.22); }
+.drawer h2 { font-family: var(--vs-display) !important; font-weight: 400 !important; }
+.drawer > h2:first-of-type::after, .drawer > div > h2:first-of-type::after, .tell > h3:first-child::after { content: ""; display: block; width: 120px; height: 9px; margin: 10px 0 4px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='9'%3E%3Cpath d='M0 4.5H50M70 4.5H120' stroke='%23d6a443' stroke-opacity='.45'/%3E%3Cpath d='M60 .5l4 4-4 4-4-4z' fill='%23d6a443' fill-opacity='.75'/%3E%3Ccircle cx='52' cy='4.5' r='1' fill='%23d6a443' fill-opacity='.5'/%3E%3Ccircle cx='68' cy='4.5' r='1' fill='%23d6a443' fill-opacity='.5'/%3E%3C/svg%3E") no-repeat left center; }
+.drawer .sub { font-family: var(--vs-mono) !important; font-size: 10.5px !important; letter-spacing: .16em !important; text-transform: uppercase; color: rgba(238,228,203,.5) !important; }
+.drawer p { line-height: 1.45; }
+.drawer [aria-label="Close"], .tell [aria-label="Close"] { display: grid !important; place-items: center; width: 32px !important; height: 32px !important; padding: 0 !important; border-radius: 50% !important; border: 1px solid rgba(214,164,67,.38) !important; background: rgba(0,0,0,.35) !important; color: #efe4c8 !important; font: 14px/1 var(--vs-mono) !important; transition: border-color .3s, box-shadow .3s, color .3s; }
+.drawer [aria-label="Close"]:hover, .tell [aria-label="Close"]:hover { border-color: #f0d68f !important; color: #fff3d2 !important; box-shadow: 0 0 16px rgba(240,199,106,.3); }
+`;
+  const st = document.createElement('style'); st.textContent = css;
+
+  function build() {
+    document.head.appendChild(st);
+    document.documentElement.dataset.vsRoom = (here.replace(/\.html$/, '').replace(/^\.\/$/, '') || 'templum');
+    // the rooms
+    const bar = document.querySelector('header.bar, .bar');
+    if (bar) {
+      bar.querySelectorAll(':scope > a').forEach(a => { const h = a.getAttribute('href') || ''; if (ROOMS.some(([r]) => r === h || (r === './' && (h === './' || h === 'index.html')))) a.remove(); });
+      const nav = document.createElement('nav'); nav.className = 'vs-rooms'; nav.setAttribute('aria-label', 'Rooms');
+      for (const [href, name, glyph] of ROOMS) { const a = document.createElement('a'); a.className = 'vs-room'; a.href = href; a.innerHTML = `<i aria-hidden="true">${glyph}</i><span>${name}</span>`; a.title = name; if (href === here) a.setAttribute('aria-current', 'page'); nav.append(a); }
+      bar.prepend(nav);
+    }
+    // volume (the Turntable has its own big volume in the transport, so it gets none here)
+    if (!document.body.dataset.novol) {
+      const l = document.createElement('label'); l.className = 'vs-vol' + (bar ? '' : ' float'); l.title = 'Volume (every room)';
+      l.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path class="w" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><input type="range" min="0" max="100" step="1" aria-label="Volume">`;
+      const inp = l.querySelector('input'), paint = () => inp.style.setProperty('--p', inp.value + '%');
+      inp.value = Math.round(vol * 100); paint(); l.classList.toggle('mute', vol === 0);
+      inp.addEventListener('input', () => { setVol(inp.value / 100); paint(); });
+      let before = vol; l.querySelector('svg').addEventListener('click', e => { e.preventDefault(); if (vol > 0) { before = vol; setVol(0); } else setVol(before || .8); paint(); });
+      if (bar) { const last = bar.querySelector('#txBtn, #fsBtn, #listBtn'); last ? last.before(l) : bar.append(l); } else document.body.append(l);
+    }
+    power(bar);
+    outside();
+    if (bar) menu(bar);   // after the volume is placed, so the volume stays in the bar on a phone
+    if (!document.body.dataset.novol) mediaVol();
+    const fs = document.getElementById('fsBtn'); if (fs && innerWidth < 1180 && innerWidth > 760) { fs.textContent = '⤢'; fs.title = 'Full screen'; fs.setAttribute('aria-label', 'Full screen'); }
+    // the dissolve between rooms
+    const fade = document.createElement('div'); fade.className = 'vs-fade'; document.body.append(fade);
+    // arriving: the dim lifts. It lifts on a plain timer as well as the next frame, because a phone pauses frames for a page
+    // that finished loading while you looked away, and the room must never stay dark
+    try { if (sessionStorage.getItem('vs-arrive')) { sessionStorage.removeItem('vs-arrive'); fade.style.transition = 'none'; fade.classList.add('on');
+      const lift = () => { if (lift.done) return; lift.done = true; void fade.offsetWidth; fade.style.transition = ''; if (!calm) fade.classList.add('arrive'); fade.classList.remove('on'); setTimeout(() => fade.classList.remove('arrive'), 1000); };
+      requestAnimationFrame(() => requestAnimationFrame(lift)); setTimeout(lift, 140); } } catch (e) {}
+    // the film (pages that draw their own, like the radio, opt out with data-nofilm)
+    if (!document.body.dataset.nofilm) { const film = document.createElement('div'); film.className = 'vs-film'; film.setAttribute('aria-hidden', 'true'); document.body.append(film); filmStock(); }
+    // quiet: after a while with no hand on anything, the frame fades back. Never while typing or with a menu open
+    let qt = 0; const busy = () => { const a = document.activeElement; return a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable) || document.querySelector('.drawer.on, dialog[open], [aria-modal="true"]:not([hidden])'); };
+    const wake = () => { document.body.classList.remove('vs-quiet'); clearTimeout(qt); qt = setTimeout(function q() { if (busy()) { qt = setTimeout(q, 3000); return; } document.body.classList.add('vs-quiet'); }, 11000); };
+    ['pointermove', 'pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(ev => addEventListener(ev, wake, { passive: true })); wake();
+    document.addEventListener('click', e => {
+      const a = e.target.closest('a.vs-room, a.play-link'); if (!a || e.metaKey || e.ctrlKey || a.target === '_blank') return;
+      // the link goes where it points on its own (no waiting, nothing here can stop it); the dissolve just plays alongside
+      try { sessionStorage.setItem('vs-arrive', '1'); } catch (er) {}
+      try { burst(e.clientX, e.clientY, 26); fade.classList.add('on'); window.VS_FADE_OUT(calm ? 60 : 220);
+        const to = ROOMS.find(([h]) => a.getAttribute('href') === h); going.innerHTML = to ? `<i aria-hidden="true">${to[2]}</i>${to[1]}` : ''; going.classList.add('on'); } catch (er) {}
+      // a slow phone connection: if this page is still here after a while, step back from the dim so it's never a dead screen
+      clearTimeout(going.t); going.t = setTimeout(() => { if (document.visibilityState === 'visible') restore(); }, 6000);
+    });
+    const going = document.createElement('div'); going.className = 'vs-going'; going.setAttribute('aria-hidden', 'true'); document.body.append(going);
+    const restore = () => { clearTimeout(going.t); fade.classList.remove('on', 'arrive'); going.classList.remove('on'); try { window.VS_ROOMS_SHUT && window.VS_ROOMS_SHUT(); } catch (e) {}
+      for (const s of window.__vsBuses || []) try { if (!document.body.classList.contains('vs-off')) s.up(.4); } catch (e) {}
+      document.querySelectorAll('video, audio').forEach(m => { if (m.__vsPre != null) { m.volume = m.__vsPre; m.__vsPre = null; } }); };
+    // Back (or a swipe back) brings this page out of the browser's memory exactly as it was left: dimmed, menu open,
+    // sound faded. Undo all of it
+    addEventListener('pageshow', e => { if (e.persisted) restore(); });
+    // instant rooms: when the pointer rests on a room tab, the browser builds that page in the background, so the click
+    // just swaps it in (Chrome's speculation rules; other browsers ignore this and load normally)
+    try { if (HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules')) { const sr = document.createElement('script'); sr.type = 'speculationrules';
+      sr.textContent = JSON.stringify({ prerender: [{ where: { and: [{ href_matches: '/*.html' }, { selector_matches: 'a.vs-room, a.play-link' }] }, eagerness: 'moderate' }] }); document.head.append(sr); } } catch (e) {}
+    sparks();
+  }
+
+  /* ---------- power: the room switches off (sound fades and stops, films pause, the screen closes like an old set) ---------- */
+  function power(bar) {
+    const ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v8M7.05 6.05a7.5 7.5 0 1 0 9.9 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+    const veil = document.createElement('div'); veil.className = 'vs-offveil'; veil.innerHTML = `<button type="button">${'<span>' + ICON + '</span>'}Switched off. Touch to wake the room.</button>`; document.body.append(veil);
+    let btn = null;
+    if (bar) { btn = document.createElement('button'); btn.type = 'button'; btn.className = 'vs-pow'; btn.innerHTML = '<i aria-hidden="true"></i>Power'; btn.title = 'Switch this room off and on'; btn.setAttribute('aria-pressed', 'true');
+      const v = bar.querySelector('.vs-vol'); v ? v.before(btn) : bar.append(btn); }
+    let paused = [];
+    const set = on => {
+      if (on === !document.body.classList.contains('vs-off')) return;
+      document.body.classList.toggle('vs-off', !on); if (btn) { btn.setAttribute('aria-pressed', String(on)); btn.title = on ? 'Switch this room off' : 'Switch this room on'; }
+      dispatchEvent(new CustomEvent('vs-power', { detail: { on } }));
+      if (!on) {
+        window.VS_FADE_OUT(260);
+        setTimeout(() => { if (document.body.classList.contains('vs-off')) { for (const s of window.__vsBuses) try { s.ctx.suspend(); } catch (e) {} paused = [...document.querySelectorAll('video')].filter(m => !m.paused); paused.forEach(m => m.pause()); } }, 300);
+      } else {
+        for (const s of window.__vsBuses) try { s.ctx.resume().then(() => s.up(.6)); } catch (e) {}
+        paused.forEach(m => { if (m.__vsPre != null) { m.volume = m.__vsPre; m.__vsPre = null; } m.play().catch(() => {}); }); paused = [];
+      }
+    };
+    window.VS_POWER = set;
+    btn && btn.addEventListener('click', () => set(document.body.classList.contains('vs-off')));
+    veil.querySelector('button').addEventListener('click', () => set(true));
+  }
+
+  /* ---------- the film stock: one grain tile made once (soft, centred on mid grey so overlay leaves the picture's
+     brightness alone), swept by a stepped CSS animation on the compositor, so it costs no script per frame ---------- */
+  function filmStock() {
+    try { if (localStorage.getItem('vs-film') === 'off') document.documentElement.classList.add('vs-nofx'); } catch (e) {}
+    const N = 220, c = document.createElement('canvas'); c.width = c.height = N; const g = c.getContext('2d'), im = g.createImageData(N, N), d = im.data;
+    let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    for (let i = 0; i < d.length; i += 4) { const v = 128 + ((rnd() + rnd() + rnd()) / 3 - .5) * 190; d[i] = v + 3; d[i + 1] = v; d[i + 2] = v - 4; d[i + 3] = 255; }
+    g.putImageData(im, 0, 0);
+    const grain = document.createElement('div'); grain.className = 'vs-grain'; grain.setAttribute('aria-hidden', 'true'); grain.style.backgroundImage = `url(${c.toDataURL('image/png')})`;
+    const leak = document.createElement('div'); leak.className = 'vs-leak'; leak.setAttribute('aria-hidden', 'true');
+    const lift = grain.cloneNode(); lift.classList.add('lift');
+    document.body.append(leak, grain, lift);
+    window.VS_FILM = on => { document.documentElement.classList.toggle('vs-nofx', !on); try { localStorage.setItem('vs-film', on ? 'on' : 'off'); } catch (e) {} };
+  }
+
+  /* ---------- step outside: real help, outside the game ---------- */
+  function outside() {
+    if (document.querySelector('.vs-out')) return;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'vs-out'; b.title = 'Real-world help, outside the game';
+    b.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2h7v12H3zM10 8h4M12 6l2 2-2 2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Step outside';
+    const p = document.createElement('div'); p.className = 'vs-outp'; p.hidden = true;
+    p.setAttribute('role', 'dialog'); p.setAttribute('aria-modal', 'true'); p.setAttribute('aria-labelledby', 'vs-out-h');
+    p.innerHTML = `<div class="vs-ob">
+      <h2 id="vs-out-h">Outside the game</h2>
+      <p>This is real-world help. The room's sound is switched off while you're here.</p>
+      <p class="vs-oe"><b>In danger, or might hurt yourself?</b> Call your local emergency number now: 911 (US, Canada), 999 (UK), 112 (EU and many countries), 000 (Australia).</p>
+      <h3>Talk to someone now</h3>
+      <ul>
+        <li><a href="tel:988">988 Suicide &amp; Crisis Lifeline<small>US · call or text 988, any time</small></a></li>
+        <li><a href="tel:116123">Samaritans · 116 123<small>UK and Ireland · free, any time</small></a></li>
+        <li><a href="https://findahelpline.com" target="_blank" rel="noopener">Find A Helpline<small>Free, confidential helplines in your country</small></a></li>
+      </ul>
+      <h3>Hearing voices, or seeing things others don't?</h3>
+      <ul>
+        <li><a href="https://www.hearing-voices.org" target="_blank" rel="noopener">Hearing Voices Network<small>Peer support groups</small></a></li>
+        <li><a href="https://www.intervoiceonline.org" target="_blank" rel="noopener">Intervoice<small>The international hearing voices network</small></a></li>
+      </ul>
+      <h3>Right now</h3>
+      <p>Feet on the floor. Name five things you can see, four you can touch, three you can hear, two you can smell, one you can taste. Breathe out slower than you breathe in.</p>
+      <div class="vs-of"><span>Nothing here is sent anywhere.</span><button type="button">Close</button></div></div>`;
+    // the floating corner button is off for now (the owner found it intrusive); the panel stays, opened by window.VS_OUTSIDE
+    // (the Compendium's rotary phone). To bring the button back, set SHOW_BUTTON to true.
+    const SHOW_BUTTON = false;
+    document.body.append(...(SHOW_BUTTON ? [b, p] : [p]));
+    let back = null;
+    const open = () => { back = document.activeElement; p.hidden = false; try { window.VS_POWER && window.VS_POWER(false); } catch (e) {} p.querySelector('.vs-ob').scrollTop = 0; p.querySelector('.vs-of button').focus({ preventScroll: true }); };
+    const close = () => { p.hidden = true; try { back && back.focus && back.focus(); } catch (e) {} };
+    b.addEventListener('click', open);
+    p.querySelector('.vs-of button').addEventListener('click', close);
+    p.addEventListener('click', e => { if (e.target === p) close(); });
+    addEventListener('keydown', e => {
+      if (p.hidden) return;
+      if (e.key === 'Escape') { e.stopImmediatePropagation(); e.preventDefault(); close(); return; }
+      if (e.key === 'Tab') { const f = [...p.querySelectorAll('a, button')], i = f.indexOf(document.activeElement); if (e.shiftKey ? i <= 0 : i === f.length - 1) { e.preventDefault(); f[e.shiftKey ? f.length - 1 : 0].focus(); } }
+      e.stopImmediatePropagation();   // the room's own keys (notes, Esc to end a sitting) stay quiet while this is open
+    }, true);
+    window.VS_OUTSIDE = open;
+    // a room with its own bar along the bottom (the Turntable's transport) gets the button lifted just above it
+    const place = () => {
+      b.style.bottom = ''; const o = b.getBoundingClientRect(); let lift = 0;
+      for (const e of document.querySelectorAll('body > *, body > * > *')) {
+        if (e === b || e === p || e.classList.contains('vs-film')) continue;
+        const cs = getComputedStyle(e); if (cs.position !== 'fixed' && cs.position !== 'absolute' || cs.display === 'none' || cs.visibility === 'hidden') continue;
+        const r = e.getBoundingClientRect(); if (r.height > innerHeight * .4 || r.bottom < innerHeight - 4 || r.left > o.right || r.right < o.left || r.top > o.bottom) continue;
+        lift = Math.max(lift, innerHeight - r.top + 8);
+      }
+      if (lift) b.style.bottom = lift + 'px';
+    };
+    if (SHOW_BUTTON) { place(); addEventListener('resize', place); setTimeout(place, 1500); setTimeout(place, 5000); }
+  }
+
+  /* ---------- the phone menu ---------- */
+  function menu(bar) {
+    const cur = ROOMS.find(([h]) => h === here) || ROOMS[0];
+    const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'vs-menu'; btn.setAttribute('aria-haspopup', 'dialog'); btn.setAttribute('aria-expanded', 'false');
+    btn.innerHTML = `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Rooms<span class="vs-n" aria-hidden="true">${ROOMS.length}</span><span class="vs-here"><i aria-hidden="true">${cur[2]}</i><span>${cur[1]}</span></span>`;
+    btn.title = 'All the rooms'; btn.setAttribute('aria-label', `Rooms (${ROOMS.length}). You are in ${cur[1]}`);
+    bar.prepend(btn);
+    const sh = document.createElement('div'); sh.className = 'vs-sheet'; sh.hidden = true; sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); sh.setAttribute('aria-label', 'Rooms');
+    // the rooms in families (a room not listed yet lands in More, so a new page always shows up)
+    const FAMS = [['Divination', ['palm.html', 'tarot.html', 'crystal.html', 'mirror.html', 'engine.html']], ['Sound and trance', ['parlour.html', 'deck.html', 'radio.html', 'mesmer.html', 'sleep.html']], ['Craft and lore', ['forge.html', 'systems.html', 'geometry.html', 'compendium.html', 'survival.html']]];
+    const placed = new Set(['./', ...FAMS.flatMap(f => f[1])]), more = ROOMS.filter(([h]) => !placed.has(h)).map(([h]) => h);
+    if (more.length) FAMS.push(['More', more]);
+    const tile = ([h, n, g, d]) => `<a class="vs-room" href="${h}"${h === here ? ' aria-current="page"' : ''}><i aria-hidden="true">${g}</i><span>${n}<small>${d}</small></span></a>`;
+    const byHref = Object.fromEntries(ROOMS.map(r => [r[0], r]));
+    sh.innerHTML = `<div class="vs-sh-top"><h2>Rooms · ${ROOMS.length}<small>You’re in ${cur[1]}</small></h2><button type="button" class="vs-x" aria-label="Close">✕</button></div>`
+      + `<nav aria-label="Rooms"><div class="vs-sh-rooms vs-sh-home">${byHref['./'] ? tile(byHref['./']) : ''}</div><div class="vs-sh-fams">`
+      + FAMS.map(([name, hs]) => { const rs = hs.map(h => byHref[h]).filter(Boolean); return rs.length ? `<section><h3>${name}</h3><div class="vs-sh-rooms">${rs.map(tile).join('')}</div></section>` : ''; }).join('')
+      + `</div></nav><h2 class="vs-sh-th">This room</h2><div class="vs-sh-tools"></div><button type="button" class="vs-sh-close">Close</button>`;
+    document.body.append(sh);
+    const tools = sh.querySelector('.vs-sh-tools');
+    // the tools heading hides itself when the room has no buttons of its own
+    const syncHead = () => { sh.querySelector('.vs-sh-th').hidden = !tools.children.length; };
+    const phone = matchMedia('(max-width: 760px)');
+    const open = () => { if (sh.classList.contains('on')) return close(); hint.done();
+      // a computer gets a dropdown hanging from the button; a phone gets the whole screen
+      const drop = !phone.matches; sh.classList.toggle('vs-drop', drop);
+      if (drop) { const b = btn.getBoundingClientRect(), r = bar.getBoundingClientRect(); sh.style.setProperty('--vs-bar-b', r.bottom + 'px'); sh.style.setProperty('--vs-drop-x', Math.max(10, b.left) + 'px'); }
+      sh.hidden = false; sh.scrollTop = 0; void sh.offsetWidth; sh.classList.add('on');   // no waiting on a frame: a paused frame once left the menu invisible over the whole screen btn.setAttribute('aria-expanded', 'true');
+      // a phone's Back gesture closes the menu instead of leaving the page
+      if (!drop && !pushed) { try { history.pushState({ vsRooms: 1 }, ''); pushed = true; } catch (e) {} }
+      sh.querySelector('.vs-x').focus({ preventScroll: true }); };
+    let pushed = false;
+    const close = (fromBack) => { if (sh.hidden) return; sh.classList.remove('on'); btn.setAttribute('aria-expanded', 'false'); setTimeout(() => { if (!sh.classList.contains('on')) sh.hidden = true; }, 230);
+      if (pushed && fromBack !== true) { pushed = false; try { history.back(); } catch (e) {} } else pushed = false; };
+    const shut = () => { sh.classList.remove('on'); sh.hidden = true; btn.setAttribute('aria-expanded', 'false'); pushed = false; };   // instant, for leaving the page
+    window.VS_ROOMS_SHUT = shut;
+    addEventListener('popstate', () => { if (pushed) { pushed = false; close(true); } });
+    btn.addEventListener('click', open); sh.querySelector('.vs-x').addEventListener('click', close); sh.querySelector('.vs-sh-close').addEventListener('click', close);
+    sh.addEventListener('click', e => { if (e.target === sh) close(); });
+    document.addEventListener('pointerdown', e => { if (!sh.hidden && sh.classList.contains('vs-drop') && !sh.contains(e.target) && !btn.contains(e.target)) close(); }, true);
+    tools.addEventListener('click', () => setTimeout(close, 0));   // a tool does its job, then the sheet gets out of the way
+    addEventListener('keydown', e => { if (e.key === 'Escape' && !sh.hidden) { e.stopImmediatePropagation(); close(); btn.focus({ preventScroll: true }); } }, true);
+    // on a phone the page's own bar buttons live in the sheet; on a wider screen they go back where they came from
+    const pick = el => el.matches('button, a, .motion-btn') && !el.matches('.vs-menu, .vs-room, .unzoom');
+    let moving = false;
+    const place = () => { moving = true;
+      if (phone.matches) { [...bar.children].filter(pick).forEach(el => { if (!el.__vsHome) { el.__vsHome = document.createComment('vs'); el.before(el.__vsHome); } tools.append(el); }); }
+      else [...tools.children].forEach(el => { if (el.__vsHome && el.__vsHome.parentNode) el.__vsHome.replaceWith(el); else bar.append(el); el.__vsHome = null; });
+      syncHead(); moving = false; };
+    // the room names show in the bar when they all fit; when they don't, the ROOMS button takes their place
+    const nav = bar.querySelector('.vs-rooms');
+    const fit = () => { if (phone.matches || !nav) { bar.classList.add('vs-tight'); return; } bar.classList.remove('vs-tight'); if (nav.scrollWidth > nav.clientWidth + 2) bar.classList.add('vs-tight'); };
+    let fq = 0; const fitSoon = () => { cancelAnimationFrame(fq); fq = requestAnimationFrame(fit); };
+    place(); fit(); phone.addEventListener('change', () => { place(); fit(); }); addEventListener('resize', fitSoon);
+    try { document.fonts.ready.then(fitSoon); } catch (e) {}
+    new MutationObserver(() => { if (!moving && phone.matches) place(); fitSoon(); }).observe(bar, { childList: true });
+    // first visit to the house: the rooms announce themselves once, so nobody thinks this is the only one
+    const hint = { el: null, t: 0, done() { clearTimeout(this.t); try { localStorage.setItem('vs-rooms-hint', '1'); } catch (e) {} btn.classList.remove('vs-call'); if (this.el) { const el = this.el; this.el = null; el.classList.remove('on'); setTimeout(() => el.remove(), 600); } } };
+    let seen = true; try { seen = !!localStorage.getItem('vs-rooms-hint'); } catch (e) {}
+    if (!seen) hint.t = setTimeout(() => {
+      const tight = bar.classList.contains('vs-tight'), a = (tight ? btn : nav).getBoundingClientRect(); if (!a.width) return;
+      const el = hint.el = document.createElement('div'); el.className = 'vs-hint'; el.setAttribute('role', 'status');
+      el.innerHTML = `<b>${ROOMS.length} rooms</b>${tight ? 'There’s more than this one. Open the menu.' : 'This is one of them. The rest are up here.'}`;
+      document.body.append(el); el.style.left = Math.max(10, a.left) + 'px'; el.style.top = (a.bottom + 10) + 'px'; el.style.setProperty('--ax', Math.min(a.width / 2, 40) + 'px');
+      if (tight) btn.classList.add('vs-call'); requestAnimationFrame(() => el.classList.add('on'));
+      try { localStorage.setItem('vs-rooms-hint', '1'); } catch (e) {}
+      hint.t = setTimeout(() => hint.done(), 9000);
+    }, 2400);
+    nav && nav.addEventListener('click', () => hint.done());
+  }
+
+  /* ---------- sparks ---------- */
+  let cv, g, P = [], running = false, last = null;
+  function sparks() {
+    if (calm) return;
+    cv = document.createElement('canvas'); cv.id = 'vs-sparks'; document.body.append(cv); g = cv.getContext('2d');
+    const size = () => { cv.width = innerWidth; cv.height = innerHeight; }; size(); addEventListener('resize', size);
+    addEventListener('pointermove', e => { if (e.pointerType === 'touch') return; const d = last ? Math.hypot(e.clientX - last[0], e.clientY - last[1]) : 99; if (d < 26) return; last = [e.clientX, e.clientY]; add(e.clientX, e.clientY, 1, .22); });
+    addEventListener('pointerdown', e => burst(e.clientX, e.clientY, 9), true);
+  }
+  function add(x, y, n, spd) { for (let i = 0; i < n; i++) { const a = Math.random() * 6.28, v = spd * (.4 + Math.random()); P.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - .25, life: 1, d: .012 + Math.random() * .014, r: 1 + Math.random() * 2.2, hue: Math.random() < .2 ? 1 : 0 }); } if (P.length > 260) P.splice(0, P.length - 260); if (!running) { running = true; requestAnimationFrame(tick); } }
+  function burst(x, y, n) { if (calm || !cv) return; add(x, y, n, 2.6); P.push({ ring: true, x, y, life: 1, d: .045 }); }
+  function tick() {
+    g.clearRect(0, 0, cv.width, cv.height); g.globalCompositeOperation = 'lighter';
+    for (let i = P.length - 1; i >= 0; i--) { const p = P[i]; p.life -= p.d; if (p.life <= 0) { P.splice(i, 1); continue; }
+      if (p.ring) { g.strokeStyle = `rgba(255,214,140,${p.life * .7})`; g.lineWidth = 1.5; g.beginPath(); g.arc(p.x, p.y, (1 - p.life) * 46, 0, 7); g.stroke(); continue; }
+      p.x += p.vx; p.y += p.vy; p.vy -= .012; p.vx *= .985; const a = p.life, r = p.r * (.5 + a * .7);
+      g.fillStyle = p.hue ? `rgba(200,225,255,${a * .9})` : `rgba(255,${200 + 40 * a | 0},${120 + 60 * a | 0},${a * .9})`; g.beginPath(); g.arc(p.x, p.y, r, 0, 7); g.fill();
+      g.fillStyle = `rgba(255,200,120,${a * .12})`; g.beginPath(); g.arc(p.x, p.y, r * 4, 0, 7); g.fill(); }
+    g.globalCompositeOperation = 'source-over';
+    if (P.length) requestAnimationFrame(tick); else { running = false; g.clearRect(0, 0, cv.width, cv.height); }
+  }
+  window.VS_BURST = (x, y, n = 20) => burst(x, y, n);
+
+  if (document.readyState === 'loading') addEventListener('DOMContentLoaded', build); else build();
+})();
+
+</script>
+</body>
+</html>
